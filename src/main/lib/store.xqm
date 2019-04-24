@@ -39,7 +39,7 @@ let $uri:=resolve-uri($doc?uri,$base)
 let $opts:=if(map:contains($doc,"opts")) then $doc?opts else map{}
 return switch (substring-before($uri,":"))
           case "file" return store:file($doc?document,substring-after($uri,"file:///"),$opts)
-          case "xmldb" return store:xmldb($doc?document,uri,$opts)
+          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
           default return error("unknown protocol:" || $uri)
 };
 

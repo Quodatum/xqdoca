@@ -1,4 +1,4 @@
-import module namespace store = 'quodatum:store' at "store.xqm";
+import module namespace store = 'quodatum:store' at "../../main/lib/store.xqm";
 let $d:=<doc>test</doc>
 let $r:=map{"uri":"foo/test.xml","serialization":map{},"document":$d}
 let $base:="xmldb:/vuepoc-test/123/"

@@ -2,7 +2,7 @@ xquery version "3.1";
 (:~ 
  : test tree
  :)
-import module namespace tree = 'quodatum:data.tree' at "tree.xqm";
+import module namespace tree = 'quodatum:data.tree' at "../../main/lib/tree.xqm";
 
 declare variable $TEST1:=(
 
