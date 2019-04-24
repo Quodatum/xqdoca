@@ -1,0 +1,82 @@
+body {
+	font-family: Helvetica;
+	padding: 0.5em 1em;
+}
+
+pre {
+	font-family: Inconsolata, Consolas, monospace;
+}
+
+ol.results {
+	padding-left: 0;
+}
+
+.footer {
+	text-align: right;
+	border-top: solid 4px;
+	padding: 0.25em 0.5em;
+	font-size: 85%;
+	color: #999;
+}
+
+li.result {
+	list-style-position: inside;
+	list-style: none;
+	height: 140px;
+}
+
+h2 {
+	display: inline-block;
+	margin: 0;
+}
+
+h2 a, .result h3 a {
+	text-decoration: inherit;
+	color: inherit;
+}
+
+h3 {
+	font-size: 140%;
+	background-color: #aaa;
+	border-bottom: 1px solid #000;
+	width: 100%;
+}
+
+h4 {
+	font-size: 100%;
+	background-color: #ddd;
+	width: 90%;
+}
+
+.namespace {
+	color: #999;
+}
+
+.namespace:before {
+	content: "{";
+}
+
+.namespace:after {
+	content: "}";
+}
+.tag-success {
+  background-color: #5cb85c;
+}
+.tag-danger {
+  background-color: #d9534f;
+}
+.tag {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+td {
+	vertical-align: text-top;
+}
