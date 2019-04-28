@@ -20,29 +20,30 @@ xquery version "3.1";
  : <p>Driver for xquery documentation generator </p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
 (:~
  : Generate html for for XQuery sources
  : @return info about the run (json format)
  :)
 
+
 import module namespace xqd = 'quodatum:build.xqdoc' at "lib/xqdoc-proj.xqm";
 import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "lib/xqdoc-html.xqm";
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
-
+declare option db:chop 'true';
 
 (:~ URL of the root folder to document
  : @default C:/Users/andy/git/vue-poc/src/vue-poc
  :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/vue-poc/src/vue-poc");
+declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/xqdoca");
 
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
 let $target:="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/"
 
-let $state:=xqd:read($efolder)=>trace("READ: ")
+let $state:=xqd:read($efolder)
 let $opts:=map{
                "src-folder": $efolder, 
                "project": $state?project, 
@@ -90,7 +91,7 @@ let $imports:=map{
                  }
 return (
        store:store(($index,$restxq,$imports,$modmap),$target),
-       xqd:export-resources2($target),
+       xqhtml:export-resources2($target),
        replace value of node $id with 1+$id,
        update:output(
          <json type="object">

@@ -64,7 +64,7 @@ let $d:=<div>
              
               <div id="ns">
                   <h1>Module Uris</h1>
-                  <table>
+                  <table class="data">
                   <thead>
                   <tr>
                   <th>Uri</th>
@@ -80,12 +80,14 @@ let $d:=<div>
                        order by $file?namespace
                       return  <tr>
                                <td>
-                                <a href="{ $file?href }index.html" title="{ $file?path }">
-                                  { $file?namespace }
-                                </a>
+                             {xqhtml:link-module($file) }
                                 </td>
                                 <td>
-                                { $file?xqparse/name() }
+                                { 
+                                let $type:=$file?xqdoc/xqdoc:module/@type/string()
+                                return if($file?xqparse/name="error") then "ERROR"
+                                       else $type
+                                 }
                                 </td>
                                    <td>
                                 { "R" }
@@ -117,62 +119,6 @@ let $d:=<div>
 return document{ xqhtml:page($d, $params ) }
 };
 
-(:~ transform files to html using c:files
- : @param $params  keys: resources 
- : "ext-id": "299",
- : "src-folder": "C:/Users/andy/git/vue-poc/src/vue-poc",
- : "project": "vue-poc",
- : "resources"
- :)
-declare function xqhtml:index-html($files,
-                            $params as map(*)
-                            )
-as document-node()                            
-{
-let $d:=<div>
-             <h1>
-                  <span class="tag tag-success">
-                      { $params?project }
-                  </span>
-                  XQDoc ,id: { $params?ext-id }
-              </h1>
-              { xqhtml:toc($params) }
-              <a href="restxq.html">RestXQ</a>
-              <div>src: { $params?src-folder }</div>
-              <div id="file">
-                  <h1>Files</h1>
-                  <ul>
-                      { for $file  at $pos in $files//c:file
-                      let $ip:= $file/@name/resolve-uri(.,base-uri($file))
-                      let $path:= string-join($file/ancestor-or-self::*/@name,'/') 
-                      return  <li>
-                                <a href="modules/F{ $pos }/index.html">
-                                   { $file/@name/string() }
-                                </a>
-                    
-                                { $pos }
-                                { $ip }
-                            </li>
-                      }
-                  </ul>
-              </div>
-
-              <div id="ns">
-                  <h1>Namespace</h1>
-                  <ul>
-                      <for-each select=".//c:file">
-                          <variable name="path" select="resolve-uri(@name,$src-folder)"/>
-                          <variable name="doc" select="doc($path)"/>
-                          <li>
-                              <value-of select="position()"/>
-                              <value-of select="$path"/>
-                          </li>
-                      </for-each>
-                  </ul>
-              </div>
-           </div>
-return document{ xqhtml:page($d, $params ) }
-};
 
 (:~ 
  : build toc 
@@ -356,7 +302,7 @@ as element(html)
         <meta http-equiv="Generator" content="xqdoc-r - https://github.com/quodatum/xqdoc-r" />
 
         <title>
-          RestXQ - xqDoc
+          { $opts?project } - xqDocA
         </title>
         <link rel="shortcut icon" type="image/x-icon" href="{$opts?resources}xqdoc.png" />
         <link rel="stylesheet" type="text/css" href="{$opts?resources}page.css" />
@@ -376,4 +322,17 @@ as element(html)
     </html>
 };
 
-    
+(:~ save runtime support files to $target :)
+declare %updating
+function xqhtml:export-resources2($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+};
+
+(:~ link to module :)
+declare 
+function xqhtml:link-module($file as map(*))                       
+as element(a)
+{  
+   <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a>
+};    

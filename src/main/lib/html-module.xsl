@@ -7,9 +7,7 @@
 	<xsl:import href="xqdoc.xsl" />
 	<!-- Standalone xqdoc:xqdoc transform mode"restxq" -->
 	<xsl:param name="project" as="xs:string" select="'unknown'" />
-	<xsl:param name="source" as="xs:string">
-		Source not available
-	</xsl:param>
+	
 	<xsl:param name="filename" as="xs:string" select="'?file'" />
 
 	<xsl:param name="show-private" as="xs:boolean" select="false()" />
@@ -55,7 +53,7 @@
 						mode="restxq" />
 					<div>
 						<h3 id="source">Original Source Code</h3>
-						<pre><code class="language-xquery"><xsl:value-of select="$source" /></code></pre>
+						<pre><code class="language-xquery"><xsl:value-of select="//doc:xqdoc/doc:module/doc:body" /></code></pre>
 					</div>
 					<br />
 

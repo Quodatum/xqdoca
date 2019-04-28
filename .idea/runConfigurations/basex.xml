@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="basex" type="XIJPXQueryProcessorConfiguration" factoryName="XQuery" singleton="false">
+    <option name="contextItem" />
+    <option name="contextItemSource" />
+    <option name="database" />
+    <option name="modulePath" />
+    <option name="processorId" value="1" />
+    <option name="rdfOutputFormat" />
+    <option name="scriptFile" />
+    <option name="scriptSource" value="LocalFile" />
+    <option name="server" />
+    <option name="updating" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
