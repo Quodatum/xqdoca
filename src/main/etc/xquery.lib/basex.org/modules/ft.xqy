@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/Full-Text_Module
  :)
-module namespace ft = "http://basex.org/modules/ft";
+module namespace ft = "http://basex.org/modules/ft#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Web_Module
  :)
-module namespace web = "http://basex.org/modules/web";
+module namespace web = "http://basex.org/modules/web#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

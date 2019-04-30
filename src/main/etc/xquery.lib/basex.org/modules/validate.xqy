@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Validate_Module
  :)
-module namespace validate = "http://basex.org/modules/validate";
+module namespace validate = "http://basex.org/modules/validate#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

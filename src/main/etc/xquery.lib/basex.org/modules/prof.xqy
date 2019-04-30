@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Profiling_Module
  :)
-module namespace prof = "http://basex.org/modules/prof";
+module namespace prof = "http://basex.org/modules/prof#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

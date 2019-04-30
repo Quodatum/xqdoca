@@ -8,7 +8,7 @@ xquery version "3.0";
  : XQuery Functions and Operators 3.0 specification. Copyright © 2017 W3C®
  : (MIT, ERCIM, Keio, Beihang).
  :)
-module namespace math = "http://www.w3.org/2005/xpath-functions/math";
+module namespace math = "http://www.w3.org/2005/xpath-functions/math#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

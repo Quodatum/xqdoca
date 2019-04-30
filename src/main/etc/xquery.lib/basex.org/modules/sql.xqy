@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/SQL_Module
  :)
-module namespace sql = "http://basex.org/modules/sql";
+module namespace sql = "http://basex.org/modules/sql#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

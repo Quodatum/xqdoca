@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Client_Module
  :)
-module namespace client = "http://basex.org/modules/client";
+module namespace client = "http://basex.org/modules/client#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

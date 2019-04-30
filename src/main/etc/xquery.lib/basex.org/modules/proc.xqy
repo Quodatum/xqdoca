@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Process_Module
  :)
-module namespace proc = "http://basex.org/modules/proc";
+module namespace proc = "http://basex.org/modules/proc#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

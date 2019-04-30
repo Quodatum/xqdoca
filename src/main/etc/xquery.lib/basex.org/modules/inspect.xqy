@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Inspection_Module
  :)
-module namespace inspect = "http://basex.org/modules/inspect";
+module namespace inspect = "http://basex.org/modules/inspect#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

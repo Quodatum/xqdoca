@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://expath.org/spec/binary/1.0
  : @see http://docs.basex.org/wiki/Binary_Module
  :)
-module namespace bin = "http://expath.org/ns/binary";
+module namespace bin = "http://expath.org/ns/binary#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

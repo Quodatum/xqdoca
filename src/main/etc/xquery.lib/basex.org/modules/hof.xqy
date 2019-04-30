@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Higher-Order_Functions_Module
  :)
-module namespace hof = "http://basex.org/modules/hof";
+module namespace hof = "http://basex.org/modules/hof#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

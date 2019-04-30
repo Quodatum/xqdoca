@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Sessions_Module
  :)
-module namespace sessions = "http://basex.org/modules/sessions";
+module namespace sessions = "http://basex.org/modules/sessions#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

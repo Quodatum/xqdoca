@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://expath.org/spec/zip
  : @see http://docs.basex.org/wiki/ZIP_Module
  :)
-module namespace zip = "http://expath.org/ns/zip";
+module namespace zip = "http://expath.org/ns/zip#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/User_Module
  :)
-module namespace user = "http://basex.org/modules/user";
+module namespace user = "http://basex.org/modules/user#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

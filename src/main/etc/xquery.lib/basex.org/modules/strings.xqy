@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Strings_Module
  :)
-module namespace strings = "http://basex.org/modules/strings";
+module namespace strings = "http://basex.org/modules/strings#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Random_Module
  :)
-module namespace random = "http://basex.org/modules/random";
+module namespace random = "http://basex.org/modules/random#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Conversion_Module
  :)
-module namespace convert = "http://basex.org/modules/convert";
+module namespace convert = "http://basex.org/modules/convert#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

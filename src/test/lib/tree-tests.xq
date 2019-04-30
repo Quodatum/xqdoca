@@ -13,11 +13,10 @@ declare variable $TEST1:=(
 );
 
 
-
-declare %unit:test
 (:~
  : smoke test
  :)
+declare %unit:test
 function tree:test(){
     let $t:=tree:build($TEST1) 
     return unit:assert(fn:true(),$t)

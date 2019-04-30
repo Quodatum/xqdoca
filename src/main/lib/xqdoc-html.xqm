@@ -35,6 +35,9 @@ import module namespace tree = 'quodatum:data.tree' at "tree.xqm";
 declare namespace c="http://www.w3.org/ns/xproc-step";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
+declare variable $xqhtml:mod-xslt external :="html-module.xsl";
+
+
 (:~ transform files to html
  : @param $params  keys: resources 
  : "ext-id": "299",
@@ -230,6 +233,33 @@ let $body:= <div>
 return  xqhtml:page($body,$opts)
 };
 
+(:~ transform xqdoc to html 
+ : map { "root": "../../", 
+ :        "cache": false(), 
+ :        "resources": "resources/", 
+ :        "ext-id": "51", 
+ :        "filename": "src\main\lib\parsepaths.xq", 
+ :        "show-private": true(), 
+ :        "src-folder": "C:/Users/andy/git/xqdoca", 
+ :         "project": "xqdoca", 
+ :         "source": () } 
+ :)
+declare function xqhtml:xqdoc-html($xqd as element(xqdoc:xqdoc),
+                            $params as map(*)
+                            )
+as document-node()                            
+{  
+try{
+     xslt:transform($xqd=>trace("WWW"),$xqhtml:mod-xslt,$params) 
+ } catch *{
+  document {<div>
+             <div>Error: { $err:code } - { $err:description }</div>
+              <pre>error { serialize($params,map{"method":"basex"}) } - { $xqhtml:mod-xslt }</pre>
+            </div>}
+}
+};
+
+(:~ import page :)
 declare function xqhtml:imports($state,$imports,$opts)
 {
   let $body:=<div>

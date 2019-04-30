@@ -11,7 +11,7 @@ xquery version "3.1";
  : XQuery Functions and Operators 1.0 to 3.1 specifications. Copyright ©
  : 2007-2017 W3C® (MIT, ERCIM, Keio, Beihang).
  :)
-module namespace fn = "http://www.w3.org/2005/xpath-functions";
+module namespace fn = "http://www.w3.org/2005/xpath-functions#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

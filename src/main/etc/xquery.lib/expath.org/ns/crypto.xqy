@@ -6,7 +6,7 @@ xquery version "3.0";
  : @see https://web.archive.org/web/20170227144046/http://expath.org/spec/crypto/20110810
  : @see http://docs.basex.org/wiki/Crypto_Module
  :)
-module namespace crypto = "http://expath.org/ns/crypto";
+module namespace crypto = "http://expath.org/ns/crypto#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

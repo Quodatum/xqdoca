@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://expath.org/spec/webapp
  :)
-module namespace web = "http://expath.org/ns/webapp";
+module namespace web = "http://expath.org/ns/webapp#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

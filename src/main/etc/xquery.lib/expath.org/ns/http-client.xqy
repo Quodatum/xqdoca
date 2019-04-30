@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://expath.org/spec/http-client
  : @see http://docs.basex.org/wiki/HTTP_Module
  :)
-module namespace http = "http://expath.org/ns/http-client";
+module namespace http = "http://expath.org/ns/http-client#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

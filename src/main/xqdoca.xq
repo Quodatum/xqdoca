@@ -16,7 +16,7 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>tx-xqdoc.xq</h1>
+ : <h1>xqdoca.xq</h1>
  : <p>Driver for xquery documentation generator </p>
  :
  : @author Andy Bunce
@@ -38,12 +38,12 @@ declare option db:chop 'true';
  : @default C:/Users/andy/git/vue-poc/src/vue-poc
  :)
 declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/xqdoca");
-
+declare variable $host as xs:string  external := "basex";
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
-
+declare variable $cache external :=false();
 let $target:="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/"
 
-let $state:=xqd:read($efolder)
+let $state:=xqd:read($efolder,$host)
 let $opts:=map{
                "src-folder": $efolder, 
                "project": $state?project, 
@@ -56,7 +56,7 @@ let $modmap:=for $file at $pos in $state?files
                let $params:=map:merge((map{
                               "source":  $file?xqparse/string(),
                               "filename": $file?path,
-                              "cache": $xqd:cache,
+                              "cache": $cache,
                               "show-private": true(),
                               "root": "../../",
                               "resources": "resources/"},
@@ -71,7 +71,7 @@ let $modmap:=for $file at $pos in $state?files
                     "uri":  $file?href || "xqparse.xml", "opts":  $xqd:XML
                  },
                   map{
-                   "document": xqd:xqdoc-html($file?xqdoc,$params),
+                   "document": xqhtml:xqdoc-html($file?xqdoc,$params),
                    "uri":  $file?href || "index.html", "opts":  $xqd:HTML5
                  }
                )

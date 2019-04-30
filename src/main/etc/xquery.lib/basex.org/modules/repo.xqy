@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Repository_Module
  :)
-module namespace repo = "http://basex.org/modules/repo";
+module namespace repo = "http://basex.org/modules/repo#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

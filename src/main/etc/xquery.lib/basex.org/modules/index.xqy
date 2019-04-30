@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Index_Module
  :)
-module namespace index = "http://basex.org/modules/index";
+module namespace index = "http://basex.org/modules/index#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

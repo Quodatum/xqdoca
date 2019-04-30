@@ -37,13 +37,13 @@ import module namespace xqp = 'quodatum:build.parser' at "xqdoc-parser.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 (: source file extensions :)
-declare variable $xqd:exts:="*.xqm,*.xq";
+declare variable $xqd:exts:="*.xqm,*.xq,*.xquery"; (: *.xqy:)
 
 declare variable $xqd:HTML5:=map{"method": "html", "version":"5.0", "indent": "no"};
 declare variable $xqd:XML:=map{"indent": "no"};
-declare variable $xqd:mod-xslt external :="html-module.xsl";
+
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
-declare variable $xqd:cache external :=false();
+
 
 (:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
@@ -52,20 +52,26 @@ declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 (:~
 : create documentation folder map
+: @param host xquery platform eg "basex"
 : map{"base-uri":.., "files":map(*)*}
 :)
 declare function xqd:read($efolder as xs:string)
 as map(*)
 {
+xqd:read($efolder,"basex")
+};
+
+declare function xqd:read($efolder as xs:string,$host as xs:string)
+as map(*)
+{
 let $files:= file:list($efolder,true(),$xqd:exts)
-let $full:= $files!concat($efolder || "\",.)                                
 return map{ 
              "base-uri": $efolder,
              "project": tokenize($efolder,"[/\\]")[last()],
              "files": for $file at $pos in $files
-                      let $full:=concat($efolder || "\", $file)
+                      let $full:=concat($efolder || "\", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
-                      let $xqdoc:=xqd:xqdoc($full,map{"_source": $spath})
+                      let $xqdoc:=xqd:xqdoc($full,$host,map{"_source": $spath})
                       let $base:=map{
                         "path":$file,
                         "href": ``[modules/F`{ $pos }`/]``,
@@ -97,56 +103,44 @@ return map{ "uri": $ns, "where": $f}
 declare function xqd:xqdoc($url as xs:string)
 as element(xqdoc:xqdoc)
 {  
- inspect:xqdoc($url)
+ try{
+   inspect:xqdoc($url)
+ } catch * { 
+   <xqdoc:xqdoc>{$err:code } - { $err:description }</xqdoc:xqdoc>
+}
 };
+
 (:~ 
  : Generate xqdoc adding custom opts 
  :)
-declare function xqd:xqdoc($url as xs:string,$opts as map(*))
+declare function xqd:xqdoc($url as xs:string,$host as xs:string,$opts as map(*))
 as map(*)
 {  
   let $xqd:=xqd:xqdoc($url)
-  let $src:=fetch:text($url)
-  let $parse:=xqp:parse($src)
+  (: add custom tags :)
   let $enh:=$xqd transform with {
           for $tag in map:keys($opts)
           where xqdoc:module[@type="library"]
           return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
           into xqdoc:module[@type="library"]/xqdoc:comment
      }
+  (: insert source:)
+  let $src:=fetch:text($url)   
   let $enh:=$enh transform with {
-    insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module
+    if(xqdoc:module) then 
+          insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module
+    else
+        ()
   }
+   
+  let $parse:=xqp:parse($src)
+  let $enh:=xqp:enrich($enh,$parse)
   return map{"xqdoc": $enh, 
              "xqparse": $parse
               }
 };
          
-(:~ transform xqdoc to html 
- : map { "root": "../../", 
- :        "cache": false(), 
- :        "resources": "resources/", 
- :        "ext-id": "51", 
- :        "filename": "src\main\lib\parsepaths.xq", 
- :        "show-private": true(), 
- :        "src-folder": "C:/Users/andy/git/xqdoca", 
- :         "project": "xqdoca", 
- :         "source": () } 
- :)
-declare function xqd:xqdoc-html($xqd as element(xqdoc:xqdoc),
-                            $params as map(*)
-                            )
-as document-node()                            
-{  
-try{
-     xslt:transform($xqd=>trace("WWW"),$xqd:mod-xslt,$params) 
- } catch *{
-  document {<div>
-             <div>Error: { $err:code } - { $err:description }</div>
-              <pre>error { serialize($params,map{"method":"basex"}) } - { $xqd:mod-xslt }</pre>
-            </div>}
-}
-};
+
 
 
 (:~ return sequence of maps with maps uri and methods :)

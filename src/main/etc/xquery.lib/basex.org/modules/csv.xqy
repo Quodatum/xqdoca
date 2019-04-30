@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/CSV_Module
  :)
-module namespace csv = "http://basex.org/modules/csv";
+module namespace csv = "http://basex.org/modules/csv#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

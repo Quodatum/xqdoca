@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/WebSocket_Module
  :)
-module namespace ws = "http://basex.org/modules/web";
+module namespace ws = "http://basex.org/modules/web#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

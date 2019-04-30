@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Archive_Module
  :)
-module namespace archive = "http://basex.org/modules/archive";
+module namespace archive = "http://basex.org/modules/archive#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

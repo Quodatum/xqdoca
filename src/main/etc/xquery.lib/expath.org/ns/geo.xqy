@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://expath.org/spec/geo
  : @see http://docs.basex.org/wiki/Geo_Module
  :)
-module namespace geo = "http://expath.org/ns/geo";
+module namespace geo = "http://expath.org/ns/geo#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://expath.org/spec/file/1.0
  : @see http://docs.basex.org/wiki/File_Module
  :)
-module namespace file = "http://expath.org/ns/file";
+module namespace file = "http://expath.org/ns/file#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

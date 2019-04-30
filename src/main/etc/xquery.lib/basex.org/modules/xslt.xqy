@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/XSLT_Module
  :)
-module namespace xslt = "http://basex.org/modules/xslt";
+module namespace xslt = "http://basex.org/modules/xslt#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

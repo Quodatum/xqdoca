@@ -5,7 +5,7 @@ xquery version "3.0";
  : @see http://docs.basex.org/wiki/Stream_Module
  : @see http://docs.basex.org/wiki/Lazy_Module
  :)
-module namespace stream = "http://basex.org/modules/stream";
+module namespace stream = "http://basex.org/modules/stream#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Jobs_Module
  :)
-module namespace jobs = "http://basex.org/modules/jobs";
+module namespace jobs = "http://basex.org/modules/jobs#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

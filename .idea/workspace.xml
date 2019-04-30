@@ -2,13 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="654d7e62-6191-4ac3-80f4-33006275d5cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/basex.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/xquery_config.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/lib/html-index.xsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/archive.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/archive.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/client.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/client.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/convert.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/convert.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/csv.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/csv.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/db.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/db.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/fetch.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/fetch.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/ft.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/ft.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/hash.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/hash.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/hof.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/hof.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/html.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/html.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/index.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/index.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/inspect.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/inspect.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/jobs.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/jobs.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/json.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/json.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/lazy.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/lazy.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/out.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/out.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/proc.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/proc.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/prof.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/prof.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/random.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/random.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/repo.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/repo.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/session.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/session.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/sessions.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/sessions.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/sql.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/sql.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/stream.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/stream.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/strings.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/strings.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/unit.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/unit.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/update.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/update.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/user.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/user.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/util.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/util.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/validate.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/validate.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/web.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/web.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/ws.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/ws.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/xquery.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/xquery.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/xslt.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/basex.org/modules/xslt.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/binary.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/binary.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/crypto.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/crypto.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/file.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/file.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/geo.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/geo.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/http-client.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/http-client.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/webapp.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/webapp.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/zip.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/expath.org/ns/zip.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/array.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/array.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/map.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/map.xqy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/math.xqy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/etc/xquery.lib/www.w3.org/2005/xpath-functions/math.xqy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/lib/xqdoc-html.xqm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/lib/xqdoc-html.xqm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/lib/xqdoc-parser.xqm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/lib/xqdoc-parser.xqm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/lib/xqdoc-proj.xqm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/lib/xqdoc-proj.xqm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/tx-xqdoc3.xq" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/tx-xqdoc3.xq" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/tx-xqdoc3.xq" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/smoke-test.xq" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/smoke-test.xq" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,24 +68,9 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/tx-xqdoc3.xq">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="55" column="51" lean-forward="true" selection-start-line="55" selection-start-column="51" selection-end-line="55" selection-end-column="51" />
-              <folding>
-                <element signature="e#22#621#0" />
-                <element signature="e#625#750#0" />
-                <element signature="e#751#842#0" />
-                <element signature="e#1080#1172#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/lib/store.xqm">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
+            <state relative-caret-position="332">
               <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
             </state>
           </provider>
@@ -70,7 +99,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -109,6 +137,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -178,15 +207,13 @@
   <component name="ToolWindowManager">
     <frame x="68" y="20" width="1400" height="784" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.75634515" visible="true" weight="0.14552239" />
-      <window_info id="Structure" order="1" sideWeight="0.24365482" side_tool="true" visible="true" weight="0.14552239" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.754717" visible="true" weight="0.1477612" />
+      <window_info id="Structure" order="1" sideWeight="0.24528302" side_tool="true" visible="true" weight="0.1477612" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Dependency Viewer" weight="0.5705522" />
-      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3297546" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3297546" />
@@ -195,9 +222,10 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3297546" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.3297546" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" visible="true" weight="0.39570552" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" visible="true" weight="0.18711656" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="right" id="Module Dependencies" visible="true" weight="0.21641791" />
+      <window_info anchor="bottom" id="Dependency Viewer" order="10" weight="0.5705522" />
+      <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -206,6 +234,7 @@
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info anchor="right" id="Maven" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Module Dependencies" order="8" visible="true" weight="0.21641791" />
     </layout>
   </component>
   <component name="XQueryProjectSettings">
@@ -223,20 +252,7 @@
     <entry file="file://$PROJECT_DIR$/xqdoca.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/lib/store.xqm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/lib/html-index.xsl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="18" column="64" selection-start-line="18" selection-start-column="64" selection-end-line="18" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/lib/html-index.xsl" />
     <entry file="file://$PROJECT_DIR$/src/main/tx-xqdoc3.xq">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
@@ -247,6 +263,13 @@
             <element signature="e#751#842#0" />
             <element signature="e#1080#1172#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/lib/store.xqm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
         </state>
       </provider>
     </entry>

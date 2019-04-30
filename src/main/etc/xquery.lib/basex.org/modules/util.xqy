@@ -4,7 +4,7 @@ xquery version "3.0";
  :
  : @see http://docs.basex.org/wiki/Utility_Module
  :)
-module namespace util = "http://basex.org/modules/util";
+module namespace util = "http://basex.org/modules/util#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";

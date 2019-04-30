@@ -4,7 +4,7 @@ xquery version "3.1";
  :
  : @see http://docs.basex.org/wiki/Fetch_Module
  :)
-module namespace fetch = "http://basex.org/modules/fetch";
+module namespace fetch = "http://basex.org/modules/fetch#";
 
 declare namespace a = "http://reecedunn.co.uk/xquery/annotations";
 declare namespace o = "http://reecedunn.co.uk/xquery/options";
