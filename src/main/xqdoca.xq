@@ -29,19 +29,20 @@ xquery version "3.1";
 
 
 import module namespace xqd = 'quodatum:build.xqdoc' at "lib/xqdoc-proj.xqm";
-import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "lib/xqdoc-html.xqm";
+import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
 
 (:~ URL of the root folder to document
- : @default C:/Users/andy/git/vue-poc/src/vue-poc
+ : @default C:/Users/andy/git/xqdoca
  :)
 declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/xqdoca");
+declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
 declare variable $host as xs:string  external := "basex";
+
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
-declare variable $cache external :=false();
-let $target:="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/"
+
 
 let $state:=xqd:read($efolder,$host)
 let $opts:=map{
@@ -50,48 +51,20 @@ let $opts:=map{
                "ext-id": $id/string(),
                "resources": "resources/"
                }
-
-(: generate o/ps per source file  :)
-let $modmap:=for $file at $pos in $state?files
-               let $params:=map:merge((map{
-                              "source":  $file?xqparse/string(),
-                              "filename": $file?path,
-                              "cache": $cache,
-                              "show-private": true(),
-                              "root": "../../",
-                              "resources": "resources/"},
-                              $opts))
-               return (
-                 map{
-                   "document": $file?xqdoc,
-                    "uri":  $file?href || "/xqdoc.xml", "opts":  $xqd:XML
-                 },
-                  map{
-                   "document": $file?xqparse,
-                    "uri":  $file?href || "xqparse.xml", "opts":  $xqd:XML
-                 },
-                  map{
-                   "document": xqhtml:xqdoc-html($file?xqdoc,$params),
-                   "uri":  $file?href || "index.html", "opts":  $xqd:HTML5
-                 }
-               )
                
- let $index:= map{ 
-                   "document": xqhtml:index-html2($state,$opts),
-                   "uri": ``[index.html]``, "opts":  $xqd:HTML5
-                 }
-                 
- let $restxq:= map{
-                   "document": xqhtml:restxq($state, xqd:rxq-paths($state),$opts),
-                     "uri": ``[restxq.html]``, "opts":  $xqd:HTML5
-                 }
-let $imports:=map{
-                   "document": xqhtml:imports($state,xqd:imports($state),$opts),
-                     "uri": ``[imports.html]``, "opts":  $xqd:HTML5
-                 }
+let $outputs:= map{
+    "views": ("index","restxq","imports","annotations"),
+    "byfile": ("xqdoc","xqparse","html")
+}               
+
+let $pages:= $outputs?views!xqo:module(.,$state,$opts) 
+     
+(: generate o/ps per source file  :)
+let $modmap:=xqo:files($outputs?byfile,$state,$opts)
+  
 return (
-       store:store(($index,$restxq,$imports,$modmap),$target),
-       xqhtml:export-resources2($target),
+       store:store(($pages,$modmap),$target),
+       xqo:export-resources($target),
        replace value of node $id with 1+$id,
        update:output(
          <json type="object">
@@ -99,6 +72,5 @@ return (
             <msg> {$target}, {count($state?files)} files processed.</msg>
             <id>{$id/string()}</id>
         </json>
-            )
        )
-
+)

@@ -302,6 +302,39 @@ declare function xqhtml:imports($state,$imports,$opts)
   </div>
   return  xqhtml:page($body,$opts)
 };
+
+(:~ annotations page :)
+declare function xqhtml:annotations($state,$annots,$opts)
+{
+  let $body:=<div>
+   <nav id="toc">
+            <h2>
+                <a href="index.html" class="tag tag-success">
+                    { $state?project }
+                </a>
+                / Imports
+            </h2>
+           
+            <h3>
+               Contents
+            </h3>
+            <ol class="toc">
+                <li>
+                    <a href="#main">
+                        <span class="secno">1 </span>
+                        <span class="content">Introduction</span>
+                    </a>
+                </li>
+                
+             </ol>
+           </nav>
+           <a href="index.html">index</a>
+           <p>Lists all Annotations defined.</p>
+       
+  </div>
+  return  xqhtml:page($body,$opts)
+};
+
 (:~  html for a path :)          
 declare function xqhtml:path-to-html($rep as map(*))
 as element(li){
@@ -352,12 +385,7 @@ as element(html)
     </html>
 };
 
-(:~ save runtime support files to $target :)
-declare %updating
-function xqhtml:export-resources2($target as xs:string)                       
-as empty-sequence(){  
-archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
-};
+
 
 (:~ link to module :)
 declare 

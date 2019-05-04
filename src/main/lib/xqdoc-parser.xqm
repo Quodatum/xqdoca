@@ -31,6 +31,11 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqp:ns-fn:="http://www.w3.org/2005/xpath-functions";
 
+declare variable $xqp:xparse_opts:=map{
+                                       "lang":"xquery",
+                                       "version":"3.1 basex",
+                                       "flatten":true()
+                                     };
 (:~  enrich basex builtin xqdoc by
  : adding function source
  : xref info
@@ -60,7 +65,7 @@ as element(xqdoc:xqdoc)
   return $xqdoc
 };
 
-(:~ scan tree for function calls
+(:~ scan tree below $e for function calls
  :)
 declare function xqp:invoked($e as element(*),$expand as function(*))
 as element(xqdoc:invoked)*
@@ -68,6 +73,7 @@ as element(xqdoc:invoked)*
   $e//FunctionCall!xqp:funcall(.,$expand),
   $e//ArrowExpr!xqp:funcall(.,$expand) 
 };
+
 
 (:~  build invoked nodes for function call
  : @param $e is FunctionCall or ArrowExpr 
@@ -78,16 +84,32 @@ as element(xqdoc:invoked)
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
 let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
-let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity 
-let $qname:=xqp:qname($e/QName,$expand)
+let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
+let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
+let $qname:=xqp:qname($fname=>trace("!!"),$expand)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
         </xqdoc:invoked>   
 };
 
+(:~  build invoked nodes for function call
+ : @param $e is variable reference @@TODO
+ :)
+declare function xqp:ref-variable($e as element(*),$expand as function(*))
+as element(xqdoc:ref-variable)
+{
+
+let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
+let $qname:=xqp:qname($fname=>trace("!!"),$expand)
+ return <xqdoc:ref-variable >
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:ref-variable>   
+};
+
 (:~  parse qname into parts
- : @param $e is QName
+ : @param $e is from QName or TOKEN in some cases e.g "count"
  :)
 declare function xqp:qname($e as xs:string,$expand as function(*))
 as map(*)
@@ -171,6 +193,6 @@ as map(*)
 declare function xqp:parse($xq as xs:string)
 as element(*)
 {  
-  xp:parse($xq || "",map{"lang":"xquery","version":"3.1 basex"}) 
+  xp:parse($xq || "",$xqp:xparse_opts) 
 };
 

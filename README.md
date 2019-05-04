@@ -1,11 +1,21 @@
 # XQdocA
 
-Generates html documentation from XQuery sources with a focus on use of annotations.
-Based on the xqDoc schema.
+Generates documentation from XQuery sources with a focus on use of annotations.
+The xqDoc schema.
 
 ## Status
 
-Work in progress - not usable yet
+Work in progress - not currently usable.
+
+## Usage
+
+### Command line
+
+```
+basex  -befolder=/Users/andy/git/xqdoca   docxqa.xq
+```
+
+
 
 ## License
 

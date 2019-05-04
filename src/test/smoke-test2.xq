@@ -4,5 +4,5 @@ import module namespace xqp = 'quodatum:build.parser' at "../main/lib/xqdoc-pars
 declare variable $a:=fetch:text("C:\Users\andy\git\xqdoca\src\test\lib\tree-tests.xq");
 let $xq:='"a;b"=>tokenize(";")'
 let $xq:='db:system( (:hh:) )'
-let $xq:='Q{http://www.w3.org/2005/xpath-functions}count(6)'
-return xqp:parse($a)
+let $xq:='count(6)'
+return xqp:parse($xq)

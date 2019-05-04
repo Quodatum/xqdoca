@@ -112,6 +112,10 @@ as element(xqdoc:xqdoc)
 
 (:~ 
  : Generate xqdoc adding custom opts 
+ : @param $url xquery source
+ : @param host ?
+ : @param $opts custom tags to add
+ : @result map keys of "xqdoc" and "xqparse"
  :)
 declare function xqd:xqdoc($url as xs:string,$host as xs:string,$opts as map(*))
 as map(*)
@@ -124,7 +128,7 @@ as map(*)
           return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
           into xqdoc:module[@type="library"]/xqdoc:comment
      }
-  (: insert source:)
+  (: insert full source into module :)
   let $src:=fetch:text($url)   
   let $enh:=$enh transform with {
     if(xqdoc:module) then 
@@ -180,6 +184,14 @@ as map(*)*
                 "function": $annot/../../(xqdoc:name/string(),@arity/string()),
                 "description": $annot/../../xqdoc:comment/xqdoc:description/node() 
                  }
+};
+
+(:~ 
+ : return all  annotations summary
+ :)
+declare function xqd:annotations2($state as map(*))
+{
+  $state
 };
 
 (:~ 
