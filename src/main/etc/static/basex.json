@@ -4,7 +4,8 @@
 "xsi": "http://www.w3.org/2001/XMLSchema-instance",
 "fn": "http://www.w3.org/2005/xpath-functions",
 "local" : "http://www.w3.org/2005/xquery-local-functions",
-
+"err": "http://www.w3.org/2005/xqt-errors",
+ 
 "math": "http://www.w3.org/2005/xpath-functions/math",
 "map": "http://www.w3.org/2005/xpath-functions/map",
 "array": "http://www.w3.org/2005/xpath-functions/array",

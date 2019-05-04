@@ -7,6 +7,11 @@ The xqDoc schema.
 
 Work in progress - not currently usable.
 
+## Requirements
+
+* `Basex` 9.2+ http://basex.org/
+* `ex-parse` 0.6.8+ installed in repository https://github.com/expkg-zone58/ex-xparse/releases/tag/0.6.8
+
 ## Usage
 
 ### Command line
@@ -23,8 +28,7 @@ XQdocA is released under the Apache License, Version 2.0
 
 ## Credit, Acknowledgements
 
-Thanks to Darin McBeath for creating the original xqDoc http://xqdoc.org/.
-XQdocA has much in common with https://github.com/xquery/xquerydoc
+* Thanks to Darin McBeath for creating the original xqDoc http://xqdoc.org/.
+* XQdocA has much in common with https://github.com/xquery/xquerydoc
 
-
-XQuery parsers were generated from EBNF using Gunther Rademacher's excellent http://www.bottlecaps.de/rex/
+* XQuery parsers were generated from EBNF using Gunther Rademacher's excellent http://www.bottlecaps.de/rex/

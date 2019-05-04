@@ -49,10 +49,10 @@ return switch (substring-before($uri,":"))
 declare %updating 
 function store:file($data,$uri as xs:string,$params as map(*))
 {  
-   let $p:=file:parent($uri=>trace("****"))
+   let $p:=file:parent($uri)
    return (
            if(file:is-dir($p)) then () else file:create-dir($p),
-           file:write($uri,$data=>trace("**ddd**"),$params)
+           file:write($uri,$data,$params)
            )
 };
 

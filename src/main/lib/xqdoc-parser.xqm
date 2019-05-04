@@ -56,7 +56,7 @@ as element(xqdoc:xqdoc)
     return if(map:contains($fmap,$key))then
                   (
                     insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f,
-                    insert node xqp:invoked($parse,$expand) into $f
+                    insert node xqp:references($parse,$expand) into $f
                 )
                else
                   let $a:=trace(map:keys($fmap))
@@ -65,13 +65,15 @@ as element(xqdoc:xqdoc)
   return $xqdoc
 };
 
-(:~ scan tree below $e for function calls
+(:~ scan tree below $e for references
+ : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
  :)
-declare function xqp:invoked($e as element(*),$expand as function(*))
-as element(xqdoc:invoked)*
+declare function xqp:references($e as element(*),$expand as function(*))
+as element(*)*
 {
   $e//FunctionCall!xqp:funcall(.,$expand),
-  $e//ArrowExpr!xqp:funcall(.,$expand) 
+  $e//ArrowExpr!xqp:funcall(.,$expand),
+  $e//VarRef!xqp:ref-variable(.,$expand) 
 };
 
 
@@ -86,7 +88,7 @@ let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqp:qname($fname=>trace("!!"),$expand)
+let $qname:=xqp:qname($fname,$expand)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -101,7 +103,7 @@ as element(xqdoc:ref-variable)
 {
 
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqp:qname($fname=>trace("!!"),$expand)
+let $qname:=xqp:qname($fname,$expand)
  return <xqdoc:ref-variable >
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>

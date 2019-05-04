@@ -194,8 +194,8 @@ declare function xqhtml:tree-list($tree as element(*),$seq as xs:integer*){
  :)
 declare function xqhtml:restxq($state,$annots,$opts)
 {
-let $tree:=trace($annots?uri)
-let $tree:=tree:build($tree)=>trace("TRRES")
+let $tree:=$annots?uri
+let $tree:=tree:build($tree)
 let $body:= <div>
           <nav id="toc">
             <h2>
@@ -250,7 +250,7 @@ declare function xqhtml:xqdoc-html($xqd as element(xqdoc:xqdoc),
 as document-node()                            
 {  
 try{
-     xslt:transform($xqd=>trace("WWW"),$xqhtml:mod-xslt,$params) 
+     xslt:transform($xqd,$xqhtml:mod-xslt,$params) 
  } catch *{
   document {<div>
              <div>Error: { $err:code } - { $err:description }</div>
