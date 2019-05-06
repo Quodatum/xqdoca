@@ -36,7 +36,7 @@
 					- xqDoc
 				</title>
 				<xsl:call-template name="resources">
-					<xsl:with-param name="path" select="concat($root,$resources)" />
+					<xsl:with-param name="path" select="$resources" />
 				</xsl:call-template>
 			</head>
 			<body class="home" id="top">

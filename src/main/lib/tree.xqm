@@ -23,7 +23,7 @@ xquery version "3.1";
  : @version 0.1
  :)
 (:~ 
- : convert sequence of paths to sequence of xml trees 
+ : Convert sequence of strings containing a delimiter like "paths" to sequence of xml trees 
  :)
 module namespace tree = 'quodatum:data.tree';
 
@@ -32,33 +32,45 @@ module namespace tree = 'quodatum:data.tree';
  : convert path(s) to tree
  :)
 declare function tree:build($a as xs:string*)
+as element(*)*
+{
+ tree:build($a,"/")
+};
+
+(:~
+ : @return sequence of nested <directory name=".."> and <file name=".." elements representing source
+ :)
+declare function tree:build($a as xs:string*,$delimiter as xs:string)
+as element(*)*
 {
 fn:fold-right($a,
              (),
-             function($this,$acc){ tree:merge($acc,tree:nest($this)) }
+             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
             )
-};
- 
+}; 
 (:~  convert a path to xml :)
-declare function tree:nest($path as xs:string)
+declare %private 
+function tree:nest($path as xs:string,$delimiter as xs:string)
 as element(*)
 {
-  let $path:=if(starts-with($path,"/")) then $path else "/" || $path
-  let $parts:=fn:tokenize(($path),"/")
+  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
+  let $parts:=fn:tokenize(($path),$delimiter)
   return fn:fold-right(subsequence($parts,1,count($parts)-1),
     <file name="{$parts[last()]}" target="{$path}"/>,
     tree:wrap#2 
    )
 };
 
-declare function tree:wrap($this as xs:string,$acc)
+declare %private 
+function tree:wrap($this as xs:string,$acc)
 as element(*)
 {
   <directory name="{$this}">{$acc}</directory>
 };
 
 
-declare function tree:merge($a1 as element(*)?,$a2 as element(*)?)
+declare %private
+function tree:merge($a1 as element(*)?,$a2 as element(*)?)
 as element(*)*
 {
  if($a1/@name=$a2/@name) then

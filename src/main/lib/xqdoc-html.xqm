@@ -31,8 +31,8 @@ xquery version "3.1";
  :)
 module namespace xqhtml = 'quodatum:build.xqdoc-html';
 import module namespace tree = 'quodatum:data.tree' at "tree.xqm";
+import module namespace xqh = 'quodatum:xqdoca.mod-html' at "xqdoc-htmlmod.xqm";
 
-declare namespace c="http://www.w3.org/ns/xproc-step";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqhtml:mod-xslt external :="html-module.xsl";
@@ -45,33 +45,30 @@ declare variable $xqhtml:mod-xslt external :="html-module.xsl";
  : "project": "vue-poc"
  :)
 declare function xqhtml:index-html2($state as map(*),
-                            $params as map(*)
+                            $opts as map(*)
                             )
 as document-node()                            
 {
 let $d:=<div>
              <h1>
                   <span class="tag tag-success">
-                      { $params?project }
+                      { $opts?project }
                   </span>
-                  XQuery module Documentation 
+                  &#160;XQuery source Documentation 
               </h1>
-              { xqhtml:toc($params) }
-              <dl>
-              <dt><a href="restxq.html">RestXQ</a></dt>
-              <dd>Summary of RESTXQ usage</dd>
-              <dt> <a href="imports.html">Imports</a></dt>
-              <dd>Summary of all imports</dd>
-               </dl>
-              <div>src: { $params?src-folder }</div>
+             
+              { xqhtml:toc($opts) }
+              { xqhtml:view-list($opts,"index")}
+              <div>src: { $opts?src-folder }</div>
              
               <div id="ns">
                   <h1>Module Uris</h1>
                   <table class="data">
                   <thead>
                   <tr>
+                  <th>Type</th>
                   <th>Uri</th>
-                  <th>parsed</th>
+                  
                   <th>Restxq</th>
                   <th>Update</th>
                   </tr>
@@ -79,25 +76,16 @@ let $d:=<div>
                   <tbody>
                  
                      { for $file  at $pos in $state?files
-                     
-                       order by $file?namespace
+                      let $type:=if($file?xqparse/name="error") then 
+                                   "ERROR"
+                                  else
+                                      $file?xqdoc/xqdoc:module/@type/string()
+                       order by $type, $file?namespace
                       return  <tr>
-                               <td>
-                             {xqhtml:link-module($file) }
-                                </td>
-                                <td>
-                                { 
-                                let $type:=$file?xqdoc/xqdoc:module/@type/string()
-                                return if($file?xqparse/name="error") then "ERROR"
-                                       else $type
-                                 }
-                                </td>
-                                   <td>
-                                { "R" }
-                                </td>
-                                  <td>
-                                { "U" }
-                                </td>       
+                              <td>{  $type }</td>
+                               <td>{xqhtml:link-module($file) }</td>
+                               <td>{ "R" }</td>
+                               <td>{ "U" }</td>       
                             </tr>
                       }
                   </tbody>
@@ -119,7 +107,7 @@ let $d:=<div>
               </div>
 
            </div>
-return document{ xqhtml:page($d, $params ) }
+return document{ xqhtml:page($d, $opts ) }
 };
 
 
@@ -250,7 +238,8 @@ declare function xqhtml:xqdoc-html($xqd as element(xqdoc:xqdoc),
 as document-node()                            
 {  
 try{
-     xslt:transform($xqd,$xqhtml:mod-xslt,$params) 
+     let $p:=map:remove($params,filter(map:keys($params),function($key){$params?($key) instance of map(*)}))
+     return xslt:transform($xqd,$xqhtml:mod-xslt,$p) 
  } catch *{
   document {<div>
              <div>Error: { $err:code } - { $err:description }</div>
@@ -258,7 +247,27 @@ try{
             </div>}
 }
 };
-
+(:~ transform xqdoc to html no xslt
+ : map { "root": "../../", 
+ :        "cache": false(), 
+ :        "resources": "resources/", 
+ :        "ext-id": "51", 
+ :        "filename": "src\main\lib\parsepaths.xq", 
+ :        "show-private": true(), 
+ :        "src-folder": "C:/Users/andy/git/xqdoca", 
+ :         "project": "xqdoca", 
+ :         "source": () } 
+ :)
+declare function xqhtml:xqdoc-html2(
+  $xqd as element(xqdoc:xqdoc),
+        $opts as map(*)
+        )
+as document-node()                            
+{
+  let $d:= xqh:xqdoc-html2($xqd,$opts)
+return document{ xqhtml:page(<div>{$d}</div>, $opts ) }
+ 
+};
 (:~ import page :)
 declare function xqhtml:imports($state,$imports,$opts)
 {
@@ -362,16 +371,19 @@ as element(html)
     <html>
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="Generator" content="xqdoc-r - https://github.com/quodatum/xqdoc-r" />
+        <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
 
         <title>
           { $opts?project } - xqDocA
         </title>
-        <link rel="shortcut icon" type="image/x-icon" href="{$opts?resources}xqdoc.png" />
-        <link rel="stylesheet" type="text/css" href="{$opts?resources}page.css" />
-        <link rel="stylesheet" type="text/css" href="{$opts?resources}query.css" />
-        <link rel="stylesheet" type="text/css" href="{$opts?resources}base.css" />
-
+        <link rel="shortcut icon" type="image/x-icon" href="{ $opts?resources }xqdoc.png" />
+        <link rel="stylesheet" type="text/css" href="{ $opts?resources }prism.css"/>
+        <link rel="stylesheet" type="text/css" href="{ $opts?resources }page.css" />
+        <link rel="stylesheet" type="text/css" href="{ $opts?resources }query.css" />
+        <link rel="stylesheet" type="text/css" href="{ $opts?resources }base.css" />
+       <style>
+				.tag {{font-size: 100%;}}
+				</style>
       </head>
 
       <body class="home" id="top">
@@ -379,8 +391,12 @@ as element(html)
         {$body}
         </div>
         <div class="footer">
-            <p style="text-align:right">generated at {current-dateTime()}</p>
+            <p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at {current-dateTime()}</p>
           </div>
+         <script  src="{ $opts?resources }prism.js" type="text/javascript"> </script>
+       
       </body>
     </html>
 };
@@ -390,7 +406,25 @@ as element(html)
 (:~ link to module :)
 declare 
 function xqhtml:link-module($file as map(*))                       
-as element(a)
+as element(span)
 {  
-   <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a>
+   <span>
+    <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a> 
+    <a href="{ $file?href }index2.html" title="{ $file?path }">*</a>
+   </span>
+};
+
+(:~ views list :)
+declare 
+function xqhtml:view-list($opts as map(*),$exclude as xs:string*)                       
+as element(dl)
+{  
+<dl>           
+ {for $name in $opts?outputs?views
+  where not($name eq $exclude)
+  let $def:= map:get($opts?renderers?modules,$name)
+  return (<dt><a href="{ $def?uri }">{ $name }</a></dt>
+         ,<dd>{ $def?title }</dd>)
+  }    
+</dl>
 };    

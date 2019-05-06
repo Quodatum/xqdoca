@@ -25,7 +25,7 @@ xquery version "3.1";
  
 
 module namespace xqo = 'quodatum:xqdoca.outputs';
-import module namespace xqd = 'quodatum:build.xqdoc' at "xqdoc-proj.xqm";
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "xqdoc-proj.xqm";
 import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
 
 declare variable $xqo:cache  :=false();
@@ -34,19 +34,23 @@ declare variable $xqo:cache  :=false();
 declare variable $xqo:modules:=
  map{ 
          "index":  map{
+                      "title": "Index of sources",
                       "document": xqhtml:index-html2#2, 
                       "uri": 'index.html', "opts":  $xqd:HTML5
          },
          "restxq": map{
+                      "title": "Http interface",
                       "document": function ($state,$opts){ xqhtml:restxq($state, xqd:rxq-paths($state),$opts)},
                       "uri": 'restxq.html', "opts":  $xqd:HTML5
          },
         "imports": map{
+                   "title": "Module import",
                    "document": function ($state,$opts){ xqhtml:imports($state,xqd:imports($state),$opts)},
                    "uri": 'imports.html', "opts":  $xqd:HTML5
          },
         "annotations":map{
-                   "document": function ($state,$opts){xqhtml:annotations($state,xqd:annotations2($state),$opts)},
+                   "title": "Annotation summary",
+                   "document": function ($state,$opts){xqhtml:annotations($state,xqd:annotations($state),$opts)},
                    "uri":'annotations.html', "opts":  $xqd:HTML5
       }
     }
@@ -56,19 +60,29 @@ declare variable $xqo:modules:=
 declare variable $xqo:files:=
  map{ 
         "xqdoc":  map{
+                   "title": "XML file XQdoc format",
                    "document": function($file, $params){ $file?xqdoc},
                     "uri": function($file){ $file?href || "/xqdoc.xml"}, "opts":  $xqd:XML
                  },
         "xqparse": map{
+                   "title": "XML file xqparse output",
                    "document": function($file, $params){ $file?xqparse},
                     "uri":  function($file){ $file?href || "xqparse.xml"}, "opts":  $xqd:XML
                  },
-        "html":    map{
+        "html2":    map{
+                   "title": "HTML page about the file", 
                    "document": function($file, $params){ xqhtml:xqdoc-html($file?xqdoc, $params)},
+                   "uri": function($file){ $file?href || "index2.html"}, "opts":  $xqd:HTML5
+                 },
+      "html":    map{
+                   "title": "HTML page about the file (new)", 
+                   "document": function($file, $params){ xqhtml:xqdoc-html2($file?xqdoc, $params)},
                    "uri": function($file){ $file?href || "index.html"}, "opts":  $xqd:HTML5
-                 }
+                 }          
     }
 ;
+
+
 (: render :)
 declare function xqo:module($name as xs:string,
                             $state as map(*),
@@ -94,12 +108,11 @@ as map(*)*
 {
 for $file at $pos in $state?files
 let $params:=map:merge((map{
-              "source":  $file?xqparse/string(),
               "filename": $file?path,
               "cache": $xqo:cache,
               "show-private": true(),
               "root": "../../",
-              "resources": "resources/"},
+              "resources": "../../resources/"},
               $opts))
               
 return $outputs!xqo:file(.,$file,$params)

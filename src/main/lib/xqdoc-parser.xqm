@@ -24,9 +24,9 @@ xquery version "3.1";
  :)
  
 
-module namespace xqp = 'quodatum:build.parser';
+module namespace xqp = 'quodatum:xqdoca.parser';
 import module namespace xp="expkg-zone58:text.parse";
-
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqp:ns-fn:="http://www.w3.org/2005/xpath-functions";
@@ -46,11 +46,11 @@ as element(xqdoc:xqdoc)
   let $fmap:=xqp:funmap($xqparse)
 
   let $moduri:=$xqdoc/xqdoc:module/xqdoc:uri/string()
-   let $expand:=xqp:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+   let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
-    let $name:=xqp:qname($f/xqdoc:name,$expand)
+    let $name:=xqn:qname($f/xqdoc:name,$expand)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then
@@ -88,7 +88,7 @@ let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqp:qname($fname,$expand)
+let $qname:=xqn:qname($fname,$expand)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -103,44 +103,14 @@ as element(xqdoc:ref-variable)
 {
 
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqp:qname($fname,$expand)
+let $qname:=xqn:qname($fname,$expand)
  return <xqdoc:ref-variable >
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
         </xqdoc:ref-variable>   
 };
 
-(:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- :)
-declare function xqp:qname($e as xs:string,$expand as function(*))
-as map(*)
-{
- let $n:=tokenize($e,":")
-let $prefix:=if(count($n)=1)then () else $n[1]
-let $n2:=if(count($n)=1)then  $n[1] else $n[2]
-return map{"uri": $expand($prefix),
-           "name": $n2} 
-};
 
-declare function xqp:map-prefix($prefix as xs:string?,$default as xs:string,$map as map(*))
-as xs:string{
-  if(empty($prefix)) then
-    $default
-  else 
-   $map?($prefix)
-};
-
-(:~  parse URIQualifiedName into parts
- : @param $e is URIQualifiedName
- :)
-declare function xqp:uriqname($e as element(URIQualifiedName))
-as map(*)
-{
-let $n:=tokenize($e,"}")
-return map{"uri": substring($n[1],3),
-           "name": $n[2]} 
-};
 
 (:~ 
  : extract set of namespace declarations from XQuery parse descendants to map{prefix->uri}
@@ -154,19 +124,13 @@ as map(*)
 )=>map:merge()  
 };
 
-(:~  map of static namespaces :)
-declare function xqp:static()
-as map(*)
-{
- fetch:text(resolve-uri("../etc/static/basex.json",static-base-uri()))
- =>parse-json() 
-};
+
 
 (:~  map of known namespaces including static :)
 declare function xqp:prefixes($e as element())
 as map(*)
 {
- (xqp:namespaces($e),xqp:static())
+ (xqp:namespaces($e),xqn:static-prefix-map())
  =>map:merge()
 };
 
@@ -176,12 +140,12 @@ as map(*)
 declare function xqp:funmap($e as element(XQuery))
 as map(*)
 {
- let $expand:=xqp:map-prefix(?,$xqp:ns-fn, xqp:prefixes($e))
+ let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($e))
  let $items:=for $f in $e//FunctionDecl
              let $name:=if($f/QName[1]) then
-                        xqp:qname($f/QName[1],$expand)
+                        xqn:qname($f/QName[1],$expand)
                         else if($f/URIQualifiedName) then
-                        xqp:uriqname($f/URIQualifiedName)
+                        xqn:uriqname($f/URIQualifiedName)
                         else error()
              let $arity:=count($f/(Param|ParamList/Param))
              let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)

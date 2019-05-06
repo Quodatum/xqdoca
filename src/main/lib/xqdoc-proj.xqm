@@ -29,11 +29,13 @@ xquery version "3.1";
  : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
  : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-module namespace xqd = 'quodatum:build.xqdoc';
+module namespace xqd = 'quodatum:xqdoca.xqdoc';
 
 import module namespace store = 'quodatum:store' at 'store.xqm';
 import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
-import module namespace xqp = 'quodatum:build.parser' at "xqdoc-parser.xqm";
+import module namespace xqp = 'quodatum:xqdoca.parser' at "xqdoc-parser.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 (: source file extensions :)
@@ -43,7 +45,7 @@ declare variable $xqd:HTML5:=map{"method": "html", "version":"5.0", "indent": "n
 declare variable $xqd:XML:=map{"indent": "no"};
 
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
-
+declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 
 (:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
@@ -73,7 +75,7 @@ return map{
                       let $spath:=translate($file,"\","/")
                       let $xqdoc:=xqd:xqdoc($full,$host,map{"_source": $spath})
                       let $base:=map{
-                        "path":$file,
+                        "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
                         "namespace": $xqdoc?xqdoc/xqdoc:module/xqdoc:uri/string()
                       }
@@ -138,7 +140,7 @@ as map(*)
   }
    
   let $parse:=xqp:parse($src)
-  let $enh:=xqp:enrich($enh,$parse)
+  let $enh:=try{ xqp:enrich($enh,$parse) } catch * { $enh } (: parse fails :)
   return map{"xqdoc": $enh, 
              "xqparse": $parse
               }
@@ -168,6 +170,7 @@ let $data:=map:merge(for $report in $reports
 let $uris:=sort(map:keys($data))        
 return $data?($uris)        
 };
+
 (:~ 
  : map for each restxq:path annotation
   :)
@@ -189,9 +192,11 @@ as map(*)*
 (:~ 
  : return all  annotations summary
  :)
-declare function xqd:annotations2($state as map(*))
+declare function xqd:annotations($annots as element(xqdoc:annotation)*)
 {
-  $state
+ for $ann in $annots
+ let $prefix:=(if(contains($ann/@name,":")) then () else "",tokenize($ann/@name,":"))
+ return "TODO"
 };
 
 (:~ 

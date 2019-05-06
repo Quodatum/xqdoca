@@ -28,7 +28,7 @@ xquery version "3.1";
  :)
 
 
-import module namespace xqd = 'quodatum:build.xqdoc' at "lib/xqdoc-proj.xqm";
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "lib/xqdoc-proj.xqm";
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
@@ -49,18 +49,21 @@ let $opts:=map{
                "src-folder": $efolder, 
                "project": $state?project, 
                "ext-id": $id/string(),
-               "resources": "resources/"
+               "resources": "resources/",
+               "outputs":  map{
+                    "views": ("index","restxq","imports","annotations"),
+                    "byfile": ("xqdoc","xqparse","html","html2")    
+                },
+                "renderers": map{
+                  "modules": $xqo:modules,
+                  "files": $xqo:files
+                }              
                }
                
-let $outputs:= map{
-    "views": ("index","restxq","imports","annotations"),
-    "byfile": ("xqdoc","xqparse","html")
-}               
-
-let $pages:= $outputs?views!xqo:module(.,$state,$opts) 
-     
+(: generate root outputs :)
+let $pages:= $opts?outputs?views !xqo:module(.,$state,$opts)     
 (: generate o/ps per source file  :)
-let $modmap:=xqo:files($outputs?byfile,$state,$opts)
+let $modmap:= $opts?outputs?byfile !xqo:files(.,$state,$opts)
   
 return (
        store:store(($pages,$modmap),$target),

@@ -17,7 +17,7 @@ Work in progress - not currently usable.
 ### Command line
 
 ```
-basex  -befolder=/Users/andy/git/xqdoca   docxqa.xq
+basex  -befolder=/Users/andy/git/xqdoca  -btarget=file:///c:/tmp/test/ xqdoca.xq
 ```
 
 

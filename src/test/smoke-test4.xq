@@ -1,7 +1,7 @@
 (: xref test :)
-import module namespace xqd = 'quodatum:build.xqdoc' at "../main/lib/xqdoc-proj.xqm";
-import module namespace xqp = 'quodatum:build.parser' at "../main/lib/xqdoc-parser.xqm";
-
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "../main/lib/xqdoc-proj.xqm";
+import module namespace xqp = 'quodatum:xqdoca.parser' at "../main/lib/xqdoc-parser.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../main/lib/xqdoc-namespace.xqm";
 let $xqparse:=doc("C:\Users\andy\basex.home\webapp\static\xqdoc\77\modules\F3\xqparse.xml")/*
-   let $expand:=xqp:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+   let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
 return  $xqparse//FunctionCall!xqp:funcall(.,$expand)
