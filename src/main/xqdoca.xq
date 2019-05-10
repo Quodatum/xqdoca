@@ -37,7 +37,7 @@ declare option db:chop 'true';
 (:~ URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca
  :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/xqdoca");
+declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri()));
 declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
 declare variable $host as xs:string  external := "basex";
 

@@ -71,7 +71,7 @@ return map{
              "base-uri": $efolder,
              "project": tokenize($efolder,"[/\\]")[last()],
              "files": for $file at $pos in $files
-                      let $full:=concat($efolder || "\", $file=>trace("FILE: "))
+                      let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
                       let $xqdoc:=xqd:xqdoc($full,$host,map{"_source": $spath})
                       let $base:=map{
