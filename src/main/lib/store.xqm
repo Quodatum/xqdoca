@@ -38,7 +38,7 @@ for $doc in $docs
 let $uri:=resolve-uri($doc?uri,$base)
 let $opts:=if(map:contains($doc,"opts")) then $doc?opts else map{}
 return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file:///"),$opts)
+          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
           case "xmldb" return store:xmldb($doc?document,$uri,$opts)
           default return error("unknown protocol:" || $uri)
 };
@@ -49,7 +49,7 @@ return switch (substring-before($uri,":"))
 declare %updating 
 function store:file($data,$uri as xs:string,$params as map(*))
 {  
-   let $p:=file:parent($uri)
+   let $p:=file:parent($uri=>trace('store as: '))
    return (
            if(file:is-dir($p)) then () else file:create-dir($p),
            file:write($uri,$data,$params)
