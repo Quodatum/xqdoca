@@ -63,13 +63,19 @@ as map(*)
 xqd:read($efolder,"basex")
 };
 
+(:~
+ : load and parse source xquery files
+ : @param $efolder root path for source files
+ : @param $host xquery platform id to provide static content e.g "basex"
+ : @return state map
+ :)
 declare function xqd:read($efolder as xs:string,$host as xs:string)
 as map(*)
 {
 let $files:= file:list($efolder,true(),$xqd:exts)
 return map{ 
              "base-uri": $efolder,
-             "project": tokenize($efolder,"[/\\]")[last()],
+             "project": tokenize($efolder,"/")[last()-1],
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
@@ -95,9 +101,6 @@ return map{ "uri": $ns, "where": $f}
 
 };
 
-
-
-   
 
 (:~ generate xqdoc
  : result is <XQuery> or <ERROR>
@@ -138,17 +141,19 @@ as map(*)
     else
         ()
   }
-   
+  (: add enrichments from parse tree :)
   let $parse:=xqp:parse($src)
-  let $enh:=try{ xqp:enrich($enh,$parse) } catch * { $enh } (: parse fails :)
+  let $enh:=try{
+                          xqp:enrich($enh,$parse) 
+                    }   catch * { 
+                            let $_:= trace($err:description ,"Enrich error: ")
+                            return $enh
+                    } (: parse fails :)
   return map{"xqdoc": $enh, 
              "xqparse": $parse
               }
 };
          
-
-
-
 (:~ return sequence of maps with maps uri and methods :)
 declare function xqd:rxq-paths($state)
 as map(*)* 
@@ -196,7 +201,7 @@ declare function xqd:annotations($annots as element(xqdoc:annotation)*)
 {
  for $ann in $annots
  let $prefix:=(if(contains($ann/@name,":")) then () else "",tokenize($ann/@name,":"))
- return "TODO"
+ return "**TODO"
 };
 
 (:~ 
@@ -228,7 +233,9 @@ as element(xqdoc:annotation)*
 
 
 
-(: @return map of functions and variables having annotations :)
+(:~
+ : @return map of functions and variables having annotations
+ :)
 declare function xqd:annotation-map($xqdoc)
 {
   let $ns:=map:merge((
@@ -249,7 +256,7 @@ declare function xqd:annotation-map($xqdoc)
          
 };
 
-(: return annotation map for a name 
+(:~ return annotation map for a name 
  :  map{ $ns: map{
  :        $aname: $values
  :      }

@@ -65,7 +65,7 @@ declare variable $xqo:files:=
                     "uri": function($file){ $file?href || "/xqdoc.xml"}, "opts":  $xqd:XML
                  },
         "xqparse": map{
-                   "title": "XML file xqparse output",
+                   "title": "XML file of xquery parse tree output",
                    "document": function($file, $params){ $file?xqparse},
                     "uri":  function($file){ $file?href || "xqparse.xml"}, "opts":  $xqd:XML
                  },
@@ -93,6 +93,8 @@ as map(*){
   return map:merge((map{"document": $doc}, $def))
 };
 
+(:~ render a per file o/p
+ :)
 declare function xqo:file($name as xs:string,
                             $file as map(*),
                             $params as map(*))
@@ -103,6 +105,9 @@ as map(*){
   return map:merge((map{"document": $doc, "uri": $uri}, $def))
 };
 
+(:~
+ : render all outputs for all per file outputs 
+ :)
 declare function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
 as map(*)*
 {
@@ -118,7 +123,9 @@ let $params:=map:merge((map{
 return $outputs!xqo:file(.,$file,$params)
 };
 
-(:~ save runtime support files to $target :)
+(:~ save runtime support files to output
+ : @param $target destination folder
+ :)
 declare %updating
 function xqo:export-resources($target as xs:string)                       
 as empty-sequence(){  

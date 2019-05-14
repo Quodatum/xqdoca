@@ -27,7 +27,7 @@ module namespace store = 'quodatum:store';
 
 
 (:~
- : store o/ps below $base
+ : store a set of  o/ps below $base
  : @param $docs sequence of maps 
  : @param $base a uri "file:..", "xmldb:.."
  :)
@@ -44,12 +44,12 @@ return switch (substring-before($uri,":"))
 };
 
 (:~ 
- :save $data to $url , create fdolder if missing) 
+ :save $data to file system $url , create folder tree if required
  :)
 declare %updating 
 function store:file($data,$uri as xs:string,$params as map(*))
 {  
-   let $p:=file:parent($uri=>trace('store as: '))
+   let $p:=file:parent($uri)
    return (
            if(file:is-dir($p)) then () else file:create-dir($p),
            file:write($uri,$data,$params)
@@ -57,7 +57,7 @@ function store:file($data,$uri as xs:string,$params as map(*))
 };
 
 (:~ 
- :save $data to $uri to db 
+ :save $data to $uri  Xml database
  :)
 declare %updating 
 function store:xmldb($data,$uri as xs:string,$params as map(*))

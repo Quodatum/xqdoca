@@ -25,20 +25,23 @@ xquery version "3.1";
  
 
 module namespace xqp = 'quodatum:xqdoca.parser';
+
 import module namespace xp="expkg-zone58:text.parse";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
+(:~ w3 xpath function namespace :)
 declare variable $xqp:ns-fn:="http://www.w3.org/2005/xpath-functions";
 
+(:~ xparser defaults :)
 declare variable $xqp:xparse_opts:=map{
                                        "lang":"xquery",
                                        "version":"3.1 basex",
                                        "flatten":true()
                                      };
-(:~  enrich basex builtin xqdoc by
- : adding function source
- : xref info
+                                     
+(:~  Enrich BaseX built-in xqDoc by
+ : adding function source and X-ref info
  :)
 declare function xqp:enrich($xqdoc as element(xqdoc:xqdoc),$xqparse as element(XQuery))
 as element(xqdoc:xqdoc)
@@ -60,12 +63,13 @@ as element(xqdoc:xqdoc)
                 )
                else
                   let $a:=trace(map:keys($fmap))
-                  return error()  
+                  return error("key not found " || $key)  
   }
   return $xqdoc
 };
 
 (:~ scan tree below $e for references
+ : @param $expand function to map prefixes to namespaces
  : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
  :)
 declare function xqp:references($e as element(*),$expand as function(*))
@@ -129,9 +133,10 @@ as map(*)
 (:~  map of known namespaces including static :)
 declare function xqp:prefixes($e as element())
 as map(*)
-{
- (xqp:namespaces($e),xqn:static-prefix-map())
- =>map:merge()
+{(
+  xqp:namespaces($e),
+ xqn:static-prefix-map()
+) =>map:merge()
 };
 
 (:~  map of function declarations
@@ -142,11 +147,13 @@ as map(*)
 {
  let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($e))
  let $items:=for $f in $e//FunctionDecl
-             let $name:=if($f/QName[1]) then
-                        xqn:qname($f/QName[1],$expand)
+             let $name:=if($f/EQName[1]) then
+                              xqn:qname($f/EQName[1],$expand)
                         else if($f/URIQualifiedName) then
-                        xqn:uriqname($f/URIQualifiedName)
-                        else error()
+                                xqn:uriqname($f/URIQualifiedName)
+                        else 
+                             let $_:=trace($f,"name")
+                             return error(xs:QName("xqp:funmap"), "bad name", $f)
              let $arity:=count($f/(Param|ParamList/Param))
              let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)
              return map:entry($key,$f)

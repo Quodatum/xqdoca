@@ -28,18 +28,26 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
  : @param $e is from QName or TOKEN in some cases e.g "count"
+ : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
  :)
-declare function xqn:qname($e as xs:string,$expand as function(*))
+declare function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string)
 as map(*)
 {
  let $n:=tokenize($e,":")
 let $prefix:=if(count($n)=1)then () else $n[1]
 let $n2:=if(count($n)=1)then  $n[1] else $n[2]
-return map{"uri": $expand($prefix),
+return map{
+           "uri": $lookup($prefix),
            "name": $n2} 
 };
 
-declare function xqn:map-prefix($prefix as xs:string?,$default as xs:string,$map as map(*))
+(:~ namespace for prefix
+ : @param $prefix prefix to lookup
+ : @param $default namespace to use if prefix empty
+ : @param $map keys are prefixes items are namespaces
+ : @return namespace for prefix
+  :)
+declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
 as xs:string{
   if(empty($prefix)) then
     $default

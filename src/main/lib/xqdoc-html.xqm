@@ -76,7 +76,7 @@ let $d:=<div>
                   <tbody>
                  
                      { for $file  at $pos in $state?files
-                      let $type:=if($file?xqparse/name="error") then 
+                      let $type:=if($file?xqparse/name()="ERROR") then 
                                    "ERROR"
                                   else
                                       $file?xqdoc/xqdoc:module/@type/string()

@@ -48,8 +48,7 @@ declare function xqh:xqdoc-html2($xqd as element(xqdoc:xqdoc),
                             )
 as element()*                          
 {  
- let $_:=trace($xqd, "EEE")
- return (
+(
    xqh:module($xqd/xqdoc:module,$params),
    xqh:toc($xqd,$params),
    xqh:imports($xqd/xqdoc:imports),
@@ -57,8 +56,7 @@ as element()*
    xqh:functions($xqd/xqdoc:functions),
    xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
    xqh:restxq($xqd),
-  
-   if($xqd//xqdoc:import) then xqh:imports($xqd//xqdoc:imports) else (),
+  if($xqd//xqdoc:import) then xqh:imports($xqd//xqdoc:imports) else (),
       <div>
         <h3 id="source">Original Source Code</h3>
         <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
@@ -554,6 +552,7 @@ as element(div)
   <div>TODO resthq</div>
 };
 
+(:~ run function when value is non empty :)
 declare function xqh:when($value,$fun as function(*))
 {
  if($value) then $fun($value) else ()
