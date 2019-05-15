@@ -1,0 +1,223 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:qd="http://www.quodatum.com/ns/xsl">
+   <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="Generator" content="xqdoc-r - https://github.com/quodatum/xqdoc-r 2018-11-02">
+      <title>parsepaths.xq
+         					- xqDoc
+         				
+      </title>
+      <link xmlns="" rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/prism.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/page.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/query.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/base.css">
+      <style xmlns="">
+         				.tag {font-size: 100%;}
+         				
+      </style>
+      <script xmlns="" src="../../resources/prism.js" type="text/javascript"> </script>
+   </head>
+   <body class="home" id="top">
+      <div id="main">
+         <h1><span class="tag tag-success">parsepaths.xq</span><small>
+               				&nbsp;
+               				main
+               				module
+               			</small></h1>
+         <dl>
+            <dt>Tags</dt>
+            <dd></dd>
+         </dl>
+         <div> Imported by <a href="../../imports.html#parsepaths.xq">*</a></div>
+         <nav id="toc">
+            <h2><a href="../../index.html" class="tag tag-success">main</a>
+               / Module
+               
+            </h2>
+            <h3><a id="contents"></a><span class="">parsepaths.xq</span></h3>
+            <ol class="toc">
+               <li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li>
+               <li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc">
+                           <li><a href="#$xp"><span class="secno">2.1</span><span class="content">$xp</span></a></li>
+                        </ol>
+                     </li>
+                  </ol>
+               </li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc">
+                           <li><a href="#local:functions"><span class="secno">3.1</span><span class="content" title="">local:functions</span></a></li>
+                           <li><a href="#local:imports"><span class="secno">3.2</span><span class="content" title="">local:imports</span></a></li>
+                           <li><a href="#local:variables"><span class="secno">3.3</span><span class="content" title="">local:variables</span></a></li>
+                        </ol>
+                     </li>
+                  </ol>
+               </li>
+               <li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"></ol>
+                     </li>
+                  </ol>
+               </li>
+               <li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li>
+            </ol>
+         </nav>
+         <div id="variables">
+            <h3><a href="#variables">Variables</a></h3>
+            <div id="$xp">
+               <h4><a href="#$xp">$xp</a></h4>
+               <dl>
+                  <dt class="label">Type</dt>
+                  <dd>item()*</dd>
+               </dl>
+            </div>
+         </div>
+         <div id="functions">
+            <h3><a href="#functions">Functions</a></h3>
+            <div id="local:functions">
+               <h4>local:functions
+                  <div style="float:right"><a href="#local:functions">#</a></div>
+               </h4>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">local:functions</code>( <code class="arg">xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">item()*</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+            <div id="local:imports">
+               <h4>local:imports
+                  <div style="float:right"><a href="#local:imports">#</a></div>
+               </h4>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">local:imports</code>( <code class="arg">xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string*</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">xs:string*</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+            <div id="local:variables">
+               <h4>local:variables
+                  <div style="float:right"><a href="#local:variables">#</a></div>
+               </h4>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">local:variables</code>( <code class="arg">xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">item()*</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+         </div>
+         <div id="namespaces">
+            <h3><a href="#namespaces">Namespaces</a></h3>
+            <p>The following namespaces are defined:</p>
+            <table class="data" style="float:none">
+               <thead>
+                  <tr>
+                     <th>Prefix</th>
+                     <th>Uri</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>local</td>
+                     <td>http://www.w3.org/2005/xquery-local-functions</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div id="restxq">
+            <h3><a href="#restxq">RestXQ</a></h3>
+         </div>
+         <div>
+            <h3 id="source">Original Source Code</h3><pre><code class="language-xquery">declare variable $xp:=doc("C:\tmp\xqdoc\classify.xqm\xparse.xml")/*;
+
+declare function local:imports($xp as element(XQuery)) as xs:string*
+{
+  $xp/LibraryModule/Prolog/ModuleImport
+};
+declare function local:variables($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/VarDecl
+};
+declare function local:functions($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/FunctionDecl
+};
+local:functions( $xp)/string()</code></pre></div><br><div class="footer">
+            <p style="text-align:right"><i>lib\parsepaths.xq<a href="xqdoc.xml" target="xqdoc">
+                     									xqdoc
+                     								</a>,
+                  								<a href="xqparse.xml" target="xqparse">
+                     									xqparse
+                     								</a></i>
+               							|
+               							generated at
+               							2019-05-15T22:50:46.326+01:00
+            </p>
+         </div>
+      </div>
+   </body>
+</html>

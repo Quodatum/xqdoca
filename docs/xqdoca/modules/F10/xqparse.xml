@@ -1,0 +1,80 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoca.xq&lt;/h1&gt;
+ : &lt;p&gt;Driver for xquery documentation generator &lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+(:~
+ : Generate html for for XQuery sources
+ : @return info about the run (json format)
+ :)
+
+
+<MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqd</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.xqdoc'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"lib/xqdoc-proj.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqo</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.outputs'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"lib/xqdoc-outputs.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>store</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:store'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"lib/store.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<OptionDecl><TOKEN>declare</TOKEN> <TOKEN>option</TOKEN> <QName>db:chop</QName> <StringLiteral>'true'</StringLiteral></OptionDecl><TOKEN>;</TOKEN>
+
+(:~ URL of the root folder to document
+ : @default C:/Users/andy/git/xqdoca
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>efolder</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN> <FunctionCall><QName>xs:anyURI</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>file:parent</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>target</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration> <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN><StringConcatExpr><StringLiteral>"file:///"</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>db:option</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"webpath"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <StringLiteral>"/static/xqdoc/"</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>"/"</StringLiteral></StringConcatExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>host</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN> <StringLiteral>"basex"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>id</QName> <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>last-id</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration><TOKEN>:=</TOKEN><RelativePathExpr><FunctionCall><QName>db:open</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"vue-poc"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"/state.xml"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>state</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>last-id</QName><PredicateList/></AxisStep></RelativePathExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog>
+
+
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>state</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqd:read</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>host</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>opts</QName><TOKEN>:=</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+               <MapConstructorEntry><StringLiteral>"src-folder"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> 
+               <MapConstructorEntry><StringLiteral>"project"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>project</NCName></Lookup></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN> 
+               <MapConstructorEntry><StringLiteral>"ext-id"</StringLiteral><TOKEN>:</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+               <MapConstructorEntry><StringLiteral>"resources"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"resources/"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+               <MapConstructorEntry><StringLiteral>"outputs"</StringLiteral><TOKEN>:</TOKEN>  <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+                    <MapConstructorEntry><StringLiteral>"views"</StringLiteral><TOKEN>:</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"index"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"restxq"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"imports"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"annotations"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+                    <MapConstructorEntry><StringLiteral>"byfile"</StringLiteral><TOKEN>:</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"xqdoc"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xqparse"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"html"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"html2"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></MapConstructorEntry>    
+                <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"renderers"</StringLiteral><TOKEN>:</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+                  <MapConstructorEntry><StringLiteral>"modules"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqo:modules</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+                  <MapConstructorEntry><StringLiteral>"files"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqo:files</QName></VarRef></MapConstructorEntry>
+                <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry>              
+               <TOKEN>}</TOKEN></MapConstructor></LetBinding></LetClause>
+               
+(: generate root outputs :)
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>pages</QName><TOKEN>:=</TOKEN> <RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>outputs</NCName></Lookup><Lookup><TOKEN>?</TOKEN><NCName>views</NCName></Lookup></PostfixExpr> <TOKEN>!</TOKEN><FunctionCall><QName>xqo:module</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>     
+(: generate o/ps per source file  :)
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>modmap</QName><TOKEN>:=</TOKEN> <RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>outputs</NCName></Lookup><Lookup><TOKEN>?</TOKEN><NCName>byfile</NCName></Lookup></PostfixExpr> <TOKEN>!</TOKEN><FunctionCall><QName>xqo:files</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+  
+<ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+       <Expr><FunctionCall><QName>store:store</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>pages</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>modmap</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>target</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+       <FunctionCall><QName>xqo:export-resources</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>target</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+       <ReplaceExpr><TOKEN>replace</TOKEN> <TOKEN>value</TOKEN> <TOKEN>of</TOKEN> <TOKEN>node</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef> <TOKEN>with</TOKEN> <AdditiveExpr><IntegerLiteral>1</IntegerLiteral><TOKEN>+</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef></AdditiveExpr></ReplaceExpr><TOKEN>,</TOKEN>
+       <FunctionCall><QName>update:output</QName><ArgumentList><TOKEN>(</TOKEN>
+         <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>json</QName><DirAttributeList><S> </S><QName>type</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>o</QuotAttrContentChar><QuotAttrContentChar>b</QuotAttrContentChar><QuotAttrContentChar>j</QuotAttrContentChar><QuotAttrContentChar>e</QuotAttrContentChar><QuotAttrContentChar>c</QuotAttrContentChar><QuotAttrContentChar>t</QuotAttrContentChar><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>extra</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><ElementContentChar>X</ElementContentChar><ElementContentChar>Q</ElementContentChar><ElementContentChar>d</ElementContentChar><ElementContentChar>o</ElementContentChar><ElementContentChar>c</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar>g</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>n</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>r</ElementContentChar><ElementContentChar>a</ElementContentChar><ElementContentChar>t</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>d</ElementContentChar><TOKEN>&lt;/</TOKEN><QName>extra</QName><TOKEN>&gt;</TOKEN></DirElemConstructor><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>msg</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><ElementContentChar> </ElementContentChar><EnclosedExpr><TOKEN>{</TOKEN><VarRef><TOKEN>$</TOKEN><QName>target</QName></VarRef><TOKEN>}</TOKEN></EnclosedExpr><ElementContentChar>,</ElementContentChar><ElementContentChar> </ElementContentChar><EnclosedExpr><TOKEN>{</TOKEN><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup></PostfixExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr><ElementContentChar> </ElementContentChar><ElementContentChar>f</ElementContentChar><ElementContentChar>i</ElementContentChar><ElementContentChar>l</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>s</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar>p</ElementContentChar><ElementContentChar>r</ElementContentChar><ElementContentChar>o</ElementContentChar><ElementContentChar>c</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>s</ElementContentChar><ElementContentChar>s</ElementContentChar><ElementContentChar>e</ElementContentChar><ElementContentChar>d</ElementContentChar><ElementContentChar>.</ElementContentChar><TOKEN>&lt;/</TOKEN><QName>msg</QName><TOKEN>&gt;</TOKEN></DirElemConstructor><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>id</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr><TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>id</QName><TOKEN>&gt;</TOKEN></DirElemConstructor><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><TOKEN>&lt;/</TOKEN><QName>json</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
+       <TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+<TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr></MainModule></Module>
+<EOF/></XQuery>

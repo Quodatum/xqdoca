@@ -1,0 +1,20 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-15T22:50:45.479+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>parsepaths.xq</xqdoc:uri><xqdoc:body>declare variable $xp:=doc("C:\tmp\xqdoc\classify.xqm\xparse.xml")/*;
+
+declare function local:imports($xp as element(XQuery)) as xs:string*
+{
+  $xp/LibraryModule/Prolog/ModuleImport
+};
+declare function local:variables($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/VarDecl
+};
+declare function local:functions($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/FunctionDecl
+};
+local:functions( $xp)/string()</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables><xqdoc:variable><xqdoc:name>xp</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:name>local:imports</xqdoc:name><xqdoc:signature>declare function local:imports($xp as element(XQuery)) as xs:string*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xp</xqdoc:name><xqdoc:type>element(XQuery)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function local:imports($xp as element(XQuery)) as xs:string*
+{
+  $xp/LibraryModule/Prolog/ModuleImport
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xp</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>local:variables</xqdoc:name><xqdoc:signature>declare function local:variables($xp as element(XQuery)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xp</xqdoc:name><xqdoc:type>element(XQuery)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function local:variables($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/VarDecl
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xp</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>local:functions</xqdoc:name><xqdoc:signature>declare function local:functions($xp as element(XQuery)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xp</xqdoc:name><xqdoc:type>element(XQuery)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function local:functions($xp as element(XQuery)){
+  $xp/LibraryModule/Prolog/AnnotatedDecl/FunctionDecl
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xp</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

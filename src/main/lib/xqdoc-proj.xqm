@@ -73,9 +73,10 @@ declare function xqd:read($efolder as xs:string,$host as xs:string)
 as map(*)
 {
 let $files:= file:list($efolder,true(),$xqd:exts)
+let $folder:= translate($efolder,"\","/")
 return map{ 
              "base-uri": $efolder,
-             "project": tokenize($efolder,"/")[last()-1],
+             "project": tokenize($folder,"/")[last()-1],
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")

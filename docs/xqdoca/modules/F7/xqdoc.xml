@@ -1,0 +1,165 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-15T22:50:45.479+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>xqdoc-outputs.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-outputs.xqm</h1>
+<p>define availiable outputs</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-outputs.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-outputs.xqm&lt;/h1&gt;
+ : &lt;p&gt;define availiable outputs&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+ 
+
+module namespace xqo = 'quodatum:xqdoca.outputs';
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "xqdoc-proj.xqm";
+import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
+
+declare variable $xqo:cache  :=false();
+
+(:~  modules define an o/p created from the state :)
+declare variable $xqo:modules:=
+ map{ 
+         "index":  map{
+                      "title": "Index of sources",
+                      "document": xqhtml:index-html2#2, 
+                      "uri": 'index.html', "opts":  $xqd:HTML5
+         },
+         "restxq": map{
+                      "title": "Http interface",
+                      "document": function ($state,$opts){ xqhtml:restxq($state, xqd:rxq-paths($state),$opts)},
+                      "uri": 'restxq.html', "opts":  $xqd:HTML5
+         },
+        "imports": map{
+                   "title": "Module import",
+                   "document": function ($state,$opts){ xqhtml:imports($state,xqd:imports($state),$opts)},
+                   "uri": 'imports.html', "opts":  $xqd:HTML5
+         },
+        "annotations":map{
+                   "title": "Annotation summary",
+                   "document": function ($state,$opts){xqhtml:annotations($state,xqd:annotations($state),$opts)},
+                   "uri":'annotations.html', "opts":  $xqd:HTML5
+      }
+    }
+;
+
+(:~  files define an o/p created from a source item :)
+declare variable $xqo:files:=
+ map{ 
+        "xqdoc":  map{
+                   "title": "XML file XQdoc format",
+                   "document": function($file, $params){ $file?xqdoc},
+                    "uri": function($file){ $file?href || "/xqdoc.xml"}, "opts":  $xqd:XML
+                 },
+        "xqparse": map{
+                   "title": "XML file of xquery parse tree output",
+                   "document": function($file, $params){ $file?xqparse},
+                    "uri":  function($file){ $file?href || "xqparse.xml"}, "opts":  $xqd:XML
+                 },
+        "html2":    map{
+                   "title": "HTML page about the file", 
+                   "document": function($file, $params){ xqhtml:xqdoc-html($file?xqdoc, $params)},
+                   "uri": function($file){ $file?href || "index2.html"}, "opts":  $xqd:HTML5
+                 },
+      "html":    map{
+                   "title": "HTML page about the file (new)", 
+                   "document": function($file, $params){ xqhtml:xqdoc-html2($file?xqdoc, $params)},
+                   "uri": function($file){ $file?href || "index.html"}, "opts":  $xqd:HTML5
+                 }          
+    }
+;
+
+
+(: render :)
+declare function xqo:module($name as xs:string,
+                            $state as map(*),
+                            $opts as map(*))
+as map(*){
+  let $def:= map:get($xqo:modules,$name)
+  let $doc:= apply($def?document,[$state,$opts])
+  return map:merge((map{"document": $doc}, $def))
+};
+
+(:~ render a per file o/p
+ :)
+declare function xqo:file($name as xs:string,
+                            $file as map(*),
+                            $params as map(*))
+as map(*){
+  let $def:= map:get($xqo:files,$name)
+  let $doc:= apply($def?document,[$file,$params])
+  let $uri:= apply($def?uri,[$file])
+  return map:merge((map{"document": $doc, "uri": $uri}, $def))
+};
+
+(:~
+ : render all outputs for all per file outputs 
+ :)
+declare function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
+as map(*)*
+{
+for $file at $pos in $state?files
+let $params:=map:merge((map{
+              "filename": $file?path,
+              "cache": $xqo:cache,
+              "show-private": true(),
+              "root": "../../",
+              "resources": "../../resources/"},
+              $opts))
+              
+return $outputs!xqo:file(.,$file,$params)
+};
+
+(:~ save runtime support files to output
+ : @param $target destination folder
+ :)
+declare %updating
+function xqo:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="xqo" uri="quodatum:xqdoca.outputs"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.xqdoc"/><xqdoc:namespace prefix="xqhtml" uri="quodatum:build.xqdoc-html"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.xqdoc</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:build.xqdoc-html</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>xqo:cache</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqo:modules</xqdoc:name><xqdoc:comment><xqdoc:description>modules define an o/p created from the state</xqdoc:description></xqdoc:comment><xqdoc:type>map(*)</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqo:files</xqdoc:name><xqdoc:comment><xqdoc:description>files define an o/p created from a source item</xqdoc:description></xqdoc:comment><xqdoc:type>map(*)</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="3"><xqdoc:name>xqo:module</xqdoc:name><xqdoc:signature>declare function xqo:module($name as xs:string, $state as map(*), $opts as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>state</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqo:module($name as xs:string,
+                            $state as map(*),
+                            $opts as map(*))
+as map(*){
+  let $def:= map:get($xqo:modules,$name)
+  let $doc:= apply($def?document,[$state,$opts])
+  return map:merge((map{"document": $doc}, $def))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>apply</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>modules</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>def</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>state</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>def</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>render a per file o/p</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:file</xqdoc:name><xqdoc:signature>declare function xqo:file($name as xs:string, $file as map(*), $params as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqo:file($name as xs:string,
+                            $file as map(*),
+                            $params as map(*))
+as map(*){
+  let $def:= map:get($xqo:files,$name)
+  let $doc:= apply($def?document,[$file,$params])
+  let $uri:= apply($def?uri,[$file])
+  return map:merge((map{"document": $doc, "uri": $uri}, $def))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>apply</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>apply</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>def</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>def</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>def</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>render all outputs for all per file outputs</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:files</xqdoc:name><xqdoc:signature>declare function xqo:files($outputs as xs:string*, $state as map(*), $opts as map(*)) as (map(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>outputs</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>state</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
+as map(*)*
+{
+for $file at $pos in $state?files
+let $params:=map:merge((map{
+              "filename": $file?path,
+              "cache": $xqo:cache,
+              "show-private": true(),
+              "root": "../../",
+              "resources": "../../resources/"},
+              $opts))
+              
+return $outputs!xqo:file(.,$file,$params)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>state</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>cache</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>outputs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>save runtime support files to output</xqdoc:description><xqdoc:param>$target destination folder</xqdoc:param></xqdoc:comment><xqdoc:name>xqo:export-resources</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function xqo:export-resources($target as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>target</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function xqo:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>extract-to</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>read-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

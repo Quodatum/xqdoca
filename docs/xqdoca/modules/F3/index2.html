@@ -1,0 +1,391 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:qd="http://www.quodatum.com/ns/xsl">
+   <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="Generator" content="xqdoc-r - https://github.com/quodatum/xqdoc-r 2018-11-02">
+      <title>quodatum:data.tree
+         					- xqDoc
+         				
+      </title>
+      <link xmlns="" rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/prism.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/page.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/query.css">
+      <link xmlns="" rel="stylesheet" type="text/css" href="../../resources/base.css">
+      <style xmlns="">
+         				.tag {font-size: 100%;}
+         				
+      </style>
+      <script xmlns="" src="../../resources/prism.js" type="text/javascript"> </script>
+   </head>
+   <body class="home" id="top">
+      <div id="main">
+         <h1><span class="tag tag-success">quodatum:data.tree</span><small>
+               				&nbsp;
+               				library
+               				module
+               			</small></h1>
+         <dl>
+            <dt class="label">Summary</dt>
+            <dd>
+               <h1 xmlns="" xmlns:xqdoc="http://www.xqdoc.org/1.0">tree.xqm</h1>
+               
+               <p xmlns="" xmlns:xqdoc="http://www.xqdoc.org/1.0">convert sequence of paths to sequence of xml trees </p>
+            </dd>
+            <dt>Tags</dt>
+            <dd>
+               <p>
+                  			Author:
+                  			Andy Bunce
+               </p>
+               <p>
+                  			Version:
+                  			0.1
+               </p>
+               <p>__source
+                  			:
+                  			lib/tree.xqm
+               </p>
+            </dd>
+         </dl>
+         <div> Imported by <a href="../../imports.html#quodatum:data.tree">*</a></div>
+         <nav id="toc">
+            <h2><a href="../../index.html" class="tag tag-success">main</a>
+               / Module
+               
+            </h2>
+            <h3><a id="contents"></a><span class="">quodatum:data.tree</span></h3>
+            <ol class="toc">
+               <li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li>
+               <li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol>
+                     </li>
+                  </ol>
+               </li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc">
+                           <li><a href="#tree:build"><span class="secno">3.1</span><span class="content" title="convert path(s) to tree">tree:build</span></a></li>
+                           <li><a href="#tree:merge"><span class="secno">3.2</span><span class="content" title="">tree:merge</span></a></li>
+                           <li><a href="#tree:nest"><span class="secno">3.3</span><span class="content" title="convert a path to xml">tree:nest</span></a></li>
+                           <li><a href="#tree:wrap"><span class="secno">3.4</span><span class="content" title="">tree:wrap</span></a></li>
+                        </ol>
+                     </li>
+                  </ol>
+               </li>
+               <li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li>
+               <li>
+                  <ol class="toc">
+                     <li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"></ol>
+                     </li>
+                  </ol>
+               </li>
+               <li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li>
+            </ol>
+         </nav>
+         <div id="functions">
+            <h3><a href="#functions">Functions</a></h3>
+            <div id="tree:build">
+               <h4>tree:build
+                  <div style="float:right"><a href="#tree:build">#</a></div>
+               </h4>
+               <dt class="label">Summary</dt>
+               <dd>convert path(s) to tree</dd>
+               <dt class="label">Summary</dt>
+               <dd></dd>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">tree:build</code>( <code class="arg">a</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string*</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></div>
+                  <div class="proto"><code class="function">tree:build</code>( <code class="arg">a</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string*</code>, <code class="arg">delimiter</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>a<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string*</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">element()*</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+            <div id="tree:merge">
+               <h4>tree:merge
+                  <div style="float:right"><a href="#tree:merge">#</a></div>
+               </h4>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">tree:merge</code>( <code class="arg">a1</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()?</code>, <code class="arg">a2</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()?</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>a1<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()?</code></li>
+                     <li>a2<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()?</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">element()*</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>Annotations</summary>
+                  <table class="data">
+                     <tbody>
+                        <tr>
+                           <td><code class="function">%private</code></td>
+                           <td><code class="arg"></code></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </details>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+            <div id="tree:nest">
+               <h4>tree:nest
+                  <div style="float:right"><a href="#tree:nest">#</a></div>
+               </h4>
+               <dt class="label">Summary</dt>
+               <dd>convert a path to xml</dd>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">tree:nest</code>( <code class="arg">path</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">delimiter</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>path<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li>
+                     <li>delimiter<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">element()</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>Annotations</summary>
+                  <table class="data">
+                     <tbody>
+                        <tr>
+                           <td><code class="function">%private</code></td>
+                           <td><code class="arg"></code></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </details>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+            <div id="tree:wrap">
+               <h4>tree:wrap
+                  <div style="float:right"><a href="#tree:wrap">#</a></div>
+               </h4>
+               <dt class="label">Signature</dt>
+               <dd>
+                  <div class="proto"><code class="function">tree:wrap</code>( <code class="arg">this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code> )<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()</code></div>
+               </dd>
+               <dt class="label">Parameters</dt>
+               <dd>
+                  <ul>
+                     <li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li>
+                     <li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li>
+                  </ul>
+               </dd>
+               <dt class="label">Return</dt>
+               <dd>
+                  <ul>
+                     <li><code class="return-type">element()</code></li>
+                  </ul>
+               </dd>
+               <details>
+                  <summary>Annotations</summary>
+                  <table class="data">
+                     <tbody>
+                        <tr>
+                           <td><code class="function">%private</code></td>
+                           <td><code class="arg"></code></td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </details>
+               <details>
+                  <summary>External functions that invoke this function</summary>
+                  todo
+                  
+               </details>
+               <details>
+                  <summary>Internal functions used by this function</summary>
+                  todo
+                  
+               </details>
+            </div>
+         </div>
+         <div id="namespaces">
+            <h3><a href="#namespaces">Namespaces</a></h3>
+            <p>The following namespaces are defined:</p>
+            <table class="data" style="float:none">
+               <thead>
+                  <tr>
+                     <th>Prefix</th>
+                     <th>Uri</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>ann</td>
+                     <td>http://www.w3.org/2012/xquery</td>
+                  </tr>
+                  <tr>
+                     <td>tree</td>
+                     <td>quodatum:data.tree</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div id="restxq">
+            <h3><a href="#restxq">RestXQ</a></h3>
+         </div>
+         <div>
+            <h3 id="source">Original Source Code</h3><pre><code class="language-xquery">xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;tree.xqm&lt;/h1&gt;
+ : &lt;p&gt;convert sequence of paths to sequence of xml trees &lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+(:~ 
+ : Convert sequence of strings containing a delimiter like "paths" to sequence of xml trees 
+ :)
+module namespace tree = 'quodatum:data.tree';
+
+
+(:~
+ : convert path(s) to tree
+ :)
+declare function tree:build($a as xs:string*)
+as element(*)*
+{
+ tree:build($a,"/")
+};
+
+(:~
+ : @return sequence of nested &lt;directory name=".."&gt; and &lt;file name=".." elements representing source
+ :)
+declare function tree:build($a as xs:string*,$delimiter as xs:string)
+as element(*)*
+{
+fn:fold-right($a,
+             (),
+             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
+            )
+}; 
+(:~  convert a path to xml :)
+declare %private 
+function tree:nest($path as xs:string,$delimiter as xs:string)
+as element(*)
+{
+  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
+  let $parts:=fn:tokenize(($path),$delimiter)
+  return fn:fold-right(subsequence($parts,1,count($parts)-1),
+    &lt;file name="{$parts[last()]}" target="{$path}"/&gt;,
+    tree:wrap#2 
+   )
+};
+
+declare %private 
+function tree:wrap($this as xs:string,$acc)
+as element(*)
+{
+  &lt;directory name="{$this}"&gt;{$acc}&lt;/directory&gt;
+};
+
+
+declare %private
+function tree:merge($a1 as element(*)?,$a2 as element(*)?)
+as element(*)*
+{
+ if($a1/@name=$a2/@name) then
+      let $n1:=$a1/*
+      let $n2:=$a2/*
+         
+      let $t:=(
+        for $x in fn:distinct-values($n1/@name[.=$n2/@name]) (:both:)
+        return tree:merge($a1/*[@name=$x],$a2/*[@name=$x]),
+        
+        for $x in fn:distinct-values($n1/@name[fn:not(.=$n2/@name)]) (:only $a1 :)
+        return $a1/*[@name=$x],
+        
+        for $x in fn:distinct-values($n2/@name[fn:not(.=$n1/@name)]) (:only $a2 :)
+        return $a2/*[@name=$x]
+      )
+      return tree:wrap($a1/@name,for $x in $t order by $x/@name return $x)
+ else 
+     ($a1,$a2)                        
+};
+
+</code></pre></div><br><div class="footer">
+            <p style="text-align:right"><i>lib\tree.xqm<a href="xqdoc.xml" target="xqdoc">
+                     									xqdoc
+                     								</a>,
+                  								<a href="xqparse.xml" target="xqparse">
+                     									xqparse
+                     								</a></i>
+               							|
+               							generated at
+               							2019-05-15T22:50:46.449+01:00
+            </p>
+         </div>
+      </div>
+   </body>
+</html>

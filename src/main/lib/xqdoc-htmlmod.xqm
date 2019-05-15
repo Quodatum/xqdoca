@@ -21,6 +21,7 @@ xquery version "3.1";
  :
  : @author Andy Bunce
  : @version 0.1
+ : @see https://github.com/Quodatum/xqdoca
  :)
  
 (:~
@@ -33,7 +34,7 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  
 (:~ transform xqdoc to html 
- : map { "root": "../../", 
+ : <pre>map { "root": "../../", 
  :        "cache": false(), 
  :        "resources": "resources/", 
  :        "ext-id": "51", 
@@ -41,7 +42,7 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  :        "show-private": true(), 
  :        "src-folder": "C:/Users/andy/git/xqdoca", 
  :         "project": "xqdoca", 
- :         "source": () } 
+ :         "source": () }</pre> 
  :)
 declare function xqh:xqdoc-html2($xqd as element(xqdoc:xqdoc),
                             $params as map(*)
@@ -290,6 +291,7 @@ return
 				<dt class="label">Type</dt>
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
+      {xqh:tags($v/xqdoc:comment/(* except xqdoc:description)) }
       { xqh:when($v/xqdoc:annotation,xqh:annotations#1) }
 		</div>
 };  
@@ -331,6 +333,7 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
+       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
       { $funs/xqdoc:annotations!xqh:annotations(.) }
        <details>
       <summary>Source</summary>
@@ -344,11 +347,16 @@ as element(div)
       </details>
 		</div>
 };
+
+(:~ 
+ :
+ :)
 declare function xqh:invoked($invoked as element(xqdoc:invoked)*)
 {
-  <details>
-      <summary>Names referenced by this function</summary>
-      <table class="complex data">
+ let $msg:= ``[References `{ count($invoked) }` functions from `{ count(distinct-values($invoked/xqdoc:uri)) }` modules ]``
+ return <details>
+      <summary>{ $msg }</summary>
+      <table class="data">
       <thead>
       <tr>
       <td>Type</td>
@@ -358,7 +366,7 @@ declare function xqh:invoked($invoked as element(xqdoc:invoked)*)
       </thead>
       <tbody>
       {for $i in $invoked
-      order by $i/xqdoc:uri,$i/xqdoc:uri,$i/@arity
+      order by $i/xqdoc:uri,$i/@arity
       return <tr>
       <td>Fn</td>
        <td>{ $i/xqdoc:uri/string() }</td>
@@ -371,35 +379,39 @@ declare function xqh:invoked($invoked as element(xqdoc:invoked)*)
 };
 
 declare function xqh:custom($v as element(xqdoc:custom))
-as element(*)
+as element(p)
 {
 		<p>{ $v/@tag/string() }: { $v/* }</p>
 };
+
+(:~ 
+ :The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
+ :a specific function (or variable) defined in a library or main module contained in xqDoc, or arbitrary text. To link to  
+ :an external site, use a complete URL such as http://www.xquery.com. To link to a library or main module contained in  
+ :   
+ :xqDoc, simply provide the URI for the library or main module. To link to a specific function (or variable) defined in an 
+ :xqDoc library or main module, simply provide the URI for the library or main module followed by a ';' and finally the     
+ :function or variable name. To provide a name for a link, simply include a second ';' followed by the name. To provide     
+ :text, simply include the 'text'. Multiple @see tags can be specified (one per link or string of text). 
+ : @see http://www.xquery.com
+ : @see xqdoc/xqdoc-display
+ : @see xqdoc/xqdoc-display;build-link
+ : @see xqdoc/xqdoc-display;$months
+ : @see xqdoc/xqdoc-display;$months;month variable
+ : @see http://www.xquery.com;;xquery
+ : @see some text
+ :)
 declare function xqh:see($v as element(xqdoc:see))
+as element(p)
 {
-		'See also:',
-		<xsl:for-each select="tokenize(.,'[ \t\r\n,]+')[. ne '']">
-			<xsl:if test="position() ne 1">
-				<xsl:text>, </xsl:text>
-			</xsl:if>
-			<xsl:choose>
-				<xsl:when test="contains(.,'#')">
-					<a
-						href="#{ concat('func_', replace(substring-before(.,'#'), ':', '_'),
-            '_', substring-after(.,'#')) }">
-						<xsl:value-of select="." />
-					</a>
-				</xsl:when>
-				<xsl:when test="starts-with(.,'$')">
-					<a href="#{ concat('var_', replace(substring-after(.,'$'), ':', '_')) }">
-						<xsl:value-of select="." />
-					</a>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="." />
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:for-each>
+  let $items:=tokenize($v,";")
+  let $first:=$items[1]
+  return  <p>See also:
+          {switch(true())
+          case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
+          case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
+          default return if(xqh:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
+        }</p>
 };
   
 declare function xqh:annotations($v as element(xqdoc:annotations))
@@ -423,6 +435,17 @@ as element(*)
 			</table>
 		</details>
 };
+
+(:~ 
+ :true() if $url represents a url
+ :@see http://urlregex.com/ 
+ :)
+declare function xqh:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]","j")
+};
+
 
 declare function xqh:namespaces($namespaces as element(xqdoc:namespaces))
 as element(div)
@@ -537,12 +560,12 @@ as element(*)*{
 
 declare function xqh:tags($tags as element(*)*)
 {
- for $n in $tags return
-typeswitch ($n)
- 
-  case element (xqdoc:author) return	<p>Author: {string($n)}</p>
-  case element (xqdoc:version) return<p>Version: {string($n)}</p>
-  case element (xqdoc:custom) return<p>{ $n/@tag/string()} : {string($n)}</p>  
+ for $tag in $tags return
+typeswitch ($tag)
+  case element (xqdoc:see) return	xqh:see($tag)
+  case element (xqdoc:author) return	<p>Author: {string($tag)}</p>
+  case element (xqdoc:version) return<p>Version: {string($tag)}</p>
+  case element (xqdoc:custom) return<p>{ $tag/@tag/string()} : {string($tag)}</p>  
   default return()
 };
  

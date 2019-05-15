@@ -1,0 +1,199 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"><style>
+				.tag {font-size: 100%;}
+				</style></head><body class="home" id="top"><div id="main"><div><h1><span class="tag tag-success">quodatum:xqdoca.outputs</span><small>library module</small><span title="RestXQ" class="tag tag-success" style="float:right">R</span></h1><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqDoc</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqParse</a></li></ul><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-outputs.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">define availiable outputs</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>__source : lib/xqdoc-outputs.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum:xqdoca.outputs">*</a></div><nav id="toc"><h2><a href="../../index.html" class="tag tag-success">main</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.outputs</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqo:cache"><span class="secno">3.1</span><span class="content">$xqo:cache</span></a></li><li><a href="#$xqo:files"><span class="secno">3.2</span><span class="content">$xqo:files</span></a></li><li><a href="#$xqo:modules"><span class="secno">3.3</span><span class="content">$xqo:modules</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqo:export-resources"><span class="secno">4.1</span><span class="content" title="">xqo:export-resources<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqo:file"><span class="secno">4.2</span><span class="content" title="">xqo:file<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqo:files"><span class="secno">4.3</span><span class="content" title="">xqo:files<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqo:module"><span class="secno">4.4</span><span class="content" title="">xqo:module<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div id="imports"><h3>Imports (2)</h3><details><table class="data" style="float:none"><thead><tr><th>Type</th><th>Uri</th></tr></thead><tbody><tr><td>library</td><td>quodatum:build.xqdoc-html<xsl:sequence xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:nslink(doc:uri)"></xsl:sequence></td></tr><tr><td>library</td><td>quodatum:xqdoca.xqdoc<xsl:sequence xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:nslink(doc:uri)"></xsl:sequence></td></tr></tbody></table></details></div><div id="variables"><h3><a href="#variables">Variables</a></h3><div id="$xqo:cache"><h4><a href="#$xqo:cache">$xqo:cache</a></h4><dl><dt class="label">Summary</dt>,
+		   <dd></dd><dt class="label">Type</dt><dd>xs:boolean</dd></dl></div><div id="$xqo:files"><h4><a href="#$xqo:files">$xqo:files</a></h4><dl><dt class="label">Summary</dt>,
+		   <dd>files define an o/p created from a source item</dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div><div id="$xqo:modules"><h4><a href="#$xqo:modules">$xqo:modules</a></h4><dl><dt class="label">Summary</dt>,
+		   <dd>modules define an o/p created from the state</dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div></div><div id="functions"><h3><a href="#functions">Functions</a></h3><div id="xqo:export-resources"><h4>xqo:export-resources<div style="float:right"><a href="#xqo:export-resources">#</a></div></h4><dt class="label">Summary</dt><dd>save runtime support files to output</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:export-resources</code>
+		  ( 
+			<code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> destination folder</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>Source</summary><pre><code class="language-xquery">function xqo:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+}</code></pre></details><details><summary>References 3 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/archive</td><td>extract-to#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>read-binary#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div id="xqo:file"><h4>xqo:file<div style="float:right"><a href="#xqo:file">#</a></div></h4><dt class="label">Summary</dt><dd>render a per file o/p</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:file</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqo:file($name as xs:string,
+                            $file as map(*),
+                            $params as map(*))
+as map(*){
+  let $def:= map:get($xqo:files,$name)
+  let $doc:= apply($def?document,[$file,$params])
+  let $uri:= apply($def?uri,[$file])
+  return map:merge((map{"document": $doc, "uri": $uri}, $def))
+}</code></pre></details><details><summary>References 4 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>apply#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>apply#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>get#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div id="xqo:files"><h4>xqo:files<div style="float:right"><a href="#xqo:files">#</a></div></h4><dt class="label">Summary</dt><dd>render all outputs for all per file outputs</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:files</code>
+		  ( 
+			<code class="arg">$outputs</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string*</code>, <code class="arg">$state</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>outputs<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string*</code></li><li>state<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
+as map(*)*
+{
+for $file at $pos in $state?files
+let $params:=map:merge((map{
+              "filename": $file?path,
+              "cache": $xqo:cache,
+              "show-private": true(),
+              "root": "../../",
+              "resources": "../../resources/"},
+              $opts))
+              
+return $outputs!xqo:file(.,$file,$params)
+}</code></pre></details><details><summary>References 3 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.outputs</td><td>file#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div id="xqo:module"><h4>xqo:module<div style="float:right"><a href="#xqo:module">#</a></div></h4><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:module</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$state</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>state<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqo:module($name as xs:string,
+                            $state as map(*),
+                            $opts as map(*))
+as map(*){
+  let $def:= map:get($xqo:modules,$name)
+  let $doc:= apply($def?document,[$state,$opts])
+  return map:merge((map{"document": $doc}, $def))
+}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>apply#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>get#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div></div><div id="namespaces"><h3><a href="#namespaces">Namespaces</a></h3><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td>http://www.w3.org/2012/xquery</td></tr><tr><td>xqd</td><td>quodatum:xqdoca.xqdoc</td></tr><tr><td>xqhtml</td><td>quodatum:build.xqdoc-html</td></tr><tr><td>xqo</td><td>quodatum:xqdoca.outputs</td></tr></tbody></table></div><div>TODO resthq</div><div id="imports"><h3>Imports (2)</h3><details><table class="data" style="float:none"><thead><tr><th>Type</th><th>Uri</th></tr></thead><tbody><tr><td>library</td><td>quodatum:build.xqdoc-html<xsl:sequence xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:nslink(doc:uri)"></xsl:sequence></td></tr><tr><td>library</td><td>quodatum:xqdoca.xqdoc<xsl:sequence xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:nslink(doc:uri)"></xsl:sequence></td></tr></tbody></table></details></div><div><h3 id="source">Original Source Code</h3><pre><code class="language-xquery">xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-outputs.xqm&lt;/h1&gt;
+ : &lt;p&gt;define availiable outputs&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+ 
+
+module namespace xqo = 'quodatum:xqdoca.outputs';
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "xqdoc-proj.xqm";
+import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
+
+declare variable $xqo:cache  :=false();
+
+(:~  modules define an o/p created from the state :)
+declare variable $xqo:modules:=
+ map{ 
+         "index":  map{
+                      "title": "Index of sources",
+                      "document": xqhtml:index-html2#2, 
+                      "uri": 'index.html', "opts":  $xqd:HTML5
+         },
+         "restxq": map{
+                      "title": "Http interface",
+                      "document": function ($state,$opts){ xqhtml:restxq($state, xqd:rxq-paths($state),$opts)},
+                      "uri": 'restxq.html', "opts":  $xqd:HTML5
+         },
+        "imports": map{
+                   "title": "Module import",
+                   "document": function ($state,$opts){ xqhtml:imports($state,xqd:imports($state),$opts)},
+                   "uri": 'imports.html', "opts":  $xqd:HTML5
+         },
+        "annotations":map{
+                   "title": "Annotation summary",
+                   "document": function ($state,$opts){xqhtml:annotations($state,xqd:annotations($state),$opts)},
+                   "uri":'annotations.html', "opts":  $xqd:HTML5
+      }
+    }
+;
+
+(:~  files define an o/p created from a source item :)
+declare variable $xqo:files:=
+ map{ 
+        "xqdoc":  map{
+                   "title": "XML file XQdoc format",
+                   "document": function($file, $params){ $file?xqdoc},
+                    "uri": function($file){ $file?href || "/xqdoc.xml"}, "opts":  $xqd:XML
+                 },
+        "xqparse": map{
+                   "title": "XML file of xquery parse tree output",
+                   "document": function($file, $params){ $file?xqparse},
+                    "uri":  function($file){ $file?href || "xqparse.xml"}, "opts":  $xqd:XML
+                 },
+        "html2":    map{
+                   "title": "HTML page about the file", 
+                   "document": function($file, $params){ xqhtml:xqdoc-html($file?xqdoc, $params)},
+                   "uri": function($file){ $file?href || "index2.html"}, "opts":  $xqd:HTML5
+                 },
+      "html":    map{
+                   "title": "HTML page about the file (new)", 
+                   "document": function($file, $params){ xqhtml:xqdoc-html2($file?xqdoc, $params)},
+                   "uri": function($file){ $file?href || "index.html"}, "opts":  $xqd:HTML5
+                 }          
+    }
+;
+
+
+(: render :)
+declare function xqo:module($name as xs:string,
+                            $state as map(*),
+                            $opts as map(*))
+as map(*){
+  let $def:= map:get($xqo:modules,$name)
+  let $doc:= apply($def?document,[$state,$opts])
+  return map:merge((map{"document": $doc}, $def))
+};
+
+(:~ render a per file o/p
+ :)
+declare function xqo:file($name as xs:string,
+                            $file as map(*),
+                            $params as map(*))
+as map(*){
+  let $def:= map:get($xqo:files,$name)
+  let $doc:= apply($def?document,[$file,$params])
+  let $uri:= apply($def?uri,[$file])
+  return map:merge((map{"document": $doc, "uri": $uri}, $def))
+};
+
+(:~
+ : render all outputs for all per file outputs 
+ :)
+declare function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
+as map(*)*
+{
+for $file at $pos in $state?files
+let $params:=map:merge((map{
+              "filename": $file?path,
+              "cache": $xqo:cache,
+              "show-private": true(),
+              "root": "../../",
+              "resources": "../../resources/"},
+              $opts))
+              
+return $outputs!xqo:file(.,$file,$params)
+};
+
+(:~ save runtime support files to output
+ : @param $target destination folder
+ :)
+declare %updating
+function xqo:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+};</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-15T22:50:45.479+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
