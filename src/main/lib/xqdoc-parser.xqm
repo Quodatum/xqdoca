@@ -147,8 +147,8 @@ as map(*)
 {
  let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($e))
  let $items:=for $f in $e//FunctionDecl
-             let $name:=if($f/EQName[1]) then
-                              xqn:qname($f/EQName[1],$expand)
+             let $name:=if($f/QName[1]) then
+                              xqn:qname($f/QName[1],$expand)
                         else if($f/URIQualifiedName) then
                                 xqn:uriqname($f/URIQualifiedName)
                         else 

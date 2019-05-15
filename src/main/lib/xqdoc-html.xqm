@@ -68,7 +68,7 @@ let $d:=<div>
                   <tr>
                   <th>Type</th>
                   <th>Uri</th>
-                  
+                  <th>refs</th>
                   <th>Restxq</th>
                   <th>Update</th>
                   </tr>
@@ -84,6 +84,7 @@ let $d:=<div>
                       return  <tr>
                               <td>{  $type }</td>
                                <td>{xqhtml:link-module($file) }</td>
+                               <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
                                <td>{ "R" }</td>
                                <td>{ "U" }</td>       
                             </tr>
