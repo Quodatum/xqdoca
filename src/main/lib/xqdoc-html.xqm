@@ -32,11 +32,17 @@ xquery version "3.1";
 module namespace xqhtml = 'quodatum:build.xqdoc-html';
 import module namespace tree = 'quodatum:data.tree' at "tree.xqm";
 import module namespace xqh = 'quodatum:xqdoca.mod-html' at "xqdoc-htmlmod.xqm";
-
+import module namespace page = 'quodatum:xqdoca.page'  at "xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqhtml:mod-xslt external :="html-module.xsl";
 
+declare variable $xqhtml:toc1 :=<toc>
+  <item href="#main" >Introduction</item>
+  <item href="#ns" >Module Uris</item>
+  <item href="#file" >Files</item>
+  <item href="#annotation" >Annotations</item>
+</toc>;
 
 (:~ transform files to html
  : @param $params  keys: resources 
@@ -51,13 +57,13 @@ as document-node()
 {
 let $d:=<div>
              <h1>
-                  <span class="tag tag-success">
+                  <span class="badge badge-info">
                       { $opts?project }
                   </span>
-                  &#160;XQuery source Documentation 
+                  &#160;XQuery source documentation 
               </h1>
              
-              { xqhtml:toc($opts) }
+              { page:toc2($opts?project, $xqhtml:toc1) }
               { xqhtml:view-list($opts,"index")}
               <div>src: { $opts?src-folder }</div>
              
@@ -69,8 +75,8 @@ let $d:=<div>
                   <th>Type</th>
                   <th>Uri</th>
                   <th>refs</th>
-                  <th>Restxq</th>
-                  <th>Update</th>
+                  <th>Updating</th>
+                  <th>Annotations</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -81,12 +87,18 @@ let $d:=<div>
                                   else
                                       $file?xqdoc/xqdoc:module/@type/string()
                        order by $type, $file?namespace
+                       let $annots:= for $a in $file?annotations
+                                     group by $ns:=$a?annotation?uri
+                                     order by $ns
+                                     return $ns
+                       let $updating:= xqhtml:has-annot($file?annotations,("http://www.w3.org/2012/xquery", "updating"))
                       return  <tr>
                               <td>{  $type }</td>
-                               <td>{xqhtml:link-module($file) }</td>
+                               <td>{page:module($file) }</td>
                                <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
-                               <td>{ "R" }</td>
-                               <td>{ "U" }</td>       
+                               <td>{ if($updating) then <span class="badge badge-danger">U</span> else () }</td>       
+                               <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
+                              
                             </tr>
                       }
                   </tbody>
@@ -106,48 +118,50 @@ let $d:=<div>
                       }
                   </ul>
               </div>
-
+              
+             <div id="annotation">
+                  <h1>Annotations</h1>
+                  Total usage: {count( $state?files?annotations)}
+                   {
+             let $ns-map:=map:merge(
+                                  for $a in $state?files?annotations
+                                  group by $uri:=$a?annotation?uri
+                                   return map:entry($uri,$a)
+                                 )
+            
+             for $ns in map:keys($ns-map)
+             order by $ns
+             return <section>
+                      <h2>{ $ns }</h2>
+                      <div>
+                      {for $a in $ns-map?($ns)
+                      group by $name:=$a?annotation?name
+                      order by lower-case($name)
+                      return <a href="annotations.html" class="badge badge-info" style="margin-right:1em;">{$name}
+                               <span class="badge badge-light">{count($a)}</span>
+                             </a>
+                    }</div>
+                   </section>
+                }
+              </div>
            </div>
-return document{ xqhtml:page($d, $opts ) }
+return document{ page:wrap($d, $opts ) }
 };
-
 
 (:~ 
- : build toc 
- : params: map{"project":..}
+ : true if annotation found in set
+ : @param $uri 1st item is uri, if 2nd then match name
  :)
-declare function xqhtml:toc($params)
-as element()
+declare function xqhtml:has-annot($annots as map(*)*,$uri as xs:string*)
+as xs:boolean
 {
-    <nav id="toc">
-            <h2>
-                <a id="contents"></a>
-                <span class="tag tag-success">
-                    { $params?project }
-                </span>
-            </h2>
-            <ol class="toc">
-                <li>
-                    <a href="#main">
-                        <span class="secno">1 </span>
-                        <span class="content">Introduction</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#ns">
-                        <span class="secno">2 </span>
-                        <span class="content">Module uris</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#file">
-                        <span class="secno">3 </span>
-                        <span class="content">Files</span>
-                    </a>
-                </li>
-            </ol>
-        </nav>
+  let $hit:=$annots?annotation[?uri=$uri[1]]
+  return if(count($uri) eq 1) then
+            count($hit)>0
+         else
+           count($hit[?name=$uri[2]])>0
 };
+
 
 (:~ tree to list :)
 declare function xqhtml:tree-list($tree as element(*),$seq as xs:integer*){
@@ -164,10 +178,10 @@ declare function xqhtml:tree-list($tree as element(*),$seq as xs:integer*){
                      <span class="secno">{string-join($seq,'.')}</span>
                      
                       <span class="content" title="{$tree/@target}">{  $tree/@name/string() }</span>
-                      <div class="tag tag-success" 
+                      <div class="badge badge-success" 
                             title="RESTXQ: {$tree/@target}">GET
                       </div>
-                      <div class="tag tag-danger"  style="float:right"
+                      <div class="badge badge-danger"  style="float:right"
                             title="RESTXQ: {$tree/@target}">X
                       </div>
                    </a>
@@ -188,7 +202,7 @@ let $tree:=tree:build($tree)
 let $body:= <div>
           <nav id="toc">
             <h2>
-                 <a href="index.html" class="tag tag-success">
+                 <a href="index.html" class="badge badge-success">
                     { $state?project }
                 </a>
                 / RestXQ
@@ -219,63 +233,17 @@ let $body:= <div>
           
            <ul>{$annots!xqhtml:path-to-html(.)}</ul>
            </div>
-return  xqhtml:page($body,$opts)
+return  page:wrap($body,$opts)
 };
 
-(:~ transform xqdoc to html 
- : map { "root": "../../", 
- :        "cache": false(), 
- :        "resources": "resources/", 
- :        "ext-id": "51", 
- :        "filename": "src\main\lib\parsepaths.xq", 
- :        "show-private": true(), 
- :        "src-folder": "C:/Users/andy/git/xqdoca", 
- :         "project": "xqdoca", 
- :         "source": () } 
- :)
-declare function xqhtml:xqdoc-html($xqd as element(xqdoc:xqdoc),
-                            $params as map(*)
-                            )
-as document-node()                            
-{  
-try{
-     let $p:=map:remove($params,filter(map:keys($params),function($key){$params?($key) instance of map(*)}))
-     return xslt:transform($xqd,$xqhtml:mod-xslt,$p) 
- } catch *{
-  document {<div>
-             <div>Error: { $err:code } - { $err:description }</div>
-              <pre>error { serialize($params,map{"method":"basex"}) } - { $xqhtml:mod-xslt }</pre>
-            </div>}
-}
-};
-(:~ transform xqdoc to html no xslt
- : map { "root": "../../", 
- :        "cache": false(), 
- :        "resources": "resources/", 
- :        "ext-id": "51", 
- :        "filename": "src\main\lib\parsepaths.xq", 
- :        "show-private": true(), 
- :        "src-folder": "C:/Users/andy/git/xqdoca", 
- :         "project": "xqdoca", 
- :         "source": () } 
- :)
-declare function xqhtml:xqdoc-html2(
-  $xqd as element(xqdoc:xqdoc),
-        $opts as map(*)
-        )
-as document-node()                            
-{
-  let $d:= xqh:xqdoc-html2($xqd,$opts)
-return document{ xqhtml:page(<div>{$d}</div>, $opts ) }
- 
-};
+
 (:~ import page :)
 declare function xqhtml:imports($state,$imports,$opts)
 {
   let $body:=<div>
    <nav id="toc">
             <h2>
-                <a href="index.html" class="tag tag-success">
+                <a href="index.html" class="badge badge-success">
                     { $state?project }
                 </a>
                 / Imports
@@ -310,20 +278,31 @@ declare function xqhtml:imports($state,$imports,$opts)
            </div>
            }
   </div>
-  return  xqhtml:page($body,$opts)
+  return  page:wrap($body,$opts)
 };
 
 (:~ annotations page :)
-declare function xqhtml:annotations($state,$annots,$opts)
+declare function xqhtml:annotations($state,$opts)
 {
+  let $ns-map:=map:merge(
+          for $a in $state?files?annotations
+          group by $uri:=$a?annotation?uri
+           return map:entry($uri,$a)
+         )
   let $body:=<div>
-   <nav id="toc">
-            <h2>
-                <a href="index.html" class="tag tag-success">
-                    { $state?project }
-                </a>
-                / Imports
-            </h2>
+                 <h1>
+                  <span class="badge badge-success">
+                      { $opts?project }
+                  </span>
+                  &#160;Annotations 
+              </h1>
+               <nav id="toc">
+                        <h2>
+                            <a href="index.html" class="badge badge-success">
+                                { $state?project }
+                            </a>
+                            / Imports
+                        </h2>
            
             <h3>
                Contents
@@ -338,11 +317,13 @@ declare function xqhtml:annotations($state,$annots,$opts)
                 
              </ol>
            </nav>
-           <a href="index.html">index</a>
-           <p>Lists all Annotations defined.</p>
-       
+           <a href="index.html">index</a>JJ
+           <ul>{
+             for $ns in map:keys($ns-map)
+             return <li>{ $ns }</li>
+           }</ul>
   </div>
-  return  xqhtml:page($body,$opts)
+  return  page:wrap($body,$opts)
 };
 
 (:~  html for a path :)          
@@ -362,60 +343,12 @@ as element(li){
        }</ul>
    </li>
 };
-(:~ 
- : generate standard page wrapper
- : uses $opts?resources
-  :)
-declare function xqhtml:page($body,$opts as map(*)) 
-as element(html)
-{
-    <html>
-      <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
-
-        <title>
-          { $opts?project } - xqDocA
-        </title>
-        <link rel="shortcut icon" type="image/x-icon" href="{ $opts?resources }xqdoc.png" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }prism.css"/>
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }page.css" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }query.css" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }base.css" />
-       <style>
-				.tag {{font-size: 100%;}}
-				</style>
-      </head>
-
-      <body class="home" id="top">
-        <div id="main">
-        {$body}
-        </div>
-        <div class="footer">
-            <p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at {current-dateTime()}</p>
-          </div>
-         <script  src="{ $opts?resources }prism.js" type="text/javascript"> </script>
-       
-      </body>
-    </html>
-};
 
 
 
-(:~ link to module :)
-declare 
-function xqhtml:link-module($file as map(*))                       
-as element(span)
-{  
-   <span>
-    <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a> 
-    <a href="{ $file?href }index2.html" title="{ $file?path }">*</a>
-   </span>
-};
 
-(:~ views list :)
+
+(:~ views list with links :)
 declare 
 function xqhtml:view-list($opts as map(*),$exclude as xs:string*)                       
 as element(dl)

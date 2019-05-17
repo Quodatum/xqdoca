@@ -37,14 +37,17 @@ declare option db:chop 'true';
 (:~ URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca
  :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri()));
+(: declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri())); :)
+(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/dba/"); :)
+declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/");
+(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/chat/"); :)
 declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
 declare variable $host as xs:string  external := "basex";
 
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
-
-let $state:=xqd:read($efolder,$host)
+let $state:= xqd:version-check()
+let $state:= xqd:read($efolder,$host) 
 let $opts:=map{
                "src-folder": $efolder, 
                "project": $state?project, 
@@ -52,7 +55,7 @@ let $opts:=map{
                "resources": "resources/",
                "outputs":  map{
                     "views": ("index","restxq","imports","annotations"),
-                    "byfile": ("xqdoc","xqparse","html","html2")    
+                    "byfile": ("xqdoc","xqparse","html")    
                 },
                 "renderers": map{
                   "modules": $xqo:modules,

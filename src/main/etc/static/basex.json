@@ -5,10 +5,11 @@
 "fn": "http://www.w3.org/2005/xpath-functions",
 "local" : "http://www.w3.org/2005/xquery-local-functions",
 "err": "http://www.w3.org/2005/xqt-errors",
- 
+"ann": "http://www.w3.org/2012/xquery", 
 "math": "http://www.w3.org/2005/xpath-functions/math",
 "map": "http://www.w3.org/2005/xpath-functions/map",
 "array": "http://www.w3.org/2005/xpath-functions/array",
+"output": "http://www.w3.org/2010/xslt-xquery-serialization",
 
 "db": "http://basex.org/modules/db",
 "file": "http://expath.org/ns/file",
@@ -47,5 +48,8 @@
 "util":  "http://basex.org/modules/util",
 "lazy":  "http://basex.org/modules/lazy",
 "update":  "http://basex.org/modules/update",
-"ws":  "http://basex.org/modules/ws"
+"ws":  "http://basex.org/modules/ws",
+"perm": "http://basex.org/modules/perm",
+"rest": "http://exquery.org/ns/restxq",
+"basex": "http://basex.org"
 }

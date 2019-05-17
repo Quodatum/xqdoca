@@ -75,12 +75,12 @@ as map(*)
 let $files:= file:list($efolder,true(),$xqd:exts)
 let $folder:= translate($efolder,"\","/")
 return map{ 
-             "base-uri": $efolder,
+             "base-uri": $folder,
              "project": tokenize($folder,"/")[last()-1],
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
-                      let $xqdoc:=xqd:xqdoc($full,$host,map{"_source": $spath})
+                      let $xqdoc:=xqd:analyse($full,$host,map{"_source": $spath})
                       let $base:=map{
                         "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
@@ -119,11 +119,11 @@ as element(xqdoc:xqdoc)
 (:~ 
  : Generate xqdoc adding custom opts 
  : @param $url xquery source
- : @param host ?
+ : @param host xquery platform id
  : @param $opts custom tags to add
- : @result map keys of "xqdoc" and "xqparse"
+ : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> ,annotations:{}*}
  :)
-declare function xqd:xqdoc($url as xs:string,$host as xs:string,$opts as map(*))
+declare function xqd:analyse($url as xs:string,$host as xs:string,$opts as map(*))
 as map(*)
 {  
   let $xqd:=xqd:xqdoc($url)
@@ -151,8 +151,20 @@ as map(*)
                             return $enh
                     } (: parse fails :)
   return map{"xqdoc": $enh, 
-             "xqparse": $parse
+             "xqparse": $parse,
+             "annotations":xqd:anno($enh)
               }
+};
+
+(:~ 
+ : all annotations in xqdoc as { annotation:{{name: uri},xqdoc:}}
+  :)
+declare function xqd:anno($xqdoc)
+as map(*)*{
+  let $ns:= xqd:namespaces($xqdoc)
+ for $a in $xqdoc//xqdoc:annotation
+ let $name:=xqn:qname-anno($a/@name,$ns)
+ return map{"annotation":$name, "xqdoc": $a} 
 };
          
 (:~ return sequence of maps with maps uri and methods :)
@@ -195,15 +207,8 @@ as map(*)*
                  }
 };
 
-(:~ 
- : return all  annotations summary
- :)
-declare function xqd:annotations($annots as element(xqdoc:annotation)*)
-{
- for $ann in $annots
- let $prefix:=(if(contains($ann/@name,":")) then () else "",tokenize($ann/@name,":"))
- return "**TODO"
-};
+
+
 
 (:~ 
  : return all matching annotations in xqdoc
@@ -234,50 +239,28 @@ as element(xqdoc:annotation)*
 
 
 
-(:~
- : @return map of functions and variables having annotations
- :)
-declare function xqd:annotation-map($xqdoc)
+(:~ 
+ : all namespaces in xqdoc as map{prefix.. uri}
+  :)
+declare function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
 {
-  let $ns:=map:merge((
-           map:entry("", "http://www.w3.org/2012/xquery"),
-           $xqdoc//xqdoc:namespace!map:entry(string(@prefix),string(@uri))
-           ))
-  let $f:=$xqdoc//xqdoc:function[xqdoc:annotations]!
-                  map:entry(
-                        xqdoc:name || "#" || @arity,
-                        xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
-                   )
-   let $v:=$xqdoc//xqdoc:variable[xqdoc:annotations]!
-                 map:entry(
-                   xqdoc:name ,
-                   xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
-                 )
-  return map:merge(($f,$v))
-         
+$xqdoc/xqdoc:namespaces/xqdoc:namespace
+!map:entry(string(@prefix),string(@uri))
+=>map:merge()
 };
 
-(:~ return annotation map for a name 
- :  map{ $ns: map{
- :        $aname: $values
- :      }
- : }
+
+
+
+(:~
+ : raise error if environment incorrect 
  :)
-declare function xqd:annots(
- $annots as element(xqdoc:annotation)*,
- $ns as map(*)
-) as map(*)
-{
- map:merge( 
- for $a in $annots
- group by $prefix:=substring-before($a/@name,":")
- return for $p in $prefix
-                  return map:entry(
-                     $ns?($p),
-                     map:merge((
-                     for $x in $a
-                     group by $aname:=if(contains($x/@name,":")) then substring-after($x/@name,":") else $x/@name
-                     return map:entry($aname,$x/*/string())
-                  ))
-                )
-)};        
+ declare function xqd:version-check()
+as empty-sequence(){
+  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne "9.2.2")then 
+       error(xs:QName("xqd:version"),"BaseX version")
+  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne "0.6.12") then
+       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
+  else
+      ()
+};       

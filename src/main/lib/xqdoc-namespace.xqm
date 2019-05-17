@@ -29,6 +29,12 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
 (:~  parse qname into parts
  : @param $e is from QName or TOKEN in some cases e.g "count"
  : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+ : @return <pre>
+ map{
+    "uri": ..,
+     "name": ..} 
+ }
+ :</pre>
  :)
 declare function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string)
 as map(*)
@@ -51,8 +57,10 @@ declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $m
 as xs:string{
   if(empty($prefix)) then
     $default
-  else 
+  else if(map:contains($map,$prefix))then 
    $map?($prefix)
+   else
+   "**ERROR" || $prefix
 };
 
 (:~  parse URIQualifiedName into parts
@@ -74,3 +82,17 @@ as map(*)
  =>parse-json() 
 };
 
+(:~  expand annotation name :)
+declare function xqn:qname-anno($e as xs:string,$prefixes as map(*))
+as map(*)
+{
+let $lookup:=xqn:map-prefix(?,"http://www.w3.org/2012/xquery", $prefixes)
+return xqn:qname($e , $lookup)
+};
+(:~  expand function name :)
+declare function xqn:qname-fun($e as xs:string,$prefixes as map(*))
+as map(*)
+{
+let $lookup:=xqn:map-prefix(?,"http://www.w3.org/2005/xpath-functions", $prefixes)
+return xqn:qname($e , $lookup)
+};

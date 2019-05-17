@@ -34,7 +34,11 @@ declare %unit:test function test:assert-failure() {
 declare %unit:test function test:assert-equals-failure() {
   unit:assert-equals(4 + 5, 6)
 };
-   
+
+(:~ Function demonstrating a failure using unit:assert-equals. :)
+declare %unit:test function test:assert-equals-failure2() {
+  unit:assert-equals(4 + 5, <ff>rich</ff>)
+};   
 (:~ Function demonstrating an unexpected success. :)
 declare %unit:test("expected", "err:FORG0001") function test:unexpected-success() {
   ()

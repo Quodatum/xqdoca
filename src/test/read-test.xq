@@ -5,8 +5,9 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git/xqdoca");
 declare variable $efolder2 as xs:anyURI  external := xs:anyURI("C:\Users\andy\git\vue-poc\src\vue-poc");
+declare variable $chat as xs:anyURI  external := xs:anyURI("C:\Users\andy\basex.home\webapp\chat");
+let $state:=xqd:read($chat)
 
-let $state:=xqd:read($efolder2)
-let $x:= $state?files?xqdoc
-return 
-  $x//xqdoc:annotations/xqdoc:annotation 
+for $f in $state?files
+let $a:=$f?annotations?annotation?uri
+return  $a

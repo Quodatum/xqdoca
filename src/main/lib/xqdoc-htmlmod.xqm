@@ -28,7 +28,7 @@ xquery version "3.1";
  : Generate  html for xqdoc
  :)
 module namespace xqh = 'quodatum:xqdoca.mod-html';
-
+import module namespace page = 'quodatum:xqdoca.page'  at "xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
@@ -45,24 +45,27 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  :         "source": () }</pre> 
  :)
 declare function xqh:xqdoc-html2($xqd as element(xqdoc:xqdoc),
-                            $params as map(*)
+                            $opts as map(*),
+                            $state as map(*)
                             )
-as element()*                          
+as document-node()                         
 {  
-(
-   xqh:module($xqd/xqdoc:module,$params),
-   xqh:toc($xqd,$params),
-   xqh:imports($xqd/xqdoc:imports),
-   xqh:variables($xqd/xqdoc:variables),
-   xqh:functions($xqd/xqdoc:functions),
-   xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
-   xqh:restxq($xqd),
-  if($xqd//xqdoc:import) then xqh:imports($xqd//xqdoc:imports) else (),
-      <div>
-        <h3 id="source">Original Source Code</h3>
-        <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
-      </div>
-  )                  
+let $d:=<div>{
+         xqh:module($xqd/xqdoc:module,$opts),
+         xqh:toc($xqd,$opts),
+         xqh:imports($xqd/xqdoc:imports),
+         xqh:variables($xqd/xqdoc:variables),
+         xqh:functions($xqd/xqdoc:functions),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:restxq($xqd),
+         if($xqd//xqdoc:import) then xqh:imports($xqd//xqdoc:imports) else (),
+            <div>
+              <h3 id="source">Original Source Code</h3>
+              <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
+            </div>
+       }</div>
+
+ return document{ page:wrap($d, $opts )  }                 
 };
 
 declare function xqh:module($mod as element(xqdoc:module),
@@ -71,23 +74,19 @@ declare function xqh:module($mod as element(xqdoc:module),
  {
    let $restxq:= true()
    return(	<h1>
-			<span class="tag tag-success">{ $mod/xqdoc:uri/string() }</span>
+			<span class="badge badge-info">{ $mod/xqdoc:uri/string() }</span>&#160;
 			<small>{ $mod/@type/string() } module</small>
      { if($restxq) then
-          <span  title="RestXQ" class="tag tag-success" style="float:right">R</span>
+          <span  title="RestXQ" class="badge badge-success" style="float:right">R</span>
         else ()  
        }
       {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              <div class="tag tag-danger" title="Updating" style="float:right">U</div>
+              <div class="badge badge-danger" title="Updating" style="float:right">U</div>
         else
         ()
       }
 		</h1>,
-    <ul>
-     <li style="display:inline">Raw XML files: </li>
-     <li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqDoc</a>, </li>
-     <li style="display:inline"><a href="xqparse.xml" target="xqparse">xqParse</a></li>
-     </ul>,
+    
 		<dl>
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			<dt>Tags</dt>
@@ -95,7 +94,12 @@ declare function xqh:module($mod as element(xqdoc:module),
 			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
 			</dd>
 		</dl>,
-		<div> Imported by <a href="{ $opts?root }imports.html#{ $mod/xqdoc:uri/string() }">*</a></div>
+		<div> Imported by <a href="{ $opts?root }imports.html#{ $mod/xqdoc:uri/string() }">*</a></div>,
+    <ul>
+     <li style="display:inline">Raw XML files: </li>
+     <li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
+     <li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li>
+     </ul>
   )
   };
   
@@ -105,7 +109,7 @@ as element(nav){
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
 	return	<nav id="toc">
 			<h2>
-			    <a href="{ $opts?root || "index.html" }" class="tag tag-success">{ $opts?project }</a>
+			    <a href="{ $opts?root || "index.html" }" >{ $opts?project }</a>
                 / Module
        </h2>
 			<h3>
@@ -169,11 +173,11 @@ as element(nav){
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
 											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
                       {if($restxq) then 
-                        <div class="tag tag-success" style="float:right"	title="RESTXQ:">R</div>
+                        <div class="badge badge-success" style="float:right"	title="RESTXQ:">R</div>
                       else
                         ()}
                        {if($update) then 
-                        <div class="tag tag-danger" style="float:right"	title="Updating">U</div>
+                        <div class="badge badge-danger" style="float:right"	title="Updating">U</div>
                       else
                         ()}  
                       </span>
@@ -280,14 +284,15 @@ declare function xqh:variable($v as element(xqdoc:variable))
 as element(div)
 {
 let $id:= concat('$',$v/xqdoc:name)
+let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
 		<div id="{ $id }">
 			<h4>
 				<a href="#{ $id }">{$id }</a>
 			</h4>
 			<dl>
-        <dt class="label">Summary</dt>,
-		   <dd>{ $v/xqdoc:comment/xqdoc:description/(node()|text()) }</dd>
+        <dt class="label">Summary</dt>
+		   <dd>{ $summary }</dd>
 				<dt class="label">Type</dt>
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
@@ -335,15 +340,16 @@ as element(div)
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
        {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
       { $funs/xqdoc:annotations!xqh:annotations(.) }
-       <details>
-      <summary>Source</summary>
-      { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
-      </details>
+      
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
        <details>
       <summary>External functions that invoke this function</summary>
       todo
+      </details>
+       <details>
+      <summary>Source</summary>
+      { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
       </details>
 		</div>
 };

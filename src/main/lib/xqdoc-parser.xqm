@@ -46,10 +46,19 @@ declare variable $xqp:xparse_opts:=map{
 declare function xqp:enrich($xqdoc as element(xqdoc:xqdoc),$xqparse as element(XQuery))
 as element(xqdoc:xqdoc)
 {
-  let $fmap:=xqp:funmap($xqparse)
-
+   (: add xqDoc-main for main modules :)
+   let $body:= $xqparse//MainModule/*[2]
+  let $xqdoc:= $xqdoc transform with {
+                insert node xqp:main($body) as last into xqdoc:functions
+              }            
+  let $fmap:=map:merge((
+                xqp:funmap($xqparse),
+                if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
+         ))
+         
   let $moduri:=$xqdoc/xqdoc:module/xqdoc:uri/string()
-   let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+  let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+   
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
@@ -65,6 +74,7 @@ as element(xqdoc:xqdoc)
                   let $a:=trace(map:keys($fmap))
                   return error("key not found " || $key)  
   }
+ 
   return $xqdoc
 };
 
@@ -140,7 +150,7 @@ as map(*)
 };
 
 (:~  map of function declarations
- : @result map{key:...,value:xquery parse }
+ : @result map where keys are Qname with # arity items are xqParse trees
  :)
 declare function xqp:funmap($e as element(XQuery))
 as map(*)
@@ -160,6 +170,25 @@ as map(*)
  return map:merge($items)
 };
 
+
+(:~  create dummy function for main modules
+ :)
+ declare function xqp:main($body as element(*)?)
+ as element(xqdoc:function)?
+ {
+   if($body) then
+        <xqdoc:function arity="0">
+          <xqdoc:comment>
+          <xqdoc:description>pseudo main function</xqdoc:description>
+         </xqdoc:comment>
+         <xqdoc:name>local:xqDoc-main</xqdoc:name>
+         <xqdoc:signature>local:xqDoc-main()</xqdoc:signature>
+         <xqdoc:body>{string($body)}</xqdoc:body>
+         </xqdoc:function>
+   else
+    ()
+ };
+ 
 (:~ parse XQuery 
  : result is <XQuery> or <ERROR>
  :)
