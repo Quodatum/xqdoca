@@ -25,100 +25,27 @@ xquery version "3.1";
  
 
 module namespace xqo = 'quodatum:xqdoca.outputs';
-import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "xqdoc-proj.xqm";
-import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
-import module namespace xqh = 'quodatum:xqdoca.mod-html' at "xqdoc-htmlmod.xqm";
 
 
-(:~  modules define an o/p created from the state :)
-declare variable $xqo:modules:=
- map{ 
-         "index":  map{
-                      "title": "Index of sources",
-                      "document": xqhtml:index-html2#2, 
-                      "uri": 'index.html', "opts":  $xqd:HTML5
-         },
-         "restxq": map{
-                      "title": "Http interface",
-                      "document": function ($state,$opts){ xqhtml:restxq($state, xqd:rxq-paths($state),$opts)},
-                      "uri": 'restxq.html', "opts":  $xqd:HTML5
-         },
-        "imports": map{
-                   "title": "Module import",
-                   "document": function ($state,$opts){ xqhtml:imports($state,xqd:imports($state),$opts)},
-                   "uri": 'imports.html', "opts":  $xqd:HTML5
-         },
-        "annotations":map{
-                   "title": "Annotation summary",
-                   "document": function ($state,$opts){xqhtml:annotations($state,$opts)},
-                   "uri":'annotations.html', "opts":  $xqd:HTML5
-      }
-    }
-;
 
-(:~  files define an o/p created from a source item :)
-declare variable $xqo:files:=
- map{ 
-        "xqdoc":  map{
-                   "title": "XML file XQdoc format",
-                   "document": function($file, $params,$state){ $file?xqdoc},
-                    "uri": function($file){ $file?href || "/xqdoc.xml"}, "opts":  $xqd:XML
-                 },
-        "xqparse": map{
-                   "title": "XML file of xquery parse tree output",
-                   "document": function($file, $params,$state){ $file?xqparse},
-                    "uri":  function($file){ $file?href || "xqparse.xml"}, "opts":  $xqd:XML
-                 },
-      "html":    map{
-                   "title": "HTML page about the file (new)", 
-                   "document": function($file, $params,$state){ xqh:xqdoc-html2($file?xqdoc, $params,$state)},
-                   "uri": function($file){ $file?href || "index.html"}, "opts":  $xqd:HTML5
-                 }          
-    }
-;
+(:~ xqdoca annotation namespace :)
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+(:~ annotation for module derived output :)
+declare variable $xqo:module:=QName("https://github.com/Quodatum/xqdoca","module");
+declare variable $xqo:global:=QName("https://github.com/Quodatum/xqdoca","global");
+(:~ annotation for serialization options :)
+declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","output");
+
+(:~ defined serialization options :)
+declare variable $xqo:outputs:=map{
+                                     "html5": map{"method": "html", "version":"5.0", "indent": "no"},
+                                     "xml": map{"indent": "no"},
+                                     "json": map{"method": "json"}
+                                   };
 
 
-(: render an output :)
-declare function xqo:module($name as xs:string,
-                            $state as map(*),
-                            $opts as map(*))
-as map(*){
-  let $def:= map:get($xqo:modules,$name)
-  let $doc:= apply($def?document,[$state,$opts])
-  return map:merge((map{"document": $doc}, $def))
-};
 
-(:~ render a per file o/p
- :)
-declare function xqo:file($name as xs:string,
-                            $file as map(*),
-                            $params as map(*),
-                            $state as map(*))
-as map(*){
-  let $def:= map:get($xqo:files,$name)
-  let $doc:= apply($def?document,[$file,$params,$state])
-  let $uri:= apply($def?uri,[$file])
-  return map:merge((map{"document": $doc, "uri": $uri}, $def))
-};
-
-(:~
- : render all outputs for all per file outputs 
- :)
-declare function xqo:files($outputs as xs:string*,$state as map(*),$opts as map(*))
-as map(*)*
-{
-for $file at $pos in $state?files
-let $params:=map:merge((
-            map{
-              "filename": $file?path,
-              "show-private": true(),
-              "root": "../../",
-              "resources": "../../resources/"
-            },
-              $opts))
-              
-return $outputs!xqo:file(.,$file,$params,$state)
-};
 
 (:~ save runtime support files to output
  : @param $target destination folder
@@ -127,4 +54,84 @@ declare %updating
 function xqo:export-resources($target as xs:string)                       
 as empty-sequence(){  
 archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+};
+
+(:~ 
+ : list xqdoca render functions found in the static context
+:)
+declare function xqo:renderers($funs as function(*)*, $qname as xs:QName)
+as function(*)*
+{
+  for $f in  $funs
+  let $ann:=inspect:function-annotations($f) 
+  where map:contains($ann,$qname) and map:contains($ann,$xqo:ann-output)
+  return $f
+};
+
+(:~
+ :  info about a render function
+:)
+declare function xqo:render-map( $function as function(*)?)
+as map(*){
+  let $ann:= inspect:function-annotations($function)
+  let $key:=if(map:contains($ann,$xqo:module)) then
+                $xqo:module
+            else if(map:contains($ann,$xqo:global)) then
+                $xqo:global
+            else
+               error(xs:QName("xqo:anno-map"))
+   return map{
+    "name": $ann?($key)[1],
+     "description": $ann?($key)[2],
+     "function": $function,
+     "type": $key,
+     "uri": $ann?($xqo:ann-output)[1],
+     "output": $ann?($xqo:ann-output)[2]
+} 
+};
+
+(:~
+ :  render $outputs against state with options
+:)
+declare function xqo:render( $state as map(*),$opts as map(*))
+as map(*)*
+{
+  let $funs:=xqo:load-generators()
+  return (
+      for $render in xqo:renderers($funs,$xqo:global)!xqo:render-map(.)
+      where $render?name =$opts?outputs?global
+      let $doc:= apply($render?function,[$state,$opts])
+      return map{"document": $doc, 
+                 "uri": $render?uri,
+                 "output":$xqo:outputs?($render?output)
+               },
+               
+      for $render in xqo:renderers($funs,$xqo:module)!xqo:render-map(.) 
+      where  $render?name =$opts?outputs?module
+      for $file at $pos in $state?files
+      let $params:=map:merge((
+            map{
+              "filename": $file?path,
+              "show-private": true(),
+              "root": "../../",
+              "resources": "../../resources/"
+            },
+              $opts))
+      let $doc:= apply($render?function,[$file,$params,$state])       
+      return map{"document": $doc, 
+                 "uri": concat($file?href,"/",$render?uri),
+                 "output": $xqo:outputs?($render?output)
+                }
+              )                                      
+};
+
+(:~
+ : dynamically load functions from *.xqm modules in generators directory into static context
+ :)
+declare function xqo:load-generators()
+as function(*)*
+{
+  let $base:=resolve-uri("generators/",static-base-uri())
+  for $f in file:list($base,true(),"*.xqm")
+  return inspect:functions(resolve-uri($f,$base))
 };

@@ -28,9 +28,10 @@ xquery version "3.1";
  : Generate  html for xqdoc
  :)
 module namespace xqh = 'quodatum:xqdoca.mod-html';
-import module namespace page = 'quodatum:xqdoca.page'  at "xqdoc-page.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  
 (:~ transform xqdoc to html 
@@ -44,31 +45,35 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  :         "project": "xqdoca", 
  :         "source": () }</pre> 
  :)
-declare function xqh:xqdoc-html2($xqd as element(xqdoc:xqdoc),
+declare 
+%xqdoca:module("module","Html5 page created from the XQuery source")
+%xqdoca:output("index.html","html5")
+function xqh:xqdoc-html2($file as map(*),
                             $opts as map(*),
                             $state as map(*)
                             )
 as document-node()                         
-{  
+{
+let $xqd:=$file?xqdoc 
 let $d:=<div>{
-         xqh:module($xqd/xqdoc:module,$opts),
-         xqh:toc($xqd,$opts),
-         xqh:imports($xqd/xqdoc:imports),
+         xqh:summary($xqd/xqdoc:module,$opts),
+         xqh:toc($xqd,$opts,$file),
+         xqh:imports($xqd/xqdoc:imports,$state), 
          xqh:variables($xqd/xqdoc:variables),
          xqh:functions($xqd/xqdoc:functions),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
          xqh:restxq($xqd),
-         if($xqd//xqdoc:import) then xqh:imports($xqd//xqdoc:imports) else (),
-            <div>
-              <h3 id="source">Original Source Code</h3>
-              <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
-            </div>
+         xqh:when($xqd/xqdoc:imports,xqh:imports(?,$state)),
+          <div>
+            <h3 id="source">Original Source Code</h3>
+            <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
+          </div>
        }</div>
 
  return document{ page:wrap($d, $opts )  }                 
 };
 
-declare function xqh:module($mod as element(xqdoc:module),
+declare function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
@@ -103,7 +108,7 @@ declare function xqh:module($mod as element(xqdoc:module),
   )
   };
   
-declare function xqh:toc($xqd,$opts)
+declare function xqh:toc($xqd,$opts,$file)
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -235,7 +240,7 @@ as element(nav){
 		</nav>
 };   
 
-declare function xqh:imports($imports as element(xqdoc:imports))
+declare function xqh:imports($imports as element(xqdoc:imports),$state as map(*))
 as element(div){
     
     <div id="imports">
@@ -254,8 +259,8 @@ as element(div){
         return 
             <tr>
               <td>{ $import/@type/string() }</td>
-              <td>{ $import/xqdoc:uri/string() }
-                <xsl:sequence select="qd:nslink(doc:uri)"/>
+              <td>{ page:link-module($import/xqdoc:uri/string(),$state) }
+               
               </td>
             </tr>
        }

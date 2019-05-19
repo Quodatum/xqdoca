@@ -56,7 +56,7 @@ as element(xqdoc:xqdoc)
                 if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
          ))
          
-  let $moduri:=$xqdoc/xqdoc:module/xqdoc:uri/string()
+
   let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
    
    (: insert function source :)
@@ -86,7 +86,7 @@ declare function xqp:references($e as element(*),$expand as function(*))
 as element(*)*
 {
   $e//FunctionCall!xqp:funcall(.,$expand),
-  $e//ArrowExpr!xqp:funcall(.,$expand),
+  $e//ArrowExpr!xqp:invoke-arrow(.,$expand),
   $e//VarRef!xqp:ref-variable(.,$expand) 
 };
 
@@ -95,13 +95,29 @@ as element(*)*
  : @param $e is FunctionCall or ArrowExpr 
  :)
 declare function xqp:funcall($e as element(*),$expand as function(*))
-as element(xqdoc:invoked)
+as element(xqdoc:invoked)*
 {
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
 let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
+let $qname:=xqn:qname($fname,$expand)
+ return <xqdoc:invoked arity="{ $arity }">
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:invoked>   
+};
+(:~  build invoked nodes for arrow expression
+ : @param $e is FunctionCall or ArrowExpr 
+ :)
+declare function xqp:invoke-arrow($e as element(ArrowExpr),$expand as function(*))
+as element(xqdoc:invoked)*
+{
+for $arrow in $e/TOKEN[. = "=&gt;"]
+let $fname:=$arrow/following-sibling::*[1]
+let $arglist:=$arrow/following-sibling::*[2]
+let $arity:=1+count($arglist/*[not(TOKEN)])
 let $qname:=xqn:qname($fname,$expand)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>

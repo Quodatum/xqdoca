@@ -31,8 +31,6 @@ xquery version "3.1";
  :)
 module namespace xqd = 'quodatum:xqdoca.xqdoc';
 
-import module namespace store = 'quodatum:store' at 'store.xqm';
-import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
 import module namespace xqp = 'quodatum:xqdoca.parser' at "xqdoc-parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 

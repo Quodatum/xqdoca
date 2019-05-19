@@ -37,46 +37,42 @@ declare option db:chop 'true';
 (:~ URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca
  :)
-(: declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri())); :)
+declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri()));
 (: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/dba/"); :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/");
+(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/"); :)
 (: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/chat/"); :)
+
+(:~ location to save outputs as a base-uri :)
 declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
+
 declare variable $host as xs:string  external := "basex";
 
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
 let $state:= xqd:version-check()
 let $state:= xqd:read($efolder,$host) 
-let $opts:=map{
+let $options:=map{
                "src-folder": $efolder, 
                "project": $state?project, 
                "ext-id": $id/string(),
                "resources": "resources/",
                "outputs":  map{
-                    "views": ("index","restxq","imports","annotations"),
-                    "byfile": ("xqdoc","xqparse","html")    
-                },
-                "renderers": map{
-                  "modules": $xqo:modules,
-                  "files": $xqo:files
-                }              
+                    "global": ("index","restxq","imports","annotations","swagger1"),
+                    "module": ("xqdoc","xqparse","module")  
+                }    
                }
                
-(: generate root outputs :)
-let $pages:= $opts?outputs?views !xqo:module(.,$state,$opts)     
-(: generate o/ps per source file  :)
-let $modmap:= $opts?outputs?byfile !xqo:files(.,$state,$opts)
-  
+(: generate  outputs :)
+let $pages:= xqo:render($state,$options)   
+
+let $result:=   <json type="object">
+                    <extra>XQdoc generated</extra>
+                    <msg> {$target}, {count($state?files)} files processed. Stored {count($pages)}</msg>
+                    <id>{$id/string()}</id>
+                </json> 
 return (
-       store:store(($pages,$modmap),$target),
+       store:store($pages,$target),
        xqo:export-resources($target),
        replace value of node $id with 1+$id,
-       update:output(
-         <json type="object">
-            <extra>XQdoc generated</extra>
-            <msg> {$target}, {count($state?files)} files processed.</msg>
-            <id>{$id/string()}</id>
-        </json>
-       )
+       update:output($result)
 )

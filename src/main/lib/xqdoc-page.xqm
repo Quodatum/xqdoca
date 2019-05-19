@@ -28,15 +28,24 @@ module namespace page = 'quodatum:xqdoca.page';
 
 (:~ link to module :)
 declare 
-function page:module($uri as xs:string,$state as map(*))                       
+function page:link-module($uri as xs:string,$state as map(*))                       
 as element(span)
-{  
- <span><a href="#todo">{ $uri }</a></span>
+{
+ let $files:=$state?files[?namespace=$uri]
+ let $root:="../../"
+ return if(empty($files)) then
+           <span class="badge badge-warning" title="External file">{ $uri }</span>
+        else
+           <span>
+           <a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }">{ $files[1]?namespace }</a>
+           {for $file at $pos in tail($files)
+           return <a  href="{ $root }{ $file?href }index.html" title="{ $file?path }">{1+$pos}</a>
+         }</span> 
 };
 
 (:~ link to module :)
 declare 
-function page:module($file as map(*))                       
+function page:link-module($file as map(*))                       
 as element(span)
 {  
    <span>
@@ -113,4 +122,30 @@ as element(nav)
                   </li>   
           }</ol>
         </nav> 
+};
+
+(:~ 
+ : filter annotation by uri and name
+ : @param $uri 1st item is uri, if 2nd then match name
+ :)
+declare function page:filter-annot($annots as map(*)*,$uri as xs:string*)
+as map(*)*
+{
+  let $hit:=$annots?annotation[?uri=$uri[1]]
+  return if(count($uri) eq 1) then
+            $hit
+         else
+           $hit[?name=$uri[2]]
+};
+
+declare function page:anno-updating($anno as map(*)*)
+as map(*)*
+{
+page:filter-annot($anno,("http://www.w3.org/2012/xquery", "updating"))
+};
+
+declare function page:anno-rest($anno as map(*)*)
+as map(*)*
+{
+page:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
 };

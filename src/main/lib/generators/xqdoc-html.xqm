@@ -30,19 +30,15 @@ xquery version "3.1";
  : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
 module namespace xqhtml = 'quodatum:build.xqdoc-html';
-import module namespace tree = 'quodatum:data.tree' at "tree.xqm";
-import module namespace xqh = 'quodatum:xqdoca.mod-html' at "xqdoc-htmlmod.xqm";
-import module namespace page = 'quodatum:xqdoca.page'  at "xqdoc-page.xqm";
+
+import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
+import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "../xqdoc-proj.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
-declare variable $xqhtml:mod-xslt external :="html-module.xsl";
 
-declare variable $xqhtml:toc1 :=<toc>
-  <item href="#main" >Introduction</item>
-  <item href="#ns" >Module Uris</item>
-  <item href="#file" >Files</item>
-  <item href="#annotation" >Annotations</item>
-</toc>;
+
 
 (:~ transform files to html
  : @param $params  keys: resources 
@@ -50,7 +46,10 @@ declare variable $xqhtml:toc1 :=<toc>
  : "src-folder": "C:/Users/andy/git/vue-poc/src/vue-poc",
  : "project": "vue-poc"
  :)
-declare function xqhtml:index-html2($state as map(*),
+declare 
+%xqdoca:global("index","Index of sources")
+%xqdoca:output("index.html","html5") 
+function xqhtml:index-html2($state as map(*),
                             $opts as map(*)
                             )
 as document-node()                            
@@ -63,12 +62,19 @@ let $d:=<div>
                   &#160;XQuery source documentation 
               </h1>
              
-              { page:toc2($opts?project, $xqhtml:toc1) }
+              { page:toc2($opts?project, 
+              <toc>
+                <item href="#main" >Introduction</item>
+                <item href="#ns" >Module Uris</item>
+                <item href="#file" >Files</item>
+                <item href="#annotation" >Annotations</item>
+              </toc>
+) }
               { xqhtml:view-list($opts,"index")}
               <div>src: { $opts?src-folder }</div>
              
               <div id="ns">
-                  <h1>Module Uris</h1>
+                  <h2>Module Uris</h2>
                   <table class="data">
                   <thead>
                   <tr>
@@ -91,10 +97,10 @@ let $d:=<div>
                                      group by $ns:=$a?annotation?uri
                                      order by $ns
                                      return $ns
-                       let $updating:= xqhtml:has-annot($file?annotations,("http://www.w3.org/2012/xquery", "updating"))
+                       let $updating  :=count(page:filter-annot($file?annotations,("http://www.w3.org/2012/xquery", "updating")))
                       return  <tr>
                               <td>{  $type }</td>
-                               <td>{page:module($file) }</td>
+                               <td>{page:link-module($file) }</td>
                                <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
                                <td>{ if($updating) then <span class="badge badge-danger">U</span> else () }</td>       
                                <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
@@ -105,7 +111,7 @@ let $d:=<div>
                   </table>
               </div>
                <div id="file">
-                  <h1>Files</h1>
+                  <h2>Files</h2>
                   <ul>
                       { for $file  at $pos in $state?files
                    
@@ -120,7 +126,7 @@ let $d:=<div>
               </div>
               
              <div id="annotation">
-                  <h1>Annotations</h1>
+                  <h2>Annotations</h2>
                   Total usage: {count( $state?files?annotations)}
                    {
              let $ns-map:=map:merge(
@@ -148,19 +154,6 @@ let $d:=<div>
 return document{ page:wrap($d, $opts ) }
 };
 
-(:~ 
- : true if annotation found in set
- : @param $uri 1st item is uri, if 2nd then match name
- :)
-declare function xqhtml:has-annot($annots as map(*)*,$uri as xs:string*)
-as xs:boolean
-{
-  let $hit:=$annots?annotation[?uri=$uri[1]]
-  return if(count($uri) eq 1) then
-            count($hit)>0
-         else
-           count($hit[?name=$uri[2]])>0
-};
 
 
 (:~ tree to list :)
@@ -195,8 +188,12 @@ declare function xqhtml:tree-list($tree as element(*),$seq as xs:integer*){
 (:~
  : html for page. 
  :)
-declare function xqhtml:restxq($state,$annots,$opts)
+declare 
+%xqdoca:global("restxq","Summary of REST interface")
+%xqdoca:output("restxq.html","html5") 
+function xqhtml:restxq($state,$opts)
 {
+let $annots:= xqd:rxq-paths($state) 
 let $tree:=$annots?uri
 let $tree:=tree:build($tree)
 let $body:= <div>
@@ -238,8 +235,12 @@ return  page:wrap($body,$opts)
 
 
 (:~ import page :)
-declare function xqhtml:imports($state,$imports,$opts)
+declare 
+%xqdoca:global("import","Summary of import usage")
+%xqdoca:output("imports.html","html5") 
+function xqhtml:imports($state,$opts)
 {
+  let $imports:=xqd:imports($state)
   let $body:=<div>
    <nav id="toc">
             <h2>
@@ -282,7 +283,10 @@ declare function xqhtml:imports($state,$imports,$opts)
 };
 
 (:~ annotations page :)
-declare function xqhtml:annotations($state,$opts)
+declare 
+%xqdoca:global("annoations","Summary of Annotation use")
+%xqdoca:output("annotation.html","html5") 
+function xqhtml:annotations($state,$opts)
 {
   let $ns-map:=map:merge(
           for $a in $state?files?annotations
@@ -345,9 +349,6 @@ as element(li){
 };
 
 
-
-
-
 (:~ views list with links :)
 declare 
 function xqhtml:view-list($opts as map(*),$exclude as xs:string*)                       
@@ -361,4 +362,27 @@ as element(dl)
          ,<dd>{ $def?title }</dd>)
   }    
 </dl>
-};    
+};
+
+declare
+%xqdoca:module("xqdoc","xqDoc file for the source module")
+%xqdoca:output("xqdoc.xml","xml") 
+function xqhtml:xqdoc($file as map(*),
+                  $opts as map(*),
+                  $state as map(*)
+                  )
+{
+  $file?xqdoc
+};
+
+declare
+%xqdoca:module("xqparse","xqparse file for the source module")
+%xqdoca:output("xqparse.xml","xml") 
+function xqhtml:xqparse($file as map(*),
+                  $opts as map(*),
+                  $state as map(*)
+                  )
+{
+  $file?xqparse
+};
+    

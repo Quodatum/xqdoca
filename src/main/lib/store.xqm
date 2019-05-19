@@ -36,7 +36,7 @@ function store:store($docs as map(*)*,$base as xs:string)
 {
 for $doc in $docs
 let $uri:=resolve-uri($doc?uri,$base)
-let $opts:=if(map:contains($doc,"opts")) then $doc?opts else map{}
+let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
 return switch (substring-before($uri,":"))
           case "file" return store:file($doc?document,substring-after($uri,"file:///"),$opts)
           case "xmldb" return store:xmldb($doc?document,$uri,$opts)
