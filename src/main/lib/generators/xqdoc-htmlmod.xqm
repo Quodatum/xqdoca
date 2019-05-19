@@ -46,7 +46,7 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  :         "source": () }</pre> 
  :)
 declare 
-%xqdoca:module("module","Html5 page created from the XQuery source")
+%xqdoca:module("module","Html5 report on the XQuery source")
 %xqdoca:output("index.html","html5")
 function xqh:xqdoc-html2($file as map(*),
                             $opts as map(*),
@@ -63,9 +63,8 @@ let $d:=<div>{
          xqh:functions($xqd/xqdoc:functions),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
          xqh:restxq($xqd),
-         xqh:when($xqd/xqdoc:imports,xqh:imports(?,$state)),
-          <div>
-            <h3 id="source">Original Source Code</h3>
+          <div class="div2">
+            <h2 ><a id="source"/>7 Source Code</h2>
             <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
           </div>
        }</div>
@@ -243,8 +242,9 @@ as element(nav){
 declare function xqh:imports($imports as element(xqdoc:imports),$state as map(*))
 as element(div){
     
-    <div id="imports">
-    <h3>Imports ({ count($imports/xqdoc:import) })</h3>
+    <div class="div2">
+    <h2><a id="imports"/>2 Imports</h2>
+    <p> { count($imports/xqdoc:import) } modules are imported by this module and {"?"} import this module.</p>
     <details>
       <table class="data" style="float:none">
         <thead>
@@ -273,28 +273,27 @@ as element(div){
 declare function xqh:variables($vars as element(xqdoc:variables))
 as element(div)
 {
-  <div id="variables">
-			<h3>
-				<a href="#variables">Variables</a>
-			</h3>
+  <div class="div2">
+			<h2>
+				<a id="variables"/>3 Variables
+			</h2>
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
-	   return xqh:variable($v),
-     if(empty( $vars/xqdoc:variable)) then "None" else ()
+      count $index
+	   return xqh:variable($v,(3,$index)),
+     if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
 		</div>
 };
 
-declare function xqh:variable($v as element(xqdoc:variable))
+declare function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
 as element(div)
 {
 let $id:= concat('$',$v/xqdoc:name)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
-		<div id="{ $id }">
-			<h4>
-				<a href="#{ $id }">{$id }</a>
-			</h4>
+		<div class="div3">
+			<h3><a id="{$id }"/>{ page:section($section) } {$id }</h3>
 			<dl>
         <dt class="label">Summary</dt>
 		   <dd>{ $summary }</dd>
@@ -309,31 +308,30 @@ return
 declare function xqh:functions($funs as element(xqdoc:functions))
 as element(div)
 {
-  <div id="functions">
-			<h3>
-				<a href="#functions">Functions</a>
-			</h3>
+  <div class="div2">
+			<h2><a id="functions"/>4 Functions</h2>
 		{ for $f in $funs/xqdoc:function
       order by  lower-case($f/xqdoc:name)
-	   return xqh:function($f)
+      count $pos
+	   return xqh:function($f,(4,$pos)),
+      if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
 		</div>
 };
 
 (:~   o/p details for function $funs has all defined arities
  :)
-declare function xqh:function($funs as element(xqdoc:function)*)
+declare function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
 as element(div)
 {
 		let $id:=$funs[1]/xqdoc:name/string()
 	  return
-		<div id="{$id}">
-			<h4>
-			   { $id }
+		<div class="div3">
+			<h3><a id="{$id}"/>{ page:section($section) } { $id }
 			  <div style="float:right">
 				<a href="#{$id}" >#</a>
 				</div>
-			</h4>
+			</h3>
 
 		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
 			<dt class="label">Signature</dt>
@@ -461,10 +459,8 @@ as xs:boolean
 declare function xqh:namespaces($namespaces as element(xqdoc:namespaces))
 as element(div)
 {
-		<div id="namespaces">
-			<h3>
-				<a href="#namespaces">Namespaces</a>
-			</h3>
+     <div class="div2">
+			<h2><a id="namespaces"/>5 Namespaces</h2>
 			<p>The following namespaces are defined:</p>
 			<table class="data" style="float:none">
 				<thead>
@@ -583,7 +579,10 @@ typeswitch ($tag)
 declare function xqh:restxq($xqd)
 as element(div)
 {
-  <div>TODO resthq</div>
+   <div class="div2">
+			<h2><a id="restxq"/>6 RestXQ</h2>
+      <p>TODO</p>
+    </div>
 };
 
 (:~ run function when value is non empty :)

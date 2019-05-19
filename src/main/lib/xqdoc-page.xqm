@@ -149,3 +149,8 @@ as map(*)*
 {
 page:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
 };
+
+declare function page:section($pos as xs:anyAtomicType*)
+as xs:string{
+  string-join($pos,".") || "&#160;"
+};

@@ -30,7 +30,66 @@ In particular the `outputs` option lists the global and module generators to run
 ```
 basex  -befolder=/Users/andy/git/xqdoca  -btarget=file:///c:/tmp/test/ xqdoca.xq
 ```
+## builtin generators
 
+```
+map {
+  "output": "html5",
+  "name": "index",
+  "uri": "index.html",
+  "function": Q{quodatum:build.xqdoc-html}index-html2#2,
+  "type": Q{https://github.com/Quodatum/xqdoca}global,
+  "description": "Index of sources"
+}
+map {
+  "output": "html5",
+  "name": "restxq",
+  "uri": "restxq.html",
+  "function": Q{quodatum:build.xqdoc-html}restxq#2,
+  "type": Q{https://github.com/Quodatum/xqdoca}global,
+  "description": "Summary of REST interface"
+}
+map {
+  "output": "html5",
+  "name": "import",
+  "uri": "imports.html",
+  "function": Q{quodatum:build.xqdoc-html}imports#2,
+  "type": Q{https://github.com/Quodatum/xqdoca}global,
+  "description": "Summary of import usage"
+}
+map {
+  "output": "html5",
+  "name": "annoations",
+  "uri": "annotation.html",
+  "function": Q{quodatum:build.xqdoc-html}annotations#2,
+  "type": Q{https://github.com/Quodatum/xqdoca}global,
+  "description": "Summary of Annotation use"
+}
+map {
+  "output": "xml",
+  "name": "xqdoc",
+  "uri": "xqdoc.xml",
+  "function": Q{quodatum:build.xqdoc-html}xqdoc#3,
+  "type": Q{https://github.com/Quodatum/xqdoca}module,
+  "description": "xqDoc file for the source module"
+}
+map {
+  "output": "xml",
+  "name": "xqparse",
+  "uri": "xqparse.xml",
+  "function": Q{quodatum:build.xqdoc-html}xqparse#3,
+  "type": Q{https://github.com/Quodatum/xqdoca}module,
+  "description": "xqparse file for the source module"
+}
+map {
+  "output": "html5",
+  "name": "module",
+  "uri": "index.html",
+  "function": Q{quodatum:xqdoca.mod-html}xqdoc-html2#3,
+  "type": Q{https://github.com/Quodatum/xqdoca}module,
+  "description": "Html5 page created from the XQuery source"
+}
+```
 ## Customization
 The available output generators are determined by scanning the `generators` folder for functions
 containing annotations in the `https://github.com/Quodatum/xqdoca` namespace, usually bound to the 
@@ -80,6 +139,14 @@ Examples:
 %xqdoca:output("swagger.json","json")
 %xqdoca:output("xqparse.xml","xml")  
 ``` 
+#### current serialization types
+```
+map{
+ "html5": map{"method": "html", "version":"5.0", "indent": "no"},
+ "xml": map{"indent": "no"},
+ "json": map{"method": "json"}
+}
+```
 ## License
 
 XQdocA is released under the Apache License, Version 2.0

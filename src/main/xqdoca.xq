@@ -23,7 +23,7 @@ xquery version "3.1";
  : @version 0.2
  :)
 (:~
- : Generate html for for XQuery sources
+ : Generate documentation for for XQuery sources
  : @return info about the run (json format)
  :)
 

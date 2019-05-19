@@ -91,42 +91,42 @@ as map(*){
 };
 
 (:~
- :  render $outputs against state with options
+ :  render $outputs defined in $opts against state
+ : @return seq of outputs generated suitable for"storing"
 :)
 declare function xqo:render( $state as map(*),$opts as map(*))
 as map(*)*
 {
   let $funs:=xqo:load-generators()
+  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$opts?outputs?global] 
+  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$opts?outputs?module]
+  (: add found render info to opts :)
+  let $opts:=map:merge((map:entry("renderers",map{"global":$global,"module":$module}),$opts))
   return (
-      for $render in xqo:renderers($funs,$xqo:global)!xqo:render-map(.)
-      where $render?name =$opts?outputs?global
+      for $render in $global
       let $doc:= apply($render?function,[$state,$opts])
       return map{"document": $doc, 
-                 "uri": $render?uri,
+                 "uri": $render?uri, 
                  "output":$xqo:outputs?($render?output)
                },
                
-      for $render in xqo:renderers($funs,$xqo:module)!xqo:render-map(.) 
-      where  $render?name =$opts?outputs?module
-      for $file at $pos in $state?files
-      let $params:=map:merge((
+      for $render in $module, $file at $pos in $state?files
+      (: override opts for destination path :)
+      let $opts:=map:merge((
             map{
-              "filename": $file?path,
-              "show-private": true(),
               "root": "../../",
               "resources": "../../resources/"
-            },
-              $opts))
-      let $doc:= apply($render?function,[$file,$params,$state])       
+            }, $opts))
+      let $doc:= apply($render?function,[$file,$opts,$state])       
       return map{"document": $doc, 
-                 "uri": concat($file?href,"/",$render?uri),
+                 "uri": concat($file?href,"/",$render?uri),  
                  "output": $xqo:outputs?($render?output)
                 }
               )                                      
 };
 
 (:~
- : dynamically load functions from *.xqm modules in generators directory into static context
+ : dynamically load functions from *.xqm modules from generators directory into static context
  :)
 declare function xqo:load-generators()
 as function(*)*

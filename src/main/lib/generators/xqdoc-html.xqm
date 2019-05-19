@@ -284,8 +284,8 @@ function xqhtml:imports($state,$opts)
 
 (:~ annotations page :)
 declare 
-%xqdoca:global("annoations","Summary of Annotation use")
-%xqdoca:output("annotation.html","html5") 
+%xqdoca:global("annotations","Summary of Annotation use")
+%xqdoca:output("annotations.html","html5") 
 function xqhtml:annotations($state,$opts)
 {
   let $ns-map:=map:merge(
@@ -355,9 +355,9 @@ function xqhtml:view-list($opts as map(*),$exclude as xs:string*)
 as element(dl)
 {  
 <dl>           
- {for $name in $opts?outputs?views
+ {for $name in $opts?outputs?global
   where not($name eq $exclude)
-  let $def:= map:get($opts?renderers?modules,$name)
+  for  $def in $opts?renderers?modules[?name=$name]
   return (<dt><a href="{ $def?uri }">{ $name }</a></dt>
          ,<dd>{ $def?title }</dd>)
   }    
