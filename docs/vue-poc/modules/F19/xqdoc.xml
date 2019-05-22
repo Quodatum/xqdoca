@@ -1,0 +1,80 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.test.jobs</xqdoc:uri><xqdoc:name>jobs.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>job list</xqdoc:description><xqdoc:custom tag="__source">features/job/jobs.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>module namespace j = 'quodatum.test.jobs';
+
+
+(:~
+ :  job list
+ :)
+declare  
+%rest:GET %rest:path("/vue-poc/api/job")
+%output:method("json")   
+function j:list()
+as element(json)
+{
+ let $jlist:=jobs:list()[. != jobs:current()] !jobs:list-details(.)
+ return &lt;json type="array"&gt;
+ {for $j in reverse($jlist)
+ return &lt;_ type="object"&gt;
+   {j:job-json($j)}
+ &lt;/_&gt;
+ }&lt;/json&gt;
+};
+
+(:~
+ :  job info
+ :)
+declare  
+%rest:GET %rest:path("/vue-poc/api/job/{$job}")
+%output:method("json")   
+function j:job($job)
+as element(json)
+{
+ let $j:=jobs:list-details($job)
+ return &lt;json type="object"&gt;
+         {if($j) then j:job-json($j) else ()}
+        &lt;/json&gt;
+};
+
+declare function j:job-json($j as element(job)) 
+as element(*)*
+{
+     &lt;id&gt;{$j/@id/string()}&lt;/id&gt;
+     ,&lt;type&gt;{$j/@type/string()}&lt;/type&gt;
+     ,&lt;state&gt;{$j/@state/string()}&lt;/state&gt;
+     ,&lt;user&gt;{$j/@user/string()}&lt;/user&gt;
+      ,&lt;registered&gt;{$j/@time/string()}&lt;/registered&gt;
+      ,&lt;start&gt;{$j/@start/string()}&lt;/start&gt;
+     ,&lt;duration&gt;{$j/@duration/string()}&lt;/duration&gt;
+     ,&lt;text&gt;{$j/string()}&lt;/text&gt;
+      ,&lt;reads&gt;{$j/@reads/string()}&lt;/reads&gt;
+       ,&lt;writes&gt;{$j/@writes/string()}&lt;/writes&gt;
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="j" uri="quodatum.test.jobs"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>job list</xqdoc:description></xqdoc:comment><xqdoc:name>j:list</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/job</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/job") %output:method("json") function j:list() as element(json)</xqdoc:signature><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function j:list()
+as element(json)
+{
+ let $jlist:=jobs:list()[. != jobs:current()] !jobs:list-details(.)
+ return &lt;json type="array"&gt;
+ {for $j in reverse($jlist)
+ return &lt;_ type="object"&gt;
+   {j:job-json($j)}
+ &lt;/_&gt;
+ }&lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>current</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>reverse</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.test.jobs</xqdoc:uri><xqdoc:name>job-json</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jlist</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>job info</xqdoc:description></xqdoc:comment><xqdoc:name>j:job</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/job/{$job}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/job/{$job}") %output:method("json") function j:job($job as item()*) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>job</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function j:job($job)
+as element(json)
+{
+ let $j:=jobs:list-details($job)
+ return &lt;json type="object"&gt;
+         {if($j) then j:job-json($j) else ()}
+        &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.test.jobs</xqdoc:uri><xqdoc:name>job-json</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>job</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>j:job-json</xqdoc:name><xqdoc:signature>declare function j:job-json($j as element(job)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>j</xqdoc:name><xqdoc:type>element(job)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function j:job-json($j as element(job)) 
+as element(*)*
+{
+     &lt;id&gt;{$j/@id/string()}&lt;/id&gt;
+     ,&lt;type&gt;{$j/@type/string()}&lt;/type&gt;
+     ,&lt;state&gt;{$j/@state/string()}&lt;/state&gt;
+     ,&lt;user&gt;{$j/@user/string()}&lt;/user&gt;
+      ,&lt;registered&gt;{$j/@time/string()}&lt;/registered&gt;
+      ,&lt;start&gt;{$j/@start/string()}&lt;/start&gt;
+     ,&lt;duration&gt;{$j/@duration/string()}&lt;/duration&gt;
+     ,&lt;text&gt;{$j/string()}&lt;/text&gt;
+      ,&lt;reads&gt;{$j/@reads/string()}&lt;/reads&gt;
+       ,&lt;writes&gt;{$j/@writes/string()}&lt;/writes&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

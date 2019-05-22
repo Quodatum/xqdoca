@@ -1,0 +1,38 @@
+<XQuery><LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>j</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.test.logs'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>entity</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.models.generated'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../models.gen.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dice</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.web.dice/v4'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../lib/dice.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>web</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.web.utils4'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../lib/webutils.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+(:~
+ :  job list
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/log"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"json"</StringLiteral><TOKEN>)</TOKEN></Annotation>   
+<FunctionDecl><TOKEN>function</TOKEN> <QName>j:list</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>json</QName><TOKEN>)</TOKEN></ElementTest>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>entity</QName><TOKEN>:=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>entity:list</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"basexlog"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></PostfixExpr></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>items</QName><TOKEN>:=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>entity</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"data"</StringLiteral><TOKEN>)</TOKEN></ArgumentList><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></PostfixExpr></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>items</QName><TOKEN>:=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>items</QName></VarRef><Predicate><TOKEN>[</TOKEN><OrExpr><FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>or</TOKEN> <FunctionCall><QName>not</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>ends-with</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN> <TOKEN>,</TOKEN><StringLiteral>"/vue-poc/api/log"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></OrExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr></LetBinding></LetClause>
+ (: let $_:=admin:write-log("hello admin:write-log") :)
+ <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>dice:response</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>items</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>entity</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>web:dice</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : create a log entry
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/log/add"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>rest:form-param</QName><TOKEN>(</TOKEN><StringLiteral>"type"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$type}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>rest:form-param</QName><TOKEN>(</TOKEN><StringLiteral>"message"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$message}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"text"</StringLiteral><TOKEN>)</TOKEN></Annotation>   
+<FunctionDecl><TOKEN>function</TOKEN> <QName>j:add</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>type</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+               <Param><TOKEN>$</TOKEN><QName>message</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN><FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>type</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>message</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>,</TOKEN><StringLiteral>"post"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+   <Expr><StringLiteral>"AAAA"</StringLiteral><TOKEN>,</TOKEN>
+   <FunctionCall><QName>admin:write-log</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>message</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>type</QName></VarRef> <TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr> 
+   <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

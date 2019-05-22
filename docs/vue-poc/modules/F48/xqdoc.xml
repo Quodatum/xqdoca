@@ -1,0 +1,71 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>http://quodatum.com/ns/plantuml</xqdoc:uri><xqdoc:name>plantuml.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>plantuml library</xqdoc:description><xqdoc:see>http://plantuml.com/code-javascript-synchronous</xqdoc:see><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="date">apr 2019</xqdoc:custom><xqdoc:custom tag="__source">lib/plantuml/plantuml.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~ 
+ :  plantuml library
+ : @see  http://plantuml.com/code-javascript-synchronous
+ : @author Andy Bunce
+ : @version 0.1
+ : @date apr 2019  
+:)
+module namespace  plant='http://quodatum.com/ns/plantuml';
+import module namespace bin="http://expath.org/ns/binary";
+
+declare function plant:encode6bit($b as xs:integer) {
+  switch(true())
+  case ($b lt  10) return fn:codepoints-to-string (48 + $b)
+  case ($b lt 36) return fn:codepoints-to-string (65 + $b -10)
+  case ($b lt 62) return fn:codepoints-to-string (97 + $b -36)
+  case ($b eq 62) return "-"
+  case ($b eq 63) return "_"
+  default return "?"
+};
+
+declare function plant:append3bytes($b1 as xs:base64Binary , 
+                                    $b2  as xs:base64Binary ,
+                                    $b3 as xs:base64Binary )
+  {
+  let $c1 := $b1=&gt;bin:shift(-2)
+  let $c2:= $b1=&gt;bin:and(bin:hex("3"))=&gt;bin:shift(4)=&gt;bin:or(bin:shift($b2,-4))
+  let $c3 := $b2=&gt;bin:and(bin:hex("F"))=&gt;bin:shift(2)=&gt;bin:or(bin:shift($b3,-6))
+  let $mask:=function($b){bin:and($b,bin:hex("3F"))=&gt;bin:unpack-integer(0,1)}
+  let $c4 := $b3 =&gt;bin:and(bin:hex("3F"))
+  return concat( 
+  plant:encode6bit($mask($c1)),
+  plant:encode6bit($mask($c2)),
+  plant:encode6bit($mask($c3)),
+  plant:encode6bit($mask($c4))
+  )
+};
+
+declare function plant:encode64($data as xs:string)
+{
+  let $b:=bin:encode-string($data,"UTF-8")
+  let $b:=bin:pad-right($b,bin:length($b) mod 3)
+  return $b
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="plant" uri="http://quodatum.com/ns/plantuml"/><xqdoc:namespace prefix="bin" uri="http://expath.org/ns/binary"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:name>plant:encode6bit</xqdoc:name><xqdoc:signature>declare function plant:encode6bit($b as xs:integer) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>b</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function plant:encode6bit($b as xs:integer) {
+  switch(true())
+  case ($b lt  10) return fn:codepoints-to-string (48 + $b)
+  case ($b lt 36) return fn:codepoints-to-string (65 + $b -10)
+  case ($b lt 62) return fn:codepoints-to-string (97 + $b -36)
+  case ($b eq 62) return "-"
+  case ($b eq 63) return "_"
+  default return "?"
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>codepoints-to-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>codepoints-to-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>codepoints-to-string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>plant:append3bytes</xqdoc:name><xqdoc:signature>declare function plant:append3bytes($b1 as xs:base64Binary, $b2 as xs:base64Binary, $b3 as xs:base64Binary) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>b1</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>b2</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>b3</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function plant:append3bytes($b1 as xs:base64Binary , 
+                                    $b2  as xs:base64Binary ,
+                                    $b3 as xs:base64Binary )
+  {
+  let $c1 := $b1=&gt;bin:shift(-2)
+  let $c2:= $b1=&gt;bin:and(bin:hex("3"))=&gt;bin:shift(4)=&gt;bin:or(bin:shift($b2,-4))
+  let $c3 := $b2=&gt;bin:and(bin:hex("F"))=&gt;bin:shift(2)=&gt;bin:or(bin:shift($b3,-6))
+  let $mask:=function($b){bin:and($b,bin:hex("3F"))=&gt;bin:unpack-integer(0,1)}
+  let $c4 := $b3 =&gt;bin:and(bin:hex("3F"))
+  return concat( 
+  plant:encode6bit($mask($c1)),
+  plant:encode6bit($mask($c2)),
+  plant:encode6bit($mask($c3)),
+  plant:encode6bit($mask($c4))
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>hex</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>shift</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>hex</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>shift</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>and</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>hex</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>hex</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/plantuml</xqdoc:uri><xqdoc:name>encode6bit</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/plantuml</xqdoc:uri><xqdoc:name>encode6bit</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/plantuml</xqdoc:uri><xqdoc:name>encode6bit</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/plantuml</xqdoc:uri><xqdoc:name>encode6bit</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>shift</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>and</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>shift</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>or</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>and</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>shift</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>or</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="6"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>unpack-integer</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>and</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b3</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b3</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mask</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mask</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mask</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c3</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mask</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c4</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>plant:encode64</xqdoc:name><xqdoc:signature>declare function plant:encode64($data as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function plant:encode64($data as xs:string)
+{
+  let $b:=bin:encode-string($data,"UTF-8")
+  let $b:=bin:pad-right($b,bin:length($b) mod 3)
+  return $b
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>encode-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>pad-right</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>length</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,108 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>text.html5</xqdoc:uri><xqdoc:name>html5parse.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>wrapper for https://github.com/digitalfondue/jfiveparse A java html5 compliant parser</xqdoc:description><xqdoc:custom tag="__source">lib/vue-compile/html5parse.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : wrapper for https://github.com/digitalfondue/jfiveparse A java html5 compliant parser 
+ :)
+
+module namespace html5="text.html5";
+declare namespace Document="java:ch.digitalfondue.jfiveparse.Document";
+declare namespace Element="java:ch.digitalfondue.jfiveparse.Element";
+declare namespace Node="java:ch.digitalfondue.jfiveparse.Node";
+declare namespace Parser="java:ch.digitalfondue.jfiveparse.Parser";
+declare namespace Selector="java:ch.digitalfondue.jfiveparse.Selector";
+declare namespace Option="java:ch.digitalfondue.jfiveparse.Option";
+declare namespace EnumSet="java:java.util.EnumSet";
+declare namespace list="java:java.util.ArrayList";
+
+declare variable $html5:opt:=EnumSet:of(Option:valueOf("HIDE_EMPTY_ATTRIBUTE_VALUE"));
+(:~
+ : parse html text string into jfiveparse.Document 
+ :)
+declare function html5:doc($text as xs:string)
+{
+  let $p:=Parser:new()
+  return Parser:parse($p,$text)
+};
+
+(:~ 
+ : apply function $fn to each jfiveparse.Node
+ :)
+declare function html5:for-each($nodes,$fn as function(*))
+{
+  for $index in 0 to list:size($nodes)-1
+  let $a:=list:get($nodes,xs:int($index))
+  return $fn($a)
+};
+
+(:~ 
+ : first element with given name 
+ :)
+declare function html5:getElementFirstByTagName($doc,$tag as xs:string)
+{
+ Document:getElementsByTagName($doc,$tag)
+ =&gt;list:get(xs:int(0))
+};
+
+(:~ 
+ : get attribute from node 
+ :)
+declare function html5:getAttribute($node,$atname as xs:string)
+as xs:string
+{
+ Element:getAttribute($node,$atname)
+};
+
+(:~ 
+ : get html from node 
+ :)
+declare function html5:getInnerHTML($node)
+as xs:string
+{
+ Node:getInnerHTML($node,$html5:opt)
+};
+(:~ 
+ : @return matcher for given element and attribute with value
+ :)
+declare function html5:selector()
+{
+  Selector:select()
+  =&gt;Selector:element("script")
+  =&gt;Selector:attrValEq("type", "text/x-template")
+  =&gt;Selector:toMatcher()
+};
+
+(:~ 
+ :write file
+ :)
+declare function html5:write-text($text as xs:string,$file as xs:string)
+{
+file:write-text($file,$text)
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="html5" uri="text.html5"/><xqdoc:namespace prefix="Document" uri="java:ch.digitalfondue.jfiveparse.Document"/><xqdoc:namespace prefix="Element" uri="java:ch.digitalfondue.jfiveparse.Element"/><xqdoc:namespace prefix="Node" uri="java:ch.digitalfondue.jfiveparse.Node"/><xqdoc:namespace prefix="Parser" uri="java:ch.digitalfondue.jfiveparse.Parser"/><xqdoc:namespace prefix="Selector" uri="java:ch.digitalfondue.jfiveparse.Selector"/><xqdoc:namespace prefix="Option" uri="java:ch.digitalfondue.jfiveparse.Option"/><xqdoc:namespace prefix="EnumSet" uri="java:java.util.EnumSet"/><xqdoc:namespace prefix="list" uri="java:java.util.ArrayList"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables><xqdoc:variable><xqdoc:name>html5:opt</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>parse html text string into jfiveparse.Document</xqdoc:description></xqdoc:comment><xqdoc:name>html5:doc</xqdoc:name><xqdoc:signature>declare function html5:doc($text as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>text</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function html5:doc($text as xs:string)
+{
+  let $p:=Parser:new()
+  return Parser:parse($p,$text)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Parser</xqdoc:uri><xqdoc:name>new</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Parser</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>apply function $fn to each jfiveparse.Node</xqdoc:description></xqdoc:comment><xqdoc:name>html5:for-each</xqdoc:name><xqdoc:signature>declare function html5:for-each($nodes as item()*, $fn as function(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>nodes</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>fn</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function html5:for-each($nodes,$fn as function(*))
+{
+  for $index in 0 to list:size($nodes)-1
+  let $a:=list:get($nodes,xs:int($index))
+  return $fn($a)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>java:java.util.ArrayList</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>java:java.util.ArrayList</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>int</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>nodes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>nodes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>index</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fn</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>first element with given name</xqdoc:description></xqdoc:comment><xqdoc:name>html5:getElementFirstByTagName</xqdoc:name><xqdoc:signature>declare function html5:getElementFirstByTagName($doc as item()*, $tag as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>doc</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>tag</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function html5:getElementFirstByTagName($doc,$tag as xs:string)
+{
+ Document:getElementsByTagName($doc,$tag)
+ =&gt;list:get(xs:int(0))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Document</xqdoc:uri><xqdoc:name>getElementsByTagName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>int</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>java:java.util.ArrayList</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>get attribute from node</xqdoc:description></xqdoc:comment><xqdoc:name>html5:getAttribute</xqdoc:name><xqdoc:signature>declare function html5:getAttribute($node as item()*, $atname as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>node</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>atname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function html5:getAttribute($node,$atname as xs:string)
+as xs:string
+{
+ Element:getAttribute($node,$atname)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Element</xqdoc:uri><xqdoc:name>getAttribute</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>atname</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>get html from node</xqdoc:description></xqdoc:comment><xqdoc:name>html5:getInnerHTML</xqdoc:name><xqdoc:signature>declare function html5:getInnerHTML($node as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>node</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function html5:getInnerHTML($node)
+as xs:string
+{
+ Node:getInnerHTML($node,$html5:opt)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Node</xqdoc:uri><xqdoc:name>getInnerHTML</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>text.html5</xqdoc:uri><xqdoc:name>opt</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description/><xqdoc:return>matcher for given element and attribute with value</xqdoc:return></xqdoc:comment><xqdoc:name>html5:selector</xqdoc:name><xqdoc:signature>declare function html5:selector() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function html5:selector()
+{
+  Selector:select()
+  =&gt;Selector:element("script")
+  =&gt;Selector:attrValEq("type", "text/x-template")
+  =&gt;Selector:toMatcher()
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Selector</xqdoc:uri><xqdoc:name>select</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Selector</xqdoc:uri><xqdoc:name>element</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="6"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Selector</xqdoc:uri><xqdoc:name>attrValEq</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>java:ch.digitalfondue.jfiveparse.Selector</xqdoc:uri><xqdoc:name>toMatcher</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>write file</xqdoc:description></xqdoc:comment><xqdoc:name>html5:write-text</xqdoc:name><xqdoc:signature>declare function html5:write-text($text as xs:string, $file as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>text</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function html5:write-text($text as xs:string,$file as xs:string)
+{
+file:write-text($file,$text)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write-text</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

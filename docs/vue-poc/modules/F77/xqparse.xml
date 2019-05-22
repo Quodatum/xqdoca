@@ -1,0 +1,8 @@
+<XQuery><MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>schematron</NCName> <TOKEN>=</TOKEN> <StringLiteral>"http://github.com/Schematron/schematron-basex"</StringLiteral></ModuleImport><TOKEN>;</TOKEN></Prolog>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>sch</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>schematron:compile</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>doc</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>'C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\docbook-mods.sch'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>xml</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>fn:doc</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>'C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\test.xml'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>validation</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>schematron:validate</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xml</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>sch</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+
+<ReturnClause><TOKEN>return</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>validation</QName></VarRef></ReturnClause></FLWORExpr></MainModule>
+
+<EOF/></XQuery>

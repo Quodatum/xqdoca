@@ -1,0 +1,25 @@
+<XQuery>(:~
+ : Open query.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/queries'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>session</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/session'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../modules/session.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the contents of a query file.
+ : @param  $name  name of query file
+ : @return query string
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/dba/query-open"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>"name"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$name}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"text"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:query-open</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>name</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <Expr><FunctionCall><QName>session:set</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:QUERY</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+  <FunctionCall><QName>file:read-text</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><FunctionCall><QName>session:directory</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></StringConcatExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

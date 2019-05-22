@@ -1,0 +1,6 @@
+<XQuery><MainModule><Prolog><NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>fw</NCName><TOKEN>=</TOKEN><StringLiteral>"quodatum:collection.walker"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+<NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>c</NCName><TOKEN>=</TOKEN><StringLiteral>"http://www.w3.org/ns/xproc-step"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>tree</NCName><TOKEN>=</TOKEN><StringLiteral>"quodatum.data.tree"</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../lib/tree.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN></Prolog>
+
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>paths</QName><TOKEN>:=</TOKEN><FunctionCall><QName>uri-collection</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"/ALO"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>tree:build</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>paths</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr></MainModule><EOF/></XQuery>

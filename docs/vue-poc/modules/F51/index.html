@@ -1,0 +1,280 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>vue-poc - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:vue.compile</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>compile vue files to js</dd><dt>Tags</dt><dd><p>__source : lib/vue-compile/vue-compile.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum:vue.compile">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">vue-poc</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:vue.compile</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$vue:COMPONENTS"><span class="secno">3.1</span><span class="content">$vue:COMPONENTS</span></a></li><li><a href="#$vue:CORE"><span class="secno">3.2</span><span class="content">$vue:CORE</span></a></li><li><a href="#$vue:DEST"><span class="secno">3.3</span><span class="content">$vue:DEST</span></a></li><li><a href="#$vue:FEATURES"><span class="secno">3.4</span><span class="content">$vue:FEATURES</span></a></li><li><a href="#$vue:FILTERS"><span class="secno">3.5</span><span class="content">$vue:FILTERS</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#vue:capitalize-first"><span class="secno">4.1</span><span class="content" title="">vue:capitalize-first<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:compile"><span class="secno">4.2</span><span class="content" title="">vue:compile<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:feature"><span class="secno">4.3</span><span class="content" title="">vue:feature<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:feature-build"><span class="secno">4.4</span><span class="content" title="">vue:feature-build<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:feature-files"><span class="secno">4.5</span><span class="content" title="">vue:feature-files<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:filelist"><span class="secno">4.6</span><span class="content" title="">vue:filelist<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:js-test"><span class="secno">4.7</span><span class="content" title="">vue:js-test<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#vue:parse"><span class="secno">4.8</span><span class="content" title="">vue:parse<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">3</span> modules, it imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;"><div><span><a href="../../modules/F29/index.html" title="features\tasks\task\task.xqm">quodatum:vue.rest</a><a href="../../modules/F32/index.html" title="features\tasks\vue-compile\rxq-vue-compile.xqm">2</a></span></div><div><span><a href="../../modules/F33/index.html" title="features\tasks\vue-compile\tx-vuecompile.xq">tx-vuecompile.xq</a></span></div><div><span><a href="../../modules/F79/index.html" title="tasks\vue-compile.xq">vue-compile.xq</a></span></div></div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F50/index.html" title="lib\vue-compile\html5parse.xqm">text.html5</a></span></div><div><span class="badge badge-warning" title="External file">quodatum:file.walker</span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><div class="div3"><h3><a id="$vue:COMPONENTS"></a>3.1&nbsp;$vue:COMPONENTS</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$vue:CORE"></a>3.2&nbsp;$vue:CORE</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$vue:DEST"></a>3.3&nbsp;$vue:DEST</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$vue:FEATURES"></a>3.4&nbsp;$vue:FEATURES</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$vue:FILTERS"></a>3.5&nbsp;$vue:FILTERS</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="vue:capitalize-first"></a>4.1&nbsp;vue:capitalize-first<div style="float:right"><a href="#vue:capitalize-first">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:capitalize-first</code>
+		  ( 
+			<code class="arg">$arg</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">xs:string</xqdoc:type>?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>arg<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string?</code></li></ul></dd><details><summary>References 4 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>upper-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:capitalize-first
+  ( $arg as xs:string? )  as xs:string? 
+{
+   concat(upper-case(substring($arg,1,1)), substring($arg,2))
+}</code></pre></details></div><div class="div3"><h3><a id="vue:compile"></a>4.2&nbsp;vue:compile<div style="float:right"><a href="#vue:compile">#</a></div></h3><dt class="label">Summary</dt><dd>compile vue code to "static/app-gen.js"</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:compile</code>
+		  ( 
+			<code class="arg">$proj</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>proj<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> root folder e.g "C:/Users/andy/git/vue-poc/src/vue-poc/"</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 25 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>write-text#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#3</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#3</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#3</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#3</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>false#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>base-uri#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>current-dateTime#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string-join#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>false#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>trace#4</td></tr><tr><td>Fn</td><td>quodatum:file.walker</td><td>directory-list#2</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>feature-files#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>js-test#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>js-test#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>js-test#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>filelist#2</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>feature-build#2</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>feature-build#2</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>feature-build#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:compile($proj as xs:string)
+{
+let $FEATURES:= file:resolve-path("features/",$proj=&gt;trace("proj:"))
+let $COMPONENTS:= file:resolve-path("components/",$proj)
+let $js:=vue:filelist(file:resolve-path("components/",$proj),".*\.js")
+let $CORE:="core.js"=&gt;file:resolve-path($proj)
+let $ROUTER:="router.js"=&gt;file:resolve-path($proj)
+let $APP:="app.vue"=&gt;file:resolve-path($proj)
+
+let $DEST:="static/app-gen.js"=&gt;file:resolve-path($proj)
+
+let $files:=vue:feature-files($proj)
+let $feats:=$files!vue:feature-build(.,false())
+
+let $files:= fw:directory-list($COMPONENTS,map{"include-filter":".*\.vue"})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+let $comps:=$files!vue:feature-build(.,true())
+
+let $comment:="// generated " || current-dateTime() || "&amp;#xA;&amp;#xD;"
+return file:write-text($DEST,string-join(($comment,
+                                         $comps,
+                                         $js!vue:js-test(.),
+                                         $feats,
+                                         vue:js-test($ROUTER),
+                                         $APP!vue:feature-build(.,false()),
+                                         vue:js-test($CORE))))
+}</code></pre></details></div><div class="div3"><h3><a id="vue:feature"></a>4.3&nbsp;vue:feature<div style="float:right"><a href="#vue:feature">#</a></div></h3><dt class="label">Summary</dt><dd>generate javascript vue call from vue files in source folder and core.js</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:feature</code>
+		  ( 
+			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$isComp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:boolean</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> is a ch.digitalfondue.jfiveparse.Document</li><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> for vue file</li><li>isComp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:boolean</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 4 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring-after#4</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>parse#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>capitalize-first#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:feature($doc,$url as xs:string,$isComp as xs:boolean)
+as xs:string
+{
+let $p:=vue:parse($doc)
+let $script:= $p?script=&gt;substring-after("{")
+
+return if(empty($p?id)) then 
+           () 
+       else 
+        if($isComp) then
+           ``[
+// src: `{ $url }`
+Vue.component('`{ $p?id }`',{template:` `{ $p?template }` `,
+      `{$script}`
+      );
+      ]``
+       else
+         ``[
+// src: `{ $url }`
+const `{ vue:capitalize-first($p?id) }`=Vue.extend({template:` `{ $p?template }` `,
+      `{ $script }`
+      );
+      ]``
+}</code></pre></details></div><div class="div3"><h3><a id="vue:feature-build"></a>4.4&nbsp;vue:feature-build<div style="float:right"><a href="#vue:feature-build">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:feature-build</code>
+		  ( 
+			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$isComp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:boolean</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>isComp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:boolean</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 3 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/fetch</td><td>text#1</td></tr><tr><td>Fn</td><td>quodatum:vue.compile</td><td>feature#4</td></tr><tr><td>Fn</td><td>text.html5</td><td>doc#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:feature-build($url as xs:string,$isComp as xs:boolean)
+as xs:string
+{
+ fetch:text($url)=&gt;html5:doc()=&gt;vue:feature($url ,$isComp)
+}</code></pre></details></div><div class="div3"><h3><a id="vue:feature-files"></a>4.5&nbsp;vue:feature-files<div style="float:right"><a href="#vue:feature-files">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:feature-files</code>
+		  ( 
+			<code class="arg">$proj</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>proj<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string*</code></li></ul></dd><details><summary>References 4 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#3</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>base-uri#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#2</td></tr><tr><td>Fn</td><td>quodatum:file.walker</td><td>directory-list#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:feature-files($proj)
+as xs:string*
+{
+ let $FEATURES:="features/"=&gt;file:resolve-path($proj)
+ let $files:=  fw:directory-list($FEATURES,map{"include-filter":".*\.vue"})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+ return $files
+}</code></pre></details></div><div class="div3"><h3><a id="vue:filelist"></a>4.6&nbsp;vue:filelist<div style="float:right"><a href="#vue:filelist">#</a></div></h3><dt class="label">Summary</dt><dd>return sequence of file paths starting from $path matching $filter</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:filelist</code>
+		  ( 
+			<code class="arg">$path</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$filter</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>path<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>filter<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string*</code></li></ul></dd><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>base-uri#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#2</td></tr><tr><td>Fn</td><td>quodatum:file.walker</td><td>directory-list#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:filelist($path as xs:string,$filter as xs:string)
+ as xs:string*
+ {
+      fw:directory-list($path,map{"include-filter": $filter})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+ }</code></pre></details></div><div class="div3"><h3><a id="vue:js-test"></a>4.7&nbsp;vue:js-test<div style="float:right"><a href="#vue:js-test">#</a></div></h3><dt class="label">Summary</dt><dd>javascript source with comment</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:js-test</code>
+		  ( 
+			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/fetch</td><td>text#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:js-test($url as xs:string)
+{
+ ``[
+// src: `{ $url }`
+`{ fetch:text($url) }`
+]``
+}</code></pre></details></div><div class="div3"><h3><a id="vue:parse"></a>4.8&nbsp;vue:parse<div style="float:right"><a href="#vue:parse">#</a></div></h3><dt class="label">Summary</dt><dd>parse a vue file to extract template and script</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">vue:parse</code>
+		  ( 
+			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>References 6 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>trace#4</td></tr><tr><td>Fn</td><td>text.html5</td><td>getInnerHTML#1</td></tr><tr><td>Fn</td><td>text.html5</td><td>getInnerHTML#1</td></tr><tr><td>Fn</td><td>text.html5</td><td>getElementFirstByTagName#2</td></tr><tr><td>Fn</td><td>text.html5</td><td>getAttribute#2</td></tr><tr><td>Fn</td><td>text.html5</td><td>getElementFirstByTagName#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function vue:parse($doc)
+as map(*)
+{
+  let $tempNode:= html5:getElementFirstByTagName($doc,"template")
+  let $template:= html5:getInnerHTML($tempNode)
+  let $id  := html5:getAttribute($tempNode,"id")=&gt;trace("ID")
+
+  let $script:= html5:getElementFirstByTagName($doc,"script")
+  let $script:= html5:getInnerHTML($script)
+  return map{"id":$id,"template":$template,"script":$script}
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>c</td><td>http://www.w3.org/ns/xproc-step</td></tr><tr><td>functx</td><td>http://www.functx.com</td></tr><tr><td>fw</td><td>quodatum:file.walker</td></tr><tr><td>html5</td><td>text.html5</td></tr><tr><td>vue</td><td>quodatum:vue.compile</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : compile vue files to js
+ :)
+module namespace vue = 'quodatum:vue.compile';
+
+import module namespace html5="text.html5" at "html5parse.xqm";
+import module namespace fw="quodatum:file.walker";
+declare namespace c="http://www.w3.org/ns/xproc-step";
+
+
+declare namespace functx = "http://www.functx.com";
+
+declare variable $vue:FEATURES:="features/";
+declare variable $vue:COMPONENTS:="components/";
+declare variable $vue:CORE:="components/core.js";
+declare variable $vue:FILTERS:="components/filters.js";
+declare variable $vue:DEST:="static/app-gen.js";
+
+(:~ 
+ : generate javascript vue call from vue files in source folder and core.js
+ : @param $doc is a ch.digitalfondue.jfiveparse.Document
+ : @param $url for vue file
+ :)
+declare function vue:feature($doc,$url as xs:string,$isComp as xs:boolean)
+as xs:string
+{
+let $p:=vue:parse($doc)
+let $script:= $p?script=&gt;substring-after("{")
+
+return if(empty($p?id)) then 
+           () 
+       else 
+        if($isComp) then
+           ``[
+// src: `{ $url }`
+Vue.component('`{ $p?id }`',{template:` `{ $p?template }` `,
+      `{$script}`
+      );
+      ]``
+       else
+         ``[
+// src: `{ $url }`
+const `{ vue:capitalize-first($p?id) }`=Vue.extend({template:` `{ $p?template }` `,
+      `{ $script }`
+      );
+      ]``
+};
+
+(:~
+ : parse a vue file to extract template and script
+ : @return  map{"id":$id,"template":$template,"script":$script}
+ :)
+declare function vue:parse($doc)
+as map(*)
+{
+  let $tempNode:= html5:getElementFirstByTagName($doc,"template")
+  let $template:= html5:getInnerHTML($tempNode)
+  let $id  := html5:getAttribute($tempNode,"id")=&gt;trace("ID")
+
+  let $script:= html5:getElementFirstByTagName($doc,"script")
+  let $script:= html5:getInnerHTML($script)
+  return map{"id":$id,"template":$template,"script":$script}
+};
+
+declare function vue:capitalize-first
+  ( $arg as xs:string? )  as xs:string? 
+{
+   concat(upper-case(substring($arg,1,1)), substring($arg,2))
+};
+
+(: filename of features:)
+declare function vue:feature-files($proj)
+as xs:string*
+{
+ let $FEATURES:="features/"=&gt;file:resolve-path($proj)
+ let $files:=  fw:directory-list($FEATURES,map{"include-filter":".*\.vue"})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+ return $files
+};
+
+declare function vue:feature-build($url as xs:string,$isComp as xs:boolean)
+as xs:string
+{
+ fetch:text($url)=&gt;html5:doc()=&gt;vue:feature($url ,$isComp)
+};
+
+(:~
+ : compile vue code to "static/app-gen.js"
+ : @param $proj root folder e.g "C:/Users/andy/git/vue-poc/src/vue-poc/"
+ :)
+declare function vue:compile($proj as xs:string)
+{
+let $FEATURES:= file:resolve-path("features/",$proj=&gt;trace("proj:"))
+let $COMPONENTS:= file:resolve-path("components/",$proj)
+let $js:=vue:filelist(file:resolve-path("components/",$proj),".*\.js")
+let $CORE:="core.js"=&gt;file:resolve-path($proj)
+let $ROUTER:="router.js"=&gt;file:resolve-path($proj)
+let $APP:="app.vue"=&gt;file:resolve-path($proj)
+
+let $DEST:="static/app-gen.js"=&gt;file:resolve-path($proj)
+
+let $files:=vue:feature-files($proj)
+let $feats:=$files!vue:feature-build(.,false())
+
+let $files:= fw:directory-list($COMPONENTS,map{"include-filter":".*\.vue"})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+let $comps:=$files!vue:feature-build(.,true())
+
+let $comment:="// generated " || current-dateTime() || "&amp;#xA;&amp;#xD;"
+return file:write-text($DEST,string-join(($comment,
+                                         $comps,
+                                         $js!vue:js-test(.),
+                                         $feats,
+                                         vue:js-test($ROUTER),
+                                         $APP!vue:feature-build(.,false()),
+                                         vue:js-test($CORE))))
+};
+
+(:~
+ : return sequence of file paths starting from $path matching $filter
+ :)
+ declare function vue:filelist($path as xs:string,$filter as xs:string)
+ as xs:string*
+ {
+      fw:directory-list($path,map{"include-filter": $filter})
+             //c:file/@name/resolve-uri(.,base-uri(.))
+ };
+(:~
+ : javascript source with comment
+ :)
+declare function vue:js-test($url as xs:string)
+{
+ ``[
+// src: `{ $url }`
+`{ fetch:text($url) }`
+]``
+};</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:22:52.354+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

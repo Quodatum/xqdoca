@@ -1,0 +1,154 @@
+<XQuery>(:~
+ : Utility functions.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>util</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/util'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>options</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/options'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'options.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>session</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/session'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'session.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~
+ : Evaluates a query and returns the result.
+ : @param  $query    query string
+ : @param  $context  initial context value
+ : @return serialized result of query
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:query</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>query</QName>    <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>context</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>limit</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:MAXCHARS</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>result</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>xquery:eval</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>query</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>''</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>context</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN> <FunctionCall><QName>util:query-options</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>util:chop</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>serialize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>result</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'limit'</StringLiteral><TOKEN>:</TOKEN> <AdditiveExpr><MultiplicativeExpr><VarRef><TOKEN>$</TOKEN><QName>limit</QName></VarRef> <TOKEN>*</TOKEN> <IntegerLiteral>2</IntegerLiteral></MultiplicativeExpr> <TOKEN>+</TOKEN> <IntegerLiteral>1</IntegerLiteral></AdditiveExpr></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'method'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'basex'</StringLiteral></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>limit</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Runs an updating query.
+ : @param  $query  query string
+ : @return empty sequence
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:update-query</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>query</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>xquery:eval-update</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>query</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN> <FunctionCall><QName>util:query-options</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the options for evaluating a query.
+ : @return options
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>private</QName></Annotation> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:query-options</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN>
+    <MapConstructorEntry><StringLiteral>'timeout'</StringLiteral>   <TOKEN>:</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:TIMEOUT</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
+    <MapConstructorEntry><StringLiteral>'memory'</StringLiteral>    <TOKEN>:</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:MEMORY</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
+    <MapConstructorEntry><StringLiteral>'permission'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:PERMISSION</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
+    <MapConstructorEntry><StringLiteral>'base-uri'</StringLiteral>  <TOKEN>:</TOKEN> <StringConcatExpr><FunctionCall><QName>session:directory</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <StringLiteral>'/'</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>session:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:QUERY</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></StringConcatExpr></MapConstructorEntry>
+  <TOKEN>}</TOKEN></MapConstructor>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the index of the first result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:start</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>page</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:integer</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>sort</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:integer</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><AndExpr><VarRef><TOKEN>$</TOKEN><QName>page</QName></VarRef> <TOKEN>and</TOKEN> <FunctionCall><QName>not</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>sort</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></AndExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <AdditiveExpr><MultiplicativeExpr><ParenthesizedExpr><TOKEN>(</TOKEN><AdditiveExpr><VarRef><TOKEN>$</TOKEN><QName>page</QName></VarRef> <TOKEN>-</TOKEN> <IntegerLiteral>1</IntegerLiteral></AdditiveExpr><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>*</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:MAXROWS</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MultiplicativeExpr> <TOKEN>+</TOKEN> <IntegerLiteral>1</IntegerLiteral></AdditiveExpr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <IntegerLiteral>1</IntegerLiteral>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the index of the last result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:end</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>page</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:integer</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>sort</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:integer</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><AndExpr><VarRef><TOKEN>$</TOKEN><QName>page</QName></VarRef> <TOKEN>and</TOKEN> <FunctionCall><QName>not</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>sort</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></AndExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <MultiplicativeExpr><VarRef><TOKEN>$</TOKEN><QName>page</QName></VarRef> <TOKEN>*</TOKEN> <FunctionCall><QName>options:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:MAXROWS</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MultiplicativeExpr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <IntegerLiteral>999999999</IntegerLiteral>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Chops a string result to the maximum number of allowed characters.
+ : @param  $string  string
+ : @param  $max     maximum number of characters
+ : @return string
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:chop</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>string</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>max</QName>     <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:integer</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><QName>string-length</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>string</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>&gt;</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>max</QName></VarRef></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <StringConcatExpr><FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>string</QName></VarRef><TOKEN>,</TOKEN> <IntegerLiteral>1</IntegerLiteral><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>max</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <StringLiteral>'...'</StringLiteral></StringConcatExpr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <VarRef><TOKEN>$</TOKEN><QName>string</QName></VarRef>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Joins sequence entries.
+ : @param  $items  items
+ : @param  $sep    separator
+ : @return result
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:item-join</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>items</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>sep</QName>    <TypeDeclaration><TOKEN>as</TOKEN> <ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>*</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><TOKEN>item</TOKEN> <PositionalVar><TOKEN>at</TOKEN> <TOKEN>$</TOKEN><QName>pos</QName></PositionalVar> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>items</QName></VarRef></ForBinding></ForClause>
+  <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>sep</QName></VarRef><Predicate><TOKEN>[</TOKEN><ComparisonExpr><VarRef><TOKEN>$</TOKEN><QName>pos</QName></VarRef> <TOKEN>&gt;</TOKEN> <IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><TOKEN>item</TOKEN></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns a count info for the specified items.
+ : @param  $items   items
+ : @param  $name    name of item (singular form)
+ : @param  $action  action label (past tense)
+ : @return result
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:info</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>items</QName>   <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>name</QName>    <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>action</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><TOKEN>count</TOKEN> <TOKEN>:=</TOKEN> <FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>items</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <StringConcatExpr><VarRef><TOKEN>$</TOKEN><TOKEN>count</TOKEN></VarRef> <TOKEN>||</TOKEN> <StringLiteral>' '</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef> <TOKEN>||</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><VarRef><TOKEN>$</TOKEN><TOKEN>count</TOKEN></VarRef> <TOKEN>&gt;</TOKEN> <IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <StringLiteral>'s were '</StringLiteral> <TOKEN>else</TOKEN> <StringLiteral>' was '</StringLiteral></IfExpr><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>action</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>'.'</StringLiteral></StringConcatExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Capitalizes a string.
+ : @param  $string  string
+ : @return capitalized string
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:capitalize</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>string</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <StringConcatExpr><FunctionCall><QName>upper-case</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>string</QName></VarRef><TOKEN>,</TOKEN> <IntegerLiteral>1</IntegerLiteral><TOKEN>,</TOKEN> <IntegerLiteral>1</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>string</QName></VarRef><TOKEN>,</TOKEN> <IntegerLiteral>2</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></StringConcatExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Convenience function for redirecting to another page from update operations.
+ : @param  $url     URL
+ : @param  $params  query parameters
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> <FunctionDecl><TOKEN>function</TOKEN> <QName>util:redirect</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>url</QName>     <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>params</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>update:output</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>web:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

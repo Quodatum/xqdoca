@@ -1,0 +1,3 @@
+<XQuery><MainModule><Prolog/><FunctionCall><QName>fetch:xml</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"http://transpect.io/test/test.xml"</StringLiteral><TOKEN>,</TOKEN> 
+<MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"catfile"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"C:\Users\andy\Desktop\basex.versions\basex.91.0831\etc\mycatalog.xml"</StringLiteral></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor>
+<TOKEN>)</TOKEN></ArgumentList></FunctionCall></MainModule><EOF/></XQuery>

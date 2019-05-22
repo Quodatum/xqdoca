@@ -1,0 +1,203 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>validate.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>general validation tools, 
+qv:validation: apply sequence of validators
+schematron  qv:schematron(?,$schematron)
+nvdl qv:nvdl(?,$nvdl)
+ 
+   msg handling                  
+format as json friendly</xqdoc:description><xqdoc:author>andy bunce ,quodatum ltd</xqdoc:author><xqdoc:custom tag="licence">apache 2</xqdoc:custom><xqdoc:custom tag="__source">lib/validate.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : general validation tools, 
+ : qv:validation: apply sequence of validators
+ : schematron  qv:schematron(?,$schematron)
+ : nvdl qv:nvdl(?,$nvdl)
+ 
+   msg handling                  
+ : format as json friendly
+ : @author andy bunce ,quodatum ltd
+ : @licence apache 2
+ :)
+
+module namespace qv = 'quodatum.validate';
+import module namespace sch="expkg-zone58.validation.schematron";
+declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";
+
+
+(:~ generate validation report for $doc
+ : @param $validators sequence of functions to apply 
+ : @param $extras custom attributes and elements to include in response
+ :)
+declare function  qv:validation($doc ,$validators as function(*)*,$extras)
+as element(validation)
+{
+  let $_:=trace(if($doc instance of xs:anyURI)then $doc else base-uri($doc),"£££££")
+  let $uri:=if($doc instance of xs:anyURI)then $doc else base-uri($doc)
+  let $results:=for-each($validators,function($f){$f($doc)})
+  return &lt;validation location="{$uri}" &gt;{ $extras,$results}&lt;/validation&gt;
+};
+
+(:~ report as json
+ : @param $options can limit size eg {"limit":200}
+:)
+declare function  qv:json($d as element(validation),$options as item()) 
+as element(json)
+{
+ let $limit:= if($options?limit) then $options?limit else 5000
+ let $type:=$d/@type/string()
+ let $uri:=$d/@location/string()
+ let $name:=tokenize($uri,"/")[last()]
+ let $fix:=function($r){element {name($r)}{attribute type {"array"},qv:msg-limit($r/_,$limit)}}
+ return &lt;json type="object"&gt;
+            &lt;uri&gt;{$uri}&lt;/uri&gt;
+            &lt;name&gt;{$name}&lt;/name&gt;
+            &lt;type&gt;{$type}&lt;/type&gt;
+            
+            &lt;msgcounts type="object"&gt;{
+            for $v in $d/* return element {name($v)}{attribute type {"number"},count($v/_)}
+            }&lt;/msgcounts&gt;
+          
+           &lt;reports type="object"&gt;{
+                $d/*!$fix(.)
+            }&lt;/reports&gt; 
+            
+         &lt;/json&gt;
+};
+
+(:~ restrict number of messages o/p :)
+declare function  qv:msg-limit($msgs as element(_)* ,$limit as xs:integer)
+as element(_)*
+{
+let $count:=count($msgs)
+return  if($count&gt;$limit)
+        then (subsequence($msgs,1,$limit -1),&lt;_ type="object"&gt;&lt;text&gt;Messages truncated, {1+ $count - $limit} not shown.&lt;/text&gt;&lt;/_&gt;)
+        else $msgs
+};
+ 
+(:~ 
+ : run schematron on doc, returns two reports
+:)
+declare function qv:schematron($d,$sch as xs:anyURI)
+as element()*
+{
+let $report:= sch:validate-document($d,doc($sch))
+return ( 
+   qv:msgs("failed-assert",$report/svrl:schematron-output/svrl:failed-assert!qv:msg-from-svrl(.)),
+   qv:msgs("successful-report", $report/svrl:schematron-output/svrl:successful-report!qv:msg-from-svrl(.))
+ )
+};
+  
+(:~ convert svrl node to standard msg :)
+declare function qv:msg-from-svrl($svrl as element())
+as element(_)
+{
+    &lt;_ type="object"&gt;
+            &lt;text&gt;{$svrl/svrl:text/string()}&lt;/text&gt;
+            &lt;role&gt;{$svrl/@role/string()}&lt;/role&gt;
+            &lt;location&gt;{$svrl/@location/string()}&lt;/location&gt;
+    &lt;/_&gt;
+};
+
+(:~ create nvdl report :)
+declare function qv:nvdl($d,$nvdl as xs:anyURI)
+{
+ let $report:= validate:rng-report($d, $nvdl)
+ return  qv:msgs("nvdl",$report/message!qv:msg-from-nvdl(.))
+};
+
+(:~ create xsd report :)
+declare function qv:xsd($d,$xsd as xs:anyURI)
+{
+ let $report:= validate:xsd-report($d, $xsd)
+ return  qv:msgs("xsd",$report/message!qv:msg-from-nvdl(.))
+};
+
+(:~ convert nvdl message to standard msg format :)
+declare function qv:msg-from-nvdl($message as element())
+as element(_)
+{
+    &lt;_ type="object"&gt;
+            &lt;text&gt;{$message/string()}&lt;/text&gt;
+            &lt;role&gt;{$message/@level/lower-case(.)}&lt;/role&gt;
+            &lt;line type="number"&gt;{$message/@line/string()}&lt;/line&gt;
+    &lt;/_&gt;
+};
+
+(:~ create element type to wrap array of msgs
+:) 
+declare %private function qv:msgs($type as xs:string,$msgs as element(_)*)
+as element()
+{
+     element {$type}  {attribute type {"array"},$msgs}
+ 
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="qv" uri="quodatum.validate"/><xqdoc:namespace prefix="sch" uri="expkg-zone58.validation.schematron"/><xqdoc:namespace prefix="svrl" uri="http://purl.oclc.org/dsdl/svrl"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>expkg-zone58.validation.schematron</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>generate validation report for $doc</xqdoc:description><xqdoc:param>$validators sequence of functions to apply</xqdoc:param><xqdoc:param>$extras custom attributes and elements to include in response</xqdoc:param></xqdoc:comment><xqdoc:name>qv:validation</xqdoc:name><xqdoc:signature>declare function qv:validation($doc as item()*, $validators as (function(*))*, $extras as item()*) as element(validation)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>doc</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>validators</xqdoc:name><xqdoc:type occurrence="*">function(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>extras</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(validation)</xqdoc:type></xqdoc:return><xqdoc:body>function  qv:validation($doc ,$validators as function(*)*,$extras)
+as element(validation)
+{
+  let $_:=trace(if($doc instance of xs:anyURI)then $doc else base-uri($doc),"£££££")
+  let $uri:=if($doc instance of xs:anyURI)then $doc else base-uri($doc)
+  let $results:=for-each($validators,function($f){$f($doc)})
+  return &lt;validation location="{$uri}" &gt;{ $extras,$results}&lt;/validation&gt;
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>for-each</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>validators</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extras</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>results</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>report as json</xqdoc:description><xqdoc:param>$options can limit size eg {"limit":200}</xqdoc:param></xqdoc:comment><xqdoc:name>qv:json</xqdoc:name><xqdoc:signature>declare function qv:json($d as element(validation), $options as item()) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>d</xqdoc:name><xqdoc:type>element(validation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>options</xqdoc:name><xqdoc:type>item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function  qv:json($d as element(validation),$options as item()) 
+as element(json)
+{
+ let $limit:= if($options?limit) then $options?limit else 5000
+ let $type:=$d/@type/string()
+ let $uri:=$d/@location/string()
+ let $name:=tokenize($uri,"/")[last()]
+ let $fix:=function($r){element {name($r)}{attribute type {"array"},qv:msg-limit($r/_,$limit)}}
+ return &lt;json type="object"&gt;
+            &lt;uri&gt;{$uri}&lt;/uri&gt;
+            &lt;name&gt;{$name}&lt;/name&gt;
+            &lt;type&gt;{$type}&lt;/type&gt;
+            
+            &lt;msgcounts type="object"&gt;{
+            for $v in $d/* return element {name($v)}{attribute type {"number"},count($v/_)}
+            }&lt;/msgcounts&gt;
+          
+           &lt;reports type="object"&gt;{
+                $d/*!$fix(.)
+            }&lt;/reports&gt; 
+            
+         &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msg-limit</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fix</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>restrict number of messages o/p</xqdoc:description></xqdoc:comment><xqdoc:name>qv:msg-limit</xqdoc:name><xqdoc:signature>declare function qv:msg-limit($msgs as element(_)*, $limit as xs:integer) as element(_)*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>msgs</xqdoc:name><xqdoc:type occurrence="*">element(_)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>limit</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element(_)</xqdoc:type></xqdoc:return><xqdoc:body>function  qv:msg-limit($msgs as element(_)* ,$limit as xs:integer)
+as element(_)*
+{
+let $count:=count($msgs)
+return  if($count&gt;$limit)
+        then (subsequence($msgs,1,$limit -1),&lt;_ type="object"&gt;&lt;text&gt;Messages truncated, {1+ $count - $limit} not shown.&lt;/text&gt;&lt;/_&gt;)
+        else $msgs
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>subsequence</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>run schematron on doc, returns two reports</xqdoc:description></xqdoc:comment><xqdoc:name>qv:schematron</xqdoc:name><xqdoc:signature>declare function qv:schematron($d as item()*, $sch as xs:anyURI) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>d</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sch</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function qv:schematron($d,$sch as xs:anyURI)
+as element()*
+{
+let $report:= sch:validate-document($d,doc($sch))
+return ( 
+   qv:msgs("failed-assert",$report/svrl:schematron-output/svrl:failed-assert!qv:msg-from-svrl(.)),
+   qv:msgs("successful-report", $report/svrl:schematron-output/svrl:successful-report!qv:msg-from-svrl(.))
+ )
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>expkg-zone58.validation.schematron</xqdoc:uri><xqdoc:name>validate-document</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msg-from-svrl</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msg-from-svrl</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sch</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>convert svrl node to standard msg</xqdoc:description></xqdoc:comment><xqdoc:name>qv:msg-from-svrl</xqdoc:name><xqdoc:signature>declare function qv:msg-from-svrl($svrl as element()) as element(_)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>svrl</xqdoc:name><xqdoc:type>element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(_)</xqdoc:type></xqdoc:return><xqdoc:body>function qv:msg-from-svrl($svrl as element())
+as element(_)
+{
+    &lt;_ type="object"&gt;
+            &lt;text&gt;{$svrl/svrl:text/string()}&lt;/text&gt;
+            &lt;role&gt;{$svrl/@role/string()}&lt;/role&gt;
+            &lt;location&gt;{$svrl/@location/string()}&lt;/location&gt;
+    &lt;/_&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>svrl</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>svrl</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>svrl</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create nvdl report</xqdoc:description></xqdoc:comment><xqdoc:name>qv:nvdl</xqdoc:name><xqdoc:signature>declare function qv:nvdl($d as item()*, $nvdl as xs:anyURI) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>d</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>nvdl</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qv:nvdl($d,$nvdl as xs:anyURI)
+{
+ let $report:= validate:rng-report($d, $nvdl)
+ return  qv:msgs("nvdl",$report/message!qv:msg-from-nvdl(.))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/validate</xqdoc:uri><xqdoc:name>rng-report</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msg-from-nvdl</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>nvdl</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create xsd report</xqdoc:description></xqdoc:comment><xqdoc:name>qv:xsd</xqdoc:name><xqdoc:signature>declare function qv:xsd($d as item()*, $xsd as xs:anyURI) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>d</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>xsd</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qv:xsd($d,$xsd as xs:anyURI)
+{
+ let $report:= validate:xsd-report($d, $xsd)
+ return  qv:msgs("xsd",$report/message!qv:msg-from-nvdl(.))
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/validate</xqdoc:uri><xqdoc:name>xsd-report</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>msg-from-nvdl</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xsd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>convert nvdl message to standard msg format</xqdoc:description></xqdoc:comment><xqdoc:name>qv:msg-from-nvdl</xqdoc:name><xqdoc:signature>declare function qv:msg-from-nvdl($message as element()) as element(_)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>message</xqdoc:name><xqdoc:type>element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(_)</xqdoc:type></xqdoc:return><xqdoc:body>function qv:msg-from-nvdl($message as element())
+as element(_)
+{
+    &lt;_ type="object"&gt;
+            &lt;text&gt;{$message/string()}&lt;/text&gt;
+            &lt;role&gt;{$message/@level/lower-case(.)}&lt;/role&gt;
+            &lt;line type="number"&gt;{$message/@line/string()}&lt;/line&gt;
+    &lt;/_&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create element type to wrap array of msgs</xqdoc:description></xqdoc:comment><xqdoc:name>qv:msgs</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function qv:msgs($type as xs:string, $msgs as element(_)*) as element()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>type</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>msgs</xqdoc:name><xqdoc:type occurrence="*">element(_)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function qv:msgs($type as xs:string,$msgs as element(_)*)
+as element()
+{
+     element {$type}  {attribute type {"array"},$msgs}
+ 
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msgs</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

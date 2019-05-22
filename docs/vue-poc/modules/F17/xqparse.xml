@@ -1,0 +1,13 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:~ data locations for image feature :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>cfg</NCName> <TOKEN>=</TOKEN> <StringLiteral>"quodatum:media.image.configure"</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>cfg:DB-IMAGE</QName><TOKEN>:=</TOKEN><StringLiteral>"media-images-20180817"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>cfg:IMAGEDIR</QName><TOKEN>:=</TOKEN><StringLiteral>"P:/pictures/Pictures/"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>cfg:THUMBDIR</QName><TOKEN>:=</TOKEN><StringLiteral>"C:/tmp/"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
+
+(:
+declare variable $cfg:IMAGEDIR:="/mnt/sda1/pictures/Pictures/";
+declare variable $cfg:THUMBDIR:="/mnt/sda1/pictures/thumbs/";
+:)<EOF/></XQuery>

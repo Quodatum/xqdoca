@@ -1,0 +1,234 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>dba - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/login</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>Code for logging in and out.</dd><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p><p>__source : login.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#dba/login">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">dba</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">dba/login</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:check"><span class="secno">4.1</span><span class="content" title="">dba:check<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#dba:login"><span class="secno">4.2</span><span class="content" title="">dba:login<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#dba:logout"><span class="secno">4.3</span><span class="content" title="">dba:logout<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#dba:welcome"><span class="secno">4.4</span><span class="content" title="">dba:welcome<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">0</span> modules, it imports
+    <span class="badge badge-info">3</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F33/index.html" title="modules\session.xqm">dba/session</a></span></div><div><span><a href="../../modules/F31/index.html" title="modules\html.xqm">dba/html</a></span></div><div><span class="badge badge-warning" title="External file">http://exquery.org/ns/request</span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="dba:accept"></a>4.1&nbsp;dba:accept<div style="float:right"><a href="#dba:accept">#</a></div></h3><dt class="label">Summary</dt><dd>Registers a user and redirects to the main page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:accept</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> entered user name</li><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:check"></a>4.2&nbsp;dba:check<div style="float:right"><a href="#dba:check">#</a></div></h3><dt class="label">Summary</dt><dd>Permissions: checks the user credentials.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:check</code>
+		  ( 
+			<code class="arg">$perm</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">element(rest:response)</xqdoc:type>?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>perm<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code> permission data</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)?</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%perm:check</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$perm}</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:login"></a>4.3&nbsp;dba:login<div style="float:right"><a href="#dba:login">#</a></div></h3><dt class="label">Summary</dt><dd>Checks the user input and redirects to the main page, or back to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:login</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$pass</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> user name</li><li>pass<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> password</li><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg"></code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/login-check</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_name</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$name}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_pass</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$pass}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_page</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$page}</xqdoc:literal></code></td></tr><tr><td><code class="function">%perm:allow</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">all</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:logout"></a>4.4&nbsp;dba:logout<div style="float:right"><a href="#dba:logout">#</a></div></h3><dt class="label">Summary</dt><dd>Ends a session and redirects to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:logout</code>
+		  ( 
+			
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/logout</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:params"></a>4.5&nbsp;dba:params<div style="float:right"><a href="#dba:params">#</a></div></h3><dt class="label">Summary</dt><dd>Crerates a map with all current query parameters.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:params</code>
+		  ( 
+			<code class="arg">$map</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>map<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code> additional parameters</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:reject"></a>4.6&nbsp;dba:reject<div style="float:right"><a href="#dba:reject">#</a></div></h3><dt class="label">Summary</dt><dd>Rejects a user and redirects to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:reject</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$message</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> entered user name</li><li>message<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> error message</li><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div><div class="div3"><h3><a id="dba:welcome"></a>4.7&nbsp;dba:welcome<div style="float:right"><a href="#dba:welcome">#</a></div></h3><dt class="label">Summary</dt><dd>Login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:welcome</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$error</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> user name (optional)</li><li>error<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> error string (optional)</li><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/login</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_name</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$name}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_error</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$error}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">_page</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$page}</xqdoc:literal></code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">html</xqdoc:literal></code></td></tr><tr><td><code class="function">%perm:allow</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">all</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery"></code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td>http://www.w3.org/2012/xquery</td></tr><tr><td>dba</td><td>dba/login</td></tr><tr><td>html</td><td>dba/html</td></tr><tr><td>output</td><td>http://www.w3.org/2010/xslt-xquery-serialization</td></tr><tr><td>perm</td><td>http://basex.org/modules/perm</td></tr><tr><td>Request</td><td>http://exquery.org/ns/request</td></tr><tr><td>rest</td><td>http://exquery.org/ns/restxq</td></tr><tr><td>session</td><td>dba/session</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : Code for logging in and out.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace dba = 'dba/login';
+
+import module namespace session = 'dba/session' at 'modules/session.xqm';
+import module namespace html = 'dba/html' at 'modules/html.xqm';
+import module namespace Request = 'http://exquery.org/ns/request';
+
+(:~
+ : Permissions: checks the user credentials.
+ : @param  $perm  permission data
+ : @return redirection to login page or empty sequence
+ :)
+declare
+  %perm:check("/dba", "{$perm}")
+function dba:check(
+  $perm  as map(*)
+) as element(rest:response)? {
+  (: redirect to login page if user is not logged in, or if page is not public :)
+  let $path := $perm?path
+  where not($session:VALUE or $perm?allow = 'all')
+  (: normalize login path :)
+  let $target := if(ends-with($path, '/dba')) then 'dba/login' else 'login'
+  (: last visited page to redirect to (if there was one) :)
+  let $page := replace($path, '^.*dba/?', '')[.]
+  return web:redirect($target, dba:params(map { '_page': $page }))
+};
+
+(:~
+ : Login page.
+ : @param  $name   user name (optional)
+ : @param  $error  error string (optional)
+ : @param  $page   page to redirect to (optional)
+ : @return page
+ :)
+declare
+  %rest:path("/dba/login")
+  %rest:query-param("_name",  "{$name}")
+  %rest:query-param("_error", "{$error}")
+  %rest:query-param("_page",  "{$page}")
+  %output:method("html")
+  %perm:allow("all")
+function dba:welcome(
+  $name   as xs:string?,
+  $error  as xs:string?,
+  $page   as xs:string?
+) as element(html) {
+  html:wrap(map { 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action="login-check" method="post"&gt;
+          &lt;input name="_page" value="{ $page }" type="hidden"/&gt;
+          {
+            for $param in Request:parameter-names()[not(starts-with(., '_'))]
+            return &lt;input name="{ $param }" value="{ Request:parameter($param) }" type="hidden"/&gt;
+          }
+          &lt;div class='small'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input name="_name" value="{ $name }" id="user" size="30"/&gt;
+                { html:focus('user') }
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;b&gt;Password:&lt;/b&gt;&lt;/td&gt;
+              &lt;td&gt;{
+                &lt;input name="_pass" type="password" size="30"/&gt;,
+                ' ',
+                &lt;input type="submit" value="Login"/&gt;
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Checks the user input and redirects to the main page, or back to the login page.
+ : @param  $name  user name
+ : @param  $pass  password
+ : @param  $page  page to redirect to (optional)
+ : @return redirection
+ :)
+declare
+  %rest:POST
+  %rest:path("/dba/login-check")
+  %rest:query-param("_name", "{$name}")
+  %rest:query-param("_pass", "{$pass}")
+  %rest:query-param("_page", "{$page}")
+  %perm:allow("all")
+function dba:login(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $page  as xs:string?
+) as element(rest:response) {
+  try {
+    user:check($name, $pass),
+    if(user:list-details($name)/@permission != 'admin') then (
+      dba:reject($name, 'Admin credentials required', $page)
+    ) else (
+      dba:accept($name, $page)
+    )
+  } catch user:* {
+    dba:reject($name, 'Please check your login data', $page)
+  }
+};
+
+(:~
+ : Ends a session and redirects to the login page.
+ : @return redirection
+ :)
+declare
+  %rest:path("/dba/logout")
+function dba:logout(
+) as element(rest:response) {
+  (: write log entry, redirect to login page :)
+  admin:write-log('Logout: ' || $session:VALUE, 'DBA'),
+  web:redirect("/dba/login", map { '_name': $session:VALUE }),
+  (: closes the DBA session :)
+  session:close()
+};
+
+(:~
+ : Registers a user and redirects to the main page.
+ : @param  $name  entered user name
+ : @param  $page  page to redirect to (optional)
+ : @return redirection
+ :)
+declare %private function dba:accept(
+  $name  as xs:string,
+  $page  as xs:string?
+) as element(rest:response) {
+  (: register user, write log entry :)
+  session:set($session:ID, $name),
+  admin:write-log('Login: ' || $name, 'DBA'),
+
+  (: redirect to supplied page or main page :)
+  web:redirect(if($page) then $page else 'logs', dba:params(map { }))
+};
+
+(:~
+ : Rejects a user and redirects to the login page.
+ : @param  $name     entered user name
+ : @param  $message  error message
+ : @param  $page     page to redirect to (optional)
+ : @return redirection
+ :)
+declare %private function dba:reject(
+  $name     as xs:string,
+  $message  as xs:string,
+  $page     as xs:string?
+) as element(rest:response) {
+  (: write log entry, redirect to login page :)
+  admin:write-log('Login denied: ' || $name, 'DBA'),
+  web:redirect(
+    "login",
+    dba:params(map { '_name': $name, '_error': $message, '_page': $page })
+  )
+};
+
+(:~
+ : Crerates a map with all current query parameters.
+ : @param  $map  additional parameters
+ : @return map
+ :)
+declare %private function dba:params(
+  $map  as map(*)
+) as map(*) {
+  map:merge((
+    $map,
+    for $param in Request:parameter-names()[not(starts-with(., '_'))]
+    return map { $param: Request:parameter($param) }
+  ))
+};
+</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:25:31.961+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

@@ -1,0 +1,42 @@
+<XQuery>(:~
+ : Generate html for for XQuery sources
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>vue-api</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:vue.api'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>query-a</NCName> <TOKEN>=</TOKEN> <StringLiteral>'vue-poc/query-a'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../../lib/query-a.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>hlog</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.data.history'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../../../lib/history.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue-api:query</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration> <TOKEN>:=</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"tx-xqdoc.xq"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+(:~
+ : run xqdoc task.
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/tasks/xqdoc"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>rest:produces</QName><TOKEN>(</TOKEN><StringLiteral>"application/json"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"json"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>vue-api:model</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>   
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>params</QName><TOKEN>:=</TOKEN><FunctionCall><QName>query-a:params</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>vue-api:query</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>log</QName><TOKEN>:=</TOKEN><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>task</QName><DirAttributeList><S> </S><QName>task</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>x</QuotAttrContentChar><QuotAttrContentChar>q</QuotAttrContentChar><QuotAttrContentChar>d</QuotAttrContentChar><QuotAttrContentChar>o</QuotAttrContentChar><QuotAttrContentChar>c</QuotAttrContentChar><TOKEN>"</TOKEN></DirAttributeValue><S> </S><QName>url</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>u</QuotAttrContentChar><QuotAttrContentChar>r</QuotAttrContentChar><QuotAttrContentChar>l</QuotAttrContentChar><QuotAttrContentChar>?</QuotAttrContentChar><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar>t</ElementContentChar><ElementContentChar>o</ElementContentChar><ElementContentChar>d</ElementContentChar><ElementContentChar>o</ElementContentChar><ElementContentChar>
+</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><TOKEN>&lt;/</TOKEN><QName>task</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></LetBinding></LetClause> 
+ <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><FunctionCall><QName>query-a:update</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>vue-api:query</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+         <FunctionCall><QName>hlog:save</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>log</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+         <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+  
+(:~
+ : get xqdoc settings.
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/tasks/xqdoc"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>rest:produces</QName><TOKEN>(</TOKEN><StringLiteral>"application/json"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"json"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>vue-api:settings</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>   
+<EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>xq</QName><TOKEN>:=</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>vue-api:query</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+   <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>query-a:inspect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xq</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule><EOF/></XQuery>

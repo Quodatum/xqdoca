@@ -1,0 +1,84 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>dba - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/files</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>Upload files.</dd><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p><p>__source : files/file-upload.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#dba/files">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">dba</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">dba/files</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:file-upload"><span class="secno">4.1</span><span class="content" title="">dba:file-upload<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">0</span> modules, it imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F33/index.html" title="modules\session.xqm">dba/session</a></span></div><div><span><a href="../../modules/F34/index.html" title="modules\util.xqm">dba/util</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><div class="div3"><h3><a id="$dba:CAT"></a>3.1&nbsp;$dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="dba:file-upload"></a>4.1&nbsp;dba:file-upload<div style="float:right"><a href="#dba:file-upload">#</a></div></h3><dt class="label">Summary</dt><dd>Upploads files.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:file-upload</code>
+		  ( 
+			<code class="arg">$files</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(xs:string, xs:base64Binary)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(xs:string, xs:base64Binary)</code> map with uploaded files</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg"></code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/file-upload</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">files</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$files}</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>References 14 functions from 9 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/session</td><td>directory#1</td></tr><tr><td>Fn</td><td>dba/util</td><td>info#3</td></tr><tr><td>Fn</td><td>http://basex.org/modules/convert</td><td>binary-to-string#1</td></tr><tr><td>Fn</td><td>http://basex.org/modules/prof</td><td>void#1</td></tr><tr><td>Fn</td><td>http://basex.org/modules/web</td><td>redirect#2</td></tr><tr><td>Fn</td><td>http://basex.org/modules/web</td><td>redirect#2</td></tr><tr><td>Fn</td><td>http://basex.org/modules/xquery</td><td>parse#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>write-binary#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>false#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>matches#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>keys#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>for-each#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>for-each#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := session:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>dba</td><td>dba/files</td></tr><tr><td>rest</td><td>http://exquery.org/ns/restxq</td></tr><tr><td>session</td><td>dba/session</td></tr><tr><td>util</td><td>dba/util</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : Upload files.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace dba = 'dba/files';
+
+import module namespace session = 'dba/session' at '../modules/session.xqm';
+import module namespace util = 'dba/util' at '../modules/util.xqm';
+
+(:~ Top category :)
+declare variable $dba:CAT := 'files';
+
+(:~
+ : Upploads files.
+ : @param  $files  map with uploaded files
+ : @return redirection
+ :)
+declare
+  %rest:POST
+  %rest:path("/dba/file-upload")
+  %rest:form-param("files", "{$files}")
+function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := session:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
+};
+</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:25:31.961+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

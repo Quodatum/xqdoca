@@ -1,0 +1,75 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-xqdoc2.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Generate html for for XQuery sources</xqdoc:description><xqdoc:return>info about the run (json format)</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
+ : Generate html for for XQuery sources
+ : @return info about the run (json format)
+ :)
+import module namespace fw="quodatum:file.walker";
+import module namespace xqd = 'quodatum:build.xqdoc' at "../../../lib/xqdoc/xqdoc-proj.xqm";
+declare namespace c="http://www.w3.org/ns/xproc-step";
+ 
+(:~ URL of the root folder to document
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc
+ :)
+declare variable $efolder as xs:anyURI  external :=
+xs:anyURI("C:/Users/andy/git/vue-poc/src/vue-poc");
+
+(:~ file URL root folder for saving results
+ : @default C:/tmp/xqdoc/
+ :)
+declare variable $target as xs:anyURI external :=
+xs:anyURI("C:/tmp/xqdoc/");
+
+declare variable $state as element(state):=db:open("vue-poc","/state.xml")/state;
+                                 
+let $project:=tokenize($efolder,"[/\\]")[last()]=&gt;trace("xqdoc: ")
+let $files:= fw:directory-list($efolder,map{"include-filter":".*\.xqm"})
+let $id:=$state/last-id
+let $opts:=map{
+               "src-folder": $efolder, 
+               "project": $project, 
+               "ext-id": $id/string()
+               }
+let $op:=xqd:save-xq($files,$target,$opts)
+let $result:=&lt;json type="object"&gt;
+                  &lt;extra&gt;hello2&lt;/extra&gt;
+                  &lt;msg&gt; {$target}, {count($files//c:file)} files processed.&lt;/msg&gt;
+                  &lt;id&gt;{$id/string()}&lt;/id&gt;
+              &lt;/json&gt;
+return (
+       update:output($result),
+       replace value of node $id with 1+$state/last-id
+       )
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="fw" uri="quodatum:file.walker"/><xqdoc:namespace prefix="xqd" uri="quodatum:build.xqdoc"/><xqdoc:namespace prefix="c" uri="http://www.w3.org/ns/xproc-step"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:file.walker</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:build.xqdoc</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>efolder</xqdoc:name><xqdoc:comment><xqdoc:description>URL of the root folder to document</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/vue-poc/src/vue-poc</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>target</xqdoc:name><xqdoc:comment><xqdoc:description>file URL root folder for saving results</xqdoc:description><xqdoc:custom tag="default">C:/tmp/xqdoc/</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>state</xqdoc:name><xqdoc:type>element(state)</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $project:=tokenize($efolder,"[/\\]")[last()]=&gt;trace("xqdoc: ")
+let $files:= fw:directory-list($efolder,map{"include-filter":".*\.xqm"})
+let $id:=$state/last-id
+let $opts:=map{
+               "src-folder": $efolder, 
+               "project": $project, 
+               "ext-id": $id/string()
+               }
+let $op:=xqd:save-xq($files,$target,$opts)
+let $result:=&lt;json type="object"&gt;
+                  &lt;extra&gt;hello2&lt;/extra&gt;
+                  &lt;msg&gt; {$target}, {count($files//c:file)} files processed.&lt;/msg&gt;
+                  &lt;id&gt;{$id/string()}&lt;/id&gt;
+              &lt;/json&gt;
+return (
+       update:output($result),
+       replace value of node $id with 1+$state/last-id
+       )</xqdoc:body><xqdoc:body>let $project:=tokenize($efolder,"[/\\]")[last()]=&gt;trace("xqdoc: ")
+let $files:= fw:directory-list($efolder,map{"include-filter":".*\.xqm"})
+let $id:=$state/last-id
+let $opts:=map{
+               "src-folder": $efolder, 
+               "project": $project, 
+               "ext-id": $id/string()
+               }
+let $op:=xqd:save-xq($files,$target,$opts)
+let $result:=&lt;json type="object"&gt;
+                  &lt;extra&gt;hello2&lt;/extra&gt;
+                  &lt;msg&gt; {$target}, {count($files//c:file)} files processed.&lt;/msg&gt;
+                  &lt;id&gt;{$id/string()}&lt;/id&gt;
+              &lt;/json&gt;
+return (
+       update:output($result),
+       replace value of node $id with 1+$state/last-id
+       )</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:file.walker</xqdoc:uri><xqdoc:name>directory-list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:build.xqdoc</xqdoc:uri><xqdoc:name>save-xq</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>state</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>project</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>state</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

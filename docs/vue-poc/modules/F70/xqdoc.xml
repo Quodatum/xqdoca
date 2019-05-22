@@ -1,0 +1,198 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>util.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Utility functions.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team, 2014-16</xqdoc:author><xqdoc:custom tag="__source">lib/util.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Utility functions.
+ :
+ : @author Christian Grün, BaseX Team, 2014-16
+ :)
+module namespace util = 'vue-poc/util';
+
+import module namespace cons = 'vue-poc/cons' at 'cons.xqm';
+
+(:~
+ : Evaluates a query and returns the result.
+ : @param  $query    query string
+ : @param  $context  initial context value
+ : @return serialized result of query
+ :)
+declare function util:query(
+  $query    as xs:string?,
+  $context  as item()*) 
+as xs:string {
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:display($result)
+};
+
+declare function util:display(
+  $result as item()*)
+as xs:string 
+{
+  let $limit := $cons:OPTION($cons:K-MAXCHARS)
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+};
+(:~
+ : Runs an updating query.
+ : @param  $query  query string
+ : @return empty sequence
+ :)
+declare %updating function util:update-query(
+  $query  as xs:string?
+) {
+  xquery:eval-update($query, map { }, util:query-options())
+};
+
+(:~
+ : Returns the options for evaluating a query.
+ : @return options
+ :)
+declare %private function util:query-options() as map(*) {
+  map {
+    'timeout'   : $cons:OPTION($cons:K-TIMEOUT),
+    'memory'    : $cons:OPTION($cons:K-MEMORY),
+    'permission': $cons:OPTION($cons:K-PERMISSION)
+  }
+};
+
+(:~
+ : Checks if the specified binary input can be converted to an XML string.
+ : @param  $input  input
+ : @return XML string
+ :)
+declare function util:to-xml-string(
+  $input  as xs:base64Binary
+) as xs:string {
+  let $string :=
+    try {
+      convert:binary-to-string($input)
+    } catch * {
+      error((), "Input is no valid UTF8 string.")
+    }
+  return
+    try {
+      (: tries to convert the input to XML, but discards the results :)
+      prof:void(parse-xml($string)),
+      $string
+    } catch * {
+      error((), "Input is no well-formed XML.")
+    }
+};
+
+(:~
+ : Returns the index of the first result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * $cons:OPTION($cons:K-MAXROWS) + 1
+  ) else (
+    1
+  )
+};
+
+(:~
+ : Returns the index of the last result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * $cons:OPTION($cons:K-MAXROWS)
+  ) else (
+    999999999
+  )
+};
+
+(:~
+ : Chops a string result to the maximum number of allowed characters.
+ : @param  $string  string
+ : @param  $max     maximum number of characters
+ : @return string
+ :)
+declare function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="util" uri="vue-poc/util"/><xqdoc:namespace prefix="cons" uri="vue-poc/cons"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>vue-poc/cons</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Evaluates a query and returns the result.</xqdoc:description><xqdoc:param>$query    query string</xqdoc:param><xqdoc:param>$context  initial context value</xqdoc:param><xqdoc:return>serialized result of query</xqdoc:return></xqdoc:comment><xqdoc:name>util:query</xqdoc:name><xqdoc:signature>declare function util:query($query as xs:string?, $context as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>context</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:query(
+  $query    as xs:string?,
+  $context  as item()*) 
+as xs:string {
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:display($result)
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>eval</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>query-options</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>display</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>context</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>util:display</xqdoc:name><xqdoc:signature>declare function util:display($result as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>result</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:display(
+  $result as item()*)
+as xs:string 
+{
+  let $limit := $cons:OPTION($cons:K-MAXCHARS)
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>chop</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>serialize</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-MAXCHARS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Runs an updating query.</xqdoc:description><xqdoc:param>$query  query string</xqdoc:param><xqdoc:return>empty sequence</xqdoc:return></xqdoc:comment><xqdoc:name>util:update-query</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function util:update-query($query as xs:string?) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function util:update-query(
+  $query  as xs:string?
+) {
+  xquery:eval-update($query, map { }, util:query-options())
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>eval-update</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>query-options</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the options for evaluating a query.</xqdoc:description><xqdoc:return>options</xqdoc:return></xqdoc:comment><xqdoc:name>util:query-options</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function util:query-options() as map(*)</xqdoc:signature><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function util:query-options() as map(*) {
+  map {
+    'timeout'   : $cons:OPTION($cons:K-TIMEOUT),
+    'memory'    : $cons:OPTION($cons:K-MEMORY),
+    'permission': $cons:OPTION($cons:K-PERMISSION)
+  }
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-TIMEOUT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-MEMORY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-PERMISSION</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Checks if the specified binary input can be converted to an XML string.</xqdoc:description><xqdoc:param>$input  input</xqdoc:param><xqdoc:return>XML string</xqdoc:return></xqdoc:comment><xqdoc:name>util:to-xml-string</xqdoc:name><xqdoc:signature>declare function util:to-xml-string($input as xs:base64Binary) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>input</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:to-xml-string(
+  $input  as xs:base64Binary
+) as xs:string {
+  let $string :=
+    try {
+      convert:binary-to-string($input)
+    } catch * {
+      error((), "Input is no valid UTF8 string.")
+    }
+  return
+    try {
+      (: tries to convert the input to XML, but discards the results :)
+      prof:void(parse-xml($string)),
+      $string
+    } catch * {
+      error((), "Input is no well-formed XML.")
+    }
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/convert</xqdoc:uri><xqdoc:name>binary-to-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/prof</xqdoc:uri><xqdoc:name>void</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse-xml</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>input</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns the index of the first result to generate.</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:start</xqdoc:name><xqdoc:signature>declare function util:start($page as xs:integer, $sort as xs:string) as xs:integer</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * $cons:OPTION($cons:K-MAXROWS) + 1
+  ) else (
+    1
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-MAXROWS</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns the index of the last result to generate.</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:end</xqdoc:name><xqdoc:signature>declare function util:end($page as xs:integer, $sort as xs:string) as xs:integer</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * $cons:OPTION($cons:K-MAXROWS)
+  ) else (
+    999999999
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>OPTION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>K-MAXROWS</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Chops a string result to the maximum number of allowed characters.</xqdoc:description><xqdoc:param>$string  string</xqdoc:param><xqdoc:param>$max     maximum number of characters</xqdoc:param><xqdoc:return>string</xqdoc:return></xqdoc:comment><xqdoc:name>util:chop</xqdoc:name><xqdoc:signature>declare function util:chop($string as xs:string, $max as xs:integer) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>string</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>max</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string-length</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

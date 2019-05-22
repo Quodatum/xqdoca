@@ -1,0 +1,69 @@
+<XQuery>(:~
+ : Session values.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>session</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/session'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>options</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/options'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'options.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>Session</NCName> <TOKEN>=</TOKEN> <StringLiteral>'http://basex.org/modules/session'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~ Session key. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>session:ID</QName> <TOKEN>:=</TOKEN> <StringLiteral>'dba'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Current session. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>session:VALUE</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>Session:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:ID</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Current directory. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>session:DIRECTORY</QName> <TOKEN>:=</TOKEN> <StringConcatExpr><VarRef><TOKEN>$</TOKEN><QName>session:ID</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>'-directory'</StringLiteral></StringConcatExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Current query. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>session:QUERY</QName> <TOKEN>:=</TOKEN> <StringConcatExpr><VarRef><TOKEN>$</TOKEN><QName>session:ID</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>'-query'</StringLiteral></StringConcatExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Closes the session.
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>session:close</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>Session:delete</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:ID</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns a session value.
+ : @return session value
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>session:get</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>name</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>Session:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Assigns session values.
+ : @param  $name   name
+ : @param  $value  value
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>session:set</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>name</QName>   <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>value</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>value</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <FunctionCall><QName>Session:set</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>value</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>else</TOKEN> <FunctionCall><QName>Session:delete</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the current query directory.
+ : @return directory
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>session:directory</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>dir</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>Session:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:DIRECTORY</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><AndExpr><FunctionCall><QName>exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>and</TOKEN> <FunctionCall><QName>file:exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></AndExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef> <TOKEN>else</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>options:DBA-DIRECTORY</QName></VarRef></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the names of all files.
+ : @return list of files
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>session:query-files</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>dir</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>session:directory</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <WhereClause><TOKEN>where</TOKEN> <FunctionCall><QName>file:exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></WhereClause>
+  <ReturnClause><TOKEN>return</TOKEN> <PostfixExpr><FunctionCall><QName>file:list</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><Predicate><TOKEN>[</TOKEN><FunctionCall><QName>matches</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN> <StringLiteral>'\.xqm?$'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>]</TOKEN></Predicate></PostfixExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

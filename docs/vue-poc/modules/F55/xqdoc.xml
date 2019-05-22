@@ -1,0 +1,182 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>aync.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>async ..
+scheduled, queued, running, cached</xqdoc:description><xqdoc:custom tag="__source">lib/aync.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+ : async ..
+ : scheduled, queued, running, cached
+ :)
+module namespace  qipe='http://quodatum.com/ns/pipeline';
+
+
+(:~ submit a pipeline :)
+declare 
+%updating
+function qipe:submit($item as element(qipe:pipeline))
+{
+  let $dbid:=qipe:id()
+  let $id:=$dbid + 0
+  let $pipe:=&lt;qipe:run id="{$id}" state="queued" step="1" 
+           base-uri="{base-uri($item)}"&gt;{ 
+    $item 
+   }&lt;/qipe:run&gt;
+  return (
+        db:replace("!ASYNC",``[run/`{ $id }`.xml]``,$pipe),
+        replace value of node $dbid with ($dbid +1)
+        )
+};
+
+(:~ next id :)
+declare 
+function qipe:id()
+as node(){
+   db:open("!ASYNC","/state.xml")/state/id
+};
+
+declare 
+function qipe:get($id as xs:string)
+as element(qipe:run)?
+{
+   collection("!ASYNC/run")/qipe:run[@id=$id]
+};
+
+declare
+%updating 
+function qipe:run-step($id as xs:string)
+ {
+   let $run:=qipe:get($id)
+   let $step:= if($run/@state="queued") then 
+                    $run/@step/number()
+               else error()
+   let $base-uri:= $run/@base-uri/string()
+
+   let $task:= $run/qipe:pipeline/*[position()=$step]
+   let $xq:=resolve-uri($task/@href,$base-uri)
+   let $opts:=map{
+                "id": ``[pipe.`{ $run/@id }`.`{ $step }`]``,
+                "cache": true()
+                }
+   let $bindings:=map:merge( $task/qipe:with-param!map:entry(@name,string()) )
+   let $job:= jobs:invoke($xq,$bindings,$opts)
+   return  replace value of node $run/@state with "running"
+};
+
+(:~ names of pipeline jobs with results :)
+declare 
+function qipe:done-jobs()
+as xs:string*
+{
+ jobs:list()[starts-with(.,"pipe.")]!.[jobs:list-details(.)/@state="cached"]
+};
+
+declare 
+function qipe:queued()
+as xs:string*
+{
+  collection("!ASYNC/run")/qipe:run[@state="queued"]/@id/string()
+};
+
+(: update run using results of job
+:)
+declare 
+%updating
+function qipe:update($jobid){
+let $p:=tokenize($jobid,"\.")
+let $run:=qipe:get($p[2])
+let $step:=$p[3]
+
+return try{
+       let $result:=jobs:result($jobid)
+       let $step:=$step+1 (: TODO all done :)
+       return (replace value of node $run/@step with ($step +1),
+               replace value of node $run/@state with "queued")
+}catch * {
+    (insert node &lt;error code="{ $err:code }"&gt;
+                  &lt;description&gt;{ $err:description }&lt;/description&gt;
+                 &lt;/error&gt;
+     into   $run,
+    replace value of node $run/@state with "error")
+}
+};
+
+declare 
+function qipe:list-details()
+{
+  collection("!ASYNC/run")/qipe:run!&lt;run id="{ @id }" state="{ @state }"/&gt;
+}; 
+
+(: periodic task to update :)
+declare 
+%updating
+function qipe:tick()
+{
+ (qipe:queued()!qipe:run-step(.),
+ qipe:done-jobs()!qipe:update(.) )
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="qipe" uri="http://quodatum.com/ns/pipeline"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>submit a pipeline</xqdoc:description></xqdoc:comment><xqdoc:name>qipe:submit</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function qipe:submit($item as element(qipe:pipeline)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>item</xqdoc:name><xqdoc:type>element(qipe:pipeline)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:submit($item as element(qipe:pipeline))
+{
+  let $dbid:=qipe:id()
+  let $id:=$dbid + 0
+  let $pipe:=&lt;qipe:run id="{$id}" state="queued" step="1" 
+           base-uri="{base-uri($item)}"&gt;{ 
+    $item 
+   }&lt;/qipe:run&gt;
+  return (
+        db:replace("!ASYNC",``[run/`{ $id }`.xml]``,$pipe),
+        replace value of node $dbid with ($dbid +1)
+        )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbid</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pipe</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbid</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbid</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>next id</xqdoc:description></xqdoc:comment><xqdoc:name>qipe:id</xqdoc:name><xqdoc:signature>declare function qipe:id() as node()</xqdoc:signature><xqdoc:return><xqdoc:type>node()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:id()
+as node(){
+   db:open("!ASYNC","/state.xml")/state/id
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>open</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>qipe:get</xqdoc:name><xqdoc:signature>declare function qipe:get($id as xs:string) as element(qipe:run)?</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">element(qipe:run)</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:get($id as xs:string)
+as element(qipe:run)?
+{
+   collection("!ASYNC/run")/qipe:run[@id=$id]
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>collection</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>qipe:run-step</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function qipe:run-step($id as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:run-step($id as xs:string)
+ {
+   let $run:=qipe:get($id)
+   let $step:= if($run/@state="queued") then 
+                    $run/@step/number()
+               else error()
+   let $base-uri:= $run/@base-uri/string()
+
+   let $task:= $run/qipe:pipeline/*[position()=$step]
+   let $xq:=resolve-uri($task/@href,$base-uri)
+   let $opts:=map{
+                "id": ``[pipe.`{ $run/@id }`.`{ $step }`]``,
+                "cache": true()
+                }
+   let $bindings:=map:merge( $task/qipe:with-param!map:entry(@name,string()) )
+   let $job:= jobs:invoke($xq,$bindings,$opts)
+   return  replace value of node $run/@state with "running"
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>position</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>invoke</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>step</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>task</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base-uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>step</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>task</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>bindings</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>names of pipeline jobs with results</xqdoc:description></xqdoc:comment><xqdoc:name>qipe:done-jobs</xqdoc:name><xqdoc:signature>declare function qipe:done-jobs() as xs:string*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:done-jobs()
+as xs:string*
+{
+ jobs:list()[starts-with(.,"pipe.")]!.[jobs:list-details(.)/@state="cached"]
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="0"><xqdoc:name>qipe:queued</xqdoc:name><xqdoc:signature>declare function qipe:queued() as xs:string*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:queued()
+as xs:string*
+{
+  collection("!ASYNC/run")/qipe:run[@state="queued"]/@id/string()
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>collection</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>qipe:update</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function qipe:update($jobid as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>jobid</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:update($jobid){
+let $p:=tokenize($jobid,"\.")
+let $run:=qipe:get($p[2])
+let $step:=$p[3]
+
+return try{
+       let $result:=jobs:result($jobid)
+       let $step:=$step+1 (: TODO all done :)
+       return (replace value of node $run/@step with ($step +1),
+               replace value of node $run/@state with "queued")
+}catch * {
+    (insert node &lt;error code="{ $err:code }"&gt;
+                  &lt;description&gt;{ $err:description }&lt;/description&gt;
+                 &lt;/error&gt;
+     into   $run,
+    replace value of node $run/@state with "error")
+}
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jobid</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jobid</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>step</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>step</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>code</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>run</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:name>qipe:list-details</xqdoc:name><xqdoc:signature>declare function qipe:list-details() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:list-details()
+{
+  collection("!ASYNC/run")/qipe:run!&lt;run id="{ @id }" state="{ @state }"/&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>collection</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="0"><xqdoc:name>qipe:tick</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function qipe:tick() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function qipe:tick()
+{
+ (qipe:queued()!qipe:run-step(.),
+ qipe:done-jobs()!qipe:update(.) )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>queued</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>run-step</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>done-jobs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://quodatum.com/ns/pipeline</xqdoc:uri><xqdoc:name>update</xqdoc:name></xqdoc:invoked></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

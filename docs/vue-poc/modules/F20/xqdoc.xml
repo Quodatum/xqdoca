@@ -1,0 +1,236 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>login.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Code for logging in and out.</xqdoc:description><xqdoc:custom tag="__source">features/login/login.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Code for logging in and out.
+ :
+ :)
+module namespace vue-login = 'vue-poc/login';
+import module namespace session = "http://basex.org/modules/session";
+
+
+(:~ Session key. :)
+declare variable $vue-login:SESSION-KEY := "id";
+(:~ Current session. :)
+declare variable $vue-login:SESSION-VALUE := session:get($vue-login:SESSION-KEY);
+
+(:~
+ : Permission check: Area for logged-in users.
+ : Checks if a session id exists for the current user; if not, redirects to the login page.
+ :)
+declare 
+(: %perm:check('/vue-poc') :)
+function vue-login:check-app() {
+  let $user := session:get('id')
+  where empty($user)
+  return web:redirect('/vue-poc/login')
+};
+(:~
+ : get status
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/status")
+%rest:cookie-param("remember", "{ $remember }")
+%rest:produces("application/json")
+%output:method("json")   
+function vue-login:status($remember as xs:string? )   
+{
+let $user:=session:get("id","")
+let $role:=if($user and user:exists($user)) then user:list-details($user)/@permission/string() else ""
+return  &lt;json   type="object" &gt;
+            &lt;user&gt;{ if($user) then $user else "guest" }&lt;/user&gt;
+            &lt;permission&gt;{$role}&lt;/permission&gt;
+            &lt;session&gt;{session:id()}&lt;/session&gt;
+            &lt;created&gt;{session:created()}&lt;/created&gt;
+            &lt;login&gt;{ $remember }&lt;/login&gt;
+  &lt;/json&gt;
+};
+
+(:~
+ : Checks the user input and redirects to the main page, or back to the login page.
+ : @param  $name  user name
+ : @param  $pass  password
+ : @param  $path  path to redirect to (optional)
+ : @return true/false
+ :)
+declare
+  %rest:path("/vue-poc/api/login-check")
+  %rest:form-param("username", "{$name}")
+  %rest:form-param("password", "{$pass}")
+  %rest:form-param("redirect", "{$path}")
+%rest:produces("application/json")
+%output:method("json")     
+function vue-login:login(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $path as xs:string?) 
+{
+  try {
+    user:check($name, $pass),
+    if( user:list-details($name)/@permission ne "admin") then (
+      vue-login:reject($name, 'Admin credentials required.', $path)
+    ) else (
+      vue-login:accept($name, $pass, $path)
+    )
+  } catch user:* {
+    vue-login:reject($name, 'Please check your login data.', $path)
+  }
+};
+
+(:~
+ : Ends a session and redirects to the login page.
+ : @return redirect
+ :)
+declare
+  %rest:path("/vue-poc/api/logout")
+function vue-login:logout(
+) as element(rest:response) {
+  session:close(),
+  admin:write-log('vue-poc user was logged out: ' || $vue-login:SESSION-VALUE),
+  web:redirect("/vue-poc/login", map { 'name': $vue-login:SESSION-VALUE })
+
+};
+
+(:~
+ : Accepts a user and redirects to the main page.
+ : @param  $name  entered user name
+ : @param  $path  path to redirect to
+ :)
+declare %private function vue-login:accept(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $path  as xs:string?
+) {
+  
+  let $val:=vue-login:cookie("remember", random:uuid(),map{'expires': xs:dayTimeDuration('P7D')})
+   return (
+  session:set($vue-login:SESSION-KEY, $name),
+  admin:write-log('VUEPOC user was logged in: ' || $name),
+  
+  &lt;rest:response&gt;
+    &lt;http:response&gt;
+       &lt;http:header name="Set-Cookie" value="{ $val }"/&gt; 
+    &lt;/http:response&gt;   
+   &lt;/rest:response&gt;, 
+    
+  &lt;json type="object"&gt;
+    &lt;status type="boolean"&gt;true&lt;/status&gt;
+  &lt;/json&gt;
+  )
+};
+
+(:~
+ : Rejects a user and redirects to the login page.
+ : @param  $name     entered user name
+ : @param  $message  error message
+ : @param  $path     path to redirect to
+ : @return json
+ :)
+declare %private function vue-login:reject(
+  $name     as xs:string,
+  $message  as xs:string,
+  $path     as xs:string?) 
+ {
+ let $cookie:=vue-login:cookie("remember", "", map{})
+ return ( admin:write-log('VUE login was denied: ' || $name),
+  &lt;rest:response&gt;
+    &lt;http:response&gt;
+       &lt;http:header name="Set-Cookie" value="{ $cookie }"/&gt; 
+    &lt;/http:response&gt;   
+   &lt;/rest:response&gt;, 
+  &lt;json type="object"&gt;
+    &lt;status type="boolean"&gt;false&lt;/status&gt;
+    &lt;message&gt;{$message}&lt;/message&gt;
+  &lt;/json&gt;
+  )
+};
+
+(:~ return cookie string
+:)
+declare function vue-login:cookie($name as xs:string,$val,$opts as map(*)?)
+as xs:string
+{
+  let $pic:="[FNn,3-3],[D01] [MNn,3-3] [Y4] [H01]:[m01]:[s01] [z]"
+  let $expires:=if(map:contains($opts,"expires")) then  current-dateTime() + $opts?expires else ()
+  return``[`{ $name }`=`{ $val }`; path=/; expires=`{ format-dateTime($expires,$pic) }`;]``
+};
+
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-login" uri="vue-poc/login"/><xqdoc:namespace prefix="session" uri="http://basex.org/modules/session"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>vue-login:SESSION-KEY</xqdoc:name><xqdoc:comment><xqdoc:description>Session key.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>vue-login:SESSION-VALUE</xqdoc:name><xqdoc:comment><xqdoc:description>Current session.</xqdoc:description></xqdoc:comment><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Permission check: Area for logged-in users.
+Checks if a session id exists for the current user; if not, redirects to the login page.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-login:check-app</xqdoc:name><xqdoc:signature>declare function vue-login:check-app() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:check-app() {
+  let $user := session:get('id')
+  where empty($user)
+  return web:redirect('/vue-poc/login')
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>get status</xqdoc:description></xqdoc:comment><xqdoc:name>vue-login:status</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/status</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:cookie-param"><xqdoc:literal type="xs:string">remember</xqdoc:literal><xqdoc:literal type="xs:string">{ $remember }</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/status") %rest:cookie-param("remember", "{ $remember }") %rest:produces("application/json") %output:method("json") function vue-login:status($remember as xs:string?) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>remember</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:status($remember as xs:string? )   
+{
+let $user:=session:get("id","")
+let $role:=if($user and user:exists($user)) then user:list-details($user)/@permission/string() else ""
+return  &lt;json   type="object" &gt;
+            &lt;user&gt;{ if($user) then $user else "guest" }&lt;/user&gt;
+            &lt;permission&gt;{$role}&lt;/permission&gt;
+            &lt;session&gt;{session:id()}&lt;/session&gt;
+            &lt;created&gt;{session:created()}&lt;/created&gt;
+            &lt;login&gt;{ $remember }&lt;/login&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>created</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>user</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>role</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>remember</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Checks the user input and redirects to the main page, or back to the login page.</xqdoc:description><xqdoc:param>$name  user name</xqdoc:param><xqdoc:param>$pass  password</xqdoc:param><xqdoc:param>$path  path to redirect to (optional)</xqdoc:param><xqdoc:return>true/false</xqdoc:return></xqdoc:comment><xqdoc:name>vue-login:login</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/login-check</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">username</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">password</xqdoc:literal><xqdoc:literal type="xs:string">{$pass}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">redirect</xqdoc:literal><xqdoc:literal type="xs:string">{$path}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/vue-poc/api/login-check") %rest:form-param("username", "{$name}") %rest:form-param("password", "{$pass}") %rest:form-param("redirect", "{$path}") %rest:produces("application/json") %output:method("json") function vue-login:login($name as xs:string, $pass as xs:string, $path as xs:string?) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pass</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:login(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $path as xs:string?) 
+{
+  try {
+    user:check($name, $pass),
+    if( user:list-details($name)/@permission ne "admin") then (
+      vue-login:reject($name, 'Admin credentials required.', $path)
+    ) else (
+      vue-login:accept($name, $pass, $path)
+    )
+  } catch user:* {
+    vue-login:reject($name, 'Please check your login data.', $path)
+  }
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>check</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>reject</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>accept</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>reject</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pass</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pass</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Ends a session and redirects to the login page.</xqdoc:description><xqdoc:return>redirect</xqdoc:return></xqdoc:comment><xqdoc:name>vue-login:logout</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/logout</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/vue-poc/api/logout") function vue-login:logout() as element(rest:response)</xqdoc:signature><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:logout(
+) as element(rest:response) {
+  session:close(),
+  admin:write-log('vue-poc user was logged out: ' || $vue-login:SESSION-VALUE),
+  web:redirect("/vue-poc/login", map { 'name': $vue-login:SESSION-VALUE })
+
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>close</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/admin</xqdoc:uri><xqdoc:name>write-log</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>SESSION-VALUE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>SESSION-VALUE</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Accepts a user and redirects to the main page.</xqdoc:description><xqdoc:param>$name  entered user name</xqdoc:param><xqdoc:param>$path  path to redirect to</xqdoc:param></xqdoc:comment><xqdoc:name>vue-login:accept</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function vue-login:accept($name as xs:string, $pass as xs:string, $path as xs:string?) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pass</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:accept(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $path  as xs:string?
+) {
+  
+  let $val:=vue-login:cookie("remember", random:uuid(),map{'expires': xs:dayTimeDuration('P7D')})
+   return (
+  session:set($vue-login:SESSION-KEY, $name),
+  admin:write-log('VUEPOC user was logged in: ' || $name),
+  
+  &lt;rest:response&gt;
+    &lt;http:response&gt;
+       &lt;http:header name="Set-Cookie" value="{ $val }"/&gt; 
+    &lt;/http:response&gt;   
+   &lt;/rest:response&gt;, 
+    
+  &lt;json type="object"&gt;
+    &lt;status type="boolean"&gt;true&lt;/status&gt;
+  &lt;/json&gt;
+  )
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>cookie</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/random</xqdoc:uri><xqdoc:name>uuid</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>dayTimeDuration</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>set</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/admin</xqdoc:uri><xqdoc:name>write-log</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>SESSION-KEY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>val</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Rejects a user and redirects to the login page.</xqdoc:description><xqdoc:param>$name     entered user name</xqdoc:param><xqdoc:param>$message  error message</xqdoc:param><xqdoc:param>$path     path to redirect to</xqdoc:param><xqdoc:return>json</xqdoc:return></xqdoc:comment><xqdoc:name>vue-login:reject</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function vue-login:reject($name as xs:string, $message as xs:string, $path as xs:string?) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>message</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:reject(
+  $name     as xs:string,
+  $message  as xs:string,
+  $path     as xs:string?) 
+ {
+ let $cookie:=vue-login:cookie("remember", "", map{})
+ return ( admin:write-log('VUE login was denied: ' || $name),
+  &lt;rest:response&gt;
+    &lt;http:response&gt;
+       &lt;http:header name="Set-Cookie" value="{ $cookie }"/&gt; 
+    &lt;/http:response&gt;   
+   &lt;/rest:response&gt;, 
+  &lt;json type="object"&gt;
+    &lt;status type="boolean"&gt;false&lt;/status&gt;
+    &lt;message&gt;{$message}&lt;/message&gt;
+  &lt;/json&gt;
+  )
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/login</xqdoc:uri><xqdoc:name>cookie</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/admin</xqdoc:uri><xqdoc:name>write-log</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>cookie</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>return cookie string</xqdoc:description></xqdoc:comment><xqdoc:name>vue-login:cookie</xqdoc:name><xqdoc:signature>declare function vue-login:cookie($name as xs:string, $val as item()*, $opts as (map(*))?) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>val</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="?">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function vue-login:cookie($name as xs:string,$val,$opts as map(*)?)
+as xs:string
+{
+  let $pic:="[FNn,3-3],[D01] [MNn,3-3] [Y4] [H01]:[m01]:[s01] [z]"
+  let $expires:=if(map:contains($opts,"expires")) then  current-dateTime() + $opts?expires else ()
+  return``[`{ $name }`=`{ $val }`; path=/; expires=`{ format-dateTime($expires,$pic) }`;]``
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>format-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>val</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>expires</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pic</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

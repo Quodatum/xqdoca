@@ -1,0 +1,97 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>cons.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Global constants and functions.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team, 2014-16</xqdoc:author><xqdoc:custom tag="__source">lib/cons.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Global constants and functions.
+ :
+ : @author Christian Grün, BaseX Team, 2014-16
+ :)
+module namespace cons = 'vue-poc/cons';
+
+import module namespace Request = 'http://exquery.org/ns/request';
+import module namespace Session = 'http://basex.org/modules/session';
+
+(:~ Session key. :)
+declare variable $cons:SESSION-KEY := "vue-poc";
+(:~ Current session. :)
+declare variable $cons:SESSION-VALUE := Session:get($cons:SESSION-KEY);
+
+(:~ Directory for DBA files. :)
+declare variable $cons:DBA-DIR := file:temp-dir() || 'vue-poc/';
+(:~ Configuration file. :)
+declare variable $cons:DBA-SETTINGS-FILE := $cons:DBA-DIR || 'poc-settings.xml';
+
+(:~ Permissions. :)
+declare variable $cons:PERMISSIONS := ('none', 'read', 'write', 'create', 'admin');
+
+(:~ Maximum length of XML characters. :)
+declare variable $cons:K-MAXCHARS := 'maxchars';
+(:~ Maximum number of table entries. :)
+declare variable $cons:K-MAXROWS := 'maxrows';
+(:~ Query timeout. :)
+declare variable $cons:K-TIMEOUT := 'timeout';
+(:~ Maximal memory consumption. :)
+declare variable $cons:K-MEMORY := 'memory';
+(:~ Permission when running queries. :)
+declare variable $cons:K-PERMISSION := 'permission';
+
+(:~ Configuration. :)
+declare variable $cons:OPTION :=
+  let $defaults := map {
+    'maxchars': 100000,
+    'maxrows': 100,
+    'timeout': 10,
+    'memory': 500,
+    'permission': 'admin'
+  }
+  return if(file:exists($cons:DBA-SETTINGS-FILE)) then (
+    try {
+      (: merge defaults with options from settings file :)
+      let $configs := fetch:xml($cons:DBA-SETTINGS-FILE)/config
+      return map:merge(
+        map:for-each($defaults, function($key, $value) {
+          map:entry($key,
+            let $config := $configs/*[name() = $key]
+            return if($config) then (
+              if($value instance of xs:numeric) then xs:integer($config) else xs:string($config)
+            ) else (
+              $value
+            )
+          )
+        })
+      )
+    } catch * {
+      (: use defaults if an error occurs while parsing the configuration file :)
+      $defaults
+    }
+  ) else (
+    $defaults
+  );
+
+(:~
+ : Checks if the current client is logged in. If not, raises an error.
+ :)
+declare function cons:check(
+) as empty-sequence() {
+  if($cons:SESSION-VALUE) then () else
+    error(xs:QName('basex:login'), 'Please log in again.', Request:path())
+};
+
+(:~
+ : Convenience function for redirecting to another page from update operations.
+ : @param  $url     URL
+ : @param  $params  query parameters
+ :)
+declare %updating function cons:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="cons" uri="vue-poc/cons"/><xqdoc:namespace prefix="Request" uri="http://exquery.org/ns/request"/><xqdoc:namespace prefix="Session" uri="http://basex.org/modules/session"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/request</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>cons:SESSION-KEY</xqdoc:name><xqdoc:comment><xqdoc:description>Session key.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:SESSION-VALUE</xqdoc:name><xqdoc:comment><xqdoc:description>Current session.</xqdoc:description></xqdoc:comment><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:DBA-DIR</xqdoc:name><xqdoc:comment><xqdoc:description>Directory for DBA files.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:DBA-SETTINGS-FILE</xqdoc:name><xqdoc:comment><xqdoc:description>Configuration file.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:PERMISSIONS</xqdoc:name><xqdoc:comment><xqdoc:description>Permissions.</xqdoc:description></xqdoc:comment><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:K-MAXCHARS</xqdoc:name><xqdoc:comment><xqdoc:description>Maximum length of XML characters.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:K-MAXROWS</xqdoc:name><xqdoc:comment><xqdoc:description>Maximum number of table entries.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:K-TIMEOUT</xqdoc:name><xqdoc:comment><xqdoc:description>Query timeout.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:K-MEMORY</xqdoc:name><xqdoc:comment><xqdoc:description>Maximal memory consumption.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:K-PERMISSION</xqdoc:name><xqdoc:comment><xqdoc:description>Permission when running queries.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>cons:OPTION</xqdoc:name><xqdoc:comment><xqdoc:description>Configuration.</xqdoc:description></xqdoc:comment><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Checks if the current client is logged in. If not, raises an error.</xqdoc:description></xqdoc:comment><xqdoc:name>cons:check</xqdoc:name><xqdoc:signature>declare function cons:check() as empty-sequence()</xqdoc:signature><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function cons:check(
+) as empty-sequence() {
+  if($cons:SESSION-VALUE) then () else
+    error(xs:QName('basex:login'), 'Please log in again.', Request:path())
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://exquery.org/ns/request</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>vue-poc/cons</xqdoc:uri><xqdoc:name>SESSION-VALUE</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Convenience function for redirecting to another page from update operations.</xqdoc:description><xqdoc:param>$url     URL</xqdoc:param><xqdoc:param>$params  query parameters</xqdoc:param></xqdoc:comment><xqdoc:name>cons:redirect</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function cons:redirect($url as xs:string, $params as map(*)) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function cons:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

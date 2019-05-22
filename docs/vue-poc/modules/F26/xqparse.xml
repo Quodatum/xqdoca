@@ -1,0 +1,41 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:~
+ : Simple server performance test
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>ping</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.test.ping'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>ping:db</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration><TOKEN>:=</TOKEN><StringLiteral>"vue-poc"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>basex:lazy</QName></Annotation> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>ping:state</QName> <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>state</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration><TOKEN>:=</TOKEN><RelativePathExpr><FunctionCall><QName>db:open</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ping:db</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"/state.xml"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>state</QName><PredicateList/></AxisStep></RelativePathExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ :  incr counter
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/ping"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"text"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>ping:dopost</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+    <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><ReplaceExpr><TOKEN>replace</TOKEN> <TOKEN>value</TOKEN> <TOKEN>of</TOKEN> <TOKEN>node</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>ping:state</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>ping</QName> <PredicateList/></AxisStep></RelativePathExpr><TOKEN>with</TOKEN> <AdditiveExpr><IntegerLiteral>1</IntegerLiteral><TOKEN>+</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>ping:state</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>ping</QName><PredicateList/></AxisStep></RelativePathExpr></AdditiveExpr></ReplaceExpr><TOKEN>,</TOKEN>
+            <FunctionCall><QName>update:output</QName><ArgumentList><TOKEN>(</TOKEN><AdditiveExpr><IntegerLiteral>1</IntegerLiteral><TOKEN>+</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>ping:state</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>ping</QName><PredicateList/></AxisStep></RelativePathExpr></AdditiveExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ :  read counter
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> 
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"text"</StringLiteral><TOKEN>)</TOKEN></Annotation>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/ping"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>ping:dostate</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>ping:state</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>ping</QName>
+<PredicateList/></AxisStep></RelativePathExpr><TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ :  return simple constant
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> 
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"text"</StringLiteral><TOKEN>)</TOKEN></Annotation>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/nodb"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>ping:nodb</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <StringLiteral>"ok"</StringLiteral>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module><EOF/></XQuery>

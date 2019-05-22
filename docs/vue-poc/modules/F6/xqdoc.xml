@@ -1,0 +1,192 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api</xqdoc:uri><xqdoc:name>edit.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>vue-poc api.</xqdoc:description><xqdoc:author>Andy Bunce may-2017</xqdoc:author><xqdoc:custom tag="__source">features/edit/edit.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : vue-poc api.
+ :
+ : @author Andy Bunce may-2017
+ :)
+module namespace vue-api = 'quodatum:vue.api';
+import module namespace rest = "http://exquery.org/ns/restxq";
+import module namespace session = "http://basex.org/modules/session";
+import module namespace ufile = 'vue-poc/file' at "../../lib/file.xqm";
+
+import module namespace mt = 'quodatum.data.mimetype' at "../../lib/mimetype.xqm";
+declare namespace c="http://www.w3.org/ns/xproc-step";
+
+
+(:~
+ : Returns a file content.
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/edit")
+%rest:query-param("url", "{$url}")
+%rest:query-param("protocol", "{$protocol}","webfile")
+%rest:produces("application/json")
+%output:method("json")   
+function vue-api:edit-get($url as xs:string,$protocol as xs:string)   
+{
+  let $reader := map{
+      "webfile":vue-api:get-webfile#1,
+      "xmldb":vue-api:get-basexdb#1
+      }
+   return $reader($protocol)($url)
+};
+
+(:~
+ : Update a file content. @TODO
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/edit")
+%rest:form-param("url", "{$url}")
+%rest:form-param("data", "{$data}")
+%rest:produces("application/json")
+%output:method("json")   
+function vue-api:edit-post($url as xs:string,$data)   
+{
+  let $path := ufile:web( $url)=&gt;trace("path ")
+  let $data:=trace($data)
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$path)
+};
+
+(:~
+ : Returns a file content.
+ :)
+declare 
+%rest:GET %rest:path("/vue-poc/api/get2")
+%rest:query-param("url", "{$url}")
+function vue-api:get-webfile($url as xs:string?)   
+as element(json)
+{
+  let $path := ufile:web( $url)=&gt;trace("path ")
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+};
+
+(:~
+ : Returns a file content.
+ : @param $url starts with protocol
+ :)
+declare 
+%rest:GET %rest:path("/vue-poc/api/get")
+%rest:query-param("url", "{$url}")
+%output:method("json")  
+function vue-api:get-file($url as xs:string?)   
+as element(json)
+{
+  let $protocol := substring-before($url,":")
+  let $path:=if($protocol eq "webfile") then
+                  substring-after($url,":") =&gt;ufile:web()
+             else
+                $url
+                
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+};
+
+(:~
+ : Returns a file content.
+ :)
+declare function vue-api:get-basexdb($url as xs:string)
+as element(json)   
+{
+  if( doc-available($url))then 
+            
+             let $doc:=doc($url)
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;application/xml&lt;/mimetype&gt;
+                        &lt;data&gt;{serialize($doc)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-api" uri="quodatum:vue.api"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="session" uri="http://basex.org/modules/session"/><xqdoc:namespace prefix="ufile" uri="vue-poc/file"/><xqdoc:namespace prefix="mt" uri="quodatum.data.mimetype"/><xqdoc:namespace prefix="c" uri="http://www.w3.org/ns/xproc-step"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/restxq</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>vue-poc/file</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns a file content.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:edit-get</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/edit</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">url</xqdoc:literal><xqdoc:literal type="xs:string">{$url}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">protocol</xqdoc:literal><xqdoc:literal type="xs:string">{$protocol}</xqdoc:literal><xqdoc:literal type="xs:string">webfile</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/edit") %rest:query-param("url", "{$url}") %rest:query-param("protocol", "{$protocol}", "webfile") %rest:produces("application/json") %output:method("json") function vue-api:edit-get($url as xs:string, $protocol as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>protocol</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:edit-get($url as xs:string,$protocol as xs:string)   
+{
+  let $reader := map{
+      "webfile":vue-api:get-webfile#1,
+      "xmldb":vue-api:get-basexdb#1
+      }
+   return $reader($protocol)($url)
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>reader</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>protocol</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Update a file content. @TODO</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:edit-post</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/edit</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">url</xqdoc:literal><xqdoc:literal type="xs:string">{$url}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">data</xqdoc:literal><xqdoc:literal type="xs:string">{$data}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/edit") %rest:form-param("url", "{$url}") %rest:form-param("data", "{$data}") %rest:produces("application/json") %output:method("json") function vue-api:edit-post($url as xs:string, $data as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:edit-post($url as xs:string,$data)   
+{
+  let $path := ufile:web( $url)=&gt;trace("path ")
+  let $data:=trace($data)
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$path)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>web</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>fetch-fn</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fetch</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Returns a file content.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:get-webfile</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/get2</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">url</xqdoc:literal><xqdoc:literal type="xs:string">{$url}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/get2") %rest:query-param("url", "{$url}") function vue-api:get-webfile($url as xs:string?) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:get-webfile($url as xs:string?)   
+as element(json)
+{
+  let $path := ufile:web( $url)=&gt;trace("path ")
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>web</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>fetch-fn</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fetch</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Returns a file content.</xqdoc:description><xqdoc:param>$url starts with protocol</xqdoc:param></xqdoc:comment><xqdoc:name>vue-api:get-file</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/get</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">url</xqdoc:literal><xqdoc:literal type="xs:string">{$url}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/get") %rest:query-param("url", "{$url}") %output:method("json") function vue-api:get-file($url as xs:string?) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:get-file($url as xs:string?)   
+as element(json)
+{
+  let $protocol := substring-before($url,":")
+  let $path:=if($protocol eq "webfile") then
+                  substring-after($url,":") =&gt;ufile:web()
+             else
+                $url
+                
+   return if( file:exists($path))then 
+             let $type:=mt:type($path)
+             let $fetch:=mt:fetch-fn($type("treat-as"))
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;{$type?type}&lt;/mimetype&gt;
+                        &lt;data&gt;{$fetch($path)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-before</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.data.mimetype</xqdoc:uri><xqdoc:name>fetch-fn</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>web</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>protocol</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fetch</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Returns a file content.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:get-basexdb</xqdoc:name><xqdoc:signature>declare function vue-api:get-basexdb($url as xs:string) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:get-basexdb($url as xs:string)
+as element(json)   
+{
+  if( doc-available($url))then 
+            
+             let $doc:=doc($url)
+             return &lt;json type="object" &gt;
+                        &lt;url&gt;{$url}&lt;/url&gt;
+                        &lt;mimetype&gt;application/xml&lt;/mimetype&gt;
+                        &lt;data&gt;{serialize($doc)}&lt;/data&gt; 
+                     &lt;/json&gt;
+          else 
+            error(xs:QName('vue-api:raw'),$url)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc-available</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>serialize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

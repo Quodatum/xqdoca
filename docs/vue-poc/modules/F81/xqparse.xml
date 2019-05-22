@@ -1,0 +1,92 @@
+<XQuery>(:~
+ : vue-poc application.
+ :
+ : @author Andy Bunce may-2017
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>vue-poc</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:vue.poc'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>rest</NCName> <TOKEN>=</TOKEN> <StringLiteral>"http://exquery.org/ns/restxq"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue-poc:index</QName><TOKEN>:=</TOKEN><FunctionCall><QName>resolve-uri</QName> <ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><StringLiteral>'static/'</StringLiteral> <TOKEN>||</TOKEN> <StringLiteral>"app.html"</StringLiteral></StringConcatExpr><TOKEN>,</TOKEN><FunctionCall><QName>fn:static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Redirects to the start page.
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:redirect</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>rest:response</QName><TOKEN>)</TOKEN></ElementTest> 
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <Expr><FunctionCall><QName>admin:write-log</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"Start"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"VUEPOC"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+  <FunctionCall><QName>rest:init</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+  <FunctionCall><QName>web:redirect</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/ui"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ display home page :) 
+<AnnotatedDecl><TOKEN>declare</TOKEN> 
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/ui"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:main</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>vue-poc:get-file</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"app.html"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns a file.
+ : @param  $file  file or unknown path
+ : @return rest response and binary file
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/ui/{$file=.+}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:file</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>file</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>+</TOKEN></SequenceType> 
+<EnclosedExpr><TOKEN>{</TOKEN>
+   <FunctionCall><QName>vue-poc:get-file</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+(:~
+ : Returns a file.
+ : @param  $file  file or unknown path
+ : @return rest binary data
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:get-file</QName><TOKEN>(</TOKEN> <Param><TOKEN>$</TOKEN><QName>file</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>+</TOKEN></SequenceType> 
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN> <StringConcatExpr><StringLiteral>'static/'</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef></StringConcatExpr><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName><TOKEN>:=</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>file:exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN><TOKEN>then</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>vue-poc:index</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>prof:dump</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>" Not found"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>content-type</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>vue-poc:content-type</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <Expr><FunctionCall><QName>web:response-header</QName><ArgumentList><TOKEN>(</TOKEN>
+                     <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'media-type'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>content-type</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN>
+                     <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'Cache-Control'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'max-age=3600,public'</StringLiteral></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor>
+                     <TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>file:read-binary</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : content type for path 
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:content-type</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>path</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ct</QName><TOKEN>:=</TOKEN><FunctionCall><QName>web:content-type</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+ <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><VarRef><TOKEN>$</TOKEN><QName>ct</QName></VarRef> <TOKEN>=</TOKEN> <StringLiteral>"text/ecmascript"</StringLiteral></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <StringLiteral>"text/javascript"</StringLiteral> <TOKEN>else</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>ct</QName></VarRef></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ unused
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue-poc:get-filex</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN> <StringConcatExpr><StringLiteral>'static/'</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef></StringConcatExpr><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> 
+    
+    <TryCatchExpr><TryClause><TOKEN>try</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+    <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><FunctionCall><QName>web:response-header</QName><ArgumentList><TOKEN>(</TOKEN><MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'media-type'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>web:content-type</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>fetch:binary</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr>
+    <TOKEN>}</TOKEN></EnclosedExpr></TryClause><CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+      <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><FunctionCall><QName>web:response-header</QName><ArgumentList><TOKEN>(</TOKEN><MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'media-type'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>web:content-type</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>vue-poc:index</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>fetch:binary</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>vue-poc:index</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr>
+    <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

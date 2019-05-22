@@ -1,0 +1,90 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-04-store-thumbs.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>generate thumbs</xqdoc:description><xqdoc:return>initial number of missing docs</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
+ : generate thumbs
+ : @return initial number of missing docs  
+:)
+import module namespace t="expkg-zone58:image.thumbnailator";
+import module namespace cfg = "quodatum:media.image.configure" at "../config.xqm";
+declare namespace c="http://www.w3.org/ns/xproc-step";
+
+declare variable $CHUNK:=1000;
+
+declare variable $DEST:="/pics.xml";
+declare variable $SIZE:=xs:integer(100);
+
+declare %updating function local:store-thumb($f as xs:string)
+{
+  let $src:=$cfg:IMAGEDIR || "../" || trace($f)
+  let $trg:= $cfg:THUMBDIR || $f
+  return try{
+            fetch:binary($src)=&gt;t:size($SIZE)=&gt;local:write-binary($trg)
+         } catch * {
+             update:output("bad: " || $f)
+        }
+};
+(:~  create folder if missing) :)
+declare %updating function local:write-binary($data,$url as xs:string)
+{  
+   let $p:=file:parent($url)
+   return  (if(file:is-dir($p)) then 
+               () 
+           else 
+               file:create-dir($p),
+           file:write-binary($url,$data)
+         )
+};
+
+let $files:= doc($cfg:DB-IMAGE || $DEST)//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+let $relpath:=filter($relpath,function($f){ 
+                                not(file:exists($cfg:THUMBDIR || $f)) 
+                                and file:exists($cfg:IMAGEDIR || "../" || $f) 
+                              })
+let $todo:= $relpath=&gt;subsequence(1, $CHUNK)
+
+return (
+        $todo!local:store-thumb(.),
+        update:output($relpath=&gt;count())
+      )</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="t" uri="expkg-zone58:image.thumbnailator"/><xqdoc:namespace prefix="cfg" uri="quodatum:media.image.configure"/><xqdoc:namespace prefix="c" uri="http://www.w3.org/ns/xproc-step"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>CHUNK</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>DEST</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>SIZE</xqdoc:name><xqdoc:type occurrence="?">xs:integer</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:name>local:store-thumb</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function local:store-thumb($f as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>f</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function local:store-thumb($f as xs:string)
+{
+  let $src:=$cfg:IMAGEDIR || "../" || trace($f)
+  let $trg:= $cfg:THUMBDIR || $f
+  return try{
+            fetch:binary($src)=&gt;t:size($SIZE)=&gt;local:write-binary($trg)
+         } catch * {
+             update:output("bad: " || $f)
+        }
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xquery-local-functions</xqdoc:uri><xqdoc:name>write-binary</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>IMAGEDIR</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>THUMBDIR</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>src</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>SIZE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create folder if missing)</xqdoc:description></xqdoc:comment><xqdoc:name>local:write-binary</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function local:write-binary($data as item()*, $url as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function local:write-binary($data,$url as xs:string)
+{  
+   let $p:=file:parent($url)
+   return  (if(file:is-dir($p)) then 
+               () 
+           else 
+               file:create-dir($p),
+           file:write-binary($url,$data)
+         )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>parent</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>is-dir</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>create-dir</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write-binary</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $files:= doc($cfg:DB-IMAGE || $DEST)//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+let $relpath:=filter($relpath,function($f){ 
+                                not(file:exists($cfg:THUMBDIR || $f)) 
+                                and file:exists($cfg:IMAGEDIR || "../" || $f) 
+                              })
+let $todo:= $relpath=&gt;subsequence(1, $CHUNK)
+
+return (
+        $todo!local:store-thumb(.),
+        update:output($relpath=&gt;count())
+      )</xqdoc:body><xqdoc:body>let $files:= doc($cfg:DB-IMAGE || $DEST)//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+let $relpath:=filter($relpath,function($f){ 
+                                not(file:exists($cfg:THUMBDIR || $f)) 
+                                and file:exists($cfg:IMAGEDIR || "../" || $f) 
+                              })
+let $todo:= $relpath=&gt;subsequence(1, $CHUNK)
+
+return (
+        $todo!local:store-thumb(.),
+        update:output($relpath=&gt;count())
+      )</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ends-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>filter</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xquery-local-functions</xqdoc:uri><xqdoc:name>store-thumb</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string-join</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="5"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>subsequence</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>DB-IMAGE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>DEST</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>relpath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>THUMBDIR</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>IMAGEDIR</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>relpath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>CHUNK</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>todo</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>relpath</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

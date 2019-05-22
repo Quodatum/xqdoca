@@ -1,0 +1,191 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>eval.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>vue-poc thumbnail api.</xqdoc:description><xqdoc:author>Andy Bunce may-2017</xqdoc:author><xqdoc:custom tag="__source">features/eval/eval.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : vue-poc thumbnail api.
+ :
+ : @author Andy Bunce may-2017
+ :)
+module namespace vue-api = 'quodatum:vue.api.eval';
+import module namespace rest = "http://exquery.org/ns/restxq";
+import module namespace util = 'vue-poc/util' at "../../lib/util.xqm";
+import module namespace ufile = 'vue-poc/file' at "../../lib/file.xqm";
+
+declare variable $vue-api:db as xs:string:="vue-poc";
+declare variable $vue-api:id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
+
+(:~
+ : eval
+ :)
+declare
+%updating
+%rest:POST %rest:path("/vue-poc/api/eval/execute")
+%rest:form-param("xq", "{$xq}")
+%output:method("json")   
+function vue-api:eval($xq )   
+{
+ let $r:=util:query($xq,())
+ return vue-api:response($r,$xq)
+};
+
+(:~
+ : return id and return
+ :)
+declare
+%updating 
+function vue-api:response($r,$query)
+{
+ let $id:=$vue-api:id + 1
+ let $out:= &lt;json   type="object" &gt;
+              &lt;id&gt;{ $id }&lt;/id&gt;
+              &lt;job&gt;{ $r }&lt;/job&gt;
+              &lt;dateTime&gt;{ current-dateTime() }&lt;/dateTime&gt;
+            &lt;/json&gt;
+ let $jobrun:=&lt;jobrun id="{$id}" &gt;{ $out }
+              &lt;query&gt;{$query}&lt;/query&gt;
+            &lt;/jobrun&gt;
+  return (
+           replace value of node $vue-api:id with $id,
+           db:replace($vue-api:db,"/jobruns/" || $id || ".xml",$jobrun),
+           update:output($out)
+          )          
+};
+
+(:~
+ : submit a simple job
+ :)
+declare
+%updating
+%rest:POST %rest:path("/vue-poc/api/eval/submit")
+%rest:form-param("xq", "{$xq}")
+%output:method("json")   
+function vue-api:submit($xq )   
+{
+ let $bindings:=map{}
+ let $opts:=map{"cache":true()}
+ let $r:=jobs:eval($xq,$bindings,$opts)
+ return vue-api:response($r,$xq)
+};
+
+
+(:~
+ : query plan
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/eval/plan")
+%rest:form-param("xq", "{$xq}")
+%output:method("json")   
+function vue-api:plan($xq )   
+{
+ let $x:=fn:trace($xq,"task: ")
+ let $r:=xquery:parse($xq,map{"compile":true(),"plan":true()})
+ return &lt;json   type="object" &gt;
+            &lt;result&gt;{ serialize($r) }&lt;/result&gt;
+  &lt;/json&gt;
+};
+
+
+(:~
+ : submit a simple job from path 
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/eval/invoke")
+%rest:form-param("path", "{$path}")
+%output:method("json")
+%updating    
+function vue-api:invoke($path )   
+{
+ let $path:=ufile:web($path)
+ let $xq:=fetch:text($path)
+ let $bindings:=map{}
+ let $opts:=map{"base-uri":$path,"cache":true()}
+ let $r:=jobs:eval($xq,$bindings,$opts)
+
+ return update:output(
+ &lt;json   type="object" &gt;
+            &lt;job&gt;{$r}&lt;/job&gt;
+  &lt;/json&gt;
+  )
+};
+(:~
+ : list available imports
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/eval/imports")
+%output:method("json")   
+function vue-api:imports( )   
+{
+let $n:='import module namespace fw="quodatum:file.walker";'
+ return &lt;json   type="array" &gt;
+            &lt;_&gt;{$n}&lt;/_&gt;
+  &lt;/json&gt;
+};
+
+(:~ 
+ : get result for job with $id
+ :)
+declare 
+%rest:POST %rest:path('/vue-poc/api/eval/result/{$id}') 
+%output:method("json") 
+function vue-api:result($id) 
+{
+  let $r:=jobs:result($id)
+   return &lt;json   type="object" &gt;
+            &lt;result&gt;{util:display($r)}&lt;/result&gt;
+  &lt;/json&gt;
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-api" uri="quodatum:vue.api.eval"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="util" uri="vue-poc/util"/><xqdoc:namespace prefix="ufile" uri="vue-poc/file"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/restxq</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>vue-poc/util</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>vue-poc/file</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>vue-api:db</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>vue-api:id</xqdoc:name><xqdoc:type>element(last-id)</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>eval</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:eval</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/execute</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">xq</xqdoc:literal><xqdoc:literal type="xs:string">{$xq}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:POST %rest:path("/vue-poc/api/eval/execute") %rest:form-param("xq", "{$xq}") %output:method("json") function vue-api:eval($xq as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xq</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:eval($xq )   
+{
+ let $r:=util:query($xq,())
+ return vue-api:response($r,$xq)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>response</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>return id and return</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:response</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function vue-api:response($r as item()*, $query as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>r</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:response($r,$query)
+{
+ let $id:=$vue-api:id + 1
+ let $out:= &lt;json   type="object" &gt;
+              &lt;id&gt;{ $id }&lt;/id&gt;
+              &lt;job&gt;{ $r }&lt;/job&gt;
+              &lt;dateTime&gt;{ current-dateTime() }&lt;/dateTime&gt;
+            &lt;/json&gt;
+ let $jobrun:=&lt;jobrun id="{$id}" &gt;{ $out }
+              &lt;query&gt;{$query}&lt;/query&gt;
+            &lt;/jobrun&gt;
+  return (
+           replace value of node $vue-api:id with $id,
+           db:replace($vue-api:db,"/jobruns/" || $id || ".xml",$jobrun),
+           update:output($out)
+          )          
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>out</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>db</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jobrun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>out</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>submit a simple job</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:submit</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/submit</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">xq</xqdoc:literal><xqdoc:literal type="xs:string">{$xq}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:POST %rest:path("/vue-poc/api/eval/submit") %rest:form-param("xq", "{$xq}") %output:method("json") function vue-api:submit($xq as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xq</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:submit($xq )   
+{
+ let $bindings:=map{}
+ let $opts:=map{"cache":true()}
+ let $r:=jobs:eval($xq,$bindings,$opts)
+ return vue-api:response($r,$xq)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>eval</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:vue.api.eval</xqdoc:uri><xqdoc:name>response</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>bindings</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>query plan</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:plan</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/plan</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">xq</xqdoc:literal><xqdoc:literal type="xs:string">{$xq}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/eval/plan") %rest:form-param("xq", "{$xq}") %output:method("json") function vue-api:plan($xq as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xq</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:plan($xq )   
+{
+ let $x:=fn:trace($xq,"task: ")
+ let $r:=xquery:parse($xq,map{"compile":true(),"plan":true()})
+ return &lt;json   type="object" &gt;
+            &lt;result&gt;{ serialize($r) }&lt;/result&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>serialize</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>submit a simple job from path</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:invoke</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/invoke</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">path</xqdoc:literal><xqdoc:literal type="xs:string">{$path}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/eval/invoke") %rest:form-param("path", "{$path}") %output:method("json") %updating function vue-api:invoke($path as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:invoke($path )   
+{
+ let $path:=ufile:web($path)
+ let $xq:=fetch:text($path)
+ let $bindings:=map{}
+ let $opts:=map{"base-uri":$path,"cache":true()}
+ let $r:=jobs:eval($xq,$bindings,$opts)
+
+ return update:output(
+ &lt;json   type="object" &gt;
+            &lt;job&gt;{$r}&lt;/job&gt;
+  &lt;/json&gt;
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>web</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>eval</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>bindings</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>list available imports</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:imports</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/imports</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/eval/imports") %output:method("json") function vue-api:imports() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:imports( )   
+{
+let $n:='import module namespace fw="quodatum:file.walker";'
+ return &lt;json   type="array" &gt;
+            &lt;_&gt;{$n}&lt;/_&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>get result for job with $id</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:result</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/eval/result/{$id}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/eval/result/{$id}") %output:method("json") function vue-api:result($id as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:result($id) 
+{
+  let $r:=jobs:result($id)
+   return &lt;json   type="object" &gt;
+            &lt;result&gt;{util:display($r)}&lt;/result&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>vue-poc/util</xqdoc:uri><xqdoc:name>display</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,23 @@
+<XQuery>(:~ 
+: vue compile
+: @author andy bunce
+: @since july 2018
+:)
+<MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>vue</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:vue.compile'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../../lib/vue-compile/vue-compile.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+
+(:~ URL of the doc to validate
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/entities/adminlog.xml
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>doc</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN>
+<CastExpr><StringLiteral>"C:/Users/andy/git/vue-poc/src/vue-poc/models/entities/adminlog.xml"</StringLiteral> <TOKEN>cast</TOKEN> <TOKEN>as</TOKEN> <QName>xs:anyURI</QName></CastExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ URL of the schema to use 
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/schemas/entity.xsd
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>schema</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration> <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN>
+<CastExpr><StringLiteral>"C:/Users/andy/git/vue-poc/src/vue-poc/models/schemas/entity.xsd"</StringLiteral>  <TOKEN>cast</TOKEN> <TOKEN>as</TOKEN> <QName>xs:anyURI</QName></CastExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog>
+                                 
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>result</QName><TOKEN>:=</TOKEN><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>json</QName><DirAttributeList><S> </S><QName>type</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>o</QuotAttrContentChar><QuotAttrContentChar>b</QuotAttrContentChar><QuotAttrContentChar>j</QuotAttrContentChar><QuotAttrContentChar>e</QuotAttrContentChar><QuotAttrContentChar>c</QuotAttrContentChar><QuotAttrContentChar>t</QuotAttrContentChar><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>hello</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><ElementContentChar>T</ElementContentChar><ElementContentChar>O</ElementContentChar><ElementContentChar>D</ElementContentChar><ElementContentChar>O</ElementContentChar><TOKEN>&lt;/</TOKEN><QName>hello</QName><TOKEN>&gt;</TOKEN></DirElemConstructor><TOKEN>&lt;/</TOKEN><QName>json</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>result</QName></VarRef></ReturnClause></FLWORExpr></MainModule>
+<EOF/></XQuery>

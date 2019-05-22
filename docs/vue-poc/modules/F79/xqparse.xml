@@ -1,0 +1,4 @@
+<XQuery><MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>vue</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:vue.compile'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../lib/vue-compile/vue-compile.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN>  <TOKEN>$</TOKEN><QName>proj</QName> <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN><StringLiteral>"C:/Users/andy/git/vue-poc/src/vue-poc/"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog>  
+<FunctionCall><QName>vue:compile</QName><ArgumentList><TOKEN>(</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MainModule><EOF/></XQuery>

@@ -1,0 +1,27 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.rest</xqdoc:uri><xqdoc:name>rxq-vue-compile.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>compile</xqdoc:description><xqdoc:custom tag="__source">features/tasks/vue-compile/rxq-vue-compile.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : compile
+ :)
+module namespace vue-rest = 'quodatum:vue.rest';
+import module namespace vue = 'quodatum:vue.compile' at "../../../lib/vue-compile/vue-compile.xqm";
+
+
+
+(:~
+ : run compile task.
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/tasks/vue-compile")
+%rest:form-param("proj", "{$proj}")
+%rest:produces("application/json")
+%output:method("json")
+%updating   
+function vue-rest:vue($proj )   
+{
+  let $op:=vue:compile($proj)
+  return update:output(&lt;json type="object"&gt;&lt;msg&gt; { $proj }.&lt;/msg&gt;&lt;/json&gt;)
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-rest" uri="quodatum:vue.rest"/><xqdoc:namespace prefix="vue" uri="quodatum:vue.compile"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:vue.compile</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>run compile task.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-rest:vue</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/tasks/vue-compile</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">proj</xqdoc:literal><xqdoc:literal type="xs:string">{$proj}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/tasks/vue-compile") %rest:form-param("proj", "{$proj}") %rest:produces("application/json") %output:method("json") %updating function vue-rest:vue($proj as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>proj</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-rest:vue($proj )   
+{
+  let $op:=vue:compile($proj)
+  return update:output(&lt;json type="object"&gt;&lt;msg&gt; { $proj }.&lt;/msg&gt;&lt;/json&gt;)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:vue.compile</xqdoc:uri><xqdoc:name>compile</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>proj</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>proj</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

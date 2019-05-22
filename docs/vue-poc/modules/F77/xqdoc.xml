@@ -1,0 +1,16 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>docbook-schematron.xq</xqdoc:uri><xqdoc:body>import module namespace schematron = "http://github.com/Schematron/schematron-basex";
+let $sch := schematron:compile(doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\docbook-mods.sch'))
+let $xml := fn:doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\test.xml')
+let $validation := schematron:validate($xml, $sch)
+
+return $validation
+
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="schematron" uri="http://github.com/Schematron/schematron-basex"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://github.com/Schematron/schematron-basex</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $sch := schematron:compile(doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\docbook-mods.sch'))
+let $xml := fn:doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\test.xml')
+let $validation := schematron:validate($xml, $sch)
+
+return $validation</xqdoc:body><xqdoc:body>let $sch := schematron:compile(doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\docbook-mods.sch'))
+let $xml := fn:doc('C:\Users\andy\git\vue-poc\src\vue-poc\static\resources\schematron\test.xml')
+let $validation := schematron:validate($xml, $sch)
+
+return $validation</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://github.com/Schematron/schematron-basex</xqdoc:uri><xqdoc:name>compile</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://github.com/Schematron/schematron-basex</xqdoc:uri><xqdoc:name>validate</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sch</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>validation</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

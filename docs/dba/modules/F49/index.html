@@ -1,0 +1,276 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>dba - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/users</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>User page.</dd><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p><p>__source : users/user.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#dba/users">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">dba</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">dba/users</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span></a></li><li><a href="#$dba:SUB"><span class="secno">3.2</span><span class="content">$dba:SUB</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:user"><span class="secno">4.1</span><span class="content" title="">dba:user<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#dba:user-redirect"><span class="secno">4.2</span><span class="content" title="">dba:user-redirect<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">0</span> modules, it imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F31/index.html" title="modules\html.xqm">dba/html</a></span></div><div><span><a href="../../modules/F32/index.html" title="modules\options.xqm">dba/options</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><div class="div3"><h3><a id="$dba:CAT"></a>3.1&nbsp;$dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$dba:SUB"></a>3.2&nbsp;$dba:SUB</h3><dl><dt class="label">Summary</dt><dd>Sub category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="dba:user"></a>4.1&nbsp;dba:user<div style="float:right"><a href="#dba:user">#</a></div></h3><dt class="label">Summary</dt><dd>Returns a single user page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:user</code>
+		  ( 
+			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$newname</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$pw</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$perm</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$error</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$info</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> user name</li><li>newname<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> new name</li><li>pw<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> password</li><li>perm<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> permission</li><li>error<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> error string</li><li>info<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> info string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg"></code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/user</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">name</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$name}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">newname</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$newname}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">pw</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$pw}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">perm</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$perm}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">error</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$error}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">info</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$info}</xqdoc:literal></code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">html</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>References 11 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/html</td><td>focus#1</td></tr><tr><td>Fn</td><td>dba/html</td><td>wrap#2</td></tr><tr><td>Fn</td><td>dba/html</td><td>link#2</td></tr><tr><td>Fn</td><td>dba/html</td><td>button#2</td></tr><tr><td>Fn</td><td>dba/html</td><td>button#2</td></tr><tr><td>Fn</td><td>dba/html</td><td>button#3</td></tr><tr><td>Fn</td><td>dba/html</td><td>table#5</td></tr><tr><td>Fn</td><td>http://basex.org/modules/user</td><td>list-details#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>head#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>head#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function dba:user(
+  $name     as xs:string,
+  $newname  as xs:string?,
+  $pw       as xs:string?,
+  $perm     as xs:string?,
+  $error    as xs:string?,
+  $info     as xs:string?
+) as element(html) {
+  let $user := user:list-details($name)
+  let $admin := $name eq 'admin'
+  return html:wrap(map { 'header': ($dba:CAT, $name), 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td width='49%'&gt;
+        &lt;form action="user-edit" method="post" autocomplete="off"&gt;
+          &lt;!--  force chrome not to autocomplete form --&gt;
+          &lt;input style="display:none" type="text" name="fake1"/&gt;
+          &lt;input style="display:none" type="password" name="fake2"/&gt;
+          &lt;h2&gt;{
+            html:link('Users', $dba:CAT), ' » ',
+            $name, ' » ',
+            html:button('save', 'Save')
+          }&lt;/h2&gt;
+          &lt;input type="hidden" name="name" value="{ $name }"/&gt;
+          &lt;table&gt;{
+            let $admin := $name eq 'admin' return (
+              if($admin) then &lt;input type='hidden' name='newname' value='admin'/&gt; else (
+                &lt;tr&gt;
+                  &lt;td&gt;Name:&lt;/td&gt;
+                  &lt;td&gt;
+                    &lt;input type="text" name="newname"
+                      value="{ head(($newname, $name)) }" id="newname"/&gt;
+                    { html:focus('newname') }
+                    &lt;div class='small'/&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              ),
+              &lt;tr&gt;
+                &lt;td&gt;Password:&lt;/td&gt;
+                &lt;td&gt;
+                  &lt;input type="password" name="pw" value="{ $pw }" id="pw"/&gt; &amp;#xa0;
+                  &lt;span class='note'&gt;
+                    …only changed if a new one is entered&lt;br/&gt;
+                  &lt;/span&gt;
+                  &lt;div class='small'/&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;,
+              if($admin) then &lt;input type='hidden' name='perm' value='admin'/&gt; else (
+                &lt;tr&gt;
+                  &lt;td&gt;Permission:&lt;/td&gt;
+                  &lt;td&gt;
+                    &lt;select name="perm" size="5"&gt;{
+                      let $perm := head(($perm, $user/@permission))
+                      for $p in $options:PERMISSIONS
+                      return element option { attribute selected { }[$p = $perm], $p }
+                    }&lt;/select&gt;
+                    &lt;div class='small'/&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              )
+            )
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      {
+        if($admin) then () else &lt;_&gt;
+          &lt;hr/&gt;
+          &lt;h3&gt;Local Permissions&lt;/h3&gt;
+          &lt;form action="{ $dba:SUB }" method="post" id="{ $dba:SUB }" class="update"&gt;
+            &lt;input type="hidden" name="name" value="{ $name }" id="name"/&gt;
+            &lt;div class='small'/&gt;
+            {
+              let $headers := (
+                map { 'key': 'pattern', 'label': 'Pattern' },
+                map { 'key': 'permission', 'label': 'Local Permission' }
+              )
+              let $entries := $user/database ! map {
+                'pattern': @pattern,
+                'permission': @permission
+              }
+              let $buttons := if($admin) then () else (
+                html:button('pattern-add', 'Add…'),
+                html:button('pattern-drop', 'Drop', true())
+              )
+              return html:table($headers, $entries, $buttons, map { }, map { })
+            }
+          &lt;/form&gt;
+          &lt;div class='note'&gt;
+            A global permission can be overwritten by a local permission.&lt;br/&gt;
+            Local permissions are applied to those databases that match&lt;br/&gt;
+            a specified pattern. The pattern is based on the &lt;a target='_blank'
+              href='http://docs.basex.org/wiki/Commands#Glob_Syntax'&gt;glob syntax&lt;/a&gt;.&lt;br/&gt;
+          &lt;/div&gt;
+        &lt;/_&gt;/node()
+      }&lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</code></pre></details></div><div class="div3"><h3><a id="dba:user-redirect"></a>4.2&nbsp;dba:user-redirect<div style="float:right"><a href="#dba:user-redirect">#</a></div></h3><dt class="label">Summary</dt><dd>Redirects to the specified action.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:user-redirect</code>
+		  ( 
+			<code class="arg">$action</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$patterns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>action<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> action to perform</li><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> user name</li><li>patterns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string*</code> patterns</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg"></code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">/dba/user</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">action</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$action}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">name</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$name}</xqdoc:literal></code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">pattern</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">{$patterns}</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/web</td><td>redirect#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function dba:user-redirect(
+  $action    as xs:string,
+  $name      as xs:string,
+  $patterns  as xs:string*
+) as element(rest:response) {
+  web:redirect($action, map { 'name': $name, 'pattern': $patterns })
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>dba</td><td>dba/users</td></tr><tr><td>html</td><td>dba/html</td></tr><tr><td>options</td><td>dba/options</td></tr><tr><td>output</td><td>http://www.w3.org/2010/xslt-xquery-serialization</td></tr><tr><td>rest</td><td>http://exquery.org/ns/restxq</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : User page.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace dba = 'dba/users';
+
+import module namespace html = 'dba/html' at '../modules/html.xqm';
+import module namespace options = 'dba/options' at '../modules/options.xqm';
+
+(:~ Top category :)
+declare variable $dba:CAT := 'users';
+(:~ Sub category :)
+declare variable $dba:SUB := 'user';
+
+(:~
+ : Returns a single user page.
+ : @param  $name     user name
+ : @param  $newname  new name
+ : @param  $pw       password
+ : @param  $perm     permission
+ : @param  $error    error string
+ : @param  $info     info string
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path("/dba/user")
+  %rest:query-param("name",     "{$name}")
+  %rest:query-param("newname",  "{$newname}")
+  %rest:query-param("pw",       "{$pw}")
+  %rest:query-param("perm",     "{$perm}")
+  %rest:query-param("error",    "{$error}")
+  %rest:query-param("info",     "{$info}")
+  %output:method("html")
+function dba:user(
+  $name     as xs:string,
+  $newname  as xs:string?,
+  $pw       as xs:string?,
+  $perm     as xs:string?,
+  $error    as xs:string?,
+  $info     as xs:string?
+) as element(html) {
+  let $user := user:list-details($name)
+  let $admin := $name eq 'admin'
+  return html:wrap(map { 'header': ($dba:CAT, $name), 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td width='49%'&gt;
+        &lt;form action="user-edit" method="post" autocomplete="off"&gt;
+          &lt;!--  force chrome not to autocomplete form --&gt;
+          &lt;input style="display:none" type="text" name="fake1"/&gt;
+          &lt;input style="display:none" type="password" name="fake2"/&gt;
+          &lt;h2&gt;{
+            html:link('Users', $dba:CAT), ' » ',
+            $name, ' » ',
+            html:button('save', 'Save')
+          }&lt;/h2&gt;
+          &lt;input type="hidden" name="name" value="{ $name }"/&gt;
+          &lt;table&gt;{
+            let $admin := $name eq 'admin' return (
+              if($admin) then &lt;input type='hidden' name='newname' value='admin'/&gt; else (
+                &lt;tr&gt;
+                  &lt;td&gt;Name:&lt;/td&gt;
+                  &lt;td&gt;
+                    &lt;input type="text" name="newname"
+                      value="{ head(($newname, $name)) }" id="newname"/&gt;
+                    { html:focus('newname') }
+                    &lt;div class='small'/&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              ),
+              &lt;tr&gt;
+                &lt;td&gt;Password:&lt;/td&gt;
+                &lt;td&gt;
+                  &lt;input type="password" name="pw" value="{ $pw }" id="pw"/&gt; &amp;#xa0;
+                  &lt;span class='note'&gt;
+                    …only changed if a new one is entered&lt;br/&gt;
+                  &lt;/span&gt;
+                  &lt;div class='small'/&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;,
+              if($admin) then &lt;input type='hidden' name='perm' value='admin'/&gt; else (
+                &lt;tr&gt;
+                  &lt;td&gt;Permission:&lt;/td&gt;
+                  &lt;td&gt;
+                    &lt;select name="perm" size="5"&gt;{
+                      let $perm := head(($perm, $user/@permission))
+                      for $p in $options:PERMISSIONS
+                      return element option { attribute selected { }[$p = $perm], $p }
+                    }&lt;/select&gt;
+                    &lt;div class='small'/&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              )
+            )
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      {
+        if($admin) then () else &lt;_&gt;
+          &lt;hr/&gt;
+          &lt;h3&gt;Local Permissions&lt;/h3&gt;
+          &lt;form action="{ $dba:SUB }" method="post" id="{ $dba:SUB }" class="update"&gt;
+            &lt;input type="hidden" name="name" value="{ $name }" id="name"/&gt;
+            &lt;div class='small'/&gt;
+            {
+              let $headers := (
+                map { 'key': 'pattern', 'label': 'Pattern' },
+                map { 'key': 'permission', 'label': 'Local Permission' }
+              )
+              let $entries := $user/database ! map {
+                'pattern': @pattern,
+                'permission': @permission
+              }
+              let $buttons := if($admin) then () else (
+                html:button('pattern-add', 'Add…'),
+                html:button('pattern-drop', 'Drop', true())
+              )
+              return html:table($headers, $entries, $buttons, map { }, map { })
+            }
+          &lt;/form&gt;
+          &lt;div class='note'&gt;
+            A global permission can be overwritten by a local permission.&lt;br/&gt;
+            Local permissions are applied to those databases that match&lt;br/&gt;
+            a specified pattern. The pattern is based on the &lt;a target='_blank'
+              href='http://docs.basex.org/wiki/Commands#Glob_Syntax'&gt;glob syntax&lt;/a&gt;.&lt;br/&gt;
+          &lt;/div&gt;
+        &lt;/_&gt;/node()
+      }&lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Redirects to the specified action.
+ : @param  $action    action to perform
+ : @param  $name      user name
+ : @param  $patterns  patterns
+ : @return redirection
+ :)
+declare
+  %rest:POST
+  %rest:path("/dba/user")
+  %rest:form-param("action",  "{$action}")
+  %rest:form-param("name",    "{$name}")
+  %rest:form-param("pattern", "{$patterns}")
+function dba:user-redirect(
+  $action    as xs:string,
+  $name      as xs:string,
+  $patterns  as xs:string*
+) as element(rest:response) {
+  web:redirect($action, map { 'name': $name, 'pattern': $patterns })
+};
+</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:25:31.961+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

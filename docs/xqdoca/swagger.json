@@ -1,0 +1,17 @@
+{
+  "swagger":"2.0",
+  "info":{
+    "version":"1.0.0",
+    "title":"Generated from main at 2019-05-22T11:24:21.502+01:00",
+    "description":"Example generation from RESTXQ xquery sources",
+    "termsOfService":"http:\/\/swagger.io\/terms\/",
+    "contact":{
+      "name":"Andy Bunce"
+    },
+    "license":{
+      "name":"MIT"
+    }
+  },
+  "host":"github.com\/Quodatum\/xqdoca",
+  "basePath":"\/api"
+}

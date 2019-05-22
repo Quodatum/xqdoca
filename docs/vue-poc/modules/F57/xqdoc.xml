@@ -1,0 +1,126 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri><xqdoc:name>dbtools.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>tools for databases..</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>mar 2013</xqdoc:since><xqdoc:custom tag="__source">lib/dbtools.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+: tools for databases..
+: @author andy bunce
+: @since mar 2013
+:)
+
+module namespace dbtools = 'quodatum.dbtools';
+import module namespace file="http://expath.org/ns/file";
+import module namespace db="http://basex.org/modules/db";
+import module namespace archive="http://basex.org/modules/archive";
+import module namespace hof="http://basex.org/modules/hof";
+
+(:  trailing slash :)
+declare variable $dbtools:webpath:= db:system()/globaloptions/webpath/fn:string()
+                             || file:dir-separator();
+
+(:~ 
+: save all in db to zip
+: no binary yet 
+:)
+declare function dbtools:zip($dbname as xs:string)
+as xs:base64Binary{
+  let $files:=db:list($dbname)
+  let $zip   := archive:create(
+                  $files ! element archive:entry { . },
+                  $files ! fn:serialize(db:open($dbname, .))
+                  )
+return $zip
+};
+
+(:~
+: update or create database from file path
+: @param $dbname name of database
+: @param $path file path contain files
+:)
+declare %updating function dbtools:sync-from-path(
+                   $dbname as xs:string,
+                   $path as xs:string)
+{
+   dbtools:sync-from-files($dbname,
+                  $path,
+                  file:list($path,fn:true()),
+                  hof:id#1)
+};
+
+(:~
+: update or create database from file list. After this the database will have a
+: matching copy of the files on the file system
+: @param $dbname name of database
+: @param $path  base file path where files are relative to en
+: @param $files file names from base
+: @param $ingest function to apply f(fullsrcpath)-&gt;anotherpath or xml nodes
+:)
+declare %updating 
+function dbtools:sync-from-files($dbname as xs:string,
+                                 $path as xs:string,
+                                 $files as xs:string*,
+                                 $ingest as function(*))
+{
+let $path:=$path ||"/"
+let $files:=$files!fn:translate(.,"\","/")
+let $files:=fn:filter($files,function($f){file:is-file(fn:concat($path,$f))})
+return if(db:exists($dbname)) then
+           (
+           for $d in db:list($dbname) 
+           where fn:not($d=$files) 
+           return db:delete($dbname,$d),
+           
+           for $f in $files
+           let $_:=fn:trace($path || $f,"file:") 
+           let $content:=$ingest($path || $f) 
+           return db:replace($dbname,$f,$content),
+           
+           db:optimize($dbname)
+           )
+       else
+          let $full:=$files!fn:concat($path,.)
+          let $content:=$full!$ingest(.) 
+          return (db:create($dbname,$content,$files))
+};
+
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="dbtools" uri="quodatum.dbtools"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/><xqdoc:namespace prefix="db" uri="http://basex.org/modules/db"/><xqdoc:namespace prefix="archive" uri="http://basex.org/modules/archive"/><xqdoc:namespace prefix="hof" uri="http://basex.org/modules/hof"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/hof</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>dbtools:webpath</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>save all in db to zip
+no binary yet</xqdoc:description></xqdoc:comment><xqdoc:name>dbtools:zip</xqdoc:name><xqdoc:signature>declare function dbtools:zip($dbname as xs:string) as xs:base64Binary</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>dbname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:return><xqdoc:body>function dbtools:zip($dbname as xs:string)
+as xs:base64Binary{
+  let $files:=db:list($dbname)
+  let $zip   := archive:create(
+                  $files ! element archive:entry { . },
+                  $files ! fn:serialize(db:open($dbname, .))
+                  )
+return $zip
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>create</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>serialize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>open</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>zip</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>update or create database from file path</xqdoc:description><xqdoc:param>$dbname name of database</xqdoc:param><xqdoc:param>$path file path contain files</xqdoc:param></xqdoc:comment><xqdoc:name>dbtools:sync-from-path</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function dbtools:sync-from-path($dbname as xs:string, $path as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>dbname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function dbtools:sync-from-path(
+                   $dbname as xs:string,
+                   $path as xs:string)
+{
+   dbtools:sync-from-files($dbname,
+                  $path,
+                  file:list($path,fn:true()),
+                  hof:id#1)
+}</xqdoc:body><xqdoc:invoked arity="4"><xqdoc:uri>quodatum.dbtools</xqdoc:uri><xqdoc:name>sync-from-files</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>update or create database from file list. After this the database will have a
+matching copy of the files on the file system</xqdoc:description><xqdoc:param>$dbname name of database</xqdoc:param><xqdoc:param>$path  base file path where files are relative to en</xqdoc:param><xqdoc:param>$files file names from base</xqdoc:param><xqdoc:param>$ingest function to apply f(fullsrcpath)-&gt;anotherpath or xml nodes</xqdoc:param></xqdoc:comment><xqdoc:name>dbtools:sync-from-files</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function dbtools:sync-from-files($dbname as xs:string, $path as xs:string, $files as xs:string*, $ingest as function(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>dbname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ingest</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function dbtools:sync-from-files($dbname as xs:string,
+                                 $path as xs:string,
+                                 $files as xs:string*,
+                                 $ingest as function(*))
+{
+let $path:=$path ||"/"
+let $files:=$files!fn:translate(.,"\","/")
+let $files:=fn:filter($files,function($f){file:is-file(fn:concat($path,$f))})
+return if(db:exists($dbname)) then
+           (
+           for $d in db:list($dbname) 
+           where fn:not($d=$files) 
+           return db:delete($dbname,$d),
+           
+           for $f in $files
+           let $_:=fn:trace($path || $f,"file:") 
+           let $content:=$ingest($path || $f) 
+           return db:replace($dbname,$f,$content),
+           
+           db:optimize($dbname)
+           )
+       else
+          let $full:=$files!fn:concat($path,.)
+          let $content:=$full!$ingest(.) 
+          return (db:create($dbname,$content,$files))
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>filter</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>is-file</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>delete</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>optimize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>create</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ingest</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>content</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>full</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ingest</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>content</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,145 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api.thumbnail</xqdoc:uri><xqdoc:name>thumbnail.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>vue-poc thumbnail api.</xqdoc:description><xqdoc:author>Andy Bunce may-2017</xqdoc:author><xqdoc:custom tag="__source">features/thumbnail/thumbnail.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : vue-poc thumbnail api.
+ :
+ : @author Andy Bunce may-2017
+ :)
+module namespace vue-api = 'quodatum:vue.api.thumbnail';
+import module namespace t="expkg-zone58:image.thumbnailator";
+import module namespace qweb = 'quodatum.web.utils4' at "../../lib/webutils.xqm";
+import module namespace rest = "http://exquery.org/ns/restxq";
+
+
+
+(:~
+ : do a thumbnail
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/thumbnail")
+%rest:form-param("url", "{$url}")
+%rest:form-param("task", "{$task}")
+function vue-api:thumbnail($url,$task )   
+{
+ let $x:=fn:parse-xml($task)=&gt;fn:trace("task: ")
+ let $thumb:=fetch:binary($url)=&gt;t:task($x/thumbnail)
+ 
+ return (qweb:download-response("basex","xx.gif"), $thumb)
+};
+
+(:~
+ : do a thumbnail
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/thumbnail/validate")
+%rest:form-param("task", "{$task}")
+%rest:produces("application/json")
+%output:method("json")   
+function vue-api:thumbnail-validate($task )   
+{
+ let $x:=fn:parse-xml($task)=&gt;fn:trace("task: ")
+ return &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {(1 to 100)!(&lt;_&gt;A{.}&lt;/_&gt;)}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+};
+(:~
+ : return set of images as base64
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/thumbnail/images")
+
+%rest:produces("application/json")
+%output:method("json")   
+function vue-api:thumbnail-images( )   
+{
+ let $p:="/vue-poc/static/resources/tiles/"=&gt;vue-api:web()
+ let $x:=$p=&gt;file:list()
+ return &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {for $item in $x
+            let $m:=vue-api:get-image($item,$p)
+            return &lt;_ type="object"&gt;
+            &lt;name&gt;{$m?name}&lt;/name&gt;
+            &lt;data&gt;{$m?data}&lt;/data&gt;
+             &lt;mime&gt;{$m?mime}&lt;/mime&gt;
+            &lt;/_&gt;}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+};
+
+declare function vue-api:get-image($name as xs:string,$path as xs:string)
+as map(*)
+{
+let $f:=file:resolve-path($name,$path)
+return map{
+           "name":$name,
+           "data":fetch:binary($f),
+           "mime":fetch:content-type($f)
+           }
+};
+(:~
+ : resolve path relative to basex webpath
+ : file("/fred")=&gt;C:\Program Files (x86)\BaseX\webapp\fred
+ :)
+declare function vue-api:web($file as xs:string)
+as xs:string
+{
+  let $file:=if(starts-with($file,"/")) then 
+                substring($file,2) 
+            else 
+                error(xs:QName('vue-api:badpath'),"leading slash")
+                 
+  let $webroot:=db:system()/globaloptions/webpath/concat(.,"/")
+  return file:resolve-path($file,$webroot)
+};
+
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-api" uri="quodatum:vue.api.thumbnail"/><xqdoc:namespace prefix="t" uri="expkg-zone58:image.thumbnailator"/><xqdoc:namespace prefix="qweb" uri="quodatum.web.utils4"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/restxq</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>do a thumbnail</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:thumbnail</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/thumbnail</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">url</xqdoc:literal><xqdoc:literal type="xs:string">{$url}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">task</xqdoc:literal><xqdoc:literal type="xs:string">{$task}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/thumbnail") %rest:form-param("url", "{$url}") %rest:form-param("task", "{$task}") function vue-api:thumbnail($url as item()*, $task as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>task</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:thumbnail($url,$task )   
+{
+ let $x:=fn:parse-xml($task)=&gt;fn:trace("task: ")
+ let $thumb:=fetch:binary($url)=&gt;t:task($x/thumbnail)
+ 
+ return (qweb:download-response("basex","xx.gif"), $thumb)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse-xml</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri><xqdoc:name>download-response</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri><xqdoc:name>task</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>task</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>thumb</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>do a thumbnail</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:thumbnail-validate</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/thumbnail/validate</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">task</xqdoc:literal><xqdoc:literal type="xs:string">{$task}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/thumbnail/validate") %rest:form-param("task", "{$task}") %rest:produces("application/json") %output:method("json") function vue-api:thumbnail-validate($task as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>task</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:thumbnail-validate($task )   
+{
+ let $x:=fn:parse-xml($task)=&gt;fn:trace("task: ")
+ return &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {(1 to 100)!(&lt;_&gt;A{.}&lt;/_&gt;)}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse-xml</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>task</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>return set of images as base64</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:thumbnail-images</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/thumbnail/images</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/thumbnail/images") %rest:produces("application/json") %output:method("json") function vue-api:thumbnail-images() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:thumbnail-images( )   
+{
+ let $p:="/vue-poc/static/resources/tiles/"=&gt;vue-api:web()
+ let $x:=$p=&gt;file:list()
+ return &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {for $item in $x
+            let $m:=vue-api:get-image($item,$p)
+            return &lt;_ type="object"&gt;
+            &lt;name&gt;{$m?name}&lt;/name&gt;
+            &lt;data&gt;{$m?data}&lt;/data&gt;
+             &lt;mime&gt;{$m?mime}&lt;/mime&gt;
+            &lt;/_&gt;}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:vue.api.thumbnail</xqdoc:uri><xqdoc:name>get-image</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:vue.api.thumbnail</xqdoc:uri><xqdoc:name>web</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>m</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>m</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>m</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>vue-api:get-image</xqdoc:name><xqdoc:signature>declare function vue-api:get-image($name as xs:string, $path as xs:string) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:get-image($name as xs:string,$path as xs:string)
+as map(*)
+{
+let $f:=file:resolve-path($name,$path)
+return map{
+           "name":$name,
+           "data":fetch:binary($f),
+           "mime":fetch:content-type($f)
+           }
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>resolve-path</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>content-type</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>resolve path relative to basex webpath
+file("/fred")=&gt;C:\Program Files (x86)\BaseX\webapp\fred</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:web</xqdoc:name><xqdoc:signature>declare function vue-api:web($file as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:web($file as xs:string)
+as xs:string
+{
+  let $file:=if(starts-with($file,"/")) then 
+                substring($file,2) 
+            else 
+                error(xs:QName('vue-api:badpath'),"leading slash")
+                 
+  let $webroot:=db:system()/globaloptions/webpath/concat(.,"/")
+  return file:resolve-path($file,$webroot)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>system</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>resolve-path</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>webroot</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,59 @@
+<XQuery>(:~
+ : Downloads a job result.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/jobs'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+(:~ Top category :)
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>dba:CAT</QName> <TOKEN>:=</TOKEN> <StringLiteral>'jobs'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Downloads the result of a job.
+ : @param  $id  job id
+ : @return rest response and file content
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/dba/job-result"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>"id"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$id}"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>""</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:job-result</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>id</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>+</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>details</QName> <TOKEN>:=</TOKEN> <FunctionCall><QName>jobs:list-details</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>details</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <FunctionCall><QName>dba:job-result</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <StringLiteral>'Job is defunct.'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>details</QName></VarRef><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>state</QName></AbbrevForwardStep> <PredicateList/></AxisStep></RelativePathExpr><TOKEN>!=</TOKEN> <StringLiteral>'cached'</StringLiteral></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <FunctionCall><QName>dba:job-result</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <StringLiteral>'Result is not available yet.'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+      <FunctionCall><QName>dba:job-result</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <FunctionCall><QName>jobs:result</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+    <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+      <FunctionCall><QName>dba:job-result</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+        <StringConcatExpr><StringLiteral>'Stopped at '</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:module</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>', '</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:line-number</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>'/'</StringLiteral> <TOKEN>||</TOKEN>
+          <VarRef><TOKEN>$</TOKEN><QName>err:column-number</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>':'</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>out:nl</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef></StringConcatExpr>
+      <TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+    <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns a job result.
+ : @param $id      job id
+ : @param $ok      ok flag
+ : @param $result  job result
+ : @return rest response and file content
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>private</QName></Annotation> <FunctionDecl><TOKEN>function</TOKEN> <QName>dba:job-result</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>id</QName>      <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>ok</QName>      <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:boolean</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>result</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>+</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <Expr><FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>name</QName> <TOKEN>:=</TOKEN> <StringConcatExpr><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef> <TOKEN>||</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ok</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <StringLiteral>'.txt'</StringLiteral> <TOKEN>else</TOKEN> <StringLiteral>'.log'</StringLiteral></IfExpr><TOKEN>)</TOKEN></ParenthesizedExpr></StringConcatExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>web:response-header</QName><ArgumentList><TOKEN>(</TOKEN>
+    <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'media-type'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'application/octet-stream'</StringLiteral></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN>
+    <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'Content-Disposition'</StringLiteral><TOKEN>:</TOKEN> <StringConcatExpr><StringLiteral>'attachment; filename='</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></StringConcatExpr></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor>
+  <TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr><TOKEN>,</TOKEN>
+  <VarRef><TOKEN>$</TOKEN><QName>result</QName></VarRef></Expr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

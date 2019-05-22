@@ -1,104 +1,71 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-15T22:50:45.479+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>xqdoc-namespace.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-namespaces.xqm</h1>
-<p>namespace and qname utils</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-namespace.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:24:21.502+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.swagger</xqdoc:uri><xqdoc:name>swagger.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>simple swagger generation 
+NOTE this is just shell no detail provided</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/swagger.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+
  
  (:~
- : &lt;h1&gt;xqdoc-namespaces.xqm&lt;/h1&gt;
- : &lt;p&gt;namespace and qname utils&lt;/p&gt;
+ : simple swagger generation 
+ : NOTE this is just shell no detail provided
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-
-module namespace xqn = 'quodatum:xqdoca.namespaces';
-
-(:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-declare function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string)
-as map(*)
+module namespace _ = 'quodatum:xqdoca.generator.swagger';
+
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+
+declare 
+%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
+%xqdoca:output("swagger.json","json") 
+function _:swagger($state as map(*),
+                            $opts as map(*)
+                            )                           
 {
- let $n:=tokenize($e,":")
-let $prefix:=if(count($n)=1)then () else $n[1]
-let $n2:=if(count($n)=1)then  $n[1] else $n[2]
-return map{
-           "uri": $lookup($prefix),
-           "name": $n2} 
+&lt;json type="object"&gt;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;
+   &lt;info type="object"&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;title&gt;Generated from { $state?project } at { current-dateTime() }&lt;/title&gt;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
+    &lt;contact type="object"&gt;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;
+    &lt;/contact&gt;
+    &lt;license type="object"&gt;
+      &lt;name&gt;MIT&lt;/name&gt;
+    &lt;/license&gt;
+  &lt;/info&gt;
+  &lt;host&gt;github.com/Quodatum/xqdoca&lt;/host&gt;
+  &lt;basePath&gt;/api&lt;/basePath&gt;
+&lt;/json&gt;
 };
 
-(:~ namespace for prefix
- : @param $prefix prefix to lookup
- : @param $default namespace to use if prefix empty
- : @param $map keys are prefixes items are namespaces
- : @return namespace for prefix
-  :)
-declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
-as xs:string{
-  if(empty($prefix)) then
-    $default
-  else 
-   $map?($prefix)
-};
-
-(:~  parse URIQualifiedName into parts
- : @param $e is URIQualifiedName
- :)
-declare function xqn:uriqname($e as element(URIQualifiedName))
-as map(*)
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.swagger"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:swagger</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">swagger1</xqdoc:literal><xqdoc:literal type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("swagger1", "Swagger file (JSON format) from restxq annotations.") %Q{https://github.com/Quodatum/xqdoca}output("swagger.json", "json") function _:swagger($state as map(*), $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>state</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function _:swagger($state as map(*),
+                            $opts as map(*)
+                            )                           
 {
-let $n:=tokenize($e,"}")
-return map{"uri": substring($n[1],3),
-           "name": $n[2]} 
-};
-
-(:~  map of static namespaces :)
-declare function xqn:static-prefix-map()
-as map(*)
-{
- fetch:text(resolve-uri("../etc/static/basex.json",static-base-uri()))
- =&gt;parse-json() 
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>parse qname into parts</xqdoc:description><xqdoc:param>$e is from QName or TOKEN in some cases e.g "count"</xqdoc:param><xqdoc:param>$lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))</xqdoc:param></xqdoc:comment><xqdoc:name>xqn:qname</xqdoc:name><xqdoc:signature>declare function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>e</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>lookup</xqdoc:name><xqdoc:type>function(xs:string) as xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string)
-as map(*)
-{
- let $n:=tokenize($e,":")
-let $prefix:=if(count($n)=1)then () else $n[1]
-let $n2:=if(count($n)=1)then  $n[1] else $n[2]
-return map{
-           "uri": $lookup($prefix),
-           "name": $n2} 
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>e</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lookup</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefix</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n2</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>namespace for prefix</xqdoc:description><xqdoc:param>$prefix prefix to lookup</xqdoc:param><xqdoc:param>$default namespace to use if prefix empty</xqdoc:param><xqdoc:param>$map keys are prefixes items are namespaces</xqdoc:param><xqdoc:return>namespace for prefix</xqdoc:return></xqdoc:comment><xqdoc:name>xqn:map-prefix</xqdoc:name><xqdoc:signature>declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*)) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>prefix</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>default</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>map</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
-as xs:string{
-  if(empty($prefix)) then
-    $default
-  else 
-   $map?($prefix)
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefix</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefix</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>parse URIQualifiedName into parts</xqdoc:description><xqdoc:param>$e is URIQualifiedName</xqdoc:param></xqdoc:comment><xqdoc:name>xqn:uriqname</xqdoc:name><xqdoc:signature>declare function xqn:uriqname($e as element(URIQualifiedName)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>e</xqdoc:name><xqdoc:type>element(URIQualifiedName)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqn:uriqname($e as element(URIQualifiedName))
-as map(*)
-{
-let $n:=tokenize($e,"}")
-return map{"uri": substring($n[1],3),
-           "name": $n[2]} 
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>e</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>map of static namespaces</xqdoc:description></xqdoc:comment><xqdoc:name>xqn:static-prefix-map</xqdoc:name><xqdoc:signature>declare function xqn:static-prefix-map() as map(*)</xqdoc:signature><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqn:static-prefix-map()
-as map(*)
-{
- fetch:text(resolve-uri("../etc/static/basex.json",static-base-uri()))
- =&gt;parse-json() 
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/fetch</xqdoc:uri><xqdoc:name>text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>static-base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse-json</xqdoc:name></xqdoc:invoked></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+&lt;json type="object"&gt;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;
+   &lt;info type="object"&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;title&gt;Generated from { $state?project } at { current-dateTime() }&lt;/title&gt;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
+    &lt;contact type="object"&gt;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;
+    &lt;/contact&gt;
+    &lt;license type="object"&gt;
+      &lt;name&gt;MIT&lt;/name&gt;
+    &lt;/license&gt;
+  &lt;/info&gt;
+  &lt;host&gt;github.com/Quodatum/xqdoca&lt;/host&gt;
+  &lt;basePath&gt;/api&lt;/basePath&gt;
+&lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>state</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,775 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>vue-poc - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum.models.generated</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>map of access functions for entity</dd><dt>Tags</dt><dd><p>__source : models.gen.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum.models.generated">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">vue-poc</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum.models.generated</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$entity:list"><span class="secno">3.1</span><span class="content">$entity:list</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#entity:fields"><span class="secno">4.1</span><span class="content" title="">entity:fields<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">6</span> modules, it imports
+    <span class="badge badge-info">1</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;"><div><span><a href="../../modules/F1/index.html" title="features\adminlog\logs.xqm">quodatum.test.logs</a></span></div><div><span><a href="../../modules/F4/index.html" title="features\collection\collections.xqm">quodatum:vue.api.collection</a></span></div><div><span><a href="../../modules/F18/index.html" title="features\images\images.xqm">quodatum:vue.api.images</a></span></div><div><span><a href="../../modules/F21/index.html" title="features\model\rxq-entity.xqm">quodatum.model.rest</a></span></div><div><span><a href="../../modules/F24/index.html" title="features\search\search.xqm">quodatum:vue.search</a></span></div><div><span><a href="../../modules/F6/index.html" title="features\edit\edit.xqm">quodatum:vue.api</a><a href="../../modules/F27/index.html" title="features\tasks\model.build\rxq-model.xqm">2</a><a href="../../modules/F36/index.html" title="features\tasks\xqdoc\rxq-xqdoc.xqm">3</a><a href="../../modules/F80/index.html" title="api.xqm">4</a></span></div></div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F17/index.html" title="features\images\config.xqm">quodatum:media.image.configure</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><div class="div3"><h3><a id="$entity:list"></a>3.1&nbsp;$entity:list</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="entity:fields"></a>4.1&nbsp;entity:fields<div style="float:right"><a href="#entity:fields">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">entity:fields</code>
+		  ( 
+			<code class="arg">$entity</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>entity<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function entity:fields($entity as xs:string)
+as map(*){
+  $entity:list($entity)("access")
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>c</td><td>http://www.w3.org/ns/xproc-step</td></tr><tr><td>cfg</td><td>quodatum:media.image.configure</td></tr><tr><td>ent</td><td>https://github.com/Quodatum/app-doc/entity</td></tr><tr><td>entity</td><td>quodatum.models.generated</td></tr><tr><td>h</td><td>urn:quodatum:vue-poc.history</td></tr><tr><td>xqdoc</td><td>http://www.xqdoc.org/1.0</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(: entity access maps 
+ : auto generated from xml files in entities folder at: 2019-02-23T22:59:34.827Z 
+ :)
+
+module namespace entity = 'quodatum.models.generated';
+import module namespace cfg = "quodatum:media.image.configure" at "features/images/config.xqm";declare namespace xqdoc='http://www.xqdoc.org/1.0';
+declare namespace ent='https://github.com/Quodatum/app-doc/entity';
+declare namespace h='urn:quodatum:vue-poc.history';
+declare namespace c='http://www.w3.org/ns/xproc-step';
+          
+declare variable $entity:list:=map { 
+  "basexlog": map{
+     "name": "basexlog",
+     "description": "BaseX log entries ",
+     "access": map{ 
+       "address": function($_ as element()) as xs:string {$_/@address },
+       "ms": function($_ as element()) as xs:integer {$_/@ms },
+       "text": function($_ as element()) as xs:string {$_/. },
+       "time": function($_ as element()) as xs:string {$_/concat(@date,'T',@time) },
+       "type": function($_ as element()) as xs:string {$_/@type },
+       "user": function($_ as element()) as xs:string {$_/@user } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "address": function($_ as element()) as element(address)? {
+            (: xs:string :)
+                        fn:data($_/@address)!element address {  .} 
+                 },
+           "ms": function($_ as element()) as element(ms)? {
+            (: xs:integer :)
+                        fn:data($_/@ms)!element ms { attribute type {'number'}, .} 
+                 },
+           "text": function($_ as element()) as element(text)? {
+            (: xs:string :)
+                        fn:data($_/.)!element text {  .} 
+                 },
+           "time": function($_ as element()) as element(time)? {
+            (: xs:string :)
+                        fn:data($_/concat(@date,'T',@time))!element time {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/@type)!element type {  .} 
+                 },
+           "user": function($_ as element()) as element(user)? {
+            (: xs:string :)
+                        fn:data($_/@user)!element user {  .} 
+                 } },
+       
+      "data": function() as element(entry)*
+       { 
+let $add-date:=function($logs as element(*)*,$d as xs:string){
+    $logs!(. transform with { insert node attribute date {$d} into .})
+}
+
+return 
+hof:top-k-by(admin:logs(), string#1, 2)  
+!(reverse(admin:logs(.,true()))=&gt;$add-date(.))
+	 },
+       
+       "views": map{ 
+       
+       }
+   },
+  "basexjob": map{
+     "name": "basexjob",
+     "description": "A BaseX job",
+     "access": map{ 
+       "duration": function($_ as element()) as xs:string {$_/@duration },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "interval": function($_ as element()) as xs:string {$_/@interval },
+       "reads": function($_ as element()) as xs:string {$_/@reads },
+       "registered": function($_ as element()) as xs:string {$_/@time },
+       "start": function($_ as element()) as xs:string {$_/@start },
+       "state": function($_ as element()) as xs:string {$_/@state },
+       "text": function($_ as element()) as xs:string {$_/. },
+       "type": function($_ as element()) as xs:string {$_/@type },
+       "user": function($_ as element()) as xs:string {$_/@user },
+       "writes": function($_ as element()) as xs:string {$_/@writes } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "duration": function($_ as element()) as element(duration)? {
+            (: xs:string :)
+                        fn:data($_/@duration)!element duration {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "interval": function($_ as element()) as element(interval)? {
+            (: xs:string :)
+                        fn:data($_/@interval)!element interval {  .} 
+                 },
+           "reads": function($_ as element()) as element(reads)? {
+            (: xs:string :)
+                        fn:data($_/@reads)!element reads {  .} 
+                 },
+           "registered": function($_ as element()) as element(registered)? {
+            (: xs:string :)
+                        fn:data($_/@time)!element registered {  .} 
+                 },
+           "start": function($_ as element()) as element(start)? {
+            (: xs:string :)
+                        fn:data($_/@start)!element start {  .} 
+                 },
+           "state": function($_ as element()) as element(state)? {
+            (: xs:string :)
+                        fn:data($_/@state)!element state {  .} 
+                 },
+           "text": function($_ as element()) as element(text)? {
+            (: xs:string :)
+                        fn:data($_/.)!element text {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/@type)!element type {  .} 
+                 },
+           "user": function($_ as element()) as element(user)? {
+            (: xs:string :)
+                        fn:data($_/@user)!element user {  .} 
+                 },
+           "writes": function($_ as element()) as element(writes)? {
+            (: xs:string :)
+                        fn:data($_/@writes)!element writes {  .} 
+                 } },
+       
+      "data": function() as element(job)*
+       { jobs:list()[. != jobs:current()] !jobs:list-details(.)=&gt;reverse()
+	 },
+       
+       "views": map{ 
+       'filter': 'name description'
+       }
+   },
+  "entity.field": map{
+     "name": "entity.field",
+     "description": "About an entity field. ",
+     "access": map{ 
+       "description": function($_ as element()) as xs:string {$_/ent:description },
+       "name": function($_ as element()) as xs:string {$_/@name },
+       "parent": function($_ as element()) as xs:string {$_/../../@name },
+       "type": function($_ as element()) as xs:string {$_/@type },
+       "xpath": function($_ as element()) as xs:string {$_/ent:xpath } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( $item/@name, $item/ent:description) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "description": function($_ as element()) as element(description)? {
+            (: xs:string :)
+                        fn:data($_/ent:description)!element description {  .} 
+                 },
+           "name": function($_ as element()) as element(name)? {
+            (: xs:string :)
+                        fn:data($_/@name)!element name {  .} 
+                 },
+           "parent": function($_ as element()) as element(parent)? {
+            (: xs:string :)
+                        fn:data($_/../../@name)!element parent {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/@type)!element type {  .} 
+                 },
+           "xpath": function($_ as element()) as element(xpath)? {
+            (: xs:string :)
+                        fn:data($_/ent:xpath)!element xpath {  .} 
+                 } },
+       
+      "data": function() as element(ent:field)*
+       { collection("doc-doc")/ent:entity/ent:fields/ent:field },
+       
+       "views": map{ 
+       'filter': 'name description'
+       }
+   },
+  "entity": map{
+     "name": "entity",
+     "description": "About an entity i.e. something described in this framework
+	",
+     "access": map{ 
+       "code": function($_ as element()) as xs:string? {$_/ent:data },
+       "description": function($_ as element()) as xs:string {$_/ent:description },
+       "fieldslink": function($_ as element()) as xs:string {$_/fn:concat("/data/entity/",@name,"/field") },
+       "iconclass": function($_ as element()) as xs:string {$_/ent:views/@iconclass },
+       "modules": function($_ as element()) as xs:string? {$_/ent:module/concat("import module namespace ",@prefix,"='",@namespace,"';
+")=&gt;string-join() },
+       "name": function($_ as element()) as xs:string {$_/@name },
+       "namespaces": function($_ as element()) as xs:string? {$_/ent:namespace/concat("declare namespace ",@prefix,"='",@uri,"';
+")=&gt;string-join() },
+       "nfields": function($_ as element()) as xs:integer {$_/fn:count(ent:fields/ent:field) },
+       "parent": function($_ as element()) as xs:string? {$_/ent:parent/@name },
+       "parentlink": function($_ as element()) as xs:string? {$_/fn:concat("/data/entity/",ent:parent/@name) },
+       "type": function($_ as element()) as xs:string {$_/ent:data/@type } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( $item/@name, $item/ent:description) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "code": function($_ as element()) as element(code)? {
+            (: xs:string? :)
+                        fn:data($_/ent:data)!element code {  .} 
+                 },
+           "description": function($_ as element()) as element(description)? {
+            (: xs:string :)
+                        fn:data($_/ent:description)!element description {  .} 
+                 },
+           "fieldslink": function($_ as element()) as element(fieldslink)? {
+            (: xs:string :)
+                        fn:data($_/fn:concat("/data/entity/",@name,"/field"))!element fieldslink {  .} 
+                 },
+           "iconclass": function($_ as element()) as element(iconclass)? {
+            (: xs:string :)
+                        fn:data($_/ent:views/@iconclass)!element iconclass {  .} 
+                 },
+           "modules": function($_ as element()) as element(modules)? {
+            (: xs:string? :)
+                        fn:data($_/ent:module/concat("import module namespace ",@prefix,"='",@namespace,"';
+")=&gt;string-join())!element modules {  .} 
+                 },
+           "name": function($_ as element()) as element(name)? {
+            (: xs:string :)
+                        fn:data($_/@name)!element name {  .} 
+                 },
+           "namespaces": function($_ as element()) as element(namespaces)? {
+            (: xs:string? :)
+                        fn:data($_/ent:namespace/concat("declare namespace ",@prefix,"='",@uri,"';
+")=&gt;string-join())!element namespaces {  .} 
+                 },
+           "nfields": function($_ as element()) as element(nfields)? {
+            (: xs:integer :)
+                        fn:data($_/fn:count(ent:fields/ent:field))!element nfields { attribute type {'number'}, .} 
+                 },
+           "parent": function($_ as element()) as element(parent)? {
+            (: xs:string? :)
+                        fn:data($_/ent:parent/@name)!element parent {  .} 
+                 },
+           "parentlink": function($_ as element()) as element(parentlink)? {
+            (: xs:string? :)
+                        fn:data($_/fn:concat("/data/entity/",ent:parent/@name))!element parentlink {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/ent:data/@type)!element type {  .} 
+                 } },
+       
+      "data": function() as element(ent:entity)*
+       { collection("vue-poc")/ent:entity },
+       
+       "views": map{ 
+       'filter': 'name description'
+       }
+   },
+  "filehistory": map{
+     "name": "filehistory",
+     "description": "vue-poc file view events ",
+     "access": map{ 
+       "created": function($_ as element()) as xs:string {$_/@when },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "protocol": function($_ as element()) as xs:string {$_/h:file/@mode },
+       "url": function($_ as element()) as xs:string {$_/h:file/@url },
+       "user": function($_ as element()) as xs:string {$_/@user } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "created": function($_ as element()) as element(created)? {
+            (: xs:string :)
+                        fn:data($_/@when)!element created {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "protocol": function($_ as element()) as element(protocol)? {
+            (: xs:string :)
+                        fn:data($_/h:file/@mode)!element protocol {  .} 
+                 },
+           "url": function($_ as element()) as element(url)? {
+            (: xs:string :)
+                        fn:data($_/h:file/@url)!element url {  .} 
+                 },
+           "user": function($_ as element()) as element(user)? {
+            (: xs:string :)
+                        fn:data($_/@user)!element user {  .} 
+                 } },
+       
+      "data": function() as element(h:event)*
+       { doc("vue-poc/history.xml")/h:history/h:event[h:file] },
+       
+       "views": map{ 
+       
+       }
+   },
+  "jobrun": map{
+     "name": "jobrun",
+     "description": "About the running of a job",
+     "access": map{ 
+       "created": function($_ as element()) as xs:string {$_/json/dateTime },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "job": function($_ as element()) as xs:string {$_/json/job },
+       "query": function($_ as element()) as xs:string {$_/query },
+       "result": function($_ as element()) as xs:string {$_/substring(result,0,1000) },
+       "resultlength": function($_ as element()) as xs:integer {$_/string-length(result) } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "created": function($_ as element()) as element(created)? {
+            (: xs:string :)
+                        fn:data($_/json/dateTime)!element created {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "job": function($_ as element()) as element(job)? {
+            (: xs:string :)
+                        fn:data($_/json/job)!element job {  .} 
+                 },
+           "query": function($_ as element()) as element(query)? {
+            (: xs:string :)
+                        fn:data($_/query)!element query {  .} 
+                 },
+           "result": function($_ as element()) as element(result)? {
+            (: xs:string :)
+                        fn:data($_/substring(result,0,1000))!element result {  .} 
+                 },
+           "resultlength": function($_ as element()) as element(resultlength)? {
+            (: xs:integer :)
+                        fn:data($_/string-length(result))!element resultlength { attribute type {'number'}, .} 
+                 } },
+       
+      "data": function() as element(jobrun)*
+       { collection("vue-poc/jobrun")/jobrun
+	 },
+       
+       "views": map{ 
+       'filter': 'name description'
+       }
+   },
+  "namespace": map{
+     "name": "namespace",
+     "description": "An XML namespace",
+     "access": map{ 
+       "description": function($_ as element()) as xs:string {$_/description },
+       "prefix": function($_ as element()) as xs:string {$_/@prefix },
+       "xmlns": function($_ as element()) as xs:string {$_/@uri } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( $item/@uri, $item/description) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "description": function($_ as element()) as element(description)? {
+            (: xs:string :)
+                        fn:data($_/description)!element description {  .} 
+                 },
+           "prefix": function($_ as element()) as element(prefix)? {
+            (: xs:string :)
+                        fn:data($_/@prefix)!element prefix {  .} 
+                 },
+           "xmlns": function($_ as element()) as element(xmlns)? {
+            (: xs:string :)
+                        fn:data($_/@uri)!element xmlns {  .} 
+                 } },
+       
+      "data": function() as element(namespace)*
+       { collection("vue-poc")/namespaces/namespace
+	 },
+       
+       "views": map{ 
+       'filter': 'xmlns description'
+       }
+   },
+  "query": map{
+     "name": "query",
+     "description": "An replx query",
+     "access": map{ 
+       "created": function($_ as element()) as xs:string {$_/created },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "query": function($_ as element()) as xs:string {$_/query },
+       "result": function($_ as element()) as xs:string {$_/substring(result,0,1000) },
+       "resultlength": function($_ as element()) as xs:integer {$_/string-length(result) } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "created": function($_ as element()) as element(created)? {
+            (: xs:string :)
+                        fn:data($_/created)!element created {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "query": function($_ as element()) as element(query)? {
+            (: xs:string :)
+                        fn:data($_/query)!element query {  .} 
+                 },
+           "result": function($_ as element()) as element(result)? {
+            (: xs:string :)
+                        fn:data($_/substring(result,0,1000))!element result {  .} 
+                 },
+           "resultlength": function($_ as element()) as element(resultlength)? {
+            (: xs:integer :)
+                        fn:data($_/string-length(result))!element resultlength { attribute type {'number'}, .} 
+                 } },
+       
+      "data": function() as element(query)*
+       { collection("replx/queries")/query
+	 },
+       
+       "views": map{ 
+       'filter': 'name description'
+       }
+   },
+  "repo": map{
+     "name": "repo",
+     "description": "An entry in the basex repository",
+     "access": map{ 
+       "name": function($_ as element()) as xs:string {$_/@name },
+       "type": function($_ as element()) as xs:string {$_/@type },
+       "version": function($_ as element()) as xs:string {$_/@version } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "name": function($_ as element()) as element(name)? {
+            (: xs:string :)
+                        fn:data($_/@name)!element name {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/@type)!element type {  .} 
+                 },
+           "version": function($_ as element()) as element(version)? {
+            (: xs:string :)
+                        fn:data($_/@version)!element version {  .} 
+                 } },
+       
+      "data": function() as element(package)*
+       { repo:list() },
+       
+       "views": map{ 
+       
+       }
+   },
+  "search-result": map{
+     "name": "search-result",
+     "description": "About a search result.",
+     "access": map{ 
+       "sref": function($_ as element()) as xs:string {$_/"app.item.index({'name':'benchx'})" },
+       "title": function($_ as element()) as xs:string {$_/title },
+       "type": function($_ as element()) as xs:string {$_/type },
+       "uri": function($_ as element()) as xs:string {$_/uri } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "sref": function($_ as element()) as element(sref)? {
+            (: xs:string :)
+                        fn:data($_/"app.item.index({'name':'benchx'})")!element sref {  .} 
+                 },
+           "title": function($_ as element()) as element(title)? {
+            (: xs:string :)
+                        fn:data($_/title)!element title {  .} 
+                 },
+           "type": function($_ as element()) as element(type)? {
+            (: xs:string :)
+                        fn:data($_/type)!element type {  .} 
+                 },
+           "uri": function($_ as element()) as element(uri)? {
+            (: xs:string :)
+                        fn:data($_/uri)!element uri {  .} 
+                 } },
+       
+      "data": function() as element(search)*
+       { () },
+       
+       "views": map{ 
+       
+       }
+   },
+  "service": map{
+     "name": "service",
+     "description": "basex services ",
+     "access": map{ 
+       "base-uri": function($_ as element()) as xs:string {$_/@base-uri },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "interval": function($_ as element()) as xs:string {$_/@interval },
+       "query": function($_ as element()) as xs:string {$_/. },
+       "running": function($_ as element()) as xs:boolean {$_/jobs:list()=@id } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "base-uri": function($_ as element()) as element(base-uri)? {
+            (: xs:string :)
+                        fn:data($_/@base-uri)!element base-uri {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "interval": function($_ as element()) as element(interval)? {
+            (: xs:string :)
+                        fn:data($_/@interval)!element interval {  .} 
+                 },
+           "query": function($_ as element()) as element(query)? {
+            (: xs:string :)
+                        fn:data($_/.)!element query {  .} 
+                 },
+           "running": function($_ as element()) as element(running)? {
+            (: xs:boolean :)
+                        fn:data($_/jobs:list()=@id)!element running { attribute type {'boolean'}, .} 
+                 } },
+       
+      "data": function() as element(job)*
+       { jobs:services() },
+       
+       "views": map{ 
+       
+       }
+   },
+  "task": map{
+     "name": "task",
+     "description": "predefined queries with parameters ",
+     "access": map{ 
+       "description": function($_ as element()) as xs:string {$_/fn:serialize(description/node()) },
+       "title": function($_ as element()) as xs:string {$_/title },
+       "to": function($_ as element()) as xs:string {$_/@name },
+       "url": function($_ as element()) as xs:string {$_/@url } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "description": function($_ as element()) as element(description)? {
+            (: xs:string :)
+                        fn:data($_/fn:serialize(description/node()))!element description {  .} 
+                 },
+           "title": function($_ as element()) as element(title)? {
+            (: xs:string :)
+                        fn:data($_/title)!element title {  .} 
+                 },
+           "to": function($_ as element()) as element(to)? {
+            (: xs:string :)
+                        fn:data($_/@name)!element to {  .} 
+                 },
+           "url": function($_ as element()) as element(url)? {
+            (: xs:string :)
+                        fn:data($_/@url)!element url {  .} 
+                 } },
+       
+      "data": function() as element(task)*
+       { doc("tasks/taskdef.xml")/tasks/task },
+       
+       "views": map{ 
+       
+       }
+   },
+  "taskhistory": map{
+     "name": "taskhistory",
+     "description": "vue-poc task view events ",
+     "access": map{ 
+       "created": function($_ as element()) as xs:string {$_/@when },
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "protocol": function($_ as element()) as xs:string {$_/h:file/@mode },
+       "url": function($_ as element()) as xs:string {$_/h:file/@url },
+       "user": function($_ as element()) as xs:string {$_/@user } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "created": function($_ as element()) as element(created)? {
+            (: xs:string :)
+                        fn:data($_/@when)!element created {  .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "protocol": function($_ as element()) as element(protocol)? {
+            (: xs:string :)
+                        fn:data($_/h:file/@mode)!element protocol {  .} 
+                 },
+           "url": function($_ as element()) as element(url)? {
+            (: xs:string :)
+                        fn:data($_/h:file/@url)!element url {  .} 
+                 },
+           "user": function($_ as element()) as element(user)? {
+            (: xs:string :)
+                        fn:data($_/@user)!element user {  .} 
+                 } },
+       
+      "data": function() as element(h:event)*
+       { doc("vue-poc/history.xml")/h:history/h:event[task] },
+       
+       "views": map{ 
+       
+       }
+   },
+  "thumbnail": map{
+     "name": "thumbnail",
+     "description": "an image.",
+     "access": map{ 
+       "geo": function($_ as element()) as xs:boolean {$_/boolean(geo) },
+       "height": function($_ as element()) as xs:integer {$_/height },
+       "id": function($_ as element()) as xs:integer {$_/db:node-id(.) },
+       "keywords": function($_ as element()) as xs:integer {$_/count(keywords/keyword) },
+       "name": function($_ as element()) as xs:string {$_/file/@name },
+       "path": function($_ as element()) as xs:string {$_/file/@path },
+       "size": function($_ as element()) as xs:integer {$_/0 },
+       "width": function($_ as element()) as xs:integer {$_/width } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( $item/file/@name) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "geo": function($_ as element()) as element(geo)? {
+            (: xs:boolean :)
+                        fn:data($_/boolean(geo))!element geo { attribute type {'boolean'}, .} 
+                 },
+           "height": function($_ as element()) as element(height)? {
+            (: xs:integer :)
+                        fn:data($_/height)!element height { attribute type {'number'}, .} 
+                 },
+           "id": function($_ as element()) as element(id)? {
+            (: xs:integer :)
+                        fn:data($_/db:node-id(.))!element id { attribute type {'number'}, .} 
+                 },
+           "keywords": function($_ as element()) as element(keywords)? {
+            (: xs:integer :)
+                        fn:data($_/count(keywords/keyword))!element keywords { attribute type {'number'}, .} 
+                 },
+           "name": function($_ as element()) as element(name)? {
+            (: xs:string :)
+                        fn:data($_/file/@name)!element name {  .} 
+                 },
+           "path": function($_ as element()) as element(path)? {
+            (: xs:string :)
+                        fn:data($_/file/@path)!element path {  .} 
+                 },
+           "size": function($_ as element()) as element(size)? {
+            (: xs:integer :)
+                        fn:data($_/0)!element size { attribute type {'number'}, .} 
+                 },
+           "width": function($_ as element()) as element(width)? {
+            (: xs:integer :)
+                        fn:data($_/width)!element width { attribute type {'number'}, .} 
+                 } },
+       
+      "data": function() as element(image)*
+       { collection($cfg:DB-IMAGE || "/image")/image },
+       
+       "views": map{ 
+       'filter': 'name'
+       }
+   },
+  "user": map{
+     "name": "user",
+     "description": "A BaseX user ",
+     "access": map{ 
+       "name": function($_ as element()) as xs:string {$_/@name },
+       "permission": function($_ as element()) as xs:string {$_/@permission } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "name": function($_ as element()) as element(name)? {
+            (: xs:string :)
+                        fn:data($_/@name)!element name {  .} 
+                 },
+           "permission": function($_ as element()) as element(permission)? {
+            (: xs:string :)
+                        fn:data($_/@permission)!element permission {  .} 
+                 } },
+       
+      "data": function() as element(user)*
+       { user:list-details() },
+       
+       "views": map{ 
+       
+       }
+   },
+  "xqdoc": map{
+     "name": "xqdoc",
+     "description": "XQuery documentation set ",
+     "access": map{ 
+       "id": function($_ as element()) as xs:string {$_/@id },
+       "root": function($_ as element()) as xs:string {$_/"file:///C:/tmp/xqdoc/" },
+       "time": function($_ as element()) as xs:string {$_/@time } },
+    
+     "filter": function($item,$q) as xs:boolean{ 
+         some $e in ( ) satisfies
+         fn:contains($e,$q, 'http://www.w3.org/2005/xpath-functions/collation/html-ascii-case-insensitive')
+      },
+       "json":   map{ 
+           "id": function($_ as element()) as element(id)? {
+            (: xs:string :)
+                        fn:data($_/@id)!element id {  .} 
+                 },
+           "root": function($_ as element()) as element(root)? {
+            (: xs:string :)
+                        fn:data($_/"file:///C:/tmp/xqdoc/")!element root {  .} 
+                 },
+           "time": function($_ as element()) as element(time)? {
+            (: xs:string :)
+                        fn:data($_/@time)!element time {  .} 
+                 } },
+       
+      "data": function() as element(entry)*
+       { () },
+       
+       "views": map{ 
+       
+       }
+   }
+};
+
+ 
+
+(:~ map of access functions for entity :)
+declare function entity:fields($entity as xs:string)
+as map(*){
+  $entity:list($entity)("access")
+}; 
+  </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:22:52.354+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

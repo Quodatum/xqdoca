@@ -1,0 +1,26 @@
+<XQuery>(:~ 
+: Import a file or directory into a database
+: @author andy bunce
+: @since july 2018
+:)
+<MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dbtools</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.dbtools'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"../../../lib/dbtools.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+
+(:~ URL of file or folder to import
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/entities
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>srcpath</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN><StringLiteral>"C:/Users/andy/git/vue-poc/src/vue-poc/models/entities"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Target BaseX db root path for imported files 
+ : @default vuepoc-test
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>targetpath</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration> <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN><StringLiteral>"/vuepoc-test"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ unused boolean test
+ : @default true
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>boolean</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:boolean</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN><FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog>
+ 
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>todo</QName><TOKEN>:=</TOKEN><StringLiteral>"target"</StringLiteral></LetBinding></LetClause>                                 
+<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>dbtools:sync-from-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>targetpath</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>srcpath</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr></MainModule>
+<EOF/></XQuery>

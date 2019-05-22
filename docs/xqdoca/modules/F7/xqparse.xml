@@ -16,118 +16,268 @@
  :)
  
  (:~
- : &lt;h1&gt;xqdoc-outputs.xqm&lt;/h1&gt;
- : &lt;p&gt;define availiable outputs&lt;/p&gt;
+ : &lt;h1&gt;xqdoc-proj.xqm&lt;/h1&gt;
+ : &lt;p&gt;Analyse XQuery source&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-
-<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqo</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.outputs'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
-<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqd</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.xqdoc'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"xqdoc-proj.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
-<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqhtml</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:build.xqdoc-html'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"xqdoc-html.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
-
-<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqo:cache</QName>  <TOKEN>:=</TOKEN><FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
-
-(:~  modules define an o/p created from the state :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqo:modules</QName><TOKEN>:=</TOKEN>
- <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN> 
-         <MapConstructorEntry><StringLiteral>"index"</StringLiteral><TOKEN>:</TOKEN>  <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                      <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"Index of sources"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                      <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <NamedFunctionRef><QName>xqhtml:index-html2</QName><TOKEN>#</TOKEN><IntegerLiteral>2</IntegerLiteral></NamedFunctionRef></MapConstructorEntry><TOKEN>,</TOKEN> 
-                      <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'index.html'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-         <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-         <MapConstructorEntry><StringLiteral>"restxq"</StringLiteral><TOKEN>:</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                      <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"Http interface"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                      <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN> <TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>state</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <FunctionCall><QName>xqhtml:restxq</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>xqd:rxq-paths</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                      <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'restxq.html'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-         <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-        <MapConstructorEntry><StringLiteral>"imports"</StringLiteral><TOKEN>:</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"Module import"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN> <TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>state</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <FunctionCall><QName>xqhtml:imports</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>xqd:imports</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'imports.html'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-         <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-        <MapConstructorEntry><StringLiteral>"annotations"</StringLiteral><TOKEN>:</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"Annotation summary"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN> <TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>state</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><FunctionCall><QName>xqhtml:annotations</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>xqd:annotations</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN><StringLiteral>'annotations.html'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-      <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry>
-    <TOKEN>}</TOKEN></MapConstructor></VarDecl></AnnotatedDecl>
-<TOKEN>;</TOKEN>
-
-(:~  files define an o/p created from a source item :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqo:files</QName><TOKEN>:=</TOKEN>
- <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN> 
-        <MapConstructorEntry><StringLiteral>"xqdoc"</StringLiteral><TOKEN>:</TOKEN>  <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"XML file XQdoc format"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>params</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                    <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <StringConcatExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>href</NCName></Lookup></PostfixExpr> <TOKEN>||</TOKEN> <StringLiteral>"/xqdoc.xml"</StringLiteral></StringConcatExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:XML</QName></VarRef></MapConstructorEntry>
-                 <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-        <MapConstructorEntry><StringLiteral>"xqparse"</StringLiteral><TOKEN>:</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"XML file of xquery parse tree output"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>params</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqparse</NCName></Lookup></PostfixExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                    <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN>  <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <StringConcatExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>href</NCName></Lookup></PostfixExpr> <TOKEN>||</TOKEN> <StringLiteral>"xqparse.xml"</StringLiteral></StringConcatExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:XML</QName></VarRef></MapConstructorEntry>
-                 <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-        <MapConstructorEntry><StringLiteral>"html2"</StringLiteral><TOKEN>:</TOKEN>    <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"HTML page about the file"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> 
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>params</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <FunctionCall><QName>xqhtml:xqdoc-html</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <StringConcatExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>href</NCName></Lookup></PostfixExpr> <TOKEN>||</TOKEN> <StringLiteral>"index2.html"</StringLiteral></StringConcatExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-                 <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
-      <MapConstructorEntry><StringLiteral>"html"</StringLiteral><TOKEN>:</TOKEN>    <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"title"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"HTML page about the file (new)"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> 
-                   <MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>params</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <FunctionCall><QName>xqhtml:xqdoc-html2</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-                   <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>file</QName></Param><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <StringConcatExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>href</NCName></Lookup></PostfixExpr> <TOKEN>||</TOKEN> <StringLiteral>"index.html"</StringLiteral></StringConcatExpr><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"opts"</StringLiteral><TOKEN>:</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>xqd:HTML5</QName></VarRef></MapConstructorEntry>
-                 <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry>          
-    <TOKEN>}</TOKEN></MapConstructor></VarDecl></AnnotatedDecl>
-<TOKEN>;</TOKEN>
-
-
-(: render :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqo:module</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>name</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
-                            <Param><TOKEN>$</TOKEN><QName>state</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
-                            <Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><EnclosedExpr><TOKEN>{</TOKEN>
-  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>def</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>map:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqo:modules</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>doc</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>apply</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>def</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>document</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><ArrayConstructor><TOKEN>[</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef></Expr><TOKEN>]</TOKEN></ArrayConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>def</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
-
-(:~ render a per file o/p
+(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqo:file</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>name</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
-                            <Param><TOKEN>$</TOKEN><QName>file</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
-                            <Param><TOKEN>$</TOKEN><QName>params</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><EnclosedExpr><TOKEN>{</TOKEN>
-  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>def</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>map:get</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqo:files</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>doc</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>apply</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>def</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>document</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><ArrayConstructor><TOKEN>[</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef></Expr><TOKEN>]</TOKEN></ArrayConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>uri</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>apply</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>def</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><ArrayConstructor><TOKEN>[</TOKEN><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>]</TOKEN></ArrayConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"document"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>def</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqd</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.model'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqp</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.parser'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"xqdoc-parser.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqn</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.namespaces'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"xqdoc-namespace.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqdoc</NCName><TOKEN>=</TOKEN><StringLiteral>"http://www.xqdoc.org/1.0"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+
+(: source file extensions :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqd:exts</QName><TOKEN>:=</TOKEN><StringLiteral>"*.xqm,*.xq,*.xquery"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN> (: *.xqy:)
+
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqd:nsRESTXQ</QName><TOKEN>:=</TOKEN> <StringLiteral>'http://exquery.org/ns/restxq'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqd:nsANN</QName><TOKEN>:=</TOKEN><StringLiteral>'http://www.w3.org/2012/xquery'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqd:methods</QName><TOKEN>:=</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"GET"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"HEAD"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"POST"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"PUT"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"DELETE"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"PATCH"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+
+(:~
+: create documentation folder map
+: @param host xquery platform eg "basex"
+: map{"base-uri":.., "files":map(*)*}
+:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:read</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>efolder</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FunctionCall><QName>xqd:read</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"basex"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
 (:~
- : render all outputs for all per file outputs 
+ : load and parse source xquery files
+ : @param $efolder root path for source files
+ : @param $host xquery platform id to provide static content e.g "basex"
+ : @return state map
  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqo:files</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>outputs</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>state</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:read</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>efolder</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>host</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
 <EnclosedExpr><TOKEN>{</TOKEN>
-<FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>file</QName> <PositionalVar><TOKEN>at</TOKEN> <TOKEN>$</TOKEN><QName>pos</QName></PositionalVar> <TOKEN>in</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>state</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup></PostfixExpr></ForBinding></ForClause>
-<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>params</QName><TOKEN>:=</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-              <MapConstructorEntry><StringLiteral>"filename"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>path</NCName></Lookup></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-              <MapConstructorEntry><StringLiteral>"cache"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqo:cache</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
-              <MapConstructorEntry><StringLiteral>"show-private"</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
-              <MapConstructorEntry><StringLiteral>"root"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"../../"</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
-              <MapConstructorEntry><StringLiteral>"resources"</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>"../../resources/"</StringLiteral></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN>
-              <VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-              
-<ReturnClause><TOKEN>return</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>outputs</QName></VarRef><TOKEN>!</TOKEN><FunctionCall><QName>xqo:file</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></ReturnClause></FLWORExpr>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>files</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>file:list</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqd:exts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>folder</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>translate</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"\"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"/"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN> 
+             <MapConstructorEntry><StringLiteral>"base-uri"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>folder</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+             <MapConstructorEntry><StringLiteral>"project"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>folder</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"/"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><Predicate><TOKEN>[</TOKEN><AdditiveExpr><FunctionCall><QName>last</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>-</TOKEN><IntegerLiteral>1</IntegerLiteral></AdditiveExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+             <MapConstructorEntry><StringLiteral>"files"</StringLiteral><TOKEN>:</TOKEN> <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>file</QName> <PositionalVar><TOKEN>at</TOKEN> <TOKEN>$</TOKEN><QName>pos</QName></PositionalVar> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>files</QName></VarRef></ForBinding></ForClause>
+                      <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>full</QName><TOKEN>:=</TOKEN><FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><VarRef><TOKEN>$</TOKEN><QName>efolder</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>"/"</StringLiteral></StringConcatExpr><TOKEN>,</TOKEN> <ArrowExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>=&gt;</TOKEN><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"FILE: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                      <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>spath</QName><TOKEN>:=</TOKEN><FunctionCall><QName>translate</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"\"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"/"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                      <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>xqdoc</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqd:analyse</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>full</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>host</QName></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"_source"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>spath</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                      <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>base</QName><TOKEN>:=</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+                        <MapConstructorEntry><StringLiteral>"path"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+                        <MapConstructorEntry><StringLiteral>"href"</StringLiteral><TOKEN>:</TOKEN> <StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>modules/F</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>pos</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>/</StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
+                        <MapConstructorEntry><StringLiteral>"namespace"</StringLiteral><TOKEN>:</TOKEN> <RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:module</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:uri</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></MapConstructorEntry>
+                      <TOKEN>}</TOKEN></MapConstructor></LetBinding></LetClause>
+                      <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>base</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr></MapConstructorEntry>  
+           <TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr>
+
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-(:~ save runtime support files to output
- : @param $target destination folder
+
+
+
+(:~ generate xqdoc
+ : result is &lt;XQuery&gt; or &lt;ERROR&gt;
  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation>
-<FunctionDecl><TOKEN>function</TOKEN> <QName>xqo:export-resources</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>target</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>                       
-<TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType><EnclosedExpr><TOKEN>{</TOKEN>  
-<FunctionCall><QName>archive:extract-to</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>target</QName></VarRef><TOKEN>,</TOKEN> <FunctionCall><QName>file:read-binary</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>'resources.zip'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module><EOF/></XQuery>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:xqdoc</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:xqdoc</QName><TOKEN>)</TOKEN></ElementTest>
+<EnclosedExpr><TOKEN>{</TOKEN>  
+ <TryCatchExpr><TryClause><TOKEN>try</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+   <FunctionCall><QName>inspect:xqdoc</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+ <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN> 
+   <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>xqdoc:xqdoc</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><VarRef><TOKEN>$</TOKEN><QName>err:code</QName></VarRef> <TOKEN>}</TOKEN></EnclosedExpr><ElementContentChar> </ElementContentChar><ElementContentChar>-</ElementContentChar><ElementContentChar> </ElementContentChar><EnclosedExpr><TOKEN>{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>xqdoc:xqdoc</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
+<TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : Generate xqdoc adding custom opts 
+ : @param $url xquery source
+ : @param host xquery platform id
+ : @param $opts custom tags to add
+ : @result map keys of {xqdoc: &lt;xqdoc:xqdoc/&gt;, xqparse: &lt;XQuery/&gt; ,annotations:{}*}
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:analyse</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>host</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>  
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>xqd</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqd:xqdoc</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  (: add custom tags :)
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>enh</QName><TOKEN>:=</TOKEN><TransformWithExpr><VarRef><TOKEN>$</TOKEN><QName>xqd</QName></VarRef> <TOKEN>transform</TOKEN> <TOKEN>with</TOKEN> <TOKEN>{</TOKEN>
+          <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>tag</QName> <TOKEN>in</TOKEN> <FunctionCall><QName>map:keys</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ForBinding></ForClause>
+          <WhereClause><TOKEN>where</TOKEN> <AxisStep><QName>xqdoc:module</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>type</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"library"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></WhereClause>
+          <ReturnClause><TOKEN>return</TOKEN> <InsertExpr><TOKEN>insert</TOKEN> <TOKEN>node</TOKEN> <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>xqdoc:custom</QName><DirAttributeList><S> </S><QName>tag</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>_</QuotAttrContentChar><EnclosedExpr><TOKEN>{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>tag</QName></VarRef> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><Lookup><TOKEN>?</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>tag</QName></VarRef><TOKEN>)</TOKEN></ParenthesizedExpr></Lookup></PostfixExpr> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>xqdoc:custom</QName><TOKEN>&gt;</TOKEN></DirElemConstructor> 
+          <TOKEN>into</TOKEN> <RelativePathExpr><AxisStep><QName>xqdoc:module</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>type</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"library"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:comment</QName>
+     <PredicateList/></AxisStep></RelativePathExpr></InsertExpr></ReturnClause></FLWORExpr><TOKEN>}</TOKEN></TransformWithExpr></LetBinding></LetClause>
+  (: insert full source into module :)
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>src</QName><TOKEN>:=</TOKEN><FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>   
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>enh</QName><TOKEN>:=</TOKEN><TransformWithExpr><VarRef><TOKEN>$</TOKEN><QName>enh</QName></VarRef> <TOKEN>transform</TOKEN> <TOKEN>with</TOKEN> <TOKEN>{</TOKEN>
+    <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><AxisStep><QName>xqdoc:module</QName><PredicateList/></AxisStep><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> 
+          <InsertExpr><TOKEN>insert</TOKEN> <TOKEN>node</TOKEN> <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>xqdoc:body</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><VarRef><TOKEN>$</TOKEN><QName>src</QName></VarRef><TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>xqdoc:body</QName><TOKEN>&gt;</TOKEN></DirElemConstructor> <TOKEN>into</TOKEN> <AxisStep><QName>xqdoc:module</QName>
+    <PredicateList/></AxisStep></InsertExpr><TOKEN>else</TOKEN>
+        <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr>
+  <TOKEN>}</TOKEN></TransformWithExpr></LetBinding></LetClause>
+  (: add enrichments from parse tree :)
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>parse</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqp:parse</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>src</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>enh</QName><TOKEN>:=</TOKEN><TryCatchExpr><TryClause><TOKEN>try</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+                          <FunctionCall><QName>xqp:enrich</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>enh</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>parse</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> 
+                    <TOKEN>}</TOKEN></EnclosedExpr></TryClause>   <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN> 
+                            <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef> <TOKEN>,</TOKEN><StringLiteral>"Enrich error: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                            <ReturnClause><TOKEN>return</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>enh</QName></VarRef></ReturnClause></FLWORExpr>
+                    <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr></LetBinding></LetClause> (: parse fails :)
+  <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"xqdoc"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>enh</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> 
+             <MapConstructorEntry><StringLiteral>"xqparse"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>parse</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+             <MapConstructorEntry><StringLiteral>"annotations"</StringLiteral><TOKEN>:</TOKEN><FunctionCall><QName>xqd:anno</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>enh</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry>
+              <TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:anno</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>xqdoc</QName></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType><EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ns</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>xqd:namespaces</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+ <ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>a</QName> <TOKEN>in</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><TOKEN>//</TOKEN><AxisStep><QName>xqdoc:annotation</QName>
+ <PredicateList/></AxisStep></RelativePathExpr></ForBinding></ForClause><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>name</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqn:qname-anno</QName><ArgumentList><TOKEN>(</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep></RelativePathExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ns</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+ <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"annotation"</StringLiteral><TOKEN>:</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"xqdoc"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr> 
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+         
+(:~ return sequence of maps with maps uri and methods :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:rxq-paths</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType> 
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>reports</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>xqd:annots-rxq</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>  
+(: map keyed on uris :)
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>data</QName><TOKEN>:=</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>report</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>reports</QName></VarRef></ForBinding></ForClause>
+          <GroupByClause><TOKEN>group</TOKEN> <TOKEN>by</TOKEN> <GroupingSpec><GroupingVariable><TOKEN>$</TOKEN><QName>uri</QName></GroupingVariable><TOKEN>:=</TOKEN><RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>report</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>annot</NCName></Lookup></PostfixExpr><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:literal</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></GroupingSpec></GroupByClause>
+          <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>methods</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN>
+                         <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>annot</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>report</QName></VarRef></ForBinding></ForClause>
+                         <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>hits</QName><TOKEN>:=</TOKEN><FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>method</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqd:methods</QName></VarRef></ForBinding></ForClause>
+                                     <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>hit</QName><TOKEN>:=</TOKEN>  <FunctionCall><QName>xqd:methods</QName><ArgumentList><TOKEN>(</TOKEN><RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>annot</NCName></Lookup></PostfixExpr><TOKEN>/</TOKEN><AxisStep><TOKEN>..</TOKEN><PredicateList/></AxisStep></RelativePathExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqd:nsRESTXQ</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>method</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                                     <WhereClause><TOKEN>where</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>hit</QName></VarRef></WhereClause>
+                                     <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>method</QName></VarRef><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr></LetBinding></LetClause>
+                         <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>hits</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN><TOKEN>then</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>hits</QName></VarRef> <TOKEN>else</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"ALL"</StringLiteral><TOKEN>:</TOKEN><VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></IfExpr></ReturnClause></FLWORExpr>
+                       <TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+          <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:entry</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>"methods"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>methods</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+        <TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause> 
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>uris</QName><TOKEN>:=</TOKEN><FunctionCall><QName>sort</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>map:keys</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>data</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>        
+<ReturnClause><TOKEN>return</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>data</QName></VarRef><Lookup><TOKEN>?</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uris</QName></VarRef><TOKEN>)</TOKEN></ParenthesizedExpr></Lookup></PostfixExpr></ReturnClause></FLWORExpr>        
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : map for each restxq:path annotation
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:annots-rxq</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>f</QName> <PositionalVar><TOKEN>at</TOKEN> <TOKEN>$</TOKEN><QName>index</QName></PositionalVar> <TOKEN>in</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup></PostfixExpr></ForBinding></ForClause>
+  <ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>annot</QName> <TOKEN>in</TOKEN> <FunctionCall><QName>xqd:annotations</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqd:nsRESTXQ</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"path"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ForBinding></ForClause>
+  <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+                <MapConstructorEntry><StringLiteral>"id"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>index</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>href</NCName></Lookup></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"path"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>path</NCName></Lookup></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"annot"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"function"</StringLiteral><TOKEN>:</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef><TOKEN>/</TOKEN><AxisStep><TOKEN>..</TOKEN><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><TOKEN>..</TOKEN><PredicateList/></AxisStep><TOKEN>/</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><RelativePathExpr><AxisStep><QName>xqdoc:name</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr><TOKEN>,</TOKEN><RelativePathExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>arity</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></RelativePathExpr></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"description"</StringLiteral><TOKEN>:</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>annot</QName></VarRef><TOKEN>/</TOKEN><AxisStep><TOKEN>..</TOKEN><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><TOKEN>..</TOKEN><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:comment</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:description</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><AnyKindTest><TOKEN>node</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></AnyKindTest> 
+                 <PredicateList/></AxisStep></RelativePathExpr></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+
+
+(:~ 
+ : return all matching annotations in xqdoc
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:annotations</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>xqdoc</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:xqdoc</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                                 <Param><TOKEN>$</TOKEN><QName>annotns</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                                 <Param><TOKEN>$</TOKEN><QName>aname</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <SequenceType><ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:annotation</QName><TOKEN>)</TOKEN></ElementTest><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>prefixes</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><TOKEN>//</TOKEN><AxisStep><QName>xqdoc:namespace</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>uri</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>annotns</QName></VarRef></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>prefix</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+ <ReturnClause><TOKEN>return</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><TOKEN>//</TOKEN><AxisStep><QName>xqdoc:annotations</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:annotation</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>p</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef></ForBinding></ForClause> <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>':'</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>aname</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr><TOKEN>)</TOKEN></ParenthesizedExpr></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></ReturnClause></FLWORExpr>
+
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : return annotations with namespace and name
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:methods</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>annots</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:annotations</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                                 <Param><TOKEN>$</TOKEN><QName>annotns</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                                 <Param><TOKEN>$</TOKEN><QName>aname</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <SequenceType><ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:annotation</QName><TOKEN>)</TOKEN></ElementTest><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+   <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ns</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>annots</QName></VarRef><TOKEN>/</TOKEN><AxisStep><ReverseStep><ReverseAxis><TOKEN>ancestor</TOKEN><TOKEN>::</TOKEN></ReverseAxis><QName>xqdoc:xqdoc</QName></ReverseStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:namespaces</QName>
+   <PredicateList/></AxisStep></RelativePathExpr></LetBinding></LetClause><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>prefixes</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>ns</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:namespace</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>uri</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>annotns</QName></VarRef></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>prefix</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>annots</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:annotation</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>p</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef></ForBinding></ForClause> <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>':'</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>aname</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr><TOKEN>)</TOKEN></ParenthesizedExpr></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></ReturnClause></FLWORExpr>
+
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+
+(:~ 
+ : all namespaces in xqdoc as map{prefix.. uri}
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:namespaces</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>xqdoc</QName> <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:xqdoc</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<ArrowExpr><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>xqdoc</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:namespaces</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:namespace</QName>
+<PredicateList/></AxisStep><TOKEN>!</TOKEN><FunctionCall><QName>map:entry</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>prefix</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>uri</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr>
+<TOKEN>=&gt;</TOKEN><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:where-imported</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup><Predicate><TOKEN>[</TOKEN><RelativePathExpr><UnaryLookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></UnaryLookup><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:imports</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:import</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><QName>xqdoc:uri</QName><PredicateList/></AxisStep><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr><TOKEN>]</TOKEN></Predicate><Lookup><TOKEN>?</TOKEN><NCName>namespace</NCName></Lookup></PostfixExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(: return sequence of maps  are imported ns values are where imported:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:imports</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN>  
+<FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>f</QName> <TOKEN>in</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup></PostfixExpr></ForBinding></ForClause>
+ <ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>in</QName> <TOKEN>in</TOKEN> <RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>//</TOKEN><AxisStep><QName>xqdoc:import</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>type</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"library"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></ForBinding></ForClause>
+<GroupByClause><TOKEN>group</TOKEN> <TOKEN>by</TOKEN> <GroupingSpec><GroupingVariable><TOKEN>$</TOKEN><QName>ns</QName></GroupingVariable><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>in</QName></VarRef><TOKEN>/</TOKEN><AxisStep><QName>xqdoc:uri</QName>
+<PredicateList/></AxisStep></RelativePathExpr></GroupingSpec></GroupByClause><ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:entry</QName><ArgumentList><TOKEN>(</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>ns</QName></VarRef><TOKEN>,</TOKEN>  <VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : filter annotation by uri and name
+ : @param $uri 1st item is uri, if 2nd then match name
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:filter-annot</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>annots</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>hit</QName><TOKEN>:=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>annots</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>annotation</NCName></Lookup><Predicate><TOKEN>[</TOKEN><ComparisonExpr><UnaryLookup><TOKEN>?</TOKEN><NCName>uri</NCName></UnaryLookup><TOKEN>=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></ComparisonExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>eq</TOKEN> <IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+            <VarRef><TOKEN>$</TOKEN><QName>hit</QName></VarRef>
+         <TOKEN>else</TOKEN>
+           <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>hit</QName></VarRef><Predicate><TOKEN>[</TOKEN><ComparisonExpr><UnaryLookup><TOKEN>?</TOKEN><NCName>name</NCName></UnaryLookup><TOKEN>=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></ComparisonExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  filter for updating :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:anno-updating</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>anno</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FunctionCall><QName>xqd:filter-annot</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>anno</QName></VarRef><TOKEN>,</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"http://www.w3.org/2012/xquery"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"updating"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  filter for rest :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqd:anno-rest</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>anno</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FunctionCall><QName>xqd:filter-annot</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>anno</QName></VarRef><TOKEN>,</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"http://exquery.org/ns/restxq"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"path"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
+ <EOF/></XQuery>

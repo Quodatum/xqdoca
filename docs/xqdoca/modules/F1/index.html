@@ -1,46 +1,189 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"><style>
-				.tag {font-size: 100%;}
-				</style></head><body class="home" id="top"><div id="main"><div><h1><span class="tag tag-success">parsepaths.xq</span><small>main module</small><span title="RestXQ" class="tag tag-success" style="float:right">R</span></h1><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqDoc</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqParse</a></li></ul><dl><dt>Tags</dt><dd></dd></dl><div> Imported by <a href="../../imports.html#parsepaths.xq">*</a></div><nav id="toc"><h2><a href="../../index.html" class="tag tag-success">main</a>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.generator.annotations</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-html.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Library to support html5 rendering of xqdoc</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>__source : lib/generators/annotations.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum:xqdoca.generator.annotations">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">main</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">parsepaths.xq</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xp"><span class="secno">3.1</span><span class="content">$xp</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#local:functions"><span class="secno">4.1</span><span class="content" title="">local:functions<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#local:imports"><span class="secno">4.2</span><span class="content" title="">local:imports<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#local:variables"><span class="secno">4.3</span><span class="content" title="">local:variables<div class="tag tag-success" style="float:right" title="RESTXQ:">R</div><div class="tag tag-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div id="imports"><h3>Imports (0)</h3><details><table class="data" style="float:none"><thead><tr><th>Type</th><th>Uri</th></tr></thead><tbody></tbody></table></details></div><div id="variables"><h3><a href="#variables">Variables</a></h3><div id="$xp"><h4><a href="#$xp">$xp</a></h4><dl><dt class="label">Summary</dt>,
-		   <dd></dd><dt class="label">Type</dt><dd>item()*</dd></dl></div></div><div id="functions"><h3><a href="#functions">Functions</a></h3><div id="local:functions"><h4>local:functions<div style="float:right"><a href="#local:functions">#</a></div></h4><dt class="label">Signature</dt><dd><div class="proto"><code class="function">local:functions</code>
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.generator.annotations</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#_:annotations"><span class="secno">4.1</span><span class="content" title="">_:annotations<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#_:summary"><span class="secno">4.2</span><span class="content" title="">_:summary<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">0</span> modules, it imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F7/index.html" title="lib\model.xqm">quodatum:xqdoca.model</a></span></div><div><span><a href="../../modules/F12/index.html" title="lib\xqdoc-page.xqm">quodatum:xqdoca.page</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="_:annotations"></a>4.1&nbsp;_:annotations<div style="float:right"><a href="#_:annotations">#</a></div></h3><dt class="label">Summary</dt><dd>annotations page</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:annotations</code>
 		  ( 
-			<code class="arg">$xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code>
+			<code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function local:functions($xp as element(XQuery)){
-  $xp/LibraryModule/Prolog/AnnotatedDecl/FunctionDecl
-}</code></pre></details><details><summary>External functions that invoke this function</summary>
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:global</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">annotations</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">Summary of Annotation use</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">annotations.html</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">html5</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>References 5 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>keys#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.generator.annotations</td><td>summary#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>wrap#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details></div><div id="local:imports"><h4>local:imports<div style="float:right"><a href="#local:imports">#</a></div></h4><dt class="label">Signature</dt><dd><div class="proto"><code class="function">local:imports</code>
-		  ( 
-			<code class="arg">$xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code>
-	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function local:imports($xp as element(XQuery)) as xs:string*
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function _:annotations($model,$opts)
 {
-  $xp/LibraryModule/Prolog/ModuleImport
-}</code></pre></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div id="local:variables"><h4>local:variables<div style="float:right"><a href="#local:variables">#</a></div></h4><dt class="label">Signature</dt><dd><div class="proto"><code class="function">local:variables</code>
+  let $ns-map:=map:merge(
+          for $a in $model?files?annotations
+          group by $uri:=$a?annotation?uri
+           return map:entry($uri,$a)
+         )
+  let $body:=&lt;div&gt;
+                 &lt;h1&gt;
+                  &lt;span class="badge badge-success"&gt;
+                      { $opts?project }
+                  &lt;/span&gt;
+                  &amp;#160;Annotations 
+              &lt;/h1&gt;
+               &lt;nav id="toc"&gt;
+                        &lt;h2&gt;
+                            &lt;a href="index.html" class="badge badge-success"&gt;
+                                { $model?project }
+                            &lt;/a&gt;
+                            / Annotations
+                        &lt;/h2&gt;
+           
+            &lt;h3&gt;
+               Contents
+            &lt;/h3&gt;
+            &lt;ol class="toc"&gt;
+                &lt;li&gt;
+                    &lt;a href="#main"&gt;
+                        &lt;span class="secno"&gt;1 &lt;/span&gt;
+                        &lt;span class="content"&gt;Introduction&lt;/span&gt;
+                    &lt;/a&gt;
+                &lt;/li&gt;
+                 &lt;li&gt;
+                    &lt;a href="#annotations"&gt;
+                        &lt;span class="secno"&gt;2 &lt;/span&gt;
+                        &lt;span class="content"&gt;Annotations&lt;/span&gt;
+                    &lt;/a&gt;
+                &lt;/li&gt;
+             &lt;/ol&gt;
+           &lt;/nav&gt;
+             {_:summary($model,$opts)}
+             &lt;div class="div2"&gt;
+                 &lt;h2&gt;&lt;a id="annotations"/&gt;2 Annotations&lt;/h2&gt;
+                 &lt;ul&gt;{
+                 for $ns in map:keys($ns-map)
+                 return &lt;li&gt;{ $ns }&lt;/li&gt;
+               }&lt;/ul&gt;
+             &lt;/div&gt;       
+  &lt;/div&gt;
+  return  page:wrap($body,$opts)
+}</code></pre></details></div><div class="div3"><h3><a id="_:summary"></a>4.2&nbsp;_:summary<div style="float:right"><a href="#_:summary">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:summary</code>
 		  ( 
-			<code class="arg">$xp</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(XQuery)</code>
+			<code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xp<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(XQuery)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function local:variables($xp as element(XQuery)){
-  $xp/LibraryModule/Prolog/AnnotatedDecl/VarDecl
-}</code></pre></details><details><summary>External functions that invoke this function</summary>
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>view-list#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details></div></div><div id="namespaces"><h3><a href="#namespaces">Namespaces</a></h3><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>local</td><td>http://www.w3.org/2005/xquery-local-functions</td></tr></tbody></table></div><div>TODO resthq</div><div><h3 id="source">Original Source Code</h3><pre><code class="language-xquery">declare variable $xp:=doc("C:\tmp\xqdoc\classify.xqm\xparse.xml")/*;
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function _:summary($model,$opts)
+as element(div)
+{
+  &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
+    &lt;p&gt;This page itemizes the use of annotations in this project.&lt;/p&gt;
+    &lt;p&gt;Other perspectives:&lt;/p&gt;
+   { page:view-list( $opts(".renderers")?global,"annotations")}
+ &lt;/div&gt;
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td></td><td>https://github.com/Quodatum/xqdoca</td></tr><tr><td>_</td><td>quodatum:xqdoca.generator.annotations</td></tr><tr><td>page</td><td>quodatum:xqdoca.page</td></tr><tr><td>xqd</td><td>quodatum:xqdoca.model</td></tr><tr><td>xqdoc</td><td>http://www.xqdoc.org/1.0</td></tr><tr><td>xqdoca</td><td>https://github.com/Quodatum/xqdoca</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-html.xqm&lt;/h1&gt;
+ : &lt;p&gt;Library to support html5 rendering of xqdoc&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+ 
+(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+ :)
+module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
-declare function local:imports($xp as element(XQuery)) as xs:string*
+
+import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+
+(:~ annotations page :)
+declare 
+%xqdoca:global("annotations","Summary of Annotation use")
+%xqdoca:output("annotations.html","html5") 
+function _:annotations($model,$opts)
 {
-  $xp/LibraryModule/Prolog/ModuleImport
+  let $ns-map:=map:merge(
+          for $a in $model?files?annotations
+          group by $uri:=$a?annotation?uri
+           return map:entry($uri,$a)
+         )
+  let $body:=&lt;div&gt;
+                 &lt;h1&gt;
+                  &lt;span class="badge badge-success"&gt;
+                      { $opts?project }
+                  &lt;/span&gt;
+                  &amp;#160;Annotations 
+              &lt;/h1&gt;
+               &lt;nav id="toc"&gt;
+                        &lt;h2&gt;
+                            &lt;a href="index.html" class="badge badge-success"&gt;
+                                { $model?project }
+                            &lt;/a&gt;
+                            / Annotations
+                        &lt;/h2&gt;
+           
+            &lt;h3&gt;
+               Contents
+            &lt;/h3&gt;
+            &lt;ol class="toc"&gt;
+                &lt;li&gt;
+                    &lt;a href="#main"&gt;
+                        &lt;span class="secno"&gt;1 &lt;/span&gt;
+                        &lt;span class="content"&gt;Introduction&lt;/span&gt;
+                    &lt;/a&gt;
+                &lt;/li&gt;
+                 &lt;li&gt;
+                    &lt;a href="#annotations"&gt;
+                        &lt;span class="secno"&gt;2 &lt;/span&gt;
+                        &lt;span class="content"&gt;Annotations&lt;/span&gt;
+                    &lt;/a&gt;
+                &lt;/li&gt;
+             &lt;/ol&gt;
+           &lt;/nav&gt;
+             {_:summary($model,$opts)}
+             &lt;div class="div2"&gt;
+                 &lt;h2&gt;&lt;a id="annotations"/&gt;2 Annotations&lt;/h2&gt;
+                 &lt;ul&gt;{
+                 for $ns in map:keys($ns-map)
+                 return &lt;li&gt;{ $ns }&lt;/li&gt;
+               }&lt;/ul&gt;
+             &lt;/div&gt;       
+  &lt;/div&gt;
+  return  page:wrap($body,$opts)
 };
-declare function local:variables($xp as element(XQuery)){
-  $xp/LibraryModule/Prolog/AnnotatedDecl/VarDecl
+
+declare function _:summary($model,$opts)
+as element(div)
+{
+  &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
+    &lt;p&gt;This page itemizes the use of annotations in this project.&lt;/p&gt;
+    &lt;p&gt;Other perspectives:&lt;/p&gt;
+   { page:view-list( $opts(".renderers")?global,"annotations")}
+ &lt;/div&gt;
 };
-declare function local:functions($xp as element(XQuery)){
-  $xp/LibraryModule/Prolog/AnnotatedDecl/FunctionDecl
-};
-local:functions( $xp)/string()</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+    </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at 2019-05-15T22:50:45.479+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at 2019-05-22T11:24:21.502+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

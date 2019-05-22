@@ -1,0 +1,5 @@
+<ERROR b="946" e="947" s="265">lexical analysis failed
+while expecting '(:'
+after successfully scanning 1 characters beginning at line 28, column 23:
+...($path, '^.*dba/?', '')[.]
+  return web:redirect($target, dba:pa...</ERROR>

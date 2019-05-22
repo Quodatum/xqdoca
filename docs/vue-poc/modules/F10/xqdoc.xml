@@ -1,0 +1,48 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-02-store-meta.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>store meta.xml document for all jpgs referenced in doc("/vue-poc/pics.xml")
+done in batches of 1000</xqdoc:description><xqdoc:return>initial number of missing docs</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
+ : store meta.xml document for all jpgs referenced in doc("/vue-poc/pics.xml")
+ : done in batches of 1000
+ : @return initial number of missing docs  
+:)
+import module namespace cfg = "quodatum:media.image.configure" at "../config.xqm";
+import module namespace imgmeta = "expkg-zone58:image.metadata" ;
+declare namespace c="http://www.w3.org/ns/xproc-step";
+
+declare variable $dir-uri:=``[`{ $cfg:DB-IMAGE }`/pics.xml]``;
+declare variable $doc:=doc( $dir-uri);
+declare variable $CHUNK:=15000;
+declare variable $meta:="/meta/";
+let $done:=uri-collection($cfg:DB-IMAGE ||$meta)
+let $files:= $doc//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+
+let $todo:= $relpath[not($done=``[/`{ $cfg:DB-IMAGE }`/meta/`{ . }`/meta.xml]``)]
+return (for $f in subsequence($todo,1, $CHUNK)
+        let $spath:=$cfg:IMAGEDIR || "../" || $f
+        let $dbpath:=$meta || $f || "/meta.xml"
+        let $meta:=imgmeta:read(trace($spath))
+        return  db:replace($cfg:DB-IMAGE,$dbpath,$meta),
+        update:output($todo=&gt;count()))</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="cfg" uri="quodatum:media.image.configure"/><xqdoc:namespace prefix="imgmeta" uri="expkg-zone58:image.metadata"/><xqdoc:namespace prefix="c" uri="http://www.w3.org/ns/xproc-step"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>expkg-zone58:image.metadata</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>dir-uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>doc</xqdoc:name><xqdoc:type occurrence="?">document-node()</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>CHUNK</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>meta</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $done:=uri-collection($cfg:DB-IMAGE ||$meta)
+let $files:= $doc//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+
+let $todo:= $relpath[not($done=``[/`{ $cfg:DB-IMAGE }`/meta/`{ . }`/meta.xml]``)]
+return (for $f in subsequence($todo,1, $CHUNK)
+        let $spath:=$cfg:IMAGEDIR || "../" || $f
+        let $dbpath:=$meta || $f || "/meta.xml"
+        let $meta:=imgmeta:read(trace($spath))
+        return  db:replace($cfg:DB-IMAGE,$dbpath,$meta),
+        update:output($todo=&gt;count()))</xqdoc:body><xqdoc:body>let $done:=uri-collection($cfg:DB-IMAGE ||$meta)
+let $files:= $doc//c:file[ends-with(lower-case(@name),".jpg")] 
+
+let $relpath:= $files!( ancestor-or-self::*/@name=&gt;string-join("/"))
+
+let $todo:= $relpath[not($done=``[/`{ $cfg:DB-IMAGE }`/meta/`{ . }`/meta.xml]``)]
+return (for $f in subsequence($todo,1, $CHUNK)
+        let $spath:=$cfg:IMAGEDIR || "../" || $f
+        let $dbpath:=$meta || $f || "/meta.xml"
+        let $meta:=imgmeta:read(trace($spath))
+        return  db:replace($cfg:DB-IMAGE,$dbpath,$meta),
+        update:output($todo=&gt;count()))</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri-collection</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ends-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>subsequence</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>expkg-zone58:image.metadata</xqdoc:uri><xqdoc:name>read</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string-join</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>DB-IMAGE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>meta</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>relpath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>done</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>DB-IMAGE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>todo</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>CHUNK</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>IMAGEDIR</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>meta</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>spath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:media.image.configure</xqdoc:uri><xqdoc:name>DB-IMAGE</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dbpath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>meta</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>todo</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

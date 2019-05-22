@@ -1,0 +1,4 @@
+<XQuery><MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN>  <NCName>plant</NCName><TOKEN>=</TOKEN><StringLiteral>'http://quodatum.com/ns/plantuml'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"plantuml.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN></Prolog>
+(: plant:encode6bit(2) :)
+(: plant:append3bytes(bin:hex("0"),bin:hex("0"),bin:hex("1")) :)
+<FunctionCall><QName>plant:encode64</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"helloc"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MainModule><EOF/></XQuery>

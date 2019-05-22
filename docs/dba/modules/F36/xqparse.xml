@@ -1,0 +1,23 @@
+<XQuery>(:~
+ : Save query.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/queries'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>session</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/session'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../modules/session.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~
+ : Closes a query file.
+ : @param  $name   name of query file
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/dba/query-close"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>"name"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$name}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:query-save</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>name</QName>   <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>session:set</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>session:QUERY</QName></VarRef><TOKEN>,</TOKEN> <StringLiteral>''</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

@@ -1,0 +1,191 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api</xqdoc:uri><xqdoc:name>api.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>vue-poc api.</xqdoc:description><xqdoc:author>Andy Bunce may-2017</xqdoc:author><xqdoc:custom tag="__source">api.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+ : vue-poc api.
+ :
+ : @author Andy Bunce may-2017
+ :)
+module namespace vue-api = 'quodatum:vue.api';
+import module namespace rest = "http://exquery.org/ns/restxq";
+import module namespace session = "http://basex.org/modules/session";
+import module namespace entity = 'quodatum.models.generated' at "models.gen.xqm";
+
+
+
+declare namespace c="http://www.w3.org/ns/xproc-step";
+
+declare namespace wadl="http://wadl.dev.java.net/2009/02";
+
+(:~
+ : get status
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/start")
+ function vue-api:start( )   
+{
+  if(db:exists("vue-poc")) then
+   ()
+  else 
+  ()
+};
+
+
+
+(:~
+ : Returns test list for select.
+ :)
+declare
+%rest:path("/vue-poc/api/test-select")
+%rest:query-param("q", "{$q}")
+%rest:produces("application/json")
+%output:method("json")   
+function vue-api:test-select($q )   
+{
+  &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {(1 to 100)!(&lt;_ type="object"&gt;
+             &lt;name&gt;A{ . }&lt;/name&gt;
+             &lt;value&gt;V{ . }&lt;/value&gt;
+            &lt;/_&gt;)}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+};
+
+(:~
+ : generate html report for test
+ :)
+declare
+%rest:GET %rest:path("/vue-poc/api/test/html")
+%output:method("html")  %output:version("5.0") 
+function vue-api:test-html()   
+{
+&lt;div id="A0"&gt;
+something
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="#A30" &gt;A30&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#A50"&gt;A50&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+{for $i in 1 to 50 return &lt;p&gt;{$i}: 
+&lt;a id="A{$i}" name="A{$i}"&gt;Lorem ipsum&lt;/a&gt; dolor sit amet, consectetur adipiscing elit. Morbi aliquam sodales justo, aliquet eleifend ex bibendum eget. Nullam vitae maximus ipsum. Sed maximus felis in interdum maximus. Vestibulum quis urna vel dolor placerat iaculis non at metus. Curabitur nec dictum mauris. Duis placerat magna non pellentesque pulvinar. Nam a eleifend sapien. Suspendisse potenti. Vestibulum nunc massa, eleifend a dolor quis, feugiat condimentum est. Integer diam eros, blandit in purus in, euismod ultrices felis. Donec ipsum magna, elementum non lacus vel, rutrum ornare ante. Integer egestas sapien quam, ut posuere nisi rhoncus nec. Etiam ornare enim eu tellus laoreet, in laoreet urna sodales. Donec interdum, augue non lobortis sodales, leo elit tincidunt mi, vitae varius augue libero vel lectus. Cras imperdiet quis dolor nec gravida. 
+&lt;a href="#A0"&gt;top&lt;/a&gt;&lt;/p&gt;
+}
+&lt;/div&gt;
+};
+(:~
+ : Returns wadl.
+ :)
+declare
+%rest:path("/vue-poc/api")
+function vue-api:wadl()   
+{
+ rest:wadl()
+};
+
+(:~
+ :  user list
+ :)
+declare  
+%rest:GET %rest:path("/vue-poc/api/user")
+%output:method("json")   
+function vue-api:user()
+as element(json)
+{
+ let $jlist:=user:list
+ return &lt;json type="array"&gt;
+ {for $j in $jlist
+ return &lt;_ type="object"&gt;
+  &lt;name&gt;{$j}&lt;/name&gt;
+ &lt;/_&gt;
+ }&lt;/json&gt;
+};
+
+(:~
+ :  repo list
+ :)
+declare  
+%rest:GET %rest:path("/vue-poc/api/repo")
+%output:method("json")   
+function vue-api:repo()
+as element(json)
+{
+ let $jlist:=repo:list()
+ return &lt;json type="array"&gt;
+ {for $j in $jlist
+ return &lt;_ type="object"&gt;
+  &lt;name&gt;{$j}&lt;/name&gt;
+ &lt;/_&gt;
+ }&lt;/json&gt;
+};
+
+declare
+  %rest:POST
+  %rest:path("/vue-poc/api/upload")
+  %rest:form-param("files", "{$files}")
+function vue-api:upload($files) {
+  for $name    in map:keys($files)
+  let $content := $files($name)
+  let $path    := file:temp-dir() || $name
+  return (
+    file:write-binary($path, $content),
+    &lt;file name="{ $name }" size="{ file:size($path) }"/&gt;
+  )
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-api" uri="quodatum:vue.api"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="session" uri="http://basex.org/modules/session"/><xqdoc:namespace prefix="entity" uri="quodatum.models.generated"/><xqdoc:namespace prefix="c" uri="http://www.w3.org/ns/xproc-step"/><xqdoc:namespace prefix="wadl" uri="http://wadl.dev.java.net/2009/02"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/restxq</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum.models.generated</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>get status</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:start</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/start</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/start") function vue-api:start() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:start( )   
+{
+  if(db:exists("vue-poc")) then
+   ()
+  else 
+  ()
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Returns test list for select.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:test-select</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/test-select</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">q</xqdoc:literal><xqdoc:literal type="xs:string">{$q}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/vue-poc/api/test-select") %rest:query-param("q", "{$q}") %rest:produces("application/json") %output:method("json") function vue-api:test-select($q as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>q</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:test-select($q )   
+{
+  &lt;json   type="object" &gt;
+            &lt;items type="array"&gt;
+            {(1 to 100)!(&lt;_ type="object"&gt;
+             &lt;name&gt;A{ . }&lt;/name&gt;
+             &lt;value&gt;V{ . }&lt;/value&gt;
+            &lt;/_&gt;)}              
+            &lt;/items&gt;
+  &lt;/json&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>generate html report for test</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:test-html</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/test/html</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:version"><xqdoc:literal type="xs:string">5.0</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/test/html") %output:method("html") %output:version("5.0") function vue-api:test-html() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:test-html()   
+{
+&lt;div id="A0"&gt;
+something
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="#A30" &gt;A30&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#A50"&gt;A50&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+{for $i in 1 to 50 return &lt;p&gt;{$i}: 
+&lt;a id="A{$i}" name="A{$i}"&gt;Lorem ipsum&lt;/a&gt; dolor sit amet, consectetur adipiscing elit. Morbi aliquam sodales justo, aliquet eleifend ex bibendum eget. Nullam vitae maximus ipsum. Sed maximus felis in interdum maximus. Vestibulum quis urna vel dolor placerat iaculis non at metus. Curabitur nec dictum mauris. Duis placerat magna non pellentesque pulvinar. Nam a eleifend sapien. Suspendisse potenti. Vestibulum nunc massa, eleifend a dolor quis, feugiat condimentum est. Integer diam eros, blandit in purus in, euismod ultrices felis. Donec ipsum magna, elementum non lacus vel, rutrum ornare ante. Integer egestas sapien quam, ut posuere nisi rhoncus nec. Etiam ornare enim eu tellus laoreet, in laoreet urna sodales. Donec interdum, augue non lobortis sodales, leo elit tincidunt mi, vitae varius augue libero vel lectus. Cras imperdiet quis dolor nec gravida. 
+&lt;a href="#A0"&gt;top&lt;/a&gt;&lt;/p&gt;
+}
+&lt;/div&gt;
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns wadl.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:wadl</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/vue-poc/api") function vue-api:wadl() as item()*</xqdoc:signature><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:wadl()   
+{
+ rest:wadl()
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://exquery.org/ns/restxq</xqdoc:uri><xqdoc:name>wadl</xqdoc:name></xqdoc:invoked></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>user list</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:user</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/user</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/user") %output:method("json") function vue-api:user() as element(json)</xqdoc:signature><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:user()
+as element(json)
+{
+ let $jlist:=user:list
+ return &lt;json type="array"&gt;
+ {for $j in $jlist
+ return &lt;_ type="object"&gt;
+  &lt;name&gt;{$j}&lt;/name&gt;
+ &lt;/_&gt;
+ }&lt;/json&gt;
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jlist</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>repo list</xqdoc:description></xqdoc:comment><xqdoc:name>vue-api:repo</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/repo</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/repo") %output:method("json") function vue-api:repo() as element(json)</xqdoc:signature><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:repo()
+as element(json)
+{
+ let $jlist:=repo:list()
+ return &lt;json type="array"&gt;
+ {for $j in $jlist
+ return &lt;_ type="object"&gt;
+  &lt;name&gt;{$j}&lt;/name&gt;
+ &lt;/_&gt;
+ }&lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/repo</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>jlist</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>j</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>vue-api:upload</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/upload</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">files</xqdoc:literal><xqdoc:literal type="xs:string">{$files}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/upload") %rest:form-param("files", "{$files}") function vue-api:upload($files as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-api:upload($files) {
+  for $name    in map:keys($files)
+  let $content := $files($name)
+  let $path    := file:temp-dir() || $name
+  return (
+    file:write-binary($path, $content),
+    &lt;file name="{ $name }" size="{ file:size($path) }"/&gt;
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>temp-dir</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>content</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

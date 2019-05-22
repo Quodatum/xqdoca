@@ -1,0 +1,21 @@
+<XQuery><LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>page</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.test.schema'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+
+(:~
+ :  get a schema
+ :)
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN>  
+<Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/form/schema"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>"uri"</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>"{$uri}"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>"json"</StringLiteral><TOKEN>)</TOKEN></Annotation>   
+<FunctionDecl><TOKEN>function</TOKEN> <QName>page:schema</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>json</QName><TOKEN>)</TOKEN></ElementTest>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>file</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN><StringLiteral>"person.json"</StringLiteral> <TOKEN>else</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></IfExpr></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName><TOKEN>:=</TOKEN><ArrowExpr><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><StringLiteral>"schema.json/"</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef></StringConcatExpr> <TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=&gt;</TOKEN><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"full"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>s</QName><TOKEN>:=</TOKEN><ArrowExpr><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>=&gt;</TOKEN><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList>
+              <TOKEN>=&gt;</TOKEN><QName>json:parse</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <RelativePathExpr><FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>s</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"JSON"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><Wildcard>*</Wildcard>
+<PredicateList/></AxisStep></RelativePathExpr></ReturnClause></FLWORExpr><TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+
+<EOF/></XQuery>

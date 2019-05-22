@@ -1,0 +1,54 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.test.logs</xqdoc:uri><xqdoc:name>logs.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>job list</xqdoc:description><xqdoc:custom tag="__source">features/adminlog/logs.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>module namespace j = 'quodatum.test.logs';
+import module namespace entity = 'quodatum.models.generated' at "../../models.gen.xqm";
+import module namespace dice = 'quodatum.web.dice/v4' at "../../lib/dice.xqm";
+import module namespace web = 'quodatum.web.utils4' at "../../lib/webutils.xqm";
+(:~
+ :  job list
+ :)
+declare  
+%rest:GET %rest:path("/vue-poc/api/log")
+%output:method("json")   
+function j:list()
+as element(json)
+{
+  let $entity:=$entity:list("basexlog")
+ let $items:=$entity("data")()
+ let $items:=$items[false() or not(ends-with(. ,"/vue-poc/api/log"))]
+ (: let $_:=admin:write-log("hello admin:write-log") :)
+ return dice:response($items,$entity,web:dice())
+};
+
+(:~ 
+ : create a log entry
+ :)
+declare  
+%rest:POST %rest:path("/vue-poc/api/log/add")
+%rest:form-param("type", "{$type}")
+%rest:form-param("message", "{$message}")
+%output:method("text")   
+function j:add($type as xs:string,
+               $message as xs:string)
+{
+  let $_:=trace(($type,$message),"post")
+  return (
+   "AAAA",
+   admin:write-log($message, $type ) 
+   )
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="j" uri="quodatum.test.logs"/><xqdoc:namespace prefix="entity" uri="quodatum.models.generated"/><xqdoc:namespace prefix="dice" uri="quodatum.web.dice/v4"/><xqdoc:namespace prefix="web" uri="quodatum.web.utils4"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum.models.generated</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum.web.dice/v4</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>job list</xqdoc:description></xqdoc:comment><xqdoc:name>j:list</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/log</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/vue-poc/api/log") %output:method("json") function j:list() as element(json)</xqdoc:signature><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function j:list()
+as element(json)
+{
+  let $entity:=$entity:list("basexlog")
+ let $items:=$entity("data")()
+ let $items:=$items[false() or not(ends-with(. ,"/vue-poc/api/log"))]
+ (: let $_:=admin:write-log("hello admin:write-log") :)
+ return dice:response($items,$entity,web:dice())
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>false</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ends-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum.web.dice/v4</xqdoc:uri><xqdoc:name>response</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri><xqdoc:name>dice</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum.models.generated</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>entity</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>entity</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create a log entry</xqdoc:description></xqdoc:comment><xqdoc:name>j:add</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/log/add</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">type</xqdoc:literal><xqdoc:literal type="xs:string">{$type}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">message</xqdoc:literal><xqdoc:literal type="xs:string">{$message}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/log/add") %rest:form-param("type", "{$type}") %rest:form-param("message", "{$message}") %output:method("text") function j:add($type as xs:string, $message as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>type</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>message</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function j:add($type as xs:string,
+               $message as xs:string)
+{
+  let $_:=trace(($type,$message),"post")
+  return (
+   "AAAA",
+   admin:write-log($message, $type ) 
+   )
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/admin</xqdoc:uri><xqdoc:name>write-log</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>message</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,65 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.txq</xqdoc:uri><xqdoc:name>txq.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>A(nother) templating Engine for XQuery (BaseX specific)
+specials:
+partial(file,name,sequence)</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>sept 2012</xqdoc:since><xqdoc:custom tag="licence">apache 2</xqdoc:custom><xqdoc:custom tag="__source">lib/txq.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+: A(nother) templating Engine for XQuery (BaseX specific)
+: specials:
+: partial(file,name,sequence)
+:
+: @author andy bunce
+: @since sept 2012
+: @licence apache 2
+:)
+ 
+module namespace txq = 'quodatum.txq';
+declare default function namespace 'quodatum.txq';
+import module namespace xquery = "http://basex.org/modules/xquery";
+ 
+(:~
+: template function
+: @param template url to fill
+: @param map name and value to apply
+: @return updated doc from map
+:)
+declare function render($template as xs:string,$map as map(*))
+{
+    let $map:=map:merge(($map,map{"partial": partial(?,?,?,$map,$template)}))
+    return xquery:invoke($template,$map)
+};
+ 
+(:~
+: template function with wrapping layout
+: @param $layout outer template with $body placeholder to insert $template
+: @return updated doc from map
+:)
+declare function render($template as xs:string,$map as map(*),$layout as xs:string)
+{
+    let $content:=render($template,$map)
+    let $map:=map:merge(($map,map{"body": $content}))
+    return render($layout,$map)
+};
+ 
+(:~
+: partial template function: evaluate part for each value in sequence
+: @return updated doc from map
+:)
+declare function partial($part as xs:string,$name,$seq,$map,$base)
+{
+    for $s in $seq
+    let $map:=map:merge(($map,map{$name: $s}))
+    return render(fn:resolve-uri($part,$base),$map)
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="txq" uri="quodatum.txq"/><xqdoc:namespace prefix="xquery" uri="http://basex.org/modules/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>template function</xqdoc:description><xqdoc:param>template url to fill</xqdoc:param><xqdoc:param>map name and value to apply</xqdoc:param><xqdoc:return>updated doc from map</xqdoc:return></xqdoc:comment><xqdoc:name>render</xqdoc:name><xqdoc:signature>declare function render($template as xs:string, $map as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>template</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>map</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function render($template as xs:string,$map as map(*))
+{
+    let $map:=map:merge(($map,map{"partial": partial(?,?,?,$map,$template)}))
+    return xquery:invoke($template,$map)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="5"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>partial</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>invoke</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>template</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>template</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>template function with wrapping layout</xqdoc:description><xqdoc:param>$layout outer template with $body placeholder to insert $template</xqdoc:param><xqdoc:return>updated doc from map</xqdoc:return></xqdoc:comment><xqdoc:name>render</xqdoc:name><xqdoc:signature>declare function render($template as xs:string, $map as map(*), $layout as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>template</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>map</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>layout</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function render($template as xs:string,$map as map(*),$layout as xs:string)
+{
+    let $content:=render($template,$map)
+    let $map:=map:merge(($map,map{"body": $content}))
+    return render($layout,$map)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>template</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>content</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>layout</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="5"><xqdoc:comment><xqdoc:description>partial template function: evaluate part for each value in sequence</xqdoc:description><xqdoc:return>updated doc from map</xqdoc:return></xqdoc:comment><xqdoc:name>partial</xqdoc:name><xqdoc:signature>declare function partial($part as xs:string, $name as item()*, $seq as item()*, $map as item()*, $base as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>part</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>seq</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>map</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>base</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function partial($part as xs:string,$name,$seq,$map,$base)
+{
+    for $s in $seq
+    let $map:=map:merge(($map,map{$name: $s}))
+    return render(fn:resolve-uri($part,$base),$map)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>seq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>s</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>part</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

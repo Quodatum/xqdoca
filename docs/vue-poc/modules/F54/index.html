@@ -1,0 +1,677 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>vue-poc - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:build.xqdoc</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>Generate XQuery  documentation in html
+using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+$efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+$target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"</dd><dt>Tags</dt><dd><p>__source : lib/xqdoc/xqdoc-proj.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum:build.xqdoc">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">vue-poc</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:build.xqdoc</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqd:HTML5"><span class="secno">3.1</span><span class="content">$xqd:HTML5</span></a></li><li><a href="#$xqd:XML"><span class="secno">3.2</span><span class="content">$xqd:XML</span></a></li><li><a href="#$xqd:cache"><span class="secno">3.3</span><span class="content">$xqd:cache</span></a></li><li><a href="#$xqd:index-xslt"><span class="secno">3.4</span><span class="content">$xqd:index-xslt</span></a></li><li><a href="#$xqd:methods"><span class="secno">3.5</span><span class="content">$xqd:methods</span></a></li><li><a href="#$xqd:mod-xslt"><span class="secno">3.6</span><span class="content">$xqd:mod-xslt</span></a></li><li><a href="#$xqd:nsRESTXQ"><span class="secno">3.7</span><span class="content">$xqd:nsRESTXQ</span></a></li></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqd:annotation-map"><span class="secno">4.1</span><span class="content" title="">xqd:annotation-map<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:annotations"><span class="secno">4.2</span><span class="content" title="">xqd:annotations<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:annots"><span class="secno">4.3</span><span class="content" title="">xqd:annots<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:annots-rxq"><span class="secno">4.4</span><span class="content" title="">xqd:annots-rxq<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:export-resources"><span class="secno">4.5</span><span class="content" title="">xqd:export-resources<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:export-resources2"><span class="secno">4.6</span><span class="content" title="">xqd:export-resources2<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:gendoc"><span class="secno">4.7</span><span class="content" title="">xqd:gendoc<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:gendoc2"><span class="secno">4.8</span><span class="content" title="">xqd:gendoc2<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:imports"><span class="secno">4.9</span><span class="content" title="">xqd:imports<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:index-html"><span class="secno">4.10</span><span class="content" title="">xqd:index-html<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:methods"><span class="secno">4.11</span><span class="content" title="">xqd:methods<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:parse"><span class="secno">4.12</span><span class="content" title="">xqd:parse<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:read"><span class="secno">4.13</span><span class="content" title="">xqd:read<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:rxq-paths"><span class="secno">4.14</span><span class="content" title="">xqd:rxq-paths<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:save-xq"><span class="secno">4.15</span><span class="content" title="">xqd:save-xq<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:store"><span class="secno">4.16</span><span class="content" title="">xqd:store<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:store2"><span class="secno">4.17</span><span class="content" title="">xqd:store2<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:xqdoc"><span class="secno">4.18</span><span class="content" title="">xqd:xqdoc<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqd:xqdoc-html"><span class="secno">4.19</span><span class="content" title="">xqd:xqdoc-html<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">5</span> modules, it imports
+    <span class="badge badge-info">3</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;"><div><span><a href="../../modules/F34/index.html" title="features\tasks\xqdoc\getxparse.xq">getxparse.xq</a></span></div><div><span><a href="../../modules/F35/index.html" title="features\tasks\xqdoc\getxqdoc.xq">getxqdoc.xq</a></span></div><div><span><a href="../../modules/F37/index.html" title="features\tasks\xqdoc\tx-xqdoc2.xq">tx-xqdoc2.xq</a></span></div><div><span><a href="../../modules/F38/index.html" title="features\tasks\xqdoc\tx-xqdoc3.xq">tx-xqdoc3.xq</a></span></div><div><span><a href="../../modules/F39/index.html" title="features\tasks\xqdoc\tx-xqrest2.xq">tx-xqrest2.xq</a></span></div></div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span class="badge badge-warning" title="External file">expkg-zone58:text.parse</span></div><div><span><a href="../../modules/F66/index.html" title="lib\store.xqm">quodatum.store</a></span></div><div><span><a href="../../modules/F53/index.html" title="lib\xqdoc\xqdoc-html.xqm">quodatum:build.xqdoc-html</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><div class="div3"><h3><a id="$xqd:cache"></a>3.1&nbsp;$xqd:cache</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:boolean</dd></dl></div><div class="div3"><h3><a id="$xqd:HTML5"></a>3.2&nbsp;$xqd:HTML5</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div><div class="div3"><h3><a id="$xqd:index-xslt"></a>3.3&nbsp;$xqd:index-xslt</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$xqd:methods"></a>3.4&nbsp;$xqd:methods</h3><dl><dt class="label">Summary</dt><dd>@see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods</dd><dt class="label">Type</dt><dd>item()*</dd></dl></div><div class="div3"><h3><a id="$xqd:mod-xslt"></a>3.5&nbsp;$xqd:mod-xslt</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$xqd:nsRESTXQ"></a>3.6&nbsp;$xqd:nsRESTXQ</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$xqd:XML"></a>3.7&nbsp;$xqd:XML</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="xqd:annotation-map"></a>4.1&nbsp;xqd:annotation-map<div style="float:right"><a href="#xqd:annotation-map">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annotation-map</code>
+		  ( 
+			<code class="arg">$xqdoc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqdoc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 10 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>annots#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>annots#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:annotation-map($xqdoc)
+{
+  let $ns:=map:merge((
+           map:entry("", "http://www.w3.org/2012/xquery"),
+           $xqdoc//xqdoc:namespace!map:entry(string(@prefix),string(@uri))
+           ))
+  let $f:=$xqdoc//xqdoc:function[xqdoc:annotations]!
+                  map:entry(
+                        xqdoc:name || "#" || @arity,
+                        xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
+                   )
+   let $v:=$xqdoc//xqdoc:variable[xqdoc:annotations]!
+                 map:entry(
+                   xqdoc:name ,
+                   xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
+                 )
+  return map:merge(($f,$v))
+         
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:annotations"></a>4.2&nbsp;xqd:annotations<div style="float:right"><a href="#xqd:annotations">#</a></div></h3><dt class="label">Summary</dt><dd>return all matching annotations in xqdoc</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annotations</code>
+		  ( 
+			<code class="arg">$xqdoc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:xqdoc)</code>, <code class="arg">$annotns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$aname</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element(xqdoc:annotation)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqdoc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>annotns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>aname<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:annotation)*</code></li></ul></dd><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
+ return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:annots"></a>4.3&nbsp;xqd:annots<div style="float:right"><a href="#xqd:annots">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annots</code>
+		  ( 
+			<code class="arg">$annots</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:annotation)*</code>, <code class="arg">$ns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>annots<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:annotation)*</code></li><li>ns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>References 8 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring-before#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>contains#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring-after#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:annots(
+ $annots as element(xqdoc:annotation)*,
+ $ns as map(*)
+) as map(*)
+{
+ map:merge( 
+ for $a in $annots
+ group by $prefix:=substring-before($a/@name,":")
+ return for $p in $prefix
+                  return map:entry(
+                     $ns?($p),
+                     map:merge((
+                     for $x in $a
+                     group by $aname:=if(contains($x/@name,":")) then substring-after($x/@name,":") else $x/@name
+                     return map:entry($aname,$x/*/string())
+                  ))
+                )
+)}</code></pre></details></div><div class="div3"><h3><a id="xqd:annots-rxq"></a>4.4&nbsp;xqd:annots-rxq<div style="float:right"><a href="#xqd:annots-rxq">#</a></div></h3><dt class="label">Summary</dt><dd>map for each restxq:path annotation</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annots-rxq</code>
+		  ( 
+			<code class="arg">$state</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>state<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>annotations#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:annots-rxq($state as map(*))
+as map(*)*
+{
+  for $f at $index in $state?files
+  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
+  return map{
+                "id": $index,
+                "uri": $f?href,
+                "path": $f?path,
+                "annot": $annot,
+                "function": $annot/../../(xqdoc:name/string(),@arity/string()),
+                "description": $annot/../../xqdoc:comment/xqdoc:description/node() 
+                 }
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:export-resources"></a>4.5&nbsp;xqd:export-resources<div style="float:right"><a href="#xqd:export-resources">#</a></div></h3><dt class="label">Summary</dt><dd>save runtime support files to $target</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:export-resources</code>
+		  ( 
+			<code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>References 3 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/archive</td><td>extract-to#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>read-binary#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:export-resources2"></a>4.6&nbsp;xqd:export-resources2<div style="float:right"><a href="#xqd:export-resources2">#</a></div></h3><dt class="label">Summary</dt><dd>save runtime support files to $target</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:export-resources2</code>
+		  ( 
+			<code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>References 3 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/archive</td><td>extract-to#2</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>read-binary#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:export-resources2($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:gendoc"></a>4.7&nbsp;xqd:gendoc<div style="float:right"><a href="#xqd:gendoc">#</a></div></h3><dt class="label">Summary</dt><dd>save xqdoc and html for source file $f</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:gendoc</code>
+		  ( 
+			<code class="arg">$f</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(c:file)</code>, <code class="arg">$op</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>f<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(c:file)</code> &lt;c:file/&gt;</li><li>op<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> destination folder</li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 16 functions from 5 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/fetch</td><td>text#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>is-dir#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>create-dir#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>path-to-native#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>resolve-path#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>base-uri#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>xqdoc#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>parse#3</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>xqdoc-html#3</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store#4</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store#4</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store#4</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:gendoc(
+                    $f as element(c:file),
+                    $op as xs:string, 
+                    $target as xs:string,
+                    $params as map(*)
+)
+ {
+  let $_:= if(file:is-dir($target)) then () else file:create-dir($target)
+   let $target:= file:path-to-native($target)
+  let $ip:= $f/@name/resolve-uri(.,base-uri(.))
+   let $dest:= file:resolve-path($op,$target)
+  
+   let $xqdoc:= xqd:xqdoc($ip,map{"source": $ip})
+   let $xq:= fetch:text($ip)
+   let $params:=map:merge((map{
+                "source": $xq,
+                "filename": $f/@name/string(),
+                "cache": $xqd:cache,
+                "show-private": true(),
+                "resources": "resources/"},
+                $params))
+   return (
+       $xq=&gt;xqd:parse()=&gt;xqd:store($dest || "/xparse.xml",$xqd:XML),
+       $xqdoc=&gt;xqd:store($dest || "/xqdoc.xml",$xqd:XML),
+       $xqdoc=&gt;xqd:xqdoc-html($params)=&gt;xqd:store($dest || "/index.html",$xqd:HTML5)
+        )
+ }</code></pre></details></div><div class="div3"><h3><a id="xqd:gendoc2"></a>4.8&nbsp;xqd:gendoc2<div style="float:right"><a href="#xqd:gendoc2">#</a></div></h3><dt class="label">Summary</dt><dd>save xqdoc and html for source file $f</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:gendoc2</code>
+		  ( 
+			<code class="arg">$f</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(c:file)</code>, <code class="arg">$op</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>f<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(c:file)</code> &lt;c:file/&gt;</li><li>op<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> destination folder</li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>References 12 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/fetch</td><td>text#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>base-uri#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>resolve-uri#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>parse#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>xqdoc#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>xqdoc-html#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store2#3</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store2#3</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store2#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:gendoc2(
+                    $f as element(c:file),
+                    $op as xs:string, 
+                    $target as xs:string,
+                    $params as map(*)
+)
+as map(*)* {
+  let $ip:= $f/@name/resolve-uri(.,base-uri(.))
+  let $xqdoc:= xqd:xqdoc($ip,map{})
+  let $xq:= fetch:text($ip)
+  let $params:=map:merge((map{
+                "source": $xq,
+                "filename": $f/@name/string(),
+                "cache": $xqd:cache,
+                "show-private": true(),
+                "root": "../../",
+                "resources": "resources/"},
+                $params))
+   return (
+       xqd:store2(xqd:parse($xq), "xparse.xml",$xqd:XML),
+        xqd:store2($xqdoc,"xqdoc.xml",$xqd:XML),
+        xqd:store2(xqd:xqdoc-html($xqdoc,$params), "index.html",$xqd:HTML5)
+        )
+ }</code></pre></details></div><div class="div3"><h3><a id="xqd:imports"></a>4.9&nbsp;xqd:imports<div style="float:right"><a href="#xqd:imports">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:imports</code>
+		  ( 
+			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:imports($doc)
+as map(*)*
+{
+for $f in $doc?files
+for $in in $f?xqdoc//xqdoc:import[@type="library"]
+group by $ns:=$in/xqdoc:uri
+return map{ "uri": $ns, "where": $f}
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:index-html"></a>4.10&nbsp;xqd:index-html<div style="float:right"><a href="#xqd:index-html">#</a></div></h3><dt class="label">Summary</dt><dd>transform files to html</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:index-html</code>
+		  ( 
+			<code class="arg">$files</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/xslt</td><td>transform#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:index-html($files,
+                            $params as map(*)
+                            )
+as document-node()                            
+{  
+xslt:transform($files,$xqd:index-xslt,$params)
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:methods"></a>4.11&nbsp;xqd:methods<div style="float:right"><a href="#xqd:methods">#</a></div></h3><dt class="label">Summary</dt><dd>return annotations with namespace and name</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:methods</code>
+		  ( 
+			<code class="arg">$annots</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:annotations)</code>, <code class="arg">$annotns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$aname</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element(xqdoc:annotation)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>annots<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:annotations)</code></li><li>annotns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>aname<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:annotation)*</code></li></ul></dd><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:methods($annots  as element(xqdoc:annotations),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
+   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
+  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:parse"></a>4.12&nbsp;xqd:parse<div style="float:right"><a href="#xqd:parse">#</a></div></h3><dt class="label">Summary</dt><dd>parse XQuery 
+result is &lt;XQuery&gt; or &lt;ERROR&gt;</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:parse</code>
+		  ( 
+			<code class="arg">$xq</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xq<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>expkg-zone58:text.parse</td><td>parse#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:parse($xq as xs:string)
+as element(*)
+{  
+  xp:parse($xq || "",map{"lang":"xquery","version":"3.1 basex"}) 
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:read"></a>4.13&nbsp;xqd:read<div style="float:right"><a href="#xqd:read">#</a></div></h3><dt class="label">Summary</dt><dd>create documentation folder map
+map{"base-uri":.., "files":map(*)*}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:read</code>
+		  ( 
+			<code class="arg">$efolder</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>efolder<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>References 11 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/fetch</td><td>text#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>list#3</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>last#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>tokenize#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>translate#3</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>xqdoc#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>parse#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:read($efolder as xs:string)
+as map(*)
+{
+let $files:= file:list($efolder,true(),"*.xqm")
+let $full:= $files!concat($efolder || "\",.)                                
+return map{ 
+             "base-uri": $efolder,
+             "project": tokenize($efolder,"[/\\]")[last()],
+             "files": for $file at $pos in $files
+                      let $full:=concat($efolder || "\", $file)
+                      let $spath:=translate($file,"\","/")
+                      let $xqdoc:=xqd:xqdoc($full,map{"_source": $spath})
+                      return map{
+                        "path":$file,
+                        "href": ``[modules/F`{ $pos }`/]``,
+                        "namespace": $xqdoc/xqdoc:module/xqdoc:uri/string(),
+                        "xqdoc": $xqdoc,
+                        "xqparse": fetch:text($full)=&gt;xqd:parse()
+                      }
+          
+           }
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:rxq-paths"></a>4.14&nbsp;xqd:rxq-paths<div style="float:right"><a href="#xqd:rxq-paths">#</a></div></h3><dt class="label">Summary</dt><dd>return sequence of maps with maps uri and methods</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:rxq-paths</code>
+		  ( 
+			<code class="arg">$state</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>state<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>References 9 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>exists#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>sort#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>merge#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>keys#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>entry#2</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>annots-rxq#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>methods#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:rxq-paths($state)
+as map(*)* 
+{
+let $reports:= xqd:annots-rxq($state)  
+(: map keyed on uris :)
+let $data:=map:merge(for $report in $reports
+          group by $uri:=$report?annot/xqdoc:literal/string()
+          let $methods:= map:merge(
+                         for $annot in $report
+                         let $hits:=for $method in $xqd:methods
+                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
+                                     where $hit
+                                     return map{$method: $annot}
+                         return if(exists($hits))then $hits else map{"ALL":$annot}
+                       )
+          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
+        ) 
+let $uris:=sort(map:keys($data))        
+return $data?($uris)        
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:save-xq"></a>4.15&nbsp;xqd:save-xq<div style="float:right"><a href="#xqd:save-xq">#</a></div></h3><dt class="label">Summary</dt><dd>save documentation for files to target</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:save-xq</code>
+		  ( 
+			<code class="arg">$files</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$target</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> c:directory-list</li><li>target<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> where to save</li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 7 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>position#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>export-resources#1</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>gendoc#4</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store#4</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc</td><td>store#4</td></tr><tr><td>Fn</td><td>quodatum:build.xqdoc-html</td><td>index-html#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:save-xq($files,$target,$params as map(*))
+{
+let $f:=  document{$files} transform with { delete  node //c:directory[not(.//c:file)]}
+ 
+return (
+    $files//c:file!xqd:gendoc(.,"modules/F" || position(),$target,$params),
+    $f=&gt;xqd:store($target || "/files.xml",$xqd:XML),
+    $f=&gt;xqhtml:index-html($params)=&gt;xqd:store($target || "/index.html",$xqd:HTML5),
+    xqd:export-resources($target)
+    )
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:store"></a>4.16&nbsp;xqd:store<div style="float:right"><a href="#xqd:store">#</a></div></h3><dt class="label">Summary</dt><dd>save $data to $url , create fdolder if missing)</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:store</code>
+		  ( 
+			<code class="arg">$data</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>data<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 4 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>parent#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>is-dir#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>create-dir#1</td></tr><tr><td>Fn</td><td>http://expath.org/ns/file</td><td>write#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:store($data,$url as xs:string,$params as map(*))
+{  
+   let $p:=file:parent($url)
+   return (
+           if(file:is-dir($p)) then () else file:create-dir($p),
+           file:write($url,$data,$params)
+           )
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:store2"></a>4.17&nbsp;xqd:store2<div style="float:right"><a href="#xqd:store2">#</a></div></h3><dt class="label">Summary</dt><dd>return intent to save $data to $url with serialization $params</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:store2</code>
+		  ( 
+			<code class="arg">$data</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>data<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:store2($data,$url as xs:string,$params as map(*))
+{  
+  map{"document": $data, "uri":$url,"opts":$params}
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:xqdoc"></a>4.18&nbsp;xqd:xqdoc<div style="float:right"><a href="#xqd:xqdoc">#</a></div></h3><dt class="label">Summary</dt><dd>Generate xqdoc adding custom opts</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:xqdoc</code>
+		  ( 
+			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(xqdoc:xqdoc)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:xqdoc)</code></li></ul></dd><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/inspect</td><td>xqdoc#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions/map</td><td>keys#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:xqdoc($url as xs:string,$opts as map(*))
+as element(xqdoc:xqdoc)
+{  
+  inspect:xqdoc($url)
+  transform with {
+          for $tag in map:keys($opts)
+          return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
+          into xqdoc:module[@type="library"]/xqdoc:comment
+  }
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:xqdoc-html"></a>4.19&nbsp;xqd:xqdoc-html<div style="float:right"><a href="#xqd:xqdoc-html">#</a></div></h3><dt class="label">Summary</dt><dd>transform xqdoc to html</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:xqdoc-html</code>
+		  ( 
+			<code class="arg">$xqd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:xqdoc)</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/xslt</td><td>transform#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqd:xqdoc-html($xqd as element(xqdoc:xqdoc),
+                            $params as map(*)
+                            )
+as document-node()                            
+{  
+xslt:transform($xqd,$xqd:mod-xslt,$params)
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td>http://www.w3.org/2012/xquery</td></tr><tr><td>c</td><td>http://www.w3.org/ns/xproc-step</td></tr><tr><td>store</td><td>quodatum.store</td></tr><tr><td>xp</td><td>expkg-zone58:text.parse</td></tr><tr><td>xqd</td><td>quodatum:build.xqdoc</td></tr><tr><td>xqdoc</td><td>http://www.xqdoc.org/1.0</td></tr><tr><td>xqhtml</td><td>quodatum:build.xqdoc-html</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+ :)
+module namespace xqd = 'quodatum:build.xqdoc';
+import module namespace xp="expkg-zone58:text.parse";
+import module namespace store = 'quodatum.store' at '../store.xqm';
+import module namespace xqhtml = 'quodatum:build.xqdoc-html' at "xqdoc-html.xqm";
+declare namespace c="http://www.w3.org/ns/xproc-step";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+
+declare variable $xqd:HTML5:=map{"method": "html","version":"5.0"};
+declare variable $xqd:XML:=map{"indent": "no"};
+declare variable $xqd:mod-xslt external :="html-module.xsl";
+declare variable $xqd:index-xslt external :="html-index.xsl";
+declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
+declare variable $xqd:cache external :=false();
+
+(:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
+declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
+
+(:~ 
+ : save documentation for files to target
+ : @param $files c:directory-list
+ : @param $target where to save
+ : @param $opts
+ :)
+declare function xqd:save-xq($files,$target,$params as map(*))
+{
+let $f:=  document{$files} transform with { delete  node //c:directory[not(.//c:file)]}
+ 
+return (
+    $files//c:file!xqd:gendoc(.,"modules/F" || position(),$target,$params),
+    $f=&gt;xqd:store($target || "/files.xml",$xqd:XML),
+    $f=&gt;xqhtml:index-html($params)=&gt;xqd:store($target || "/index.html",$xqd:HTML5),
+    xqd:export-resources($target)
+    )
+};   
+ 
+(:~
+ : save xqdoc and html for source file $f
+ : @param $f &lt;c:file/&gt;
+ : @param $target destination folder
+ : @param map
+ : @param 
+ :)
+declare  function xqd:gendoc(
+                    $f as element(c:file),
+                    $op as xs:string, 
+                    $target as xs:string,
+                    $params as map(*)
+)
+ {
+  let $_:= if(file:is-dir($target)) then () else file:create-dir($target)
+   let $target:= file:path-to-native($target)
+  let $ip:= $f/@name/resolve-uri(.,base-uri(.))
+   let $dest:= file:resolve-path($op,$target)
+  
+   let $xqdoc:= xqd:xqdoc($ip,map{"source": $ip})
+   let $xq:= fetch:text($ip)
+   let $params:=map:merge((map{
+                "source": $xq,
+                "filename": $f/@name/string(),
+                "cache": $xqd:cache,
+                "show-private": true(),
+                "resources": "resources/"},
+                $params))
+   return (
+       $xq=&gt;xqd:parse()=&gt;xqd:store($dest || "/xparse.xml",$xqd:XML),
+       $xqdoc=&gt;xqd:store($dest || "/xqdoc.xml",$xqd:XML),
+       $xqdoc=&gt;xqd:xqdoc-html($params)=&gt;xqd:store($dest || "/index.html",$xqd:HTML5)
+        )
+ };
+ 
+(:~
+: create documentation folder map
+: map{"base-uri":.., "files":map(*)*}
+:)
+declare function xqd:read($efolder as xs:string)
+as map(*)
+{
+let $files:= file:list($efolder,true(),"*.xqm")
+let $full:= $files!concat($efolder || "\",.)                                
+return map{ 
+             "base-uri": $efolder,
+             "project": tokenize($efolder,"[/\\]")[last()],
+             "files": for $file at $pos in $files
+                      let $full:=concat($efolder || "\", $file)
+                      let $spath:=translate($file,"\","/")
+                      let $xqdoc:=xqd:xqdoc($full,map{"_source": $spath})
+                      return map{
+                        "path":$file,
+                        "href": ``[modules/F`{ $pos }`/]``,
+                        "namespace": $xqdoc/xqdoc:module/xqdoc:uri/string(),
+                        "xqdoc": $xqdoc,
+                        "xqparse": fetch:text($full)=&gt;xqd:parse()
+                      }
+          
+           }
+
+};
+
+(: return sequence of maps  are imported ns values are where imported:)
+declare function xqd:imports($doc)
+as map(*)*
+{
+for $f in $doc?files
+for $in in $f?xqdoc//xqdoc:import[@type="library"]
+group by $ns:=$in/xqdoc:uri
+return map{ "uri": $ns, "where": $f}
+
+};
+
+ (:~
+ : save xqdoc and html for source file $f
+ : @param $f &lt;c:file/&gt;
+ : @param $target destination folder
+ : @param map
+ : @param 
+ :)
+declare  function xqd:gendoc2(
+                    $f as element(c:file),
+                    $op as xs:string, 
+                    $target as xs:string,
+                    $params as map(*)
+)
+as map(*)* {
+  let $ip:= $f/@name/resolve-uri(.,base-uri(.))
+  let $xqdoc:= xqd:xqdoc($ip,map{})
+  let $xq:= fetch:text($ip)
+  let $params:=map:merge((map{
+                "source": $xq,
+                "filename": $f/@name/string(),
+                "cache": $xqd:cache,
+                "show-private": true(),
+                "root": "../../",
+                "resources": "resources/"},
+                $params))
+   return (
+       xqd:store2(xqd:parse($xq), "xparse.xml",$xqd:XML),
+        xqd:store2($xqdoc,"xqdoc.xml",$xqd:XML),
+        xqd:store2(xqd:xqdoc-html($xqdoc,$params), "index.html",$xqd:HTML5)
+        )
+ };
+(:~ 
+ :save $data to $url , create fdolder if missing) 
+ :)
+declare function xqd:store($data,$url as xs:string,$params as map(*))
+{  
+   let $p:=file:parent($url)
+   return (
+           if(file:is-dir($p)) then () else file:create-dir($p),
+           file:write($url,$data,$params)
+           )
+};
+
+(:~ 
+ : return intent to save $data to $url with serialization $params
+ :)
+declare function xqd:store2($data,$url as xs:string,$params as map(*))
+{  
+  map{"document": $data, "uri":$url,"opts":$params}
+};
+     
+(:~ parse XQuery 
+ : result is &lt;XQuery&gt; or &lt;ERROR&gt;
+ :)
+declare function xqd:parse($xq as xs:string)
+as element(*)
+{  
+  xp:parse($xq || "",map{"lang":"xquery","version":"3.1 basex"}) 
+};
+
+(:~ 
+ : Generate xqdoc adding custom opts 
+ :)
+declare function xqd:xqdoc($url as xs:string,$opts as map(*))
+as element(xqdoc:xqdoc)
+{  
+  inspect:xqdoc($url)
+  transform with {
+          for $tag in map:keys($opts)
+          return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
+          into xqdoc:module[@type="library"]/xqdoc:comment
+  }
+};
+         
+(:~ transform xqdoc to html :)
+declare function xqd:xqdoc-html($xqd as element(xqdoc:xqdoc),
+                            $params as map(*)
+                            )
+as document-node()                            
+{  
+xslt:transform($xqd,$xqd:mod-xslt,$params)
+};
+
+(:~ transform files to html :)
+declare function xqd:index-html($files,
+                            $params as map(*)
+                            )
+as document-node()                            
+{  
+xslt:transform($files,$xqd:index-xslt,$params)
+};
+
+(:~ save runtime support files to $target :)
+declare
+function xqd:export-resources($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+}; 
+
+(:~ save runtime support files to $target :)
+declare %updating
+function xqd:export-resources2($target as xs:string)                       
+as empty-sequence(){  
+archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+};
+
+(:~ return sequence of maps with maps uri and methods :)
+declare function xqd:rxq-paths($state)
+as map(*)* 
+{
+let $reports:= xqd:annots-rxq($state)  
+(: map keyed on uris :)
+let $data:=map:merge(for $report in $reports
+          group by $uri:=$report?annot/xqdoc:literal/string()
+          let $methods:= map:merge(
+                         for $annot in $report
+                         let $hits:=for $method in $xqd:methods
+                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
+                                     where $hit
+                                     return map{$method: $annot}
+                         return if(exists($hits))then $hits else map{"ALL":$annot}
+                       )
+          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
+        ) 
+let $uris:=sort(map:keys($data))        
+return $data?($uris)        
+};
+(:~ 
+ : map for each restxq:path annotation
+  :)
+declare function xqd:annots-rxq($state as map(*))
+as map(*)*
+{
+  for $f at $index in $state?files
+  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
+  return map{
+                "id": $index,
+                "uri": $f?href,
+                "path": $f?path,
+                "annot": $annot,
+                "function": $annot/../../(xqdoc:name/string(),@arity/string()),
+                "description": $annot/../../xqdoc:comment/xqdoc:description/node() 
+                 }
+};
+
+(:~ 
+ : return all matching annotations in xqdoc
+ :)
+declare function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
+ return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+};
+
+(:~ 
+ : return annotations with namespace and name
+  :)
+declare function xqd:methods($annots  as element(xqdoc:annotations),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
+   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
+  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+};
+
+
+
+(: @return map of functions and variables having annotations :)
+declare function xqd:annotation-map($xqdoc)
+{
+  let $ns:=map:merge((
+           map:entry("", "http://www.w3.org/2012/xquery"),
+           $xqdoc//xqdoc:namespace!map:entry(string(@prefix),string(@uri))
+           ))
+  let $f:=$xqdoc//xqdoc:function[xqdoc:annotations]!
+                  map:entry(
+                        xqdoc:name || "#" || @arity,
+                        xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
+                   )
+   let $v:=$xqdoc//xqdoc:variable[xqdoc:annotations]!
+                 map:entry(
+                   xqdoc:name ,
+                   xqd:annots(xqdoc:annotations/xqdoc:annotation,$ns)
+                 )
+  return map:merge(($f,$v))
+         
+};
+
+(: return annotation map for a name 
+ :  map{ $ns: map{
+ :        $aname: $values
+ :      }
+ : }
+ :)
+declare function xqd:annots(
+ $annots as element(xqdoc:annotation)*,
+ $ns as map(*)
+) as map(*)
+{
+ map:merge( 
+ for $a in $annots
+ group by $prefix:=substring-before($a/@name,":")
+ return for $p in $prefix
+                  return map:entry(
+                     $ns?($p),
+                     map:merge((
+                     for $x in $a
+                     group by $aname:=if(contains($x/@name,":")) then substring-after($x/@name,":") else $x/@name
+                     return map:entry($aname,$x/*/string())
+                  ))
+                )
+)};        </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:22:52.354+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

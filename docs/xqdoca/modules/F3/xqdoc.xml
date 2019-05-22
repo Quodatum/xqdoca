@@ -1,5 +1,5 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-15T22:50:45.479+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>tree.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>tree.xqm</h1>
-<p>convert sequence of paths to sequence of xml trees </p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/tree.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:24:21.502+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.meta</xqdoc:uri><xqdoc:name>meta.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>metal.xqm</h1>
+<p>generate meta info about the xqdoc run</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/meta.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
  :
@@ -17,124 +17,41 @@
  :)
  
  (:~
- : &lt;h1&gt;tree.xqm&lt;/h1&gt;
- : &lt;p&gt;convert sequence of paths to sequence of xml trees &lt;/p&gt;
+ : &lt;h1&gt;metal.xqm&lt;/h1&gt;
+ : &lt;p&gt;generate meta info about the xqdoc run&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
  :)
-(:~ 
- : Convert sequence of strings containing a delimiter like "paths" to sequence of xml trees 
+ 
+(:~
+ : Generate meta
  :)
-module namespace tree = 'quodatum:data.tree';
+module namespace _ = 'quodatum:xqdoca.generator.meta';
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 
 (:~
- : convert path(s) to tree
+ : metadata. 
  :)
-declare function tree:build($a as xs:string*)
-as element(*)*
+declare 
+%xqdoca:global("meta","xqDoca run configuration report (XML)")
+%xqdoca:output("xqdoca.xml","xml") 
+function _:restxq($model,$opts)
 {
- tree:build($a,"/")
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+    typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  case   array(*) return "array"
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
 };
-
-(:~
- : @return sequence of nested &lt;directory name=".."&gt; and &lt;file name=".." elements representing source
- :)
-declare function tree:build($a as xs:string*,$delimiter as xs:string)
-as element(*)*
-{
-fn:fold-right($a,
-             (),
-             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
-            )
-}; 
-(:~  convert a path to xml :)
-declare %private 
-function tree:nest($path as xs:string,$delimiter as xs:string)
-as element(*)
-{
-  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
-  let $parts:=fn:tokenize(($path),$delimiter)
-  return fn:fold-right(subsequence($parts,1,count($parts)-1),
-    &lt;file name="{$parts[last()]}" target="{$path}"/&gt;,
-    tree:wrap#2 
-   )
-};
-
-declare %private 
-function tree:wrap($this as xs:string,$acc)
-as element(*)
-{
-  &lt;directory name="{$this}"&gt;{$acc}&lt;/directory&gt;
-};
-
-
-declare %private
-function tree:merge($a1 as element(*)?,$a2 as element(*)?)
-as element(*)*
-{
- if($a1/@name=$a2/@name) then
-      let $n1:=$a1/*
-      let $n2:=$a2/*
-         
-      let $t:=(
-        for $x in fn:distinct-values($n1/@name[.=$n2/@name]) (:both:)
-        return tree:merge($a1/*[@name=$x],$a2/*[@name=$x]),
-        
-        for $x in fn:distinct-values($n1/@name[fn:not(.=$n2/@name)]) (:only $a1 :)
-        return $a1/*[@name=$x],
-        
-        for $x in fn:distinct-values($n2/@name[fn:not(.=$n1/@name)]) (:only $a2 :)
-        return $a2/*[@name=$x]
-      )
-      return tree:wrap($a1/@name,for $x in $t order by $x/@name return $x)
- else 
-     ($a1,$a2)                        
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="tree" uri="quodatum:data.tree"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>convert path(s) to tree</xqdoc:description></xqdoc:comment><xqdoc:name>tree:build</xqdoc:name><xqdoc:signature>declare function tree:build($a as xs:string*) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function tree:build($a as xs:string*)
-as element(*)*
-{
- tree:build($a,"/")
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>build</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description/><xqdoc:return>sequence of nested &lt;directory name=".."&gt; and &lt;file name=".." elements representing source</xqdoc:return></xqdoc:comment><xqdoc:name>tree:build</xqdoc:name><xqdoc:signature>declare function tree:build($a as xs:string*, $delimiter as xs:string) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>delimiter</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function tree:build($a as xs:string*,$delimiter as xs:string)
-as element(*)*
-{
-fn:fold-right($a,
-             (),
-             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
-            )
-}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fold-right</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>nest</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>acc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>delimiter</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>convert a path to xml</xqdoc:description></xqdoc:comment><xqdoc:name>tree:nest</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function tree:nest($path as xs:string, $delimiter as xs:string) as element()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>delimiter</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function tree:nest($path as xs:string,$delimiter as xs:string)
-as element(*)
-{
-  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
-  let $parts:=fn:tokenize(($path),$delimiter)
-  return fn:fold-right(subsequence($parts,1,count($parts)-1),
-    &lt;file name="{$parts[last()]}" target="{$path}"/&gt;,
-    tree:wrap#2 
-   )
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fold-right</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>subsequence</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>delimiter</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>delimiter</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>delimiter</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>tree:wrap</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function tree:wrap($this as xs:string, $acc as item()*) as element()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>this</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>acc</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function tree:wrap($this as xs:string,$acc)
-as element(*)
-{
-  &lt;directory name="{$this}"&gt;{$acc}&lt;/directory&gt;
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>acc</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>tree:merge</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function tree:merge($a1 as element()?, $a2 as element()?) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a1</xqdoc:name><xqdoc:type occurrence="?">element()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>a2</xqdoc:name><xqdoc:type occurrence="?">element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function tree:merge($a1 as element(*)?,$a2 as element(*)?)
-as element(*)*
-{
- if($a1/@name=$a2/@name) then
-      let $n1:=$a1/*
-      let $n2:=$a2/*
-         
-      let $t:=(
-        for $x in fn:distinct-values($n1/@name[.=$n2/@name]) (:both:)
-        return tree:merge($a1/*[@name=$x],$a2/*[@name=$x]),
-        
-        for $x in fn:distinct-values($n1/@name[fn:not(.=$n2/@name)]) (:only $a1 :)
-        return $a1/*[@name=$x],
-        
-        for $x in fn:distinct-values($n2/@name[fn:not(.=$n1/@name)]) (:only $a2 :)
-        return $a2/*[@name=$x]
-      )
-      return tree:wrap($a1/@name,for $x in $t order by $x/@name return $x)
- else 
-     ($a1,$a2)                        
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>t</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a1</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.meta"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>metadata.</xqdoc:description></xqdoc:comment><xqdoc:name>_:restxq</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">meta</xqdoc:literal><xqdoc:literal type="xs:string">xqDoca run configuration report (XML)</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoca.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("meta", "xqDoca run configuration report (XML)") %Q{https://github.com/Quodatum/xqdoca}output("xqdoca.xml", "xml") function _:restxq($model as item()*, $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

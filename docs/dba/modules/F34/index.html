@@ -1,0 +1,292 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>dba - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/util</span>&nbsp;
+			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd>Utility functions.</dd><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p><p>__source : modules/util.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#dba/util">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">dba</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">dba/util</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#util:capitalize"><span class="secno">4.1</span><span class="content" title="">util:capitalize<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:chop"><span class="secno">4.2</span><span class="content" title="">util:chop<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:end"><span class="secno">4.3</span><span class="content" title="">util:end<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:info"><span class="secno">4.4</span><span class="content" title="">util:info<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:item-join"><span class="secno">4.5</span><span class="content" title="">util:item-join<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:query"><span class="secno">4.6</span><span class="content" title="">util:query<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:redirect"><span class="secno">4.7</span><span class="content" title="">util:redirect<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:start"><span class="secno">4.8</span><span class="content" title="">util:start<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#util:update-query"><span class="secno">4.9</span><span class="content" title="">util:update-query<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">29</span> modules, it imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;"><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a><a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm">2</a><a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm">3</a><a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm">4</a><a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm">5</a><a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm">6</a><a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm">7</a><a href="../../modules/F8/index.html" title="databases\resources\resource.xqm">8</a><a href="../../modules/F9/index.html" title="databases\backups.xqm">9</a><a href="../../modules/F10/index.html" title="databases\database.xqm">10</a><a href="../../modules/F11/index.html" title="databases\databases.xqm">11</a><a href="../../modules/F12/index.html" title="databases\db-alter.xqm">12</a><a href="../../modules/F13/index.html" title="databases\db-copy.xqm">13</a><a href="../../modules/F14/index.html" title="databases\db-create.xqm">14</a><a href="../../modules/F15/index.html" title="databases\db-drop.xqm">15</a><a href="../../modules/F16/index.html" title="databases\db-optimize.xqm">16</a></span></div><div><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a><a href="../../modules/F18/index.html" title="files\dir-create.xqm">2</a><a href="../../modules/F19/index.html" title="files\file-delete.xqm">3</a><a href="../../modules/F20/index.html" title="files\file-download.xqm">4</a><a href="../../modules/F21/index.html" title="files\file-start.xqm">5</a><a href="../../modules/F22/index.html" title="files\file-stop.xqm">6</a><a href="../../modules/F23/index.html" title="files\file-upload.xqm">7</a><a href="../../modules/F24/index.html" title="files\files.xqm">8</a></span></div><div><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a><a href="../../modules/F18/index.html" title="files\dir-create.xqm">2</a><a href="../../modules/F19/index.html" title="files\file-delete.xqm">3</a><a href="../../modules/F20/index.html" title="files\file-download.xqm">4</a><a href="../../modules/F21/index.html" title="files\file-start.xqm">5</a><a href="../../modules/F22/index.html" title="files\file-stop.xqm">6</a><a href="../../modules/F23/index.html" title="files\file-upload.xqm">7</a><a href="../../modules/F24/index.html" title="files\files.xqm">8</a></span></div><div><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a><a href="../../modules/F18/index.html" title="files\dir-create.xqm">2</a><a href="../../modules/F19/index.html" title="files\file-delete.xqm">3</a><a href="../../modules/F20/index.html" title="files\file-download.xqm">4</a><a href="../../modules/F21/index.html" title="files\file-start.xqm">5</a><a href="../../modules/F22/index.html" title="files\file-stop.xqm">6</a><a href="../../modules/F23/index.html" title="files\file-upload.xqm">7</a><a href="../../modules/F24/index.html" title="files\files.xqm">8</a></span></div><div><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a><a href="../../modules/F18/index.html" title="files\dir-create.xqm">2</a><a href="../../modules/F19/index.html" title="files\file-delete.xqm">3</a><a href="../../modules/F20/index.html" title="files\file-download.xqm">4</a><a href="../../modules/F21/index.html" title="files\file-start.xqm">5</a><a href="../../modules/F22/index.html" title="files\file-stop.xqm">6</a><a href="../../modules/F23/index.html" title="files\file-upload.xqm">7</a><a href="../../modules/F24/index.html" title="files\files.xqm">8</a></span></div><div><span><a href="../../modules/F25/index.html" title="jobs\job-result.xqm">dba/jobs</a><a href="../../modules/F26/index.html" title="jobs\job-stop.xqm">2</a><a href="../../modules/F27/index.html" title="jobs\jobs.xqm">3</a></span></div><div><span><a href="../../modules/F25/index.html" title="jobs\job-result.xqm">dba/jobs</a><a href="../../modules/F26/index.html" title="jobs\job-stop.xqm">2</a><a href="../../modules/F27/index.html" title="jobs\jobs.xqm">3</a></span></div><div><span><a href="../../modules/F28/index.html" title="logs\log-delete.xqm">dba/logs</a><a href="../../modules/F29/index.html" title="logs\log-download.xqm">2</a><a href="../../modules/F30/index.html" title="logs\logs.xqm">3</a></span></div><div><span><a href="../../modules/F31/index.html" title="modules\html.xqm">dba/html</a></span></div><div><span><a href="../../modules/F35/index.html" title="queries\queries.xqm">dba/queries</a><a href="../../modules/F36/index.html" title="queries\query-close.xqm">2</a><a href="../../modules/F37/index.html" title="queries\query-eval.xqm">3</a><a href="../../modules/F38/index.html" title="queries\query-open.xqm">4</a><a href="../../modules/F39/index.html" title="queries\query-save.xqm">5</a></span></div><div><span><a href="../../modules/F40/index.html" title="sessions\session-kill.xqm">dba/sessions</a><a href="../../modules/F41/index.html" title="sessions\sessions.xqm">2</a></span></div><div><span><a href="../../modules/F40/index.html" title="sessions\session-kill.xqm">dba/sessions</a><a href="../../modules/F41/index.html" title="sessions\sessions.xqm">2</a></span></div><div><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a><a href="../../modules/F45/index.html" title="users\pattern-drop.xqm">2</a><a href="../../modules/F46/index.html" title="users\user-create.xqm">3</a><a href="../../modules/F47/index.html" title="users\user-drop.xqm">4</a><a href="../../modules/F48/index.html" title="users\user-edit.xqm">5</a><a href="../../modules/F49/index.html" title="users\user.xqm">6</a><a href="../../modules/F50/index.html" title="users\users.xqm">7</a></span></div><div><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a><a href="../../modules/F45/index.html" title="users\pattern-drop.xqm">2</a><a href="../../modules/F46/index.html" title="users\user-create.xqm">3</a><a href="../../modules/F47/index.html" title="users\user-drop.xqm">4</a><a href="../../modules/F48/index.html" title="users\user-edit.xqm">5</a><a href="../../modules/F49/index.html" title="users\user.xqm">6</a><a href="../../modules/F50/index.html" title="users\users.xqm">7</a></span></div><div><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a><a href="../../modules/F45/index.html" title="users\pattern-drop.xqm">2</a><a href="../../modules/F46/index.html" title="users\user-create.xqm">3</a><a href="../../modules/F47/index.html" title="users\user-drop.xqm">4</a><a href="../../modules/F48/index.html" title="users\user-edit.xqm">5</a><a href="../../modules/F49/index.html" title="users\user.xqm">6</a><a href="../../modules/F50/index.html" title="users\users.xqm">7</a></span></div><div><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a><a href="../../modules/F45/index.html" title="users\pattern-drop.xqm">2</a><a href="../../modules/F46/index.html" title="users\user-create.xqm">3</a><a href="../../modules/F47/index.html" title="users\user-drop.xqm">4</a><a href="../../modules/F48/index.html" title="users\user-edit.xqm">5</a><a href="../../modules/F49/index.html" title="users\user.xqm">6</a><a href="../../modules/F50/index.html" title="users\users.xqm">7</a></span></div><div><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a><a href="../../modules/F45/index.html" title="users\pattern-drop.xqm">2</a><a href="../../modules/F46/index.html" title="users\user-create.xqm">3</a><a href="../../modules/F47/index.html" title="users\user-drop.xqm">4</a><a href="../../modules/F48/index.html" title="users\user-edit.xqm">5</a><a href="../../modules/F49/index.html" title="users\user.xqm">6</a><a href="../../modules/F50/index.html" title="users\users.xqm">7</a></span></div></div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F32/index.html" title="modules\options.xqm">dba/options</a></span></div><div><span><a href="../../modules/F33/index.html" title="modules\session.xqm">dba/session</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="util:capitalize"></a>4.1&nbsp;util:capitalize<div style="float:right"><a href="#util:capitalize">#</a></div></h3><dt class="label">Summary</dt><dd>Capitalizes a string.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:capitalize</code>
+		  ( 
+			<code class="arg">$string</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>string<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 3 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>upper-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+}</code></pre></details></div><div class="div3"><h3><a id="util:chop"></a>4.2&nbsp;util:chop<div style="float:right"><a href="#util:chop">#</a></div></h3><dt class="label">Summary</dt><dd>Chops a string result to the maximum number of allowed characters.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:chop</code>
+		  ( 
+			<code class="arg">$string</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$max</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>string<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> string</li><li>max<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> maximum number of characters</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string-length#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+}</code></pre></details></div><div class="div3"><h3><a id="util:end"></a>4.3&nbsp;util:end<div style="float:right"><a href="#util:end">#</a></div></h3><dt class="label">Summary</dt><dd>Returns the index of the last result to generate.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:end</code>
+		  ( 
+			<code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>, <code class="arg">$sort</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> current page</li><li>sort<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> sort key</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code></li></ul></dd><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+}</code></pre></details></div><div class="div3"><h3><a id="util:info"></a>4.4&nbsp;util:info<div style="float:right"><a href="#util:info">#</a></div></h3><dt class="label">Summary</dt><dd>Returns a count info for the specified items.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:info</code>
+		  ( 
+			<code class="arg">$items</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$action</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> items</li><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> name of item (singular form)</li><li>action<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> action label (past tense)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count &gt; 1) then 's were ' else ' was ') || $action || '.'
+}</code></pre></details></div><div class="div3"><h3><a id="util:item-join"></a>4.5&nbsp;util:item-join<div style="float:right"><a href="#util:item-join">#</a></div></h3><dt class="label">Summary</dt><dd>Joins sequence entries.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:item-join</code>
+		  ( 
+			<code class="arg">$items</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$sep</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> items</li><li>sep<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()</code> separator</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+}</code></pre></details></div><div class="div3"><h3><a id="util:query"></a>4.6&nbsp;util:query<div style="float:right"><a href="#util:query">#</a></div></h3><dt class="label">Summary</dt><dd>Evaluates a query and returns the result.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:query</code>
+		  ( 
+			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$context</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> query string</li><li>context<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> initial context value</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>References 5 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>dba/util</td><td>query-options#1</td></tr><tr><td>Fn</td><td>dba/util</td><td>chop#2</td></tr><tr><td>Fn</td><td>http://basex.org/modules/xquery</td><td>eval#3</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>serialize#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:query(
+  $query    as xs:string?,
+  $context  as item()*
+) as xs:string {
+  let $limit := options:get($options:MAXCHARS)
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+}</code></pre></details></div><div class="div3"><h3><a id="util:query-options"></a>4.7&nbsp;util:query-options<div style="float:right"><a href="#util:query-options">#</a></div></h3><dt class="label">Summary</dt><dd>Returns the options for evaluating a query.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:query-options</code>
+		  ( 
+			
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>References 5 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>dba/session</td><td>directory#1</td></tr><tr><td>Fn</td><td>dba/session</td><td>get#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : session:directory() || '/' || session:get($session:QUERY)
+  }
+}</code></pre></details></div><div class="div3"><h3><a id="util:redirect"></a>4.8&nbsp;util:redirect<div style="float:right"><a href="#util:redirect">#</a></div></h3><dt class="label">Summary</dt><dd>Convenience function for redirecting to another page from update operations.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:redirect</code>
+		  ( 
+			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> URL</li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code> query parameters</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://basex.org/modules/update</td><td>output#1</td></tr><tr><td>Fn</td><td>http://basex.org/modules/web</td><td>redirect#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+}</code></pre></details></div><div class="div3"><h3><a id="util:start"></a>4.9&nbsp;util:start<div style="float:right"><a href="#util:start">#</a></div></h3><dt class="label">Summary</dt><dd>Returns the index of the first result to generate.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:start</code>
+		  ( 
+			<code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>, <code class="arg">$sort</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> current page</li><li>sort<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> sort key</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code></li></ul></dd><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/options</td><td>get#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+}</code></pre></details></div><div class="div3"><h3><a id="util:update-query"></a>4.10&nbsp;util:update-query<div style="float:right"><a href="#util:update-query">#</a></div></h3><dt class="label">Summary</dt><dd>Runs an updating query.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:update-query</code>
+		  ( 
+			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> query string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>dba/util</td><td>query-options#1</td></tr><tr><td>Fn</td><td>http://basex.org/modules/xquery</td><td>eval-update#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Source</summary><pre><code class="language-xquery">function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, map { }, util:query-options())
+}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td>http://www.w3.org/2012/xquery</td></tr><tr><td>options</td><td>dba/options</td></tr><tr><td>session</td><td>dba/session</td></tr><tr><td>util</td><td>dba/util</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+ : Utility functions.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace util = 'dba/util';
+
+import module namespace options = 'dba/options' at 'options.xqm';
+import module namespace session = 'dba/session' at 'session.xqm';
+
+(:~
+ : Evaluates a query and returns the result.
+ : @param  $query    query string
+ : @param  $context  initial context value
+ : @return serialized result of query
+ :)
+declare function util:query(
+  $query    as xs:string?,
+  $context  as item()*
+) as xs:string {
+  let $limit := options:get($options:MAXCHARS)
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+};
+
+(:~
+ : Runs an updating query.
+ : @param  $query  query string
+ : @return empty sequence
+ :)
+declare %updating function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, map { }, util:query-options())
+};
+
+(:~
+ : Returns the options for evaluating a query.
+ : @return options
+ :)
+declare %private function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : session:directory() || '/' || session:get($session:QUERY)
+  }
+};
+
+(:~
+ : Returns the index of the first result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+};
+
+(:~
+ : Returns the index of the last result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+};
+
+(:~
+ : Chops a string result to the maximum number of allowed characters.
+ : @param  $string  string
+ : @param  $max     maximum number of characters
+ : @return string
+ :)
+declare function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+};
+
+(:~
+ : Joins sequence entries.
+ : @param  $items  items
+ : @param  $sep    separator
+ : @return result
+ :)
+declare function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+};
+
+(:~
+ : Returns a count info for the specified items.
+ : @param  $items   items
+ : @param  $name    name of item (singular form)
+ : @param  $action  action label (past tense)
+ : @return result
+ :)
+declare function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count &gt; 1) then 's were ' else ' was ') || $action || '.'
+};
+
+(:~
+ : Capitalizes a string.
+ : @param  $string  string
+ : @return capitalized string
+ :)
+declare function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+};
+
+(:~
+ : Convenience function for redirecting to another page from update operations.
+ : @param  $url     URL
+ : @param  $params  query parameters
+ :)
+declare %updating function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+};
+</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
+            at 2019-05-22T11:25:31.961+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

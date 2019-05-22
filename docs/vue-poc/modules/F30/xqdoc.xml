@@ -1,0 +1,28 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-dbimport.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Import a file or directory into a database</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
+: Import a file or directory into a database
+: @author andy bunce
+: @since july 2018
+:)
+import module namespace dbtools = 'quodatum.dbtools' at "../../../lib/dbtools.xqm";
+
+
+(:~ URL of file or folder to import
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/entities
+  :)
+declare variable $srcpath as xs:anyURI  external :="C:/Users/andy/git/vue-poc/src/vue-poc/models/entities";
+
+(:~ Target BaseX db root path for imported files 
+ : @default vuepoc-test
+ :)
+declare variable $targetpath as xs:anyURI external :="/vuepoc-test";
+
+(:~ unused boolean test
+ : @default true
+  :)
+declare variable $boolean as xs:boolean  external :=false();
+ 
+let $todo:="target"                                 
+return dbtools:sync-from-path($targetpath, $srcpath)
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="dbtools" uri="quodatum.dbtools"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>srcpath</xqdoc:name><xqdoc:comment><xqdoc:description>URL of file or folder to import</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/vue-poc/src/vue-poc/models/entities</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>targetpath</xqdoc:name><xqdoc:comment><xqdoc:description>Target BaseX db root path for imported files</xqdoc:description><xqdoc:custom tag="default">vuepoc-test</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>boolean</xqdoc:name><xqdoc:comment><xqdoc:description>unused boolean test</xqdoc:description><xqdoc:custom tag="default">true</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $todo:="target"                                 
+return dbtools:sync-from-path($targetpath, $srcpath)</xqdoc:body><xqdoc:body>let $todo:="target"                                 
+return dbtools:sync-from-path($targetpath, $srcpath)</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.dbtools</xqdoc:uri><xqdoc:name>sync-from-path</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>targetpath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>srcpath</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,148 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/query-a</xqdoc:uri><xqdoc:name>query-a.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>evaluTE query library</xqdoc:description><xqdoc:author>Andy Bunce, 2018</xqdoc:author><xqdoc:custom tag="__source">lib/query-a.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : evaluTE query library
+ :
+ : @author Andy Bunce, 2018
+ :)
+module namespace query-a = 'vue-poc/query-a';
+
+import module namespace request = "http://exquery.org/ns/request";
+
+
+(:~
+ : attributes of a stored query including parameters and updating status.
+ : @return json format
+ :)
+declare function query-a:inspect($mod as xs:anyURI)
+as element(json)
+{
+let $updating:=xquery:parse-uri($mod)/@updating/string()
+let $d:=inspect:module($mod)
+let $vars:=$d/variable[@external="true"]
+return &lt;json type="object"&gt;
+   &lt;description&gt;{ $d/description/string() }&lt;/description&gt;
+   &lt;updating type="boolean" &gt;{  $updating }&lt;/updating&gt;
+    &lt;url &gt;{  $mod }&lt;/url&gt;
+  &lt;fields type="array"&gt;{  
+  $vars!
+        &lt;_ type="object"&gt;
+         &lt;model&gt;{ @name/string() }&lt;/model&gt;
+         &lt;label&gt;{ description/string() }&lt;/label&gt;
+         &lt;type&gt;{ @type/string() }&lt;/type&gt;
+        &lt;/_&gt; 
+  }&lt;/fields&gt;
+   &lt;values type="object"&gt;{
+   $vars!element{@name}{default_tag/string()}
+   }&lt;/values&gt;
+   &lt;/json&gt;
+};
+
+(:~ 
+ :convert type
+:)
+declare function query-a:cast($val as item(),$type as xs:string)
+as item() 
+{
+  switch($type)
+   case "xs:anyURI" return xs:anyURI($val)
+   default          return $val
+};
+
+
+(:~
+ : @return map of request parameter names typed
+ :)
+declare 
+function query-a:params($mod as xs:anyURI)
+as map(*)
+{
+  let $vars:=inspect:module($mod=&gt;trace("params"))/variable[@external="true"]
+  return map:merge(
+          $vars[@name=request:parameter-names()]!
+              map:entry(@name,query-a:cast(request:parameter(@name/string()),@type))
+
+           )
+};
+
+declare
+%updating  
+function query-a:run($query as xs:anyURI,$params as map(*))
+{ 
+let $updating:=xquery:parse-uri($query)/@updating/boolean(.)
+return if($updating) then
+       xquery:invoke-update($query,$params)
+     else 
+       &lt;json type="object"&gt;
+               &lt;res&gt;{ xquery:invoke($query,$params)}&lt;/res&gt;
+               &lt;params&gt;todo&lt;/params&gt;
+       &lt;/json&gt;=&gt;update:output()
+};
+
+declare
+%updating  
+function query-a:run-json($query as xs:anyURI,$params as map(*))
+{ 
+  xquery:invoke($query,$params)=&gt;update:output()
+};
+
+
+declare
+%updating 
+function query-a:update($query as xs:anyURI,$params as map(*))
+{
+    xquery:invoke-update($query,$params)
+};
+
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="query-a" uri="vue-poc/query-a"/><xqdoc:namespace prefix="request" uri="http://exquery.org/ns/request"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://exquery.org/ns/request</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>attributes of a stored query including parameters and updating status.</xqdoc:description><xqdoc:return>json format</xqdoc:return></xqdoc:comment><xqdoc:name>query-a:inspect</xqdoc:name><xqdoc:signature>declare function query-a:inspect($mod as xs:anyURI) as element(json)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>mod</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(json)</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:inspect($mod as xs:anyURI)
+as element(json)
+{
+let $updating:=xquery:parse-uri($mod)/@updating/string()
+let $d:=inspect:module($mod)
+let $vars:=$d/variable[@external="true"]
+return &lt;json type="object"&gt;
+   &lt;description&gt;{ $d/description/string() }&lt;/description&gt;
+   &lt;updating type="boolean" &gt;{  $updating }&lt;/updating&gt;
+    &lt;url &gt;{  $mod }&lt;/url&gt;
+  &lt;fields type="array"&gt;{  
+  $vars!
+        &lt;_ type="object"&gt;
+         &lt;model&gt;{ @name/string() }&lt;/model&gt;
+         &lt;label&gt;{ description/string() }&lt;/label&gt;
+         &lt;type&gt;{ @type/string() }&lt;/type&gt;
+        &lt;/_&gt; 
+  }&lt;/fields&gt;
+   &lt;values type="object"&gt;{
+   $vars!element{@name}{default_tag/string()}
+   }&lt;/values&gt;
+   &lt;/json&gt;
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>parse-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>updating</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>convert type</xqdoc:description></xqdoc:comment><xqdoc:name>query-a:cast</xqdoc:name><xqdoc:signature>declare function query-a:cast($val as item(), $type as xs:string) as item()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>val</xqdoc:name><xqdoc:type>item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>type</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>item()</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:cast($val as item(),$type as xs:string)
+as item() 
+{
+  switch($type)
+   case "xs:anyURI" return xs:anyURI($val)
+   default          return $val
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>anyURI</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>val</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>val</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description/><xqdoc:return>map of request parameter names typed</xqdoc:return></xqdoc:comment><xqdoc:name>query-a:params</xqdoc:name><xqdoc:signature>declare function query-a:params($mod as xs:anyURI) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>mod</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:params($mod as xs:anyURI)
+as map(*)
+{
+  let $vars:=inspect:module($mod=&gt;trace("params"))/variable[@external="true"]
+  return map:merge(
+          $vars[@name=request:parameter-names()]!
+              map:entry(@name,query-a:cast(request:parameter(@name/string()),@type))
+
+           )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://exquery.org/ns/request</xqdoc:uri><xqdoc:name>parameter-names</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>vue-poc/query-a</xqdoc:uri><xqdoc:name>cast</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://exquery.org/ns/request</xqdoc:uri><xqdoc:name>parameter</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>query-a:run</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function query-a:run($query as xs:anyURI, $params as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:run($query as xs:anyURI,$params as map(*))
+{ 
+let $updating:=xquery:parse-uri($query)/@updating/boolean(.)
+return if($updating) then
+       xquery:invoke-update($query,$params)
+     else 
+       &lt;json type="object"&gt;
+               &lt;res&gt;{ xquery:invoke($query,$params)}&lt;/res&gt;
+               &lt;params&gt;todo&lt;/params&gt;
+       &lt;/json&gt;=&gt;update:output()
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>parse-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>boolean</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>invoke-update</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>invoke</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>updating</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>query-a:run-json</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function query-a:run-json($query as xs:anyURI, $params as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:run-json($query as xs:anyURI,$params as map(*))
+{ 
+  xquery:invoke($query,$params)=&gt;update:output()
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>invoke</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>query-a:update</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function query-a:update($query as xs:anyURI, $params as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function query-a:update($query as xs:anyURI,$params as map(*))
+{
+    xquery:invoke-update($query,$params)
+}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>invoke-update</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

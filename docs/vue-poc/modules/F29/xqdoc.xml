@@ -1,0 +1,93 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.rest</xqdoc:uri><xqdoc:name>task.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>task</xqdoc:description><xqdoc:custom tag="__source">features/tasks/task/task.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : task
+ :)
+module namespace vue-rest = 'quodatum:vue.rest';
+
+
+(:~
+ : run compile task.
+ :)
+declare
+%rest:POST %rest:path("/vue-poc/api/tasks/task")
+%rest:form-param("name", "{$name}")
+%rest:produces("application/json")
+%output:method("json")
+%updating   
+function vue-rest:vue($name)   
+{
+  update:output(&lt;json type="object"&gt;&lt;msg&gt; { $name }.&lt;/msg&gt;&lt;/json&gt;)
+};
+  
+(:~
+: new app
+:)
+declare function vue-rest:new($name as xs:string){
+    let $archive:=file:read-binary(fn:resolve-uri('./data/vuetif.zip'))
+   let $contents := archive:extract-binary($archive)
+   let $entries:= archive:entries($archive)
+   (: update paths :)
+   let $entries:=$entries!fn:replace(.,'vuetif',$name)
+   let $contents:=$contents!vue-rest:update-extract(.,'[Vv]uetif',$name)
+
+   return archive:create($entries,$contents)
+};
+
+(:~ 
+ : test for text
+ : @see http://stackoverflow.com/questions/2644938/how-to-tell-binary-from-text-files-in-linux
+ :) 
+declare function vue-rest:is-text($b as xs:base64Binary )
+as xs:boolean{
+    fn:empty(bin:find($b, 0,bin:hex("00")))
+};
+
+(:~ 
+ : if context is text replace string else return unchanged
+ :) 
+declare function vue-rest:update-extract($extract as xs:base64Binary,
+                                $from as xs:string,
+                                $to as xs:string )
+as xs:base64Binary{
+  if(vue-rest:is-text($extract))
+  then try{
+  (: escape chars etc :)
+    let $t:=convert:binary-to-string($extract)
+    let $t:=fn:replace($t,$from,$to)
+    return convert:string-to-base64($t)
+    } catch * {
+    $extract
+    }
+  else 
+    $extract
+};
+  </xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="vue-rest" uri="quodatum:vue.rest"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>run compile task.</xqdoc:description></xqdoc:comment><xqdoc:name>vue-rest:vue</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/vue-poc/api/tasks/task</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:produces"><xqdoc:literal type="xs:string">application/json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/vue-poc/api/tasks/task") %rest:form-param("name", "{$name}") %rest:produces("application/json") %output:method("json") %updating function vue-rest:vue($name as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-rest:vue($name)   
+{
+  update:output(&lt;json type="object"&gt;&lt;msg&gt; { $name }.&lt;/msg&gt;&lt;/json&gt;)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>new app</xqdoc:description></xqdoc:comment><xqdoc:name>vue-rest:new</xqdoc:name><xqdoc:signature>declare function vue-rest:new($name as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function vue-rest:new($name as xs:string){
+    let $archive:=file:read-binary(fn:resolve-uri('./data/vuetif.zip'))
+   let $contents := archive:extract-binary($archive)
+   let $entries:= archive:entries($archive)
+   (: update paths :)
+   let $entries:=$entries!fn:replace(.,'vuetif',$name)
+   let $contents:=$contents!vue-rest:update-extract(.,'[Vv]uetif',$name)
+
+   return archive:create($entries,$contents)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>read-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>extract-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>entries</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:vue.rest</xqdoc:uri><xqdoc:name>update-extract</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>create</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>archive</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>archive</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>entries</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>contents</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>entries</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>contents</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>test for text</xqdoc:description><xqdoc:see>http://stackoverflow.com/questions/2644938/how-to-tell-binary-from-text-files-in-linux</xqdoc:see></xqdoc:comment><xqdoc:name>vue-rest:is-text</xqdoc:name><xqdoc:signature>declare function vue-rest:is-text($b as xs:base64Binary) as xs:boolean</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>b</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function vue-rest:is-text($b as xs:base64Binary )
+as xs:boolean{
+    fn:empty(bin:find($b, 0,bin:hex("00")))
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>find</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/binary</xqdoc:uri><xqdoc:name>hex</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>b</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>if context is text replace string else return unchanged</xqdoc:description></xqdoc:comment><xqdoc:name>vue-rest:update-extract</xqdoc:name><xqdoc:signature>declare function vue-rest:update-extract($extract as xs:base64Binary, $from as xs:string, $to as xs:string) as xs:base64Binary</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>extract</xqdoc:name><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>from</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>to</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:base64Binary</xqdoc:type></xqdoc:return><xqdoc:body>function vue-rest:update-extract($extract as xs:base64Binary,
+                                $from as xs:string,
+                                $to as xs:string )
+as xs:base64Binary{
+  if(vue-rest:is-text($extract))
+  then try{
+  (: escape chars etc :)
+    let $t:=convert:binary-to-string($extract)
+    let $t:=fn:replace($t,$from,$to)
+    return convert:string-to-base64($t)
+    } catch * {
+    $extract
+    }
+  else 
+    $extract
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:vue.rest</xqdoc:uri><xqdoc:name>is-text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/convert</xqdoc:uri><xqdoc:name>binary-to-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/convert</xqdoc:uri><xqdoc:name>string-to-base64</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extract</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extract</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>t</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>from</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>t</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extract</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extract</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

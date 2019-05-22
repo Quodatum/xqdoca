@@ -1,0 +1,33 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:~ 
+ : test tree
+ :)
+<MainModule><Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>tree</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.data.tree'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"tree.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>TEST1</QName><TOKEN>:=</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN>
+
+    <Expr><StringLiteral>"/api/environment"</StringLiteral><TOKEN>,</TOKEN>
+    <StringLiteral>"/api/execute"</StringLiteral><TOKEN>,</TOKEN>
+    <StringLiteral>"/api/library"</StringLiteral><TOKEN>,</TOKEN>
+    <StringLiteral>"/api/library/{$id}"</StringLiteral></Expr>
+<TOKEN>)</TOKEN></ParenthesizedExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>unit:test</QName></Annotation>
+(:~
+ : smoke test
+ :)
+<FunctionDecl><TOKEN>function</TOKEN> <QName>tree:test</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>t</QName><TOKEN>:=</TOKEN><FunctionCall><QName>tree:build</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>TEST1</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause> 
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>unit:assert</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>fn:true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>t</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>unit:test</QName></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>tree:test3</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>t</QName><TOKEN>:=</TOKEN><FunctionCall><QName>unparsed-text-lines</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"tree-data/paths.txt"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause> 
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>unit:assert</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>fn:true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>t</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog>
+
+<RelativePathExpr><FunctionCall><QName>tree:build</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>TEST1</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>directory</QName><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"api"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></MainModule></Module>
+<EOF/></XQuery>

@@ -1,0 +1,222 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:25:31.961+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>util.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Utility functions.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">modules/util.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Utility functions.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace util = 'dba/util';
+
+import module namespace options = 'dba/options' at 'options.xqm';
+import module namespace session = 'dba/session' at 'session.xqm';
+
+(:~
+ : Evaluates a query and returns the result.
+ : @param  $query    query string
+ : @param  $context  initial context value
+ : @return serialized result of query
+ :)
+declare function util:query(
+  $query    as xs:string?,
+  $context  as item()*
+) as xs:string {
+  let $limit := options:get($options:MAXCHARS)
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+};
+
+(:~
+ : Runs an updating query.
+ : @param  $query  query string
+ : @return empty sequence
+ :)
+declare %updating function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, map { }, util:query-options())
+};
+
+(:~
+ : Returns the options for evaluating a query.
+ : @return options
+ :)
+declare %private function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : session:directory() || '/' || session:get($session:QUERY)
+  }
+};
+
+(:~
+ : Returns the index of the first result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+};
+
+(:~
+ : Returns the index of the last result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+};
+
+(:~
+ : Chops a string result to the maximum number of allowed characters.
+ : @param  $string  string
+ : @param  $max     maximum number of characters
+ : @return string
+ :)
+declare function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+};
+
+(:~
+ : Joins sequence entries.
+ : @param  $items  items
+ : @param  $sep    separator
+ : @return result
+ :)
+declare function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+};
+
+(:~
+ : Returns a count info for the specified items.
+ : @param  $items   items
+ : @param  $name    name of item (singular form)
+ : @param  $action  action label (past tense)
+ : @return result
+ :)
+declare function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count &gt; 1) then 's were ' else ' was ') || $action || '.'
+};
+
+(:~
+ : Capitalizes a string.
+ : @param  $string  string
+ : @return capitalized string
+ :)
+declare function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+};
+
+(:~
+ : Convenience function for redirecting to another page from update operations.
+ : @param  $url     URL
+ : @param  $params  query parameters
+ :)
+declare %updating function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="options" uri="dba/options"/><xqdoc:namespace prefix="session" uri="dba/session"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/options</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/session</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Evaluates a query and returns the result.</xqdoc:description><xqdoc:param>$query    query string</xqdoc:param><xqdoc:param>$context  initial context value</xqdoc:param><xqdoc:return>serialized result of query</xqdoc:return></xqdoc:comment><xqdoc:name>util:query</xqdoc:name><xqdoc:signature>declare function util:query($query as xs:string?, $context as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>context</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:query(
+  $query    as xs:string?,
+  $context  as item()*
+) as xs:string {
+  let $limit := options:get($options:MAXCHARS)
+  let $result := xquery:eval($query, map { '': $context }, util:query-options())
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>eval</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>query-options</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>chop</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>serialize</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MAXCHARS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>context</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>limit</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Runs an updating query.</xqdoc:description><xqdoc:param>$query  query string</xqdoc:param><xqdoc:return>empty sequence</xqdoc:return></xqdoc:comment><xqdoc:name>util:update-query</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function util:update-query($query as xs:string?) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, map { }, util:query-options())
+}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>eval-update</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>query-options</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the options for evaluating a query.</xqdoc:description><xqdoc:return>options</xqdoc:return></xqdoc:comment><xqdoc:name>util:query-options</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function util:query-options() as map(*)</xqdoc:signature><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : session:directory() || '/' || session:get($session:QUERY)
+  }
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/session</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/session</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>TIMEOUT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MEMORY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>PERMISSION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/session</xqdoc:uri><xqdoc:name>QUERY</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns the index of the first result to generate.</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:start</xqdoc:name><xqdoc:signature>declare function util:start($page as xs:integer, $sort as xs:string) as xs:integer</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MAXROWS</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns the index of the last result to generate.</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:end</xqdoc:name><xqdoc:signature>declare function util:end($page as xs:integer, $sort as xs:string) as xs:integer</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>page</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MAXROWS</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Chops a string result to the maximum number of allowed characters.</xqdoc:description><xqdoc:param>$string  string</xqdoc:param><xqdoc:param>$max     maximum number of characters</xqdoc:param><xqdoc:return>string</xqdoc:return></xqdoc:comment><xqdoc:name>util:chop</xqdoc:name><xqdoc:signature>declare function util:chop($string as xs:string, $max as xs:integer) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>string</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>max</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string-length</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Joins sequence entries.</xqdoc:description><xqdoc:param>$items  items</xqdoc:param><xqdoc:param>$sep    separator</xqdoc:param><xqdoc:return>result</xqdoc:return></xqdoc:comment><xqdoc:name>util:item-join</xqdoc:name><xqdoc:signature>declare function util:item-join($items as item()*, $sep as item()) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>items</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sep</xqdoc:name><xqdoc:type>item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sep</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Returns a count info for the specified items.</xqdoc:description><xqdoc:param>$items   items</xqdoc:param><xqdoc:param>$name    name of item (singular form)</xqdoc:param><xqdoc:param>$action  action label (past tense)</xqdoc:param><xqdoc:return>result</xqdoc:return></xqdoc:comment><xqdoc:name>util:info</xqdoc:name><xqdoc:signature>declare function util:info($items as item()*, $name as xs:string, $action as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>items</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>action</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count &gt; 1) then 's were ' else ' was ') || $action || '.'
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>action</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Capitalizes a string.</xqdoc:description><xqdoc:param>$string  string</xqdoc:param><xqdoc:return>capitalized string</xqdoc:return></xqdoc:comment><xqdoc:name>util:capitalize</xqdoc:name><xqdoc:signature>declare function util:capitalize($string as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>string</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>upper-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Convenience function for redirecting to another page from update operations.</xqdoc:description><xqdoc:param>$url     URL</xqdoc:param><xqdoc:param>$params  query parameters</xqdoc:param></xqdoc:comment><xqdoc:name>util:redirect</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function util:redirect($url as xs:string, $params as map(*)) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:body>function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

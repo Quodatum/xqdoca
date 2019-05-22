@@ -1,0 +1,30 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-validate.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>schema validation task</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
+: schema validation task
+: @author andy bunce
+: @since july 2018
+:)
+
+
+import module namespace qv = 'quodatum.validate' at "../../lib/validate.xqm";
+
+(:~ URL of the doc to validate
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/entities/adminlog.xml
+  :)
+declare variable $doc as xs:anyURI  external :=
+"C:/Users/andy/git/vue-poc/src/vue-poc/models/entities/adminlog.xml" cast as xs:anyURI;
+
+
+(:~ URL of the schema to use 
+ : @default C:/Users/andy/git/vue-poc/src/vue-poc/models/schemas/entity.xsd
+ :)
+declare variable $schema as xs:anyURI external :=
+"C:/Users/andy/git/vue-poc/src/vue-poc/models/schemas/entity.xsd" cast as xs:anyURI;
+                                 
+let $validators:=qv:xsd(?,$schema)
+let $report:= qv:validation($doc ,$validators,attribute type {"xsd"})
+return qv:json($report,map{})
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="qv" uri="quodatum.validate"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum.validate</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables><xqdoc:variable><xqdoc:name>doc</xqdoc:name><xqdoc:comment><xqdoc:description>URL of the doc to validate</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/vue-poc/src/vue-poc/models/entities/adminlog.xml</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>schema</xqdoc:name><xqdoc:comment><xqdoc:description>URL of the schema to use</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/vue-poc/src/vue-poc/models/schemas/entity.xsd</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $validators:=qv:xsd(?,$schema)
+let $report:= qv:validation($doc ,$validators,attribute type {"xsd"})
+return qv:json($report,map{})</xqdoc:body><xqdoc:body>let $validators:=qv:xsd(?,$schema)
+let $report:= qv:validation($doc ,$validators,attribute type {"xsd"})
+return qv:json($report,map{})</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>xsd</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>validation</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum.validate</xqdoc:uri><xqdoc:name>json</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>schema</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>validators</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

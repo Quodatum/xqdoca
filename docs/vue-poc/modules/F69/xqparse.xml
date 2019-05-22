@@ -1,0 +1,49 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:~
+: A(nother) templating Engine for XQuery (BaseX specific)
+: specials:
+: partial(file,name,sequence)
+:
+: @author andy bunce
+: @since sept 2012
+: @licence apache 2
+:)
+ 
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>txq</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum.txq'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+<Prolog><DefaultNamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>default</TOKEN> <TOKEN>function</TOKEN> <TOKEN>namespace</TOKEN> <StringLiteral>'quodatum.txq'</StringLiteral></DefaultNamespaceDecl><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xquery</NCName> <TOKEN>=</TOKEN> <StringLiteral>"http://basex.org/modules/xquery"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+ 
+(:~
+: template function
+: @param template url to fill
+: @param map name and value to apply
+: @return updated doc from map
+:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>render</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>template</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><TOKEN>map</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><TOKEN>map</TOKEN><TOKEN>:=</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"partial"</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>partial</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>?</TOKEN><TOKEN>,</TOKEN><TOKEN>?</TOKEN><TOKEN>,</TOKEN><TOKEN>?</TOKEN><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>template</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>xquery:invoke</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>template</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+ 
+(:~
+: template function with wrapping layout
+: @param $layout outer template with $body placeholder to insert $template
+: @return updated doc from map
+:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>render</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>template</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><TOKEN>map</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>layout</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>content</QName><TOKEN>:=</TOKEN><FunctionCall><QName>render</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>template</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+    <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><TOKEN>map</TOKEN><TOKEN>:=</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"body"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>content</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>render</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>layout</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+ 
+(:~
+: partial template function: evaluate part for each value in sequence
+: @return updated doc from map
+:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>partial</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>part</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>name</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>seq</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><TOKEN>map</TOKEN></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>base</QName></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+    <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>s</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>seq</QName></VarRef></ForBinding></ForClause>
+    <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><TOKEN>map</TOKEN><TOKEN>:=</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>s</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>render</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>fn:resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>part</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>base</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module><EOF/></XQuery>

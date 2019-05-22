@@ -1,0 +1,26 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.data.history</xqdoc:uri><xqdoc:name>history.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>log an event</xqdoc:description><xqdoc:custom tag="__source">lib/history.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+ : log an event
+ :)
+module namespace hlog = 'quodatum.data.history';
+declare namespace hist="urn:quodatum:vue-poc.history";
+declare variable $hlog:doc as element(hist:history):=db:open("vue-poc","/history.xml")/hist:history;
+
+declare 
+%updating
+function hlog:save($item as element(*))
+{
+let $id:=$hlog:doc/@next-id/string(.)
+let $n:=&lt;hist:event id="{$id}" when="{fn:current-dateTime()}" user="admin"&gt;{$item}&lt;/hist:event&gt;
+return (insert node $n as first into $hlog:doc,
+            replace value of node $hlog:doc/@next-id with number($id)+1 
+             )
+};
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="hlog" uri="quodatum.data.history"/><xqdoc:namespace prefix="hist" uri="urn:quodatum:vue-poc.history"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports/><xqdoc:variables><xqdoc:variable><xqdoc:name>hlog:doc</xqdoc:name><xqdoc:type>element(hist:history)</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:name>hlog:save</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function hlog:save($item as element()) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>item</xqdoc:name><xqdoc:type>element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function hlog:save($item as element(*))
+{
+let $id:=$hlog:doc/@next-id/string(.)
+let $n:=&lt;hist:event id="{$id}" when="{fn:current-dateTime()}" user="admin"&gt;{$item}&lt;/hist:event&gt;
+return (insert node $n as first into $hlog:doc,
+            replace value of node $hlog:doc/@next-id with number($id)+1 
+             )
+}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum.data.history</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum.data.history</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum.data.history</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

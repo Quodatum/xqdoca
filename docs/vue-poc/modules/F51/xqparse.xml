@@ -1,0 +1,137 @@
+<XQuery>(:~
+ : compile vue files to js
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>vue</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:vue.compile'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>html5</NCName><TOKEN>=</TOKEN><StringLiteral>"text.html5"</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"html5parse.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>fw</NCName><TOKEN>=</TOKEN><StringLiteral>"quodatum:file.walker"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+<NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>c</NCName><TOKEN>=</TOKEN><StringLiteral>"http://www.w3.org/ns/xproc-step"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+
+
+<NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>functx</NCName> <TOKEN>=</TOKEN> <StringLiteral>"http://www.functx.com"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue:FEATURES</QName><TOKEN>:=</TOKEN><StringLiteral>"features/"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue:COMPONENTS</QName><TOKEN>:=</TOKEN><StringLiteral>"components/"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue:CORE</QName><TOKEN>:=</TOKEN><StringLiteral>"components/core.js"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue:FILTERS</QName><TOKEN>:=</TOKEN><StringLiteral>"components/filters.js"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>vue:DEST</QName><TOKEN>:=</TOKEN><StringLiteral>"static/app-gen.js"</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : generate javascript vue call from vue files in source folder and core.js
+ : @param $doc is a ch.digitalfondue.jfiveparse.Document
+ : @param $url for vue file
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:feature</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>doc</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>isComp</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:boolean</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>p</QName><TOKEN>:=</TOKEN><FunctionCall><QName>vue:parse</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>script</QName><TOKEN>:=</TOKEN> <ArrowExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>script</NCName></Lookup></PostfixExpr><TOKEN>=&gt;</TOKEN><QName>substring-after</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"{"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+
+<ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>id</NCName></Lookup></PostfixExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> 
+           <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> 
+       <TOKEN>else</TOKEN> 
+        <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>isComp</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+           <StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>
+// src: </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+Vue.component('</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>id</NCName></Lookup></PostfixExpr> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>',{template:` </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>template</NCName></Lookup></PostfixExpr> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars> `,
+      </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN><VarRef><TOKEN>$</TOKEN><QName>script</QName></VarRef><TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+      );
+      </StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor>
+       <TOKEN>else</TOKEN>
+         <StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>
+// src: </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+const </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <FunctionCall><QName>vue:capitalize-first</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>id</NCName></Lookup></PostfixExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>=Vue.extend({template:` </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>template</NCName></Lookup></PostfixExpr> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars> `,
+      </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>script</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+      );
+      </StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor></IfExpr></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : parse a vue file to extract template and script
+ : @return  map{"id":$id,"template":$template,"script":$script}
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:parse</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>doc</QName></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>tempNode</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>html5:getElementFirstByTagName</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"template"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>template</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>html5:getInnerHTML</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>tempNode</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>id</QName>  <TOKEN>:=</TOKEN> <ArrowExpr><FunctionCall><QName>html5:getAttribute</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>tempNode</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"id"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=&gt;</TOKEN><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"ID"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>script</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>html5:getElementFirstByTagName</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"script"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>script</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>html5:getInnerHTML</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>script</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"id"</StringLiteral><TOKEN>:</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN><MapConstructorEntry><StringLiteral>"template"</StringLiteral><TOKEN>:</TOKEN><VarRef><TOKEN>$</TOKEN><QName>template</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN><MapConstructorEntry><StringLiteral>"script"</StringLiteral><TOKEN>:</TOKEN><VarRef><TOKEN>$</TOKEN><QName>script</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:capitalize-first</QName>
+  <TOKEN>(</TOKEN> <Param><TOKEN>$</TOKEN><QName>arg</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param> <TOKEN>)</TOKEN>  <TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType> 
+<EnclosedExpr><TOKEN>{</TOKEN>
+   <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>upper-case</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>arg</QName></VarRef><TOKEN>,</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>,</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>arg</QName></VarRef><TOKEN>,</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(: filename of features:)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:feature-files</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>proj</QName></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>FEATURES</QName><TOKEN>:=</TOKEN><ArrowExpr><StringLiteral>"features/"</StringLiteral><TOKEN>=&gt;</TOKEN><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+ <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>files</QName><TOKEN>:=</TOKEN>  <RelativePathExpr><FunctionCall><QName>fw:directory-list</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>FEATURES</QName></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"include-filter"</StringLiteral><TOKEN>:</TOKEN><StringLiteral>".*\.vue"</StringLiteral></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+             <TOKEN>//</TOKEN><AxisStep><QName>c:file</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+ <ReturnClause><TOKEN>return</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>files</QName></VarRef></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:feature-build</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>isComp</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:boolean</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <ArrowExpr><FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=&gt;</TOKEN><QName>html5:doc</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList><TOKEN>=&gt;</TOKEN><QName>vue:feature</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef> <TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>isComp</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : compile vue code to "static/app-gen.js"
+ : @param $proj root folder e.g "C:/Users/andy/git/vue-poc/src/vue-poc/"
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:compile</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>proj</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>FEATURES</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"features/"</StringLiteral><TOKEN>,</TOKEN><ArrowExpr><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>=&gt;</TOKEN><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"proj:"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>COMPONENTS</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"components/"</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>js</QName><TOKEN>:=</TOKEN><FunctionCall><QName>vue:filelist</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"components/"</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>".*\.js"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>CORE</QName><TOKEN>:=</TOKEN><ArrowExpr><StringLiteral>"core.js"</StringLiteral><TOKEN>=&gt;</TOKEN><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ROUTER</QName><TOKEN>:=</TOKEN><ArrowExpr><StringLiteral>"router.js"</StringLiteral><TOKEN>=&gt;</TOKEN><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>APP</QName><TOKEN>:=</TOKEN><ArrowExpr><StringLiteral>"app.vue"</StringLiteral><TOKEN>=&gt;</TOKEN><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>DEST</QName><TOKEN>:=</TOKEN><ArrowExpr><StringLiteral>"static/app-gen.js"</StringLiteral><TOKEN>=&gt;</TOKEN><QName>file:resolve-path</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
+
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>files</QName><TOKEN>:=</TOKEN><FunctionCall><QName>vue:feature-files</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>proj</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>feats</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>files</QName></VarRef><TOKEN>!</TOKEN><FunctionCall><QName>vue:feature-build</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>files</QName><TOKEN>:=</TOKEN> <RelativePathExpr><FunctionCall><QName>fw:directory-list</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>COMPONENTS</QName></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"include-filter"</StringLiteral><TOKEN>:</TOKEN><StringLiteral>".*\.vue"</StringLiteral></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+             <TOKEN>//</TOKEN><AxisStep><QName>c:file</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>comps</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>files</QName></VarRef><TOKEN>!</TOKEN><FunctionCall><QName>vue:feature-build</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></LetBinding></LetClause>
+
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><TOKEN>comment</TOKEN><TOKEN>:=</TOKEN><StringConcatExpr><StringLiteral>"// generated "</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>current-dateTime</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <StringLiteral>"&amp;#xA;&amp;#xD;"</StringLiteral></StringConcatExpr></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>file:write-text</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>DEST</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>string-join</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><TOKEN>comment</TOKEN></VarRef><TOKEN>,</TOKEN>
+                                         <VarRef><TOKEN>$</TOKEN><QName>comps</QName></VarRef><TOKEN>,</TOKEN>
+                                         <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>js</QName></VarRef><TOKEN>!</TOKEN><FunctionCall><QName>vue:js-test</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr><TOKEN>,</TOKEN>
+                                         <VarRef><TOKEN>$</TOKEN><QName>feats</QName></VarRef><TOKEN>,</TOKEN>
+                                         <FunctionCall><QName>vue:js-test</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ROUTER</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+                                         <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>APP</QName></VarRef><TOKEN>!</TOKEN><FunctionCall><QName>vue:feature-build</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr><TOKEN>,</TOKEN>
+                                         <FunctionCall><QName>vue:js-test</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>CORE</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : return sequence of file paths starting from $path matching $filter
+ :)
+ <AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:filelist</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>path</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>filter</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+ <TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType>
+ <EnclosedExpr><TOKEN>{</TOKEN>
+      <RelativePathExpr><FunctionCall><QName>fw:directory-list</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>,</TOKEN><MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"include-filter"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>filter</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+             <TOKEN>//</TOKEN><AxisStep><QName>c:file</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><FunctionCall><QName>base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr>
+ <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~
+ : javascript source with comment
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>vue:js-test</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>
+// src: </StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>
+</StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule><EOF/></XQuery>
