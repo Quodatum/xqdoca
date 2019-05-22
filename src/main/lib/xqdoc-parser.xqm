@@ -50,7 +50,12 @@ as element(xqdoc:xqdoc)
    let $body:= $xqparse//MainModule/*[2]
   let $xqdoc:= $xqdoc transform with {
                 insert node xqp:main($body) as last into xqdoc:functions
-              }            
+              }
+  (:~ swap imports and namespaces basex err :) 
+   let $xqdoc:= $xqdoc transform with {
+                replace node xqdoc:namespaces with xqdoc:imports,
+                replace node xqdoc:imports with xqdoc:namespaces
+              }          
   let $fmap:=map:merge((
                 xqp:funmap($xqparse),
                 if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
@@ -66,10 +71,10 @@ as element(xqdoc:xqdoc)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then
-                  (
-                    insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f,
-                    insert node xqp:references($parse,$expand) into $f
-                )
+                   (   
+                    insert node xqp:references($parse,$expand) into $f,
+                    insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f
+                  )
                else
                   let $a:=trace(map:keys($fmap))
                   return error("key not found " || $key)  

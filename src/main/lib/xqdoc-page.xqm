@@ -34,12 +34,16 @@ as element(span)
  let $files:=$model?files[?namespace=$uri]
  let $root:="../../"
  return if(empty($files)) then
-           <span class="badge badge-warning" title="External file">{ $uri }</span>
+           <span class="badge badge-warning" title="Externally defined">{ $uri }</span>
         else
            <span>
            <a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }">{ $files[1]?namespace }</a>
            {for $file at $pos in tail($files)
-           return <a  href="{ $root }{ $file?href }index.html" title="{ $file?path }">{1+$pos}</a>
+           return ("&#160;",
+                <a  href="{ $root }{ $file?href }index.html" title="{ $file?path }">
+                <span class="badge badge-info">{1+$pos}</span>
+                </a>
+                )
          }</span> 
 };
 
@@ -54,8 +58,10 @@ as element(span)
 };
 (:~  connections list :)
 declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
-as element(div)
+as element(div)?
 {
+  if(0=count($calls-this) and 0=count($called-by-this))then ()
+  else 
   <div style="display: flex;width:100%; justify-content: space-between;">
     <div style="width:30%;">{ if (count($calls-this)) then
                                  $calls-this!<div >{.}</div>

@@ -54,14 +54,30 @@ function xqh:xqdoc-html2($file as map(*),
                             )
 as document-node()                         
 {
-let $xqd:=$file?xqdoc 
-let $d:=<div>{
-         xqh:summary($xqd/xqdoc:module,$opts),
+let $xqd:=$file?xqdoc
+let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
+let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $d:=<div>
+       <h1>
+			<span class="badge badge-info">{ $file?namespace }</span>&#160;
+			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
+     { if($restxq) then
+          <span  title="RestXQ" class="badge badge-success" style="float:right">R</span>
+        else ()  
+       }
+      {if($updating) then
+              <div class="badge badge-danger" title="Updating" style="float:right">U</div>
+        else
+        ()
+      }
+		</h1>
+{
          xqh:toc($xqd,$opts,$file),
+         xqh:summary($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
          xqh:functions($xqd/xqdoc:functions),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           <div class="div2">
             <h2 ><a id="source"/>7 Source Code</h2>
@@ -76,21 +92,8 @@ declare function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
-   let $restxq:= true()
-   return(	<h1>
-			<span class="badge badge-info">{ $mod/xqdoc:uri/string() }</span>&#160;
-			<small>{ $mod/@type/string() } module</small>
-     { if($restxq) then
-          <span  title="RestXQ" class="badge badge-success" style="float:right">R</span>
-        else ()  
-       }
-      {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              <div class="badge badge-danger" title="Updating" style="float:right">U</div>
-        else
-        ()
-      }
-		</h1>,
-    
+    <div class="div2">
+    <h2><a id="summary"/>1 Summary</h2>
 		<dl>
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			<dt>Tags</dt>
@@ -104,7 +107,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
      <li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
      <li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li>
      </ul>
-  )
+    </div>
   };
   
 declare function xqh:toc($xqd,$opts,$file)
@@ -122,9 +125,9 @@ as element(nav){
 			</h3>
 			<ol class="toc">
 				<li>
-					<a href="#main">
+					<a href="#summary">
 						<span class="secno">1 </span>
-						<span class="content">Introduction</span>
+						<span class="content">Summary</span>
 					</a>
 				</li>
 				<li>
@@ -249,7 +252,7 @@ as element(div){
     <h2><a id="imports"/>2 Imports</h2>
 
     <p>
-    <span class="badge badge-info">this</span> module is imported by
+    This module is imported by
     <span class="badge badge-info">{ count($importing) }</span> modules, it imports
     <span class="badge badge-info">{ count($imports/xqdoc:import) }</span> modules.
     </p>
@@ -337,8 +340,12 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      { $funs/xqdoc:annotations!xqh:annotations(.) }
+      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      <details>
+        <summary>Source</summary>
+        { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
+      </details>
+     
       
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
@@ -346,10 +353,7 @@ as element(div)
       <summary>External functions that invoke this function</summary>
       todo
       </details>
-       <details>
-      <summary>Source</summary>
-      { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
-      </details>
+     { $funs/xqdoc:annotations!xqh:annotations(.) }
 		</div>
 };
 
@@ -452,7 +456,7 @@ as xs:boolean
 };
 
 
-declare function xqh:namespaces($namespaces as element(xqdoc:namespaces))
+declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
 as element(div)
 {
      <div class="div2">
@@ -471,7 +475,7 @@ as element(div)
           return
 						<tr>
 							<td>{string($ns/@prefix) }</td>
-							<td>{ string($ns/@uri) }</td>
+							<td>{ page:link-module(string($ns/@uri),$model) }</td>
 						</tr>
 			}</tbody>
 			</table>

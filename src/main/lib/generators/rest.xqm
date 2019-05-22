@@ -76,9 +76,10 @@ as element(div)
 
 (:~  html for a path :)          
 declare function _:path-to-html($rep as map(*))
-as element(li){
-   <li id="{ $rep?uri }">
-       <h4>{ $rep?uri }</h4>
+as element(div)
+{
+  <div class="div4">
+       <h4><a id="{ $rep?uri }"/>{ $rep?uri }</h4>
        <ul>{
        let $methods as map(*) :=$rep?methods
        for $method in map:keys($methods)
@@ -89,7 +90,7 @@ as element(li){
                     <div>{$d?description}</div>
               </li>
        }</ul>
-   </li>
+   </div>
 };
 
 (:~  toc :)

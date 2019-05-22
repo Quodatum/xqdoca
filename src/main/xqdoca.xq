@@ -54,7 +54,7 @@ let $options:=map{
                "project": $model?project, 
                "resources": "resources/",
                "outputs":  map{
-                    "global": ("index","restxq","imports","annotations","meta","swagger1"),
+                    "global": ("index","restxq","imports","annotations","meta","xqdoc-validate"),
                     "module": ("xqdoc","xqparse","module")  
                 }    
                }

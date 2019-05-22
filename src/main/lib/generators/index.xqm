@@ -98,7 +98,7 @@ as element(div)
 {
   <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
-   
+    <p>This project contains:</p>
     <ul>
     <li>{ count($model?files) } modules. </li>
     <li>{ $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.</li>
@@ -149,7 +149,21 @@ as element(div)
 {
  <div class="div2">
     <h2><a id="ns"/>2 Modules</h2>
-    <table class="data">
+    <div class="div3">
+    <h3><a id="ns_main"/>2.1 Main modules</h3>
+    {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="main"])}
+    </div>
+     <div class="div3">
+    <h3><a id="ns_library"/>2.2 Library modules</h3>
+    {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="library"])}
+    </div>
+</div>
+};
+
+declare function xqhtml:modtable($files as map(*)*)
+as element(table)
+{
+     <table class="data">
     <thead>
     <tr>
     <th>Type</th>
@@ -162,7 +176,7 @@ as element(div)
     </thead>
     <tbody>
    
-       { for $file  at $pos in $model?files
+       { for $file  at $pos in $files
         let $type:=if($file?xqparse/name()="ERROR") then 
                      "ERROR"
                     else
@@ -179,8 +193,8 @@ as element(div)
                  <td>{page:link-module($file) }</td>
                 
                  <td>{ 
-                       if($updating) then <span class="badge badge-danger">U</span> else ()
-                      ,if($rest) then <span class="badge badge-info">R</span> else () 
+                       if($updating) then <span class="badge badge-danger" title="Updating">U</span> else ()
+                      ,if($rest) then <span class="badge badge-info" title="rest">R</span> else () 
                     }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
                  <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
@@ -188,7 +202,6 @@ as element(div)
         }
     </tbody>
     </table>
-</div>
 };
 
 (:~ import page :)

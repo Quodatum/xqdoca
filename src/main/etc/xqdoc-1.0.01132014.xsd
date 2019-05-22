@@ -148,6 +148,8 @@
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
                         <xsd:enumeration value="1.0"/>
+                        <xsd:enumeration value="1.1"/> <!-- basex uses? -->
+
                         <xsd:enumeration value="N/A"/>
                     </xsd:restriction>
                 </xsd:simpleType>

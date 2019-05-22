@@ -16,8 +16,8 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>metal.xqm</h1>
- : <p>generate meta info about the xqdoc run</p>
+ : <h1>meta.xqm</h1>
+ : <p>Generate meta data about the <code>xqDocA</code> run</p>
  :
  : @author Andy Bunce
  : @version 0.1
@@ -41,7 +41,7 @@ function _:restxq($model,$opts)
 <xqdoca created="{current-dateTime()}">
 {
 let $f:=function($v,$this){
-    typeswitch($v)
+  typeswitch($v)
   case xs:anyAtomicType return $v
   case   map(*) return map:for-each($v,
                      function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
