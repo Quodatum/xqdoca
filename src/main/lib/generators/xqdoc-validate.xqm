@@ -1,20 +1,12 @@
 xquery version "3.1";
+(:~
+ : validate xqdoc o/p against schema
 
- 
- (:~
- : simple swagger generation 
- : NOTE this is just shell no detail provided
- :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-(:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
- :)
+
 module namespace _ = 'quodatum:xqdoca.generator.validate-xqdoc';
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";

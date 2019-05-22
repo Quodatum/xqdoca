@@ -35,10 +35,8 @@ declare variable $xqp:ns-fn:="http://www.w3.org/2005/xpath-functions";
 
 (:~ xparser defaults :)
 declare variable $xqp:xparse_opts:=map{
-                                       "lang":"xquery",
-                                       "version":"3.1 basex",
-                                       "flatten":true()
-                                     };
+  "basex":  map{ "lang":"xquery", "version":"3.1 basex",  "flatten":true() }
+};
                                      
 (:~  Enrich BaseX built-in xqDoc by
  : adding function source and X-ref info
@@ -213,9 +211,9 @@ as map(*)
 (:~ parse XQuery 
  : result is <XQuery> or <ERROR>
  :)
-declare function xqp:parse($xq as xs:string)
+declare function xqp:parse($xq as xs:string,$platform as xs:string)
 as element(*)
 {  
-  xp:parse($xq || "",$xqp:xparse_opts) 
+  xp:parse($xq || "",$xqp:xparse_opts($platform)) 
 };
 

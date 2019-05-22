@@ -1,7 +1,5 @@
 xquery version "3.1";
-
- 
- (:~
+(:~
  : simple swagger generation 
  : NOTE this is just shell no detail provided
  :
@@ -9,20 +7,11 @@ xquery version "3.1";
  : @version 0.1
  :)
  
-(:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
- :)
 module namespace _ = 'quodatum:xqdoca.generator.swagger';
 
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-
-
 declare 
-%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%xqdoca:output("swagger.json","json") 
+%Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
+%Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
 function _:swagger($model as map(*),
                             $opts as map(*)
                             )                           

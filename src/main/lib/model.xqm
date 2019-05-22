@@ -31,13 +31,11 @@ xquery version "3.1";
  :)
 module namespace xqd = 'quodatum:xqdoca.model';
 
-import module namespace xqp = 'quodatum:xqdoca.parser' at "xqdoc-parser.xqm";
+import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-(: source file extensions :)
-declare variable $xqd:exts:="*.xqm,*.xq,*.xquery"; (: *.xqy:)
 
 
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
@@ -47,36 +45,29 @@ declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 
-
-(:~
-: create documentation folder map
-: @param host xquery platform eg "basex"
-: map{"base-uri":.., "files":map(*)*}
-:)
-declare function xqd:read($efolder as xs:string)
-as map(*)
-{
-xqd:read($efolder,"basex")
+declare variable $xqd:platforms:= map{
+  "basex": map{"parser": 42}
 };
 
 (:~
  : load and parse source xquery files
  : @param $efolder root path for source files
- : @param $host xquery platform id to provide static content e.g "basex"
+ : @param $platform target XQuery engine e.g "basex"
  : @return state map
  :)
-declare function xqd:read($efolder as xs:string,$host as xs:string)
+declare function xqd:snap($efolder as xs:string, $platform as xs:string, $extensions as xs:string)
 as map(*)
 {
-let $files:= file:list($efolder,true(),$xqd:exts)
+let $files:= file:list($efolder,true(),$extensions)
 let $folder:= translate($efolder,"\","/")
 return map{ 
              "base-uri": $folder,
+             "platform": $platform,
              "project": tokenize($folder,"/")[last()-1],
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
-                      let $xqdoc:=xqd:analyse($full,$host,map{"_source": $spath})
+                      let $xqdoc:=xqd:analyse($full,$platform,map{"_source": $spath})
                       let $base:=map{
                         "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
@@ -106,11 +97,11 @@ as element(xqdoc:xqdoc)
 (:~ 
  : Generate xqdoc adding custom opts 
  : @param $url xquery source
- : @param host xquery platform id
+ : @param platform xquery platform id
  : @param $opts custom tags to add
  : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> ,annotations:{}*}
  :)
-declare function xqd:analyse($url as xs:string,$host as xs:string,$opts as map(*))
+declare function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
 as map(*)
 {  
   let $xqd:=xqd:xqdoc($url)
@@ -130,7 +121,7 @@ as map(*)
         ()
   }
   (: add enrichments from parse tree :)
-  let $parse:=xqp:parse($src)
+  let $parse:=xqp:parse($src,$platform)
   let $enh:=try{
                           xqp:enrich($enh,$parse) 
                     }   catch * { 

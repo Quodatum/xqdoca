@@ -136,33 +136,30 @@ as element(nav){
             <span class="content">Imports</span>
           </a>
         </li>
+				
+          <li>
+            <a href="#variables">
+              <span class="secno">3 </span>
+              <span class="content">Variables</span>
+            </a>
+            <ol class="toc">
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
+                <li>
+                  <a href="#{$id}">
+                    <span class="secno">{ concat('3.',$pos) }</span>
+                    <span class="content">{ $id }</span>
+                  </a>
+                </li>
+            }
+            </ol>
+          </li>
+				
 				<li>
-					<ol class="toc">
-						<li>
-							<a href="#variables">
-								<span class="secno">3 </span>
-								<span class="content">Variables</span>
-							</a>
-							<ol class="toc">
-              {for $var  in $vars
-              order by $var/xqdoc:name
-              let $id:=concat('$',$var/xqdoc:name)
-              count $pos
-              return
-									<li>
-										<a href="#{$id}">
-											<span class="secno">{ concat('3.',$pos) }</span>
-											<span class="content">{ $id }</span>
-										</a>
-									</li>
-							}
-							</ol>
-						</li>
-					</ol>
-				</li>
-				<li>
-					<ol class="toc">
-						<li>
+
 							<a href="#functions">
 								<span class="secno">4 </span>
 								<span class="content">Functions</span>
@@ -193,9 +190,7 @@ as element(nav){
 							}
 							
 							</ol>
-						</li>
-					</ol>
-
+		
 				</li>
 				<li>
 					<a href="#namespaces">
@@ -204,8 +199,6 @@ as element(nav){
 					</a>
 				</li>
 				<li>
-					<ol class="toc">
-						<li>
 							<a href="#restxq">
 								<span class="secno">6 </span>
 								<span class="content">Restxq</span>
@@ -228,9 +221,7 @@ as element(nav){
 									</li>
 								</xsl:for-each-group>
 							</ol>
-						</li>
-					</ol>
-
+				
 				</li>
        	<li>
 					<a href="#source">

@@ -33,23 +33,30 @@ import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xq
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
-
+ 
 (:~ URL of the root folder to document
- : @default C:/Users/andy/git/xqdoca
+ : @default C:/Users/andy/git/xqdoca 
  :)
-(: declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri())); :)
-(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/dba/"); :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/");
-(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/chat/"); :)
+declare variable $efolder as xs:anyURI  external :=
+              xs:anyURI(db:option("webpath") ||"/vue-poc/")
+              (: xs:anyURI(db:option("webpath") ||"/dba/") :)
+              (: xs:anyURI(file:parent(static-base-uri()) :)
+              (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
+;
+
+
+declare variable $platform as xs:string  external := "basex";
+
+(:~ source file extensions to parse :)
+declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery"; (: *.xqy:)
+
+(: hack for unique ids @TODO use date:)
+declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
 (:~ location to save outputs as a base-uri :)
 declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
 
-declare variable $host as xs:string  external := "basex";
-
-declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
-
-let $model:= xqd:read($efolder,$host) 
+let $model:= xqd:snap($efolder,$platform,$exts) 
 let $options:=map{
                "project": $model?project, 
                "resources": "resources/",
@@ -61,7 +68,7 @@ let $options:=map{
                
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)   
-
+(: arbitary result :)
 let $result:=   <json type="object">
                     <extra>XQdoc generated</extra>
                     <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>
