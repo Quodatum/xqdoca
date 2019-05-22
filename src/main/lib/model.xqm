@@ -29,7 +29,7 @@ xquery version "3.1";
  : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
  : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-module namespace xqd = 'quodatum:xqdoca.xqdoc';
+module namespace xqd = 'quodatum:xqdoca.model';
 
 import module namespace xqp = 'quodatum:xqdoca.parser' at "xqdoc-parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
@@ -39,8 +39,6 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 (: source file extensions :)
 declare variable $xqd:exts:="*.xqm,*.xq,*.xquery"; (: *.xqy:)
 
-declare variable $xqd:HTML5:=map{"method": "html", "version":"5.0", "indent": "no"};
-declare variable $xqd:XML:=map{"indent": "no"};
 
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
@@ -89,16 +87,7 @@ return map{
 
 };
 
-(: return sequence of maps  are imported ns values are where imported:)
-declare function xqd:imports($doc)
-as map(*)*
-{
-for $f in $doc?files
-for $in in $f?xqdoc//xqdoc:import[@type="library"]
-group by $ns:=$in/xqdoc:uri
-return map{ "uri": $ns, "where": $f}
 
-};
 
 
 (:~ generate xqdoc
@@ -155,8 +144,8 @@ as map(*)
 };
 
 (:~ 
- : all annotations in xqdoc as { annotation:{{name: uri},xqdoc:}}
-  :)
+ : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
+ :)
 declare function xqd:anno($xqdoc)
 as map(*)*{
   let $ns:= xqd:namespaces($xqdoc)
@@ -166,10 +155,10 @@ as map(*)*{
 };
          
 (:~ return sequence of maps with maps uri and methods :)
-declare function xqd:rxq-paths($state)
+declare function xqd:rxq-paths($model)
 as map(*)* 
 {
-let $reports:= xqd:annots-rxq($state)  
+let $reports:= xqd:annots-rxq($model)  
 (: map keyed on uris :)
 let $data:=map:merge(for $report in $reports
           group by $uri:=$report?annot/xqdoc:literal/string()
@@ -190,10 +179,10 @@ return $data?($uris)
 (:~ 
  : map for each restxq:path annotation
   :)
-declare function xqd:annots-rxq($state as map(*))
+declare function xqd:annots-rxq($model as map(*))
 as map(*)*
 {
-  for $f at $index in $state?files
+  for $f at $index in $model?files
   for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
   return map{
                 "id": $index,
@@ -247,18 +236,48 @@ $xqdoc/xqdoc:namespaces/xqdoc:namespace
 =>map:merge()
 };
 
+declare function xqd:where-imported($uri as xs:string,$model as map(*))
+{
+  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]?namespace
+};
 
+(: return sequence of maps  are imported ns values are where imported:)
+declare function xqd:imports($model)
+as map(*)
+{
+map:merge(  
+for $f in $model?files
+ for $in in $f?xqdoc//xqdoc:import[@type="library"]
+group by $ns:=$in/xqdoc:uri
+return map:entry( $ns,  $f)
+)
+};
 
-
-(:~
- : raise error if environment incorrect 
+(:~ 
+ : filter annotation by uri and name
+ : @param $uri 1st item is uri, if 2nd then match name
  :)
- declare function xqd:version-check()
-as empty-sequence(){
-  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne "9.2.2")then 
-       error(xs:QName("xqd:version"),"BaseX version")
-  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne "0.6.12") then
-       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
-  else
-      ()
-};       
+declare function xqd:filter-annot($annots as map(*)*,$uri as xs:string*)
+as map(*)*
+{
+  let $hit:=$annots?annotation[?uri=$uri[1]]
+  return if(count($uri) eq 1) then
+            $hit
+         else
+           $hit[?name=$uri[2]]
+};
+
+(:~  filter for updating :)
+declare function xqd:anno-updating($anno as map(*)*)
+as map(*)*
+{
+xqd:filter-annot($anno,("http://www.w3.org/2012/xquery", "updating"))
+};
+
+(:~  filter for rest :)
+declare function xqd:anno-rest($anno as map(*)*)
+as map(*)*
+{
+xqd:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
+};
+ 

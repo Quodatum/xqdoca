@@ -17,7 +17,7 @@ xquery version "3.1";
  
  (:~
  : <h1>xqdoc-links.xqm</h1>
- : <p>generate links into html docs</p>
+ : <p>html utilities</p>
  :
  : @author Andy Bunce
  : @version 0.1
@@ -28,10 +28,10 @@ module namespace page = 'quodatum:xqdoca.page';
 
 (:~ link to module :)
 declare 
-function page:link-module($uri as xs:string,$state as map(*))                       
+function page:link-module($uri as xs:string,$model as map(*))                       
 as element(span)
 {
- let $files:=$state?files[?namespace=$uri]
+ let $files:=$model?files[?namespace=$uri]
  let $root:="../../"
  return if(empty($files)) then
            <span class="badge badge-warning" title="External file">{ $uri }</span>
@@ -52,6 +52,25 @@ as element(span)
     <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a> 
    </span>
 };
+(:~  connections list :)
+declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
+as element(div)
+{
+  <div style="display: flex;width:100%; justify-content: space-between;">
+    <div style="width:30%;">{ if (count($calls-this)) then
+                                 $calls-this!<div >{.}</div>
+                              else "(None)"   
+                             }</div>
+     <div><div>imports</div>&#x2192;</div>
+    <div class="badge badge-info">this</div>
+     <div><div>imports</div>&#x2192;</div>
+    <div style="width:30%;">{ if(count($called-by-this)) then
+                                $called-by-this!<div>{.}</div>
+                              else
+                               ("(None)")
+     }</div>
+</div> 
+};
 
 (:~ 
  : generate standard page wrapper
@@ -65,9 +84,6 @@ as element(html)
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
        <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
-       <!-- 
-       <link rel="stylesheet" type="text/css" href="{ $opts?resources }bootstrap-4.3.1.min.css" />
-        -->
         <title>
           { $opts?project } - xqDocA
         </title>
@@ -124,33 +140,64 @@ as element(nav)
         </nav> 
 };
 
-(:~ 
- : filter annotation by uri and name
- : @param $uri 1st item is uri, if 2nd then match name
- :)
-declare function page:filter-annot($annots as map(*)*,$uri as xs:string*)
-as map(*)*
-{
-  let $hit:=$annots?annotation[?uri=$uri[1]]
-  return if(count($uri) eq 1) then
-            $hit
-         else
-           $hit[?name=$uri[2]]
-};
 
-declare function page:anno-updating($anno as map(*)*)
-as map(*)*
-{
-page:filter-annot($anno,("http://www.w3.org/2012/xquery", "updating"))
-};
-
-declare function page:anno-rest($anno as map(*)*)
-as map(*)*
-{
-page:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
-};
-
+(:~  section numbering util :)
 declare function page:section($pos as xs:anyAtomicType*)
 as xs:string{
   string-join($pos,".") || "&#160;"
+};
+
+(:~ tree to list :)
+declare function page:tree-list($tree as element(*),$seq as xs:integer*){
+  typeswitch ($tree )
+  case element(directory) 
+      return <li>
+                 <span class="secno">{string-join($seq,'.')}</span>
+                 <span class="content">{$tree/@name/string()}/</span>
+                 <ol class="toc">{$tree/*!page:tree-list(.,($seq,position()))}</ol>
+             </li>
+   case element(file) 
+      return <li>{if($tree/@target) then
+                   <a href="#{$tree/@target}">
+                     <span class="secno">{string-join($seq,'.')}</span>
+                     
+                      <span class="content" title="{$tree/@target}">{  $tree/@name/string() }</span>
+                      <div class="badge badge-success" 
+                            title="RESTXQ: {$tree/@target}">GET
+                      </div>
+                      <div class="badge badge-danger"  style="float:right"
+                            title="RESTXQ: {$tree/@target}">X
+                      </div>
+                   </a>
+               else 
+                <span class="content">{$tree/@name/string()}</span>
+             }</li>   
+  default 
+     return <li>unknown</li>
+};
+
+
+
+(:~ views list with links
+ : @todo only show in referenced in $opts
+ :)
+declare 
+function page:view-list($renderers as map(*)*,$exclude as xs:string*)                       
+as element(table)
+{
+ <table class="data">
+ <thead>
+ <th>View</th>
+ <th>Description</th>
+ </thead>
+ <tbody>
+ {
+  for  $def in $renderers
+  where not($def?name = $exclude)
+  return <tr><td><a href="{ $def?uri }">{ $def?name }</a></td>
+             <td>{ $def?description }</td>
+         </tr>
+  }    
+ </tbody>
+</table>
 };

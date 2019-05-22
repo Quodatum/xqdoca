@@ -28,7 +28,7 @@ xquery version "3.1";
  :)
 
 
-import module namespace xqd = 'quodatum:xqdoca.xqdoc' at "lib/xqdoc-proj.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "lib/model.xqm";
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
@@ -37,9 +37,9 @@ declare option db:chop 'true';
 (:~ URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca
  :)
-declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri()));
+(: declare variable $efolder as xs:anyURI  external := xs:anyURI(file:parent(static-base-uri())); :)
 (: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/dba/"); :)
-(: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/"); :)
+declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/vue-poc/");
 (: declare variable $efolder as xs:anyURI  external := xs:anyURI(db:option("webpath") ||"/chat/"); :)
 
 (:~ location to save outputs as a base-uri :)
@@ -49,25 +49,22 @@ declare variable $host as xs:string  external := "basex";
 
 declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
-let $state:= xqd:version-check()
-let $state:= xqd:read($efolder,$host) 
+let $model:= xqd:read($efolder,$host) 
 let $options:=map{
-               "src-folder": $efolder, 
-               "project": $state?project, 
-               "ext-id": $id/string(),
+               "project": $model?project, 
                "resources": "resources/",
                "outputs":  map{
-                    "global": ("index","restxq","imports","annotations","swagger1"),
+                    "global": ("index","restxq","imports","annotations","meta","swagger1"),
                     "module": ("xqdoc","xqparse","module")  
                 }    
                }
                
 (: generate  outputs :)
-let $pages:= xqo:render($state,$options)   
+let $pages:= xqo:render($model,$options)   
 
 let $result:=   <json type="object">
                     <extra>XQdoc generated</extra>
-                    <msg> {$target}, {count($state?files)} files processed. Stored {count($pages)}</msg>
+                    <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>
                     <id>{$id/string()}</id>
                 </json> 
 return (

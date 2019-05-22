@@ -17,7 +17,7 @@ xquery version "3.1";
  
  (:~
  : <h1>xqdoc-outputs.xqm</h1>
- : <p>define availiable outputs</p>
+ : <p>Load and run a set of generators</p>
  :
  : @author Andy Bunce
  : @version 0.1
@@ -33,8 +33,9 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 (:~ annotation for module derived output :)
 declare variable $xqo:module:=QName("https://github.com/Quodatum/xqdoca","module");
+(:~ annotation for global derived output :)
 declare variable $xqo:global:=QName("https://github.com/Quodatum/xqdoca","global");
-(:~ annotation for serialization options :)
+(:~ annotation used to indicate serialization options :)
 declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","output");
 
 (:~ defined serialization options :)
@@ -94,30 +95,30 @@ as map(*){
  :  render $outputs defined in $opts against state
  : @return seq of outputs generated suitable for"storing"
 :)
-declare function xqo:render( $state as map(*),$opts as map(*))
+declare function xqo:render( $model as map(*),$opts as map(*))
 as map(*)*
 {
   let $funs:=xqo:load-generators()
   let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$opts?outputs?global] 
   let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$opts?outputs?module]
-  (: add found render info to opts :)
-  let $opts:=map:merge((map:entry("renderers",map{"global":$global,"module":$module}),$opts))
+  (: add found renderers info to opts :)
+  let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
   return (
       for $render in $global
-      let $doc:= apply($render?function,[$state,$opts])
+      let $doc:= apply($render?function,[$model,$opts])
       return map{"document": $doc, 
                  "uri": $render?uri, 
                  "output":$xqo:outputs?($render?output)
                },
                
-      for $render in $module, $file at $pos in $state?files
+      for $render in $module, $file at $pos in $model?files
       (: override opts for destination path :)
       let $opts:=map:merge((
             map{
               "root": "../../",
               "resources": "../../resources/"
             }, $opts))
-      let $doc:= apply($render?function,[$file,$opts,$state])       
+      let $doc:= apply($render?function,[$file,$opts,$model])       
       return map{"document": $doc, 
                  "uri": concat($file?href,"/",$render?uri),  
                  "output": $xqo:outputs?($render?output)

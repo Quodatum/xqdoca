@@ -28,6 +28,8 @@ xquery version "3.1";
  : Generate  html for xqdoc
  :)
 module namespace xqh = 'quodatum:xqdoca.mod-html';
+
+import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
@@ -38,10 +40,8 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
  : <pre>map { "root": "../../", 
  :        "cache": false(), 
  :        "resources": "resources/", 
- :        "ext-id": "51", 
  :        "filename": "src\main\lib\parsepaths.xq", 
- :        "show-private": true(), 
- :        "src-folder": "C:/Users/andy/git/xqdoca", 
+ :        "show-private": true(),  
  :         "project": "xqdoca", 
  :         "source": () }</pre> 
  :)
@@ -50,7 +50,7 @@ declare
 %xqdoca:output("index.html","html5")
 function xqh:xqdoc-html2($file as map(*),
                             $opts as map(*),
-                            $state as map(*)
+                            $model as map(*)
                             )
 as document-node()                         
 {
@@ -58,7 +58,7 @@ let $xqd:=$file?xqdoc
 let $d:=<div>{
          xqh:summary($xqd/xqdoc:module,$opts),
          xqh:toc($xqd,$opts,$file),
-         xqh:imports($xqd/xqdoc:imports,$state), 
+         xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
          xqh:functions($xqd/xqdoc:functions),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
@@ -239,34 +239,30 @@ as element(nav){
 		</nav>
 };   
 
-declare function xqh:imports($imports as element(xqdoc:imports),$state as map(*))
+declare function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
 as element(div){
-    
+  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
+  let $importing:=xqd:imports($model)?($uri)
+  let $imports:=$xqd/xqdoc:imports
+  return  
     <div class="div2">
     <h2><a id="imports"/>2 Imports</h2>
-    <p> { count($imports/xqdoc:import) } modules are imported by this module and {"?"} import this module.</p>
-    <details>
-      <table class="data" style="float:none">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Uri</th>
-          </tr>
-        </thead>
-        <tbody>
-        {for $import in $imports/xqdoc:import
-        order by lower-case($import/xqdoc:uri)
-        return 
-            <tr>
-              <td>{ $import/@type/string() }</td>
-              <td>{ page:link-module($import/xqdoc:uri/string(),$state) }
-               
-              </td>
-            </tr>
-       }
-        </tbody>
-      </table>
-      </details>
+
+    <p>
+    <span class="badge badge-info">this</span> module is imported by
+    <span class="badge badge-info">{ count($importing) }</span> modules, it imports
+    <span class="badge badge-info">{ count($imports/xqdoc:import) }</span> modules.
+    </p>
+   
+  
+    {
+     page:calls(
+		     $importing?namespace!page:link-module(.,$model),
+		     $uri,
+		     $imports/xqdoc:import/xqdoc:uri/string()!page:link-module(.,$model)
+   )
+  }
+ 
     </div>
 }; 
 
@@ -581,7 +577,7 @@ as element(div)
 {
    <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
-      <p>TODO</p>
+      <p>None</p>
     </div>
 };
 
@@ -589,4 +585,26 @@ as element(div)
 declare function xqh:when($value,$fun as function(*))
 {
  if($value) then $fun($value) else ()
+};
+
+declare
+%xqdoca:module("xqdoc","xqDoc file for the source module")
+%xqdoca:output("xqdoc.xml","xml") 
+function xqh:xqdoc($file as map(*),
+                  $opts as map(*),
+                  $model as map(*)
+                  )
+{
+  $file?xqdoc
+};
+
+declare
+%xqdoca:module("xqparse","xqparse file for the source module")
+%xqdoca:output("xqparse.xml","xml") 
+function xqh:xqparse($file as map(*),
+                  $opts as map(*),
+                  $model as map(*)
+                  )
+{
+  $file?xqparse
 };

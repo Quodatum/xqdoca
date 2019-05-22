@@ -2,7 +2,8 @@ xquery version "3.1";
 
  
  (:~
- : simple swagger generation
+ : simple swagger generation 
+ : NOTE this is just shell no detail provided
  :
  : @author Andy Bunce
  : @version 0.1
@@ -14,15 +15,15 @@ xquery version "3.1";
  : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
  : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-module namespace openapi = 'quodatum:xqdoca.swagger';
+module namespace _ = 'quodatum:xqdoca.generator.swagger';
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 
 declare 
-%xqdoca:global("swagger1","Generate swagger from restxq ")
+%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
 %xqdoca:output("swagger.json","json") 
-function openapi:swagger($state as map(*),
+function _:swagger($state as map(*),
                             $opts as map(*)
                             )                           
 {
