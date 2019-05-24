@@ -1,0 +1,59 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>check-environment.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>check-environment.xq</h1>
+<p>Validate dependancies </p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;check-environment.xq&lt;/h1&gt;
+ : &lt;p&gt;Validate dependancies &lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+(:~
+ : raise error if environment incorrect 
+ :)
+  let $ex-parse:="0.6.12"
+  let $basex:="9.2.2"
+  return 
+  
+  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne $basex)then 
+       error(xs:QName("xqd:version"),"BaseX version")
+  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne $ex-parse) then
+       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
+  else
+      "xqdoca dependancies are all installed."
+      
+
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $ex-parse:="0.6.12"
+  let $basex:="9.2.2"
+  return 
+  
+  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne $basex)then 
+       error(xs:QName("xqd:version"),"BaseX version")
+  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne $ex-parse) then
+       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
+  else
+      "xqdoca dependancies are all installed."</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>system</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/repo</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>basex</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ex-parse</xqdoc:name></xqdoc:ref-variable><xqdoc:body>let $ex-parse:="0.6.12"
+  let $basex:="9.2.2"
+  return 
+  
+  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne $basex)then 
+       error(xs:QName("xqd:version"),"BaseX version")
+  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne $ex-parse) then
+       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
+  else
+      "xqdoca dependancies are all installed."</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
