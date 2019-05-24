@@ -16,83 +16,56 @@
  :)
  
  (:~
- : &lt;h1&gt;xqdoc-namespaces.xqm&lt;/h1&gt;
- : &lt;p&gt;namespace and qname utils&lt;/p&gt;
+ : &lt;h1&gt;store.xqm&lt;/h1&gt;
+ : &lt;p&gt;Save documents to file system or database. Data is supplied as a map which 
+ : includes serialization options&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
  :)
- 
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>store</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:store'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
 
-<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqn</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.namespaces'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
 
-(:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
- : @return &lt;pre&gt;
- map{
-    "uri": ..,
-     "name": ..} 
- }
- :&lt;/pre&gt;
+(:~
+ : store a set of  o/ps below $base
+ : @param $docs sequence of maps 
+ : @param $base a uri "file:..", "xmldb:.."
  :)
-<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qname</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>lookup</QName> <TypeDeclaration><TOKEN>as</TOKEN> <TypedFunctionTest><TOKEN>function</TOKEN><TOKEN>(</TOKEN><QName>xs:string</QName><TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName></TypedFunctionTest></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>store:store</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>docs</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>base</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
 <EnclosedExpr><TOKEN>{</TOKEN>
- <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>n</QName><TOKEN>:=</TOKEN><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>":"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>prefix</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=</TOKEN><IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></IfExpr></LetBinding></LetClause>
-<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>n2</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=</TOKEN><IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN>  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr> <TOKEN>else</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></IfExpr></LetBinding></LetClause>
-<ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
-           <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>lookup</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN>
-           <MapConstructorEntry><StringLiteral>"name"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>n2</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr> 
+<FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>doc</QName> <TOKEN>in</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>docs</QName></VarRef></ForBinding></ForClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>uri</QName><TOKEN>:=</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>base</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>opts</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>map:contains</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"output"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>output</NCName></Lookup></PostfixExpr> <TOKEN>else</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><TOKEN>}</TOKEN></MapConstructor></IfExpr></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <SwitchExpr><TOKEN>switch</TOKEN> <TOKEN>(</TOKEN><FunctionCall><QName>substring-before</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>":"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN>
+          <SwitchCaseClause><TOKEN>case</TOKEN> <StringLiteral>"file"</StringLiteral> <TOKEN>return</TOKEN> <FunctionCall><QName>store:file</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>document</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><FunctionCall><QName>substring-after</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"file:///"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></SwitchCaseClause>
+          <SwitchCaseClause><TOKEN>case</TOKEN> <StringLiteral>"xmldb"</StringLiteral> <TOKEN>return</TOKEN> <FunctionCall><QName>store:xmldb</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>doc</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>document</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></SwitchCaseClause>
+          <TOKEN>default</TOKEN> <TOKEN>return</TOKEN> <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><StringLiteral>"unknown protocol:"</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></StringConcatExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></SwitchExpr></ReturnClause></FLWORExpr>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-(:~ namespace for prefix
- : @param $prefix prefix to lookup
- : @param $default namespace to use if prefix empty
- : @param $map keys are prefixes items are namespaces
- : @return namespace for prefix
-  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:map-prefix</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>prefix</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><TOKEN>default</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><TOKEN>map</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <QName>xs:string</QName><EnclosedExpr><TOKEN>{</TOKEN>
-  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
-    <VarRef><TOKEN>$</TOKEN><TOKEN>default</TOKEN></VarRef>
-  <TOKEN>else</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>map:contains</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN><TOKEN>then</TOKEN> 
-   <PostfixExpr><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><Lookup><TOKEN>?</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ParenthesizedExpr></Lookup></PostfixExpr>
-   <TOKEN>else</TOKEN>
-   <StringConcatExpr><StringLiteral>"**ERROR"</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef></StringConcatExpr></IfExpr></IfExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
-
-(:~  parse URIQualifiedName into parts
- : @param $e is URIQualifiedName
+(:~ 
+ :save $data to file system $url , create folder tree if required
  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:uriqname</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>URIQualifiedName</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
-<EnclosedExpr><TOKEN>{</TOKEN>
-<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>n</QName><TOKEN>:=</TOKEN><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"}"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-<ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr><TOKEN>,</TOKEN><IntegerLiteral>3</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
-           <MapConstructorEntry><StringLiteral>"name"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr> 
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>store:file</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>data</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>params</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>  
+   <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>p</QName><TOKEN>:=</TOKEN><FunctionCall><QName>file:parent</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+   <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+           <Expr><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>file:is-dir</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <FunctionCall><QName>file:create-dir</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>p</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr><TOKEN>,</TOKEN>
+           <FunctionCall><QName>file:write</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>data</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+           <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-(:~  map of static namespaces :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:static-prefix-map</QName><TOKEN>(</TOKEN><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
-<EnclosedExpr><TOKEN>{</TOKEN>
- <ArrowExpr><FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"../etc/static/basex.json"</StringLiteral><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
- <TOKEN>=&gt;</TOKEN><QName>parse-json</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr> 
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ 
+ :save $data to $uri  Xml database
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>store:xmldb</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>data</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>params</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>  
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>a</QName><TOKEN>:=</TOKEN><FunctionCall><QName>analyze-string</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>substring-after</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>":"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>"/([^/]*)/(.*)"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>db</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>//</TOKEN><AxisStep><Wildcard>*</Wildcard><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>nr</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"1"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>//</TOKEN><AxisStep><Wildcard>*</Wildcard><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>nr</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"2"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>db:replace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>db</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>data</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
 
-(:~  expand annotation name :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qname-anno</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>prefixes</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
-<EnclosedExpr><TOKEN>{</TOKEN>
-<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>lookup</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqn:map-prefix</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>?</TOKEN><TOKEN>,</TOKEN><StringLiteral>"http://www.w3.org/2012/xquery"</StringLiteral><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>xqn:qname</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef> <TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>lookup</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
-(:~  expand function name :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qname-fun</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>prefixes</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
-<EnclosedExpr><TOKEN>{</TOKEN>
-<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>lookup</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqn:map-prefix</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>?</TOKEN><TOKEN>,</TOKEN><StringLiteral>"http://www.w3.org/2005/xpath-functions"</StringLiteral><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>xqn:qname</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef> <TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>lookup</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module><EOF/></XQuery>
+<EOF/></XQuery>

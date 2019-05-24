@@ -1,5 +1,5 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:24:21.502+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.meta</xqdoc:uri><xqdoc:name>meta.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>metal.xqm</h1>
-<p>generate meta info about the xqdoc run</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/meta.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.meta</xqdoc:uri><xqdoc:name>meta.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>meta.xqm</h1>
+<p>Generate meta data about the <code>xqDocA</code> run</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/meta.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
  :
@@ -17,8 +17,8 @@
  :)
  
  (:~
- : &lt;h1&gt;metal.xqm&lt;/h1&gt;
- : &lt;p&gt;generate meta info about the xqdoc run&lt;/p&gt;
+ : &lt;h1&gt;meta.xqm&lt;/h1&gt;
+ : &lt;p&gt;Generate meta data about the &lt;code&gt;xqDocA&lt;/code&gt; run&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
@@ -42,7 +42,7 @@ function _:restxq($model,$opts)
 &lt;xqdoca created="{current-dateTime()}"&gt;
 {
 let $f:=function($v,$this){
-    typeswitch($v)
+  typeswitch($v)
   case xs:anyAtomicType return $v
   case   map(*) return map:for-each($v,
                      function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}

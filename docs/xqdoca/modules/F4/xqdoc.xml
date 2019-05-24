@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:24:21.502+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>module.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-htmlmod.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>module.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-htmlmod.xqm</h1>
 <p>Library to support html5 rendering of single xqdoc source</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:see>https://github.com/Quodatum/xqdoca</xqdoc:see><xqdoc:custom tag="__source">lib/generators/module.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -31,6 +31,7 @@
 module namespace xqh = 'quodatum:xqdoca.mod-html';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
@@ -55,14 +56,31 @@ function xqh:xqdoc-html2($file as map(*),
                             )
 as document-node()                         
 {
-let $xqd:=$file?xqdoc 
-let $d:=&lt;div&gt;{
+let $xqd:=$file?xqdoc
+let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
+let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $ns:=xqd:namespaces($xqd)
+let $d:=&lt;div&gt;
+       &lt;h1&gt;
+			&lt;span class="badge badge-info"&gt;{ $file?namespace }&lt;/span&gt;&amp;#160;
+			&lt;small&gt;{ $xqd/xqdoc:module/@type/string() } module&lt;/small&gt;
+     { if($restxq) then
+          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
+        else ()  
+       }
+      {if($updating) then
+              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
+        else
+        ()
+      }
+		&lt;/h1&gt;
+{
+         xqh:toc($xqd,$opts,$file,$ns),
          xqh:summary($xqd/xqdoc:module,$opts),
-         xqh:toc($xqd,$opts,$file),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:functions($xqd/xqdoc:functions,$ns),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           &lt;div class="div2"&gt;
             &lt;h2 &gt;&lt;a id="source"/&gt;7 Source Code&lt;/h2&gt;
@@ -77,21 +95,8 @@ declare function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
-   let $restxq:= true()
-   return(	&lt;h1&gt;
-			&lt;span class="badge badge-info"&gt;{ $mod/xqdoc:uri/string() }&lt;/span&gt;&amp;#160;
-			&lt;small&gt;{ $mod/@type/string() } module&lt;/small&gt;
-     { if($restxq) then
-          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
-        else ()  
-       }
-      {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
-        else
-        ()
-      }
-		&lt;/h1&gt;,
-    
+    &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
 		&lt;dl&gt;
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			&lt;dt&gt;Tags&lt;/dt&gt;
@@ -105,10 +110,10 @@ declare function xqh:summary($mod as element(xqdoc:module),
      &lt;li style="display:inline"&gt;&lt;a href="xqdoc.xml" target="xqdoc"&gt;xqdoc.xml&lt;/a&gt;, &lt;/li&gt;
      &lt;li style="display:inline"&gt;&lt;a href="xqparse.xml" target="xqparse"&gt;xqparse.xml&lt;/a&gt;&lt;/li&gt;
      &lt;/ul&gt;
-  )
+    &lt;/div&gt;
   };
   
-declare function xqh:toc($xqd,$opts,$file)
+declare function xqh:toc($xqd,$opts,$file,$ns as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -123,9 +128,9 @@ as element(nav){
 			&lt;/h3&gt;
 			&lt;ol class="toc"&gt;
 				&lt;li&gt;
-					&lt;a href="#main"&gt;
+					&lt;a href="#summary"&gt;
 						&lt;span class="secno"&gt;1 &lt;/span&gt;
-						&lt;span class="content"&gt;Introduction&lt;/span&gt;
+						&lt;span class="content"&gt;Summary&lt;/span&gt;
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
@@ -134,33 +139,30 @@ as element(nav){
             &lt;span class="content"&gt;Imports&lt;/span&gt;
           &lt;/a&gt;
         &lt;/li&gt;
+				
+          &lt;li&gt;
+            &lt;a href="#variables"&gt;
+              &lt;span class="secno"&gt;3 &lt;/span&gt;
+              &lt;span class="content"&gt;Variables&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;ol class="toc"&gt;
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
+                &lt;li&gt;
+                  &lt;a href="#{$id}"&gt;
+                    &lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
+                    &lt;span class="content"&gt;{ $id }&lt;/span&gt;
+                  &lt;/a&gt;
+                &lt;/li&gt;
+            }
+            &lt;/ol&gt;
+          &lt;/li&gt;
+				
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
-							&lt;a href="#variables"&gt;
-								&lt;span class="secno"&gt;3 &lt;/span&gt;
-								&lt;span class="content"&gt;Variables&lt;/span&gt;
-							&lt;/a&gt;
-							&lt;ol class="toc"&gt;
-              {for $var  in $vars
-              order by $var/xqdoc:name
-              let $id:=concat('$',$var/xqdoc:name)
-              count $pos
-              return
-									&lt;li&gt;
-										&lt;a href="#{$id}"&gt;
-											&lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
-											&lt;span class="content"&gt;{ $id }&lt;/span&gt;
-										&lt;/a&gt;
-									&lt;/li&gt;
-							}
-							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-				&lt;/li&gt;
-				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
+
 							&lt;a href="#functions"&gt;
 								&lt;span class="secno"&gt;4 &lt;/span&gt;
 								&lt;span class="content"&gt;Functions&lt;/span&gt;
@@ -177,23 +179,16 @@ as element(nav){
 										&lt;a href="#{$name}"&gt;
 											&lt;span class="secno"&gt;{ concat('4.',$pos[1]) }&lt;/span&gt;
 											&lt;span class="content" title="{$fun[1]/xqdoc:description/string()}"&gt;{ $name }
-                      {if($restxq) then 
-                        &lt;div class="badge badge-success" style="float:right"	title="RESTXQ:"&gt;R&lt;/div&gt;
-                      else
-                        ()}
-                       {if($update) then 
-                        &lt;div class="badge badge-danger" style="float:right"	title="Updating"&gt;U&lt;/div&gt;
-                      else
-                        ()}  
-                      &lt;/span&gt;
+                      &lt;div style="float:right"&gt;
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                        &lt;/div&gt;
+                        &lt;/span&gt;  
 										&lt;/a&gt;
 									&lt;/li&gt;
 							}
 							
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+		
 				&lt;/li&gt;
 				&lt;li&gt;
 					&lt;a href="#namespaces"&gt;
@@ -202,8 +197,6 @@ as element(nav){
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
 							&lt;a href="#restxq"&gt;
 								&lt;span class="secno"&gt;6 &lt;/span&gt;
 								&lt;span class="content"&gt;Restxq&lt;/span&gt;
@@ -226,9 +219,7 @@ as element(nav){
 									&lt;/li&gt;
 								&lt;/xsl:for-each-group&gt;
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+				
 				&lt;/li&gt;
        	&lt;li&gt;
 					&lt;a href="#source"&gt;
@@ -250,7 +241,7 @@ as element(div){
     &lt;h2&gt;&lt;a id="imports"/&gt;2 Imports&lt;/h2&gt;
 
     &lt;p&gt;
-    &lt;span class="badge badge-info"&gt;this&lt;/span&gt; module is imported by
+    This module is imported by
     &lt;span class="badge badge-info"&gt;{ count($importing) }&lt;/span&gt; modules, it imports
     &lt;span class="badge badge-info"&gt;{ count($imports/xqdoc:import) }&lt;/span&gt; modules.
     &lt;/p&gt;
@@ -302,26 +293,32 @@ return
 		&lt;/div&gt;
 };  
 
-declare function xqh:functions($funs as element(xqdoc:functions))
+declare function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
 as element(div)
 {
   &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="functions"/&gt;4 Functions&lt;/h2&gt;
 		{ for $f in $funs/xqdoc:function
-      order by  lower-case($f/xqdoc:name)
+      group by $name:=$f/xqdoc:name
+      order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos)),
+	   return xqh:function($f,(4,$pos),$ns),
       if(empty( $funs/xqdoc:function)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
 };
 
 (:~   o/p details for function $funs has all defined arities
+ : @param $section no.
  :)
-declare function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
+declare function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $ns as map(*))
 as element(div)
 {
+    let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
+
 	  return
 		&lt;div class="div3"&gt;
 			&lt;h3&gt;&lt;a id="{$id}"/&gt;{ page:section($section) } { $id }
@@ -329,8 +326,16 @@ as element(div)
 				&lt;a href="#{$id}" &gt;#&lt;/a&gt;
 				&lt;/div&gt;
 			&lt;/h3&gt;
-
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
+      { $funs!&lt;a id="{ $id }#{ @arity }"/&gt; }
+     &lt;p&gt;Arities: {  $funs 
+                  ! &lt;span &gt;
+                      &lt;a href="#{ $id }#{ @arity }"&gt;#{ string(@arity) }&lt;/a&gt;
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                      
+                    &lt;/span&gt;
+                          
+                 }&lt;/p&gt;
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=&gt;head(),xqh:description#1) }
 			&lt;dt class="label"&gt;Signature&lt;/dt&gt;
 			&lt;dd&gt;
 			{$funs!xqh:function-signature(.) }
@@ -338,8 +343,12 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      { $funs/xqdoc:annotations!xqh:annotations(.) }
+      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      &lt;details&gt;
+        &lt;summary&gt;Source&lt;/summary&gt;
+        { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
+      &lt;/details&gt;
+     
       
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
@@ -347,12 +356,11 @@ as element(div)
       &lt;summary&gt;External functions that invoke this function&lt;/summary&gt;
       todo
       &lt;/details&gt;
-       &lt;details&gt;
-      &lt;summary&gt;Source&lt;/summary&gt;
-      { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
-      &lt;/details&gt;
+     { $funs/xqdoc:annotations!xqh:annotations(.) }
 		&lt;/div&gt;
 };
+
+
 
 (:~ 
  :
@@ -453,7 +461,7 @@ as xs:boolean
 };
 
 
-declare function xqh:namespaces($namespaces as element(xqdoc:namespaces))
+declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
 as element(div)
 {
      &lt;div class="div2"&gt;
@@ -472,7 +480,7 @@ as element(div)
           return
 						&lt;tr&gt;
 							&lt;td&gt;{string($ns/@prefix) }&lt;/td&gt;
-							&lt;td&gt;{ string($ns/@uri) }&lt;/td&gt;
+							&lt;td&gt;{ page:link-module(string($ns/@uri),$model) }&lt;/td&gt;
 						&lt;/tr&gt;
 			}&lt;/tbody&gt;
 			&lt;/table&gt;
@@ -608,27 +616,44 @@ function xqh:xqparse($file as map(*),
                   )
 {
   $file?xqparse
-};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="xqh" uri="quodatum:xqdoca.mod-html"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="xsl" uri="http://www.w3.org/1999/XSL/Transform"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>transform xqdoc to html 
+};</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqh" uri="quodatum:xqdoca.mod-html"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="xsl" uri="http://www.w3.org/1999/XSL/Transform"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>transform xqdoc to html 
 <pre>map { "root": "../../", 
        "cache": false(), 
        "resources": "resources/", 
        "filename": "src\main\lib\parsepaths.xq", 
        "show-private": true(),  
         "project": "xqdoca", 
-        "source": () }</pre></xqdoc:description></xqdoc:comment><xqdoc:name>xqh:xqdoc-html2</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">module</xqdoc:literal><xqdoc:literal type="xs:string">Html5 report on the XQuery source</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">index.html</xqdoc:literal><xqdoc:literal type="xs:string">html5</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("module", "Html5 report on the XQuery source") %Q{https://github.com/Quodatum/xqdoca}output("index.html", "html5") function xqh:xqdoc-html2($file as map(*), $opts as map(*), $model as map(*)) as document-node()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:xqdoc-html2($file as map(*),
+        "source": () }</pre></xqdoc:description></xqdoc:comment><xqdoc:name>xqh:xqdoc-html2</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">module</xqdoc:literal><xqdoc:literal type="xs:string">Html5 report on the XQuery source</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">index.html</xqdoc:literal><xqdoc:literal type="xs:string">html5</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("module", "Html5 report on the XQuery source") %Q{https://github.com/Quodatum/xqdoca}output("index.html", "html5") function xqh:xqdoc-html2($file as map(*), $opts as map(*), $model as map(*)) as document-node()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>toc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>variables</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>functions</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>restxq</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>restxq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>updating</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:xqdoc-html2($file as map(*),
                             $opts as map(*),
                             $model as map(*)
                             )
 as document-node()                         
 {
-let $xqd:=$file?xqdoc 
-let $d:=&lt;div&gt;{
+let $xqd:=$file?xqdoc
+let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
+let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $ns:=xqd:namespaces($xqd)
+let $d:=&lt;div&gt;
+       &lt;h1&gt;
+			&lt;span class="badge badge-info"&gt;{ $file?namespace }&lt;/span&gt;&amp;#160;
+			&lt;small&gt;{ $xqd/xqdoc:module/@type/string() } module&lt;/small&gt;
+     { if($restxq) then
+          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
+        else ()  
+       }
+      {if($updating) then
+              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
+        else
+        ()
+      }
+		&lt;/h1&gt;
+{
+         xqh:toc($xqd,$opts,$file,$ns),
          xqh:summary($xqd/xqdoc:module,$opts),
-         xqh:toc($xqd,$opts,$file),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:functions($xqd/xqdoc:functions,$ns),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           &lt;div class="div2"&gt;
             &lt;h2 &gt;&lt;a id="source"/&gt;7 Source Code&lt;/h2&gt;
@@ -637,25 +662,12 @@ let $d:=&lt;div&gt;{
        }&lt;/div&gt;
 
  return document{ page:wrap($d, $opts )  }                 
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>toc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>variables</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>functions</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>restxq</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:summary</xqdoc:name><xqdoc:signature>declare function xqh:summary($mod as element(xqdoc:module), $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>mod</xqdoc:name><xqdoc:type>element(xqdoc:module)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:summary($mod as element(xqdoc:module),
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:summary</xqdoc:name><xqdoc:signature>declare function xqh:summary($mod as element(xqdoc:module), $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>mod</xqdoc:name><xqdoc:type>element(xqdoc:module)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
-   let $restxq:= true()
-   return(	&lt;h1&gt;
-			&lt;span class="badge badge-info"&gt;{ $mod/xqdoc:uri/string() }&lt;/span&gt;&amp;#160;
-			&lt;small&gt;{ $mod/@type/string() } module&lt;/small&gt;
-     { if($restxq) then
-          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
-        else ()  
-       }
-      {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
-        else
-        ()
-      }
-		&lt;/h1&gt;,
-    
+    &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
 		&lt;dl&gt;
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			&lt;dt&gt;Tags&lt;/dt&gt;
@@ -669,8 +681,8 @@ let $d:=&lt;div&gt;{
      &lt;li style="display:inline"&gt;&lt;a href="xqdoc.xml" target="xqdoc"&gt;xqdoc.xml&lt;/a&gt;, &lt;/li&gt;
      &lt;li style="display:inline"&gt;&lt;a href="xqparse.xml" target="xqparse"&gt;xqparse.xml&lt;/a&gt;&lt;/li&gt;
      &lt;/ul&gt;
-  )
-  }</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>restxq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqh:toc</xqdoc:name><xqdoc:signature>declare function xqh:toc($xqd as item()*, $opts as item()*, $file as item()*) as element(nav)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(nav)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:toc($xqd,$opts,$file)
+    &lt;/div&gt;
+  }</xqdoc:body></xqdoc:function><xqdoc:function arity="4"><xqdoc:name>xqh:toc</xqdoc:name><xqdoc:signature>declare function xqh:toc($xqd as item()*, $opts as item()*, $file as item()*, $ns as map(*)) as element(nav)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(nav)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>badges</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>var</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>var</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:toc($xqd,$opts,$file,$ns as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -685,9 +697,9 @@ as element(nav){
 			&lt;/h3&gt;
 			&lt;ol class="toc"&gt;
 				&lt;li&gt;
-					&lt;a href="#main"&gt;
+					&lt;a href="#summary"&gt;
 						&lt;span class="secno"&gt;1 &lt;/span&gt;
-						&lt;span class="content"&gt;Introduction&lt;/span&gt;
+						&lt;span class="content"&gt;Summary&lt;/span&gt;
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
@@ -696,33 +708,30 @@ as element(nav){
             &lt;span class="content"&gt;Imports&lt;/span&gt;
           &lt;/a&gt;
         &lt;/li&gt;
+				
+          &lt;li&gt;
+            &lt;a href="#variables"&gt;
+              &lt;span class="secno"&gt;3 &lt;/span&gt;
+              &lt;span class="content"&gt;Variables&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;ol class="toc"&gt;
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
+                &lt;li&gt;
+                  &lt;a href="#{$id}"&gt;
+                    &lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
+                    &lt;span class="content"&gt;{ $id }&lt;/span&gt;
+                  &lt;/a&gt;
+                &lt;/li&gt;
+            }
+            &lt;/ol&gt;
+          &lt;/li&gt;
+				
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
-							&lt;a href="#variables"&gt;
-								&lt;span class="secno"&gt;3 &lt;/span&gt;
-								&lt;span class="content"&gt;Variables&lt;/span&gt;
-							&lt;/a&gt;
-							&lt;ol class="toc"&gt;
-              {for $var  in $vars
-              order by $var/xqdoc:name
-              let $id:=concat('$',$var/xqdoc:name)
-              count $pos
-              return
-									&lt;li&gt;
-										&lt;a href="#{$id}"&gt;
-											&lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
-											&lt;span class="content"&gt;{ $id }&lt;/span&gt;
-										&lt;/a&gt;
-									&lt;/li&gt;
-							}
-							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-				&lt;/li&gt;
-				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
+
 							&lt;a href="#functions"&gt;
 								&lt;span class="secno"&gt;4 &lt;/span&gt;
 								&lt;span class="content"&gt;Functions&lt;/span&gt;
@@ -739,23 +748,16 @@ as element(nav){
 										&lt;a href="#{$name}"&gt;
 											&lt;span class="secno"&gt;{ concat('4.',$pos[1]) }&lt;/span&gt;
 											&lt;span class="content" title="{$fun[1]/xqdoc:description/string()}"&gt;{ $name }
-                      {if($restxq) then 
-                        &lt;div class="badge badge-success" style="float:right"	title="RESTXQ:"&gt;R&lt;/div&gt;
-                      else
-                        ()}
-                       {if($update) then 
-                        &lt;div class="badge badge-danger" style="float:right"	title="Updating"&gt;U&lt;/div&gt;
-                      else
-                        ()}  
-                      &lt;/span&gt;
+                      &lt;div style="float:right"&gt;
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                        &lt;/div&gt;
+                        &lt;/span&gt;  
 										&lt;/a&gt;
 									&lt;/li&gt;
 							}
 							
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+		
 				&lt;/li&gt;
 				&lt;li&gt;
 					&lt;a href="#namespaces"&gt;
@@ -764,8 +766,6 @@ as element(nav){
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
 							&lt;a href="#restxq"&gt;
 								&lt;span class="secno"&gt;6 &lt;/span&gt;
 								&lt;span class="content"&gt;Restxq&lt;/span&gt;
@@ -788,9 +788,7 @@ as element(nav){
 									&lt;/li&gt;
 								&lt;/xsl:for-each-group&gt;
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+				
 				&lt;/li&gt;
        	&lt;li&gt;
 					&lt;a href="#source"&gt;
@@ -800,7 +798,7 @@ as element(nav){
 				&lt;/li&gt; 
 			&lt;/ol&gt;
 		&lt;/nav&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>var</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>var</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>restxq</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>update</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:imports</xqdoc:name><xqdoc:signature>declare function xqh:imports($xqd as element(xqdoc:xqdoc), $model as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:imports</xqdoc:name><xqdoc:signature>declare function xqh:imports($xqd as element(xqdoc:xqdoc), $model as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>calls</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>importing</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>importing</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
 as element(div){
   let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
   let $importing:=xqd:imports($model)?($uri)
@@ -810,7 +808,7 @@ as element(div){
     &lt;h2&gt;&lt;a id="imports"/&gt;2 Imports&lt;/h2&gt;
 
     &lt;p&gt;
-    &lt;span class="badge badge-info"&gt;this&lt;/span&gt; module is imported by
+    This module is imported by
     &lt;span class="badge badge-info"&gt;{ count($importing) }&lt;/span&gt; modules, it imports
     &lt;span class="badge badge-info"&gt;{ count($imports/xqdoc:import) }&lt;/span&gt; modules.
     &lt;/p&gt;
@@ -825,7 +823,7 @@ as element(div){
   }
  
     &lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>calls</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>importing</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>importing</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:variables</xqdoc:name><xqdoc:signature>declare function xqh:variables($vars as element(xqdoc:variables)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>vars</xqdoc:name><xqdoc:type>element(xqdoc:variables)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:variables($vars as element(xqdoc:variables))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:variables</xqdoc:name><xqdoc:signature>declare function xqh:variables($vars as element(xqdoc:variables)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>vars</xqdoc:name><xqdoc:type>element(xqdoc:variables)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>variable</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>index</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:variables($vars as element(xqdoc:variables))
 as element(div)
 {
   &lt;div class="div2"&gt;
@@ -839,7 +837,7 @@ as element(div)
      if(empty( $vars/xqdoc:variable)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>variable</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>index</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>vars</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:variable</xqdoc:name><xqdoc:signature>declare function xqh:variable($v as element(xqdoc:variable), $section as xs:anyAtomicType*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:variable)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>section</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:variable</xqdoc:name><xqdoc:signature>declare function xqh:variable($v as element(xqdoc:variable), $section as xs:anyAtomicType*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:variable)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>section</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
 as element(div)
 {
 let $id:= concat('$',$v/xqdoc:name)
@@ -856,22 +854,27 @@ return
       {xqh:tags($v/xqdoc:comment/(* except xqdoc:description)) }
       { xqh:when($v/xqdoc:annotation,xqh:annotations#1) }
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:functions</xqdoc:name><xqdoc:signature>declare function xqh:functions($funs as element(xqdoc:functions)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>funs</xqdoc:name><xqdoc:type>element(xqdoc:functions)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:functions($funs as element(xqdoc:functions))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:functions</xqdoc:name><xqdoc:signature>declare function xqh:functions($funs as element(xqdoc:functions), $ns as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>funs</xqdoc:name><xqdoc:type>element(xqdoc:functions)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>function</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
 as element(div)
 {
   &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="functions"/&gt;4 Functions&lt;/h2&gt;
 		{ for $f in $funs/xqdoc:function
-      order by  lower-case($f/xqdoc:name)
+      group by $name:=$f/xqdoc:name
+      order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos)),
+	   return xqh:function($f,(4,$pos),$ns),
       if(empty( $funs/xqdoc:function)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>function</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>o/p details for function $funs has all defined arities</xqdoc:description></xqdoc:comment><xqdoc:name>xqh:function</xqdoc:name><xqdoc:signature>declare function xqh:function($funs as element(xqdoc:function)*, $section as xs:anyAtomicType*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>funs</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:function)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>section</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>o/p details for function $funs has all defined arities</xqdoc:description><xqdoc:param>$section no.</xqdoc:param></xqdoc:comment><xqdoc:name>xqh:function</xqdoc:name><xqdoc:signature>declare function xqh:function($funs as element(xqdoc:function)*, $section as xs:anyAtomicType*, $ns as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>funs</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:function)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>section</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>badges</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>function-signature</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>parameters</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>return</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $ns as map(*))
 as element(div)
 {
+    let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
+
 	  return
 		&lt;div class="div3"&gt;
 			&lt;h3&gt;&lt;a id="{$id}"/&gt;{ page:section($section) } { $id }
@@ -879,8 +882,16 @@ as element(div)
 				&lt;a href="#{$id}" &gt;#&lt;/a&gt;
 				&lt;/div&gt;
 			&lt;/h3&gt;
-
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
+      { $funs!&lt;a id="{ $id }#{ @arity }"/&gt; }
+     &lt;p&gt;Arities: {  $funs 
+                  ! &lt;span &gt;
+                      &lt;a href="#{ $id }#{ @arity }"&gt;#{ string(@arity) }&lt;/a&gt;
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                      
+                    &lt;/span&gt;
+                          
+                 }&lt;/p&gt;
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=&gt;head(),xqh:description#1) }
 			&lt;dt class="label"&gt;Signature&lt;/dt&gt;
 			&lt;dd&gt;
 			{$funs!xqh:function-signature(.) }
@@ -888,8 +899,12 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      { $funs/xqdoc:annotations!xqh:annotations(.) }
+      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      &lt;details&gt;
+        &lt;summary&gt;Source&lt;/summary&gt;
+        { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
+      &lt;/details&gt;
+     
       
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
@@ -897,12 +912,9 @@ as element(div)
       &lt;summary&gt;External functions that invoke this function&lt;/summary&gt;
       todo
       &lt;/details&gt;
-       &lt;details&gt;
-      &lt;summary&gt;Source&lt;/summary&gt;
-      { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
-      &lt;/details&gt;
+     { $funs/xqdoc:annotations!xqh:annotations(.) }
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>function-signature</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>parameters</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>return</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>when</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description/></xqdoc:comment><xqdoc:name>xqh:invoked</xqdoc:name><xqdoc:signature>declare function xqh:invoked($invoked as element(xqdoc:invoked)*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>invoked</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:invoked)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:invoked($invoked as element(xqdoc:invoked)*)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description/></xqdoc:comment><xqdoc:name>xqh:invoked</xqdoc:name><xqdoc:signature>declare function xqh:invoked($invoked as element(xqdoc:invoked)*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>invoked</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:invoked)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:invoked($invoked as element(xqdoc:invoked)*)
 {
  let $msg:= ``[References `{ count($invoked) }` functions from `{ count(distinct-values($invoked/xqdoc:uri)) }` modules ]``
  return &lt;details&gt;
@@ -927,18 +939,18 @@ as element(div)
       &lt;/tbody&gt;
       &lt;/table&gt;
       &lt;/details&gt; 
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>msg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>invoked</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:custom</xqdoc:name><xqdoc:signature>declare function xqh:custom($v as element(xqdoc:custom)) as element(p)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:custom)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(p)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:custom($v as element(xqdoc:custom))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:custom</xqdoc:name><xqdoc:signature>declare function xqh:custom($v as element(xqdoc:custom)) as element(p)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:custom)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(p)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:custom($v as element(xqdoc:custom))
 as element(p)
 {
 		&lt;p&gt;{ $v/@tag/string() }: { $v/* }&lt;/p&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
 a specific function (or variable) defined in a library or main module contained in xqDoc, or arbitrary text. To link to  
 an external site, use a complete URL such as http://www.xquery.com. To link to a library or main module contained in  
   
 xqDoc, simply provide the URI for the library or main module. To link to a specific function (or variable) defined in an 
 xqDoc library or main module, simply provide the URI for the library or main module followed by a ';' and finally the     
 function or variable name. To provide a name for a link, simply include a second ';' followed by the name. To provide     
-text, simply include the 'text'. Multiple @see tags can be specified (one per link or string of text).</xqdoc:description><xqdoc:see>http://www.xquery.com</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;build-link</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;$months</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;$months;month variable</xqdoc:see><xqdoc:see>http://www.xquery.com;;xquery</xqdoc:see><xqdoc:see>some text</xqdoc:see></xqdoc:comment><xqdoc:name>xqh:see</xqdoc:name><xqdoc:signature>declare function xqh:see($v as element(xqdoc:see)) as element(p)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:see)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(p)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:see($v as element(xqdoc:see))
+text, simply include the 'text'. Multiple @see tags can be specified (one per link or string of text).</xqdoc:description><xqdoc:see>http://www.xquery.com</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;build-link</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;$months</xqdoc:see><xqdoc:see>xqdoc/xqdoc-display;$months;month variable</xqdoc:see><xqdoc:see>http://www.xquery.com;;xquery</xqdoc:see><xqdoc:see>some text</xqdoc:see></xqdoc:comment><xqdoc:name>xqh:see</xqdoc:name><xqdoc:signature>declare function xqh:see($v as element(xqdoc:see)) as element(p)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:see)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(p)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>is-url</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:see($v as element(xqdoc:see))
 as element(p)
 {
   let $items:=tokenize($v,";")
@@ -949,7 +961,7 @@ as element(p)
           case count($items) eq 2 return &lt;a href="{ $first }#{ $items[2] }"&gt;{ $items[2] }&lt;/a&gt;
           default return if(xqh:is-url($first)) then &lt;a href="{ $first }"&gt;{ $first }&lt;/a&gt; else $first
         }&lt;/p&gt;
-}</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>is-url</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>first</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:annotations</xqdoc:name><xqdoc:signature>declare function xqh:annotations($v as element(xqdoc:annotations)) as element()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:annotations)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:annotations($v as element(xqdoc:annotations))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:annotations</xqdoc:name><xqdoc:signature>declare function xqh:annotations($v as element(xqdoc:annotations)) as element()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:annotations)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:annotations($v as element(xqdoc:annotations))
 as element(*)
 {
 		&lt;details&gt;
@@ -969,11 +981,11 @@ as element(*)
     }&lt;/tbody&gt;
 			&lt;/table&gt;
 		&lt;/details&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>true() if $url represents a url</xqdoc:description><xqdoc:see>http://urlregex.com/</xqdoc:see></xqdoc:comment><xqdoc:name>xqh:is-url</xqdoc:name><xqdoc:signature>declare function xqh:is-url($url as xs:string) as xs:boolean</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:is-url($url as xs:string)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>true() if $url represents a url</xqdoc:description><xqdoc:see>http://urlregex.com/</xqdoc:see></xqdoc:comment><xqdoc:name>xqh:is-url</xqdoc:name><xqdoc:signature>declare function xqh:is-url($url as xs:string) as xs:boolean</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>matches</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:is-url($url as xs:string)
 as xs:boolean
 {
   matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
-}</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>matches</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:namespaces</xqdoc:name><xqdoc:signature>declare function xqh:namespaces($namespaces as element(xqdoc:namespaces)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>namespaces</xqdoc:name><xqdoc:type>element(xqdoc:namespaces)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:namespaces($namespaces as element(xqdoc:namespaces))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqh:namespaces</xqdoc:name><xqdoc:signature>declare function xqh:namespaces($namespaces as element(xqdoc:namespaces), $model as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>namespaces</xqdoc:name><xqdoc:type>element(xqdoc:namespaces)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
 as element(div)
 {
      &lt;div class="div2"&gt;
@@ -992,12 +1004,12 @@ as element(div)
           return
 						&lt;tr&gt;
 							&lt;td&gt;{string($ns/@prefix) }&lt;/td&gt;
-							&lt;td&gt;{ string($ns/@uri) }&lt;/td&gt;
+							&lt;td&gt;{ page:link-module(string($ns/@uri),$model) }&lt;/td&gt;
 						&lt;/tr&gt;
 			}&lt;/tbody&gt;
 			&lt;/table&gt;
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:parameters</xqdoc:name><xqdoc:signature>declare function xqh:parameters($v as element(xqdoc:parameters)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:parameters)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:parameters($v as element(xqdoc:parameters))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:parameters</xqdoc:name><xqdoc:signature>declare function xqh:parameters($v as element(xqdoc:parameters)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:parameters)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:parameters($v as element(xqdoc:parameters))
 as element(*)*
 {
 	&lt;dt class="label"&gt;Parameters&lt;/dt&gt;,
@@ -1021,7 +1033,7 @@ as element(*)*
                 &lt;/li&gt;
     }&lt;/ul&gt;
 		&lt;/dd&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:return</xqdoc:name><xqdoc:signature>declare function xqh:return($v as element(xqdoc:return)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:return)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:return($v as element(xqdoc:return))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:return</xqdoc:name><xqdoc:signature>declare function xqh:return($v as element(xqdoc:return)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:return)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:return($v as element(xqdoc:return))
 as element(*)*
 {
 		&lt;dt class="label"&gt;Return&lt;/dt&gt;,
@@ -1038,13 +1050,13 @@ as element(*)*
 				&lt;/li&gt;
 			&lt;/ul&gt;
 		&lt;/dd&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:error</xqdoc:name><xqdoc:signature>declare function xqh:error($v as element(xqdoc:error)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:error)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:error($v as element(xqdoc:error))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:error</xqdoc:name><xqdoc:signature>declare function xqh:error($v as element(xqdoc:error)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:error)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:error($v as element(xqdoc:error))
 {
 		&lt;dt class="label"&gt;Error&lt;/dt&gt;,
 		&lt;dd&gt;
 		{ $v/(node()|text()) }
 		&lt;/dd&gt;
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:function-signature</xqdoc:name><xqdoc:signature>declare function xqh:function-signature($v as element(xqdoc:function)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:function)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:function-signature($v as element(xqdoc:function))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:function-signature</xqdoc:name><xqdoc:signature>declare function xqh:function-signature($v as element(xqdoc:function)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:function)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:function-signature($v as element(xqdoc:function))
 as element(div){
 		&lt;div class="proto"&gt;
 			&lt;code class="function"&gt;{ $v/xqdoc:name/string() }&lt;/code&gt;
@@ -1064,13 +1076,13 @@ as element(div){
 			&lt;/code&gt;
       
 		&lt;/div&gt;
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:description</xqdoc:name><xqdoc:signature>declare function xqh:description($v as element(xqdoc:description)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:description)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:description($v as element(xqdoc:description))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:description</xqdoc:name><xqdoc:signature>declare function xqh:description($v as element(xqdoc:description)) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v</xqdoc:name><xqdoc:type>element(xqdoc:description)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:description($v as element(xqdoc:description))
 as element(*)*{
   		&lt;dt class="label"&gt;Summary&lt;/dt&gt;,
 		&lt;dd&gt;
 			{ $v/(node()|text()) }
 		&lt;/dd&gt;
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:tags</xqdoc:name><xqdoc:signature>declare function xqh:tags($tags as element()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>tags</xqdoc:name><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:tags($tags as element(*)*)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:tags</xqdoc:name><xqdoc:signature>declare function xqh:tags($tags as element()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>tags</xqdoc:name><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>see</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:tags($tags as element(*)*)
 {
  for $tag in $tags return
 typeswitch ($tag)
@@ -1079,26 +1091,26 @@ typeswitch ($tag)
   case element (xqdoc:version) return&lt;p&gt;Version: {string($tag)}&lt;/p&gt;
   case element (xqdoc:custom) return&lt;p&gt;{ $tag/@tag/string()} : {string($tag)}&lt;/p&gt;  
   default return()
-}</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.mod-html</xqdoc:uri><xqdoc:name>see</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tags</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:restxq</xqdoc:name><xqdoc:signature>declare function xqh:restxq($xqd as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:restxq($xqd)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqh:restxq</xqdoc:name><xqdoc:signature>declare function xqh:restxq($xqd as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:restxq($xqd)
 as element(div)
 {
    &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="restxq"/&gt;6 RestXQ&lt;/h2&gt;
       &lt;p&gt;None&lt;/p&gt;
     &lt;/div&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>run function when value is non empty</xqdoc:description></xqdoc:comment><xqdoc:name>xqh:when</xqdoc:name><xqdoc:signature>declare function xqh:when($value as item()*, $fun as function(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>value</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>fun</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:when($value,$fun as function(*))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>run function when value is non empty</xqdoc:description></xqdoc:comment><xqdoc:name>xqh:when</xqdoc:name><xqdoc:signature>declare function xqh:when($value as item()*, $fun as function(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>value</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>fun</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:when($value,$fun as function(*))
 {
  if($value) then $fun($value) else ()
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fun</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqh:xqdoc</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqdoc</xqdoc:literal><xqdoc:literal type="xs:string">xqDoc file for the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoc.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("xqdoc", "xqDoc file for the source module") %Q{https://github.com/Quodatum/xqdoca}output("xqdoc.xml", "xml") function xqh:xqdoc($file as map(*), $opts as map(*), $model as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:xqdoc($file as map(*),
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqh:xqdoc</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqdoc</xqdoc:literal><xqdoc:literal type="xs:string">xqDoc file for the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoc.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("xqdoc", "xqDoc file for the source module") %Q{https://github.com/Quodatum/xqdoca}output("xqdoc.xml", "xml") function xqh:xqdoc($file as map(*), $opts as map(*), $model as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:xqdoc($file as map(*),
                   $opts as map(*),
                   $model as map(*)
                   )
 {
   $file?xqdoc
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqh:xqparse</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqparse</xqdoc:literal><xqdoc:literal type="xs:string">xqparse file for the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqparse.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("xqparse", "xqparse file for the source module") %Q{https://github.com/Quodatum/xqdoca}output("xqparse.xml", "xml") function xqh:xqparse($file as map(*), $opts as map(*), $model as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqh:xqparse($file as map(*),
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqh:xqparse</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqparse</xqdoc:literal><xqdoc:literal type="xs:string">xqparse file for the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqparse.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("xqparse", "xqparse file for the source module") %Q{https://github.com/Quodatum/xqdoca}output("xqparse.xml", "xml") function xqh:xqparse($file as map(*), $opts as map(*), $model as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqh:xqparse($file as map(*),
                   $opts as map(*),
                   $model as map(*)
                   )
 {
   $file?xqparse
-}</xqdoc:body><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

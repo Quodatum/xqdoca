@@ -47,6 +47,13 @@ return map{
            "name": $n2} 
 };
 
+declare function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
+as xs:boolean
+{
+  $a?name=$name and $a?uri=$uri
+};
+
+
 (:~ namespace for prefix
  : @param $prefix prefix to lookup
  : @param $default namespace to use if prefix empty

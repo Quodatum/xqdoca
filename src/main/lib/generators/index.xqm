@@ -33,6 +33,7 @@ module namespace xqhtml = 'quodatum:build.xqdoc-html';
 
 import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
@@ -59,16 +60,22 @@ let $d:=<div>
                   </span>
                   &#160;XQuery source documentation 
               </h1>
+              <h2>Built { page:date() }</h2>
+             { page:toc3($opts?project, 
+                                <directory name="foo">
+                                  <file name="Summary" target="#summary"/>
+                                  <directory target="#ns" name="Modules">
+                                   <file name="Main modules" target="#ns_main"/>
+                                    <file name="Library modules" target="#ns_library"/>
+                                   </directory>
+                                  <file target="#file" name="Files"/>
+                                  <file target="#annotation" name="Annotations"/>
+                                  <file target="#perspectives" name="Other perspectives"/>
+                                   
+                                </directory>,
+                                xqhtml:toc-render#2
+                              )
              
-              { page:toc2($opts?project, 
-                                <toc>
-                                  <item href="#summary" >Summary</item>
-                                  <item href="#ns" >Modules</item>
-                                  <item href="#file" >Files</item>
-                                  <item href="#annotation" >Annotations</item>
-                                   <item href="#perspectives" >Other perspectives</item>
-                                </toc>
-                  )
                   , xqhtml:summary($model,$opts)
                   , xqhtml:modules($model,$opts)
  }
@@ -91,6 +98,19 @@ let $d:=<div>
            }
      </div>
 return document{ page:wrap($d, $opts ) }
+};
+
+declare function xqhtml:toc-render($pos as xs:string,$el as element(*))
+as element(*)
+{
+let $c:=(
+<span class="secno">{$pos}</span>,
+<span class="content">{$el/@name/string()}</span>
+)
+return if($el/@target) then
+ <a href="{$el/@target}">{ $c }</a>
+else
+ $c
 };
 
 declare function xqhtml:summary($model,$opts)
@@ -182,6 +202,7 @@ as element(table)
                     else
                         $file?xqdoc/xqdoc:module/@type/string()
          order by $type, $file?namespace
+         let $ns:=xqd:namespaces($file?xqdoc)
          let $annots:= for $a in $file?annotations
                        group by $ns:=$a?annotation?uri
                        order by $ns
@@ -192,10 +213,7 @@ as element(table)
                 <td>{  $type }</td>
                  <td>{page:link-module($file) }</td>
                 
-                 <td>{ 
-                       if($updating) then <span class="badge badge-danger" title="Updating">U</span> else ()
-                      ,if($rest) then <span class="badge badge-info" title="rest">R</span> else () 
-                    }</td>       
+                 <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $ns) }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
                  <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
               </tr>

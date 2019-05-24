@@ -44,8 +44,8 @@ declare
 function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model) 
-let $tree:=$annots?uri
-let $tree:=tree:build($tree)
+let $tree:=$annots?uri 
+let $tree:=tree:build($tree)=>trace("TREE: ")
 let $body:= <div>
               <h1>
                  Project <span class="badge badge-info">
@@ -120,10 +120,24 @@ as element(nav)
                         <span class="content">Rest Paths</span>
                     </a>
                 </li>
-                <li>
-      
-                 <ol  class="toc"> { $tree/*/*!page:tree-list(.,2) } </ol>
-                </li>
+                { $tree/*!page:tree-list(.,2,_:toc-render#2) } 
              </ol>
            </nav>
+};
+
+
+declare function _:toc-render($pos as xs:string,$el as element(*))
+as element(*)*
+{
+let $c:=(
+<span class="secno">{$pos}</span>,
+<span class="content">{$el/@name/string()}</span>
+)
+return if($el/@target) then
+ <a href="#{$el/@target}">
+ { $c }
+ <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}">X</div>
+  </a>
+else
+ $c
 };

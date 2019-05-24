@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Driver for xquery documentation generator </p>
  :
  : @author Andy Bunce
- : @version 0.2
+ : @version 0.2 
  :)
 (:~
  : Generate documentation for for XQuery sources
@@ -34,13 +34,13 @@ import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
  
-(:~ URL of the root folder to document
+(:~  URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca 
  :)
 declare variable $efolder as xs:anyURI  external :=
               xs:anyURI(db:option("webpath") ||"/vue-poc/")
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              (: xs:anyURI(file:parent(static-base-uri()) :)
+              (: xs:anyURI(file:parent(static-base-uri())) :)
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 ;
 
@@ -48,35 +48,33 @@ declare variable $efolder as xs:anyURI  external :=
 declare variable $platform as xs:string  external := "basex";
 
 (:~ source file extensions to parse :)
-declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery"; (: *.xqy:)
+declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery";
 
-(: hack for unique ids @TODO use date:)
-declare variable $id as element(last-id):=db:open("vue-poc","/state.xml")/state/last-id;
 
 (:~ location to save outputs as a base-uri :)
-declare variable $target as xs:string external :="file:///" || db:option("webpath") || "/static/xqdoc/" || $id || "/";
+declare variable $target as xs:string external :="file:///{webpath}/static/xqdoc/{project}/" ;
 
-let $model:= xqd:snap($efolder,$platform,$exts) 
+let $files:=xqd:find-sources($efolder,$exts)
+let $model:= xqd:snap($efolder,$files,$platform) 
 let $options:=map{
                "project": $model?project, 
                "resources": "resources/",
                "outputs":  map{
-                    "global": ("index","restxq","imports","annotations","meta","xqdoc-validate"),
+                    "global": ("index","restxq","imports","annotations","meta"),
                     "module": ("xqdoc","xqparse","module")  
                 }    
                }
                
 (: generate  outputs :)
-let $pages:= xqo:render($model,$options)   
+let $pages:= xqo:render($model,$options)
+let $target:=xqd:target($target,$options)   
 (: arbitary result :)
 let $result:=   <json type="object">
                     <extra>XQdoc generated</extra>
                     <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>
-                    <id>{$id/string()}</id>
                 </json> 
 return (
        store:store($pages,$target),
        xqo:export-resources($target),
-       replace value of node $id with 1+$id,
        update:output($result)
 )

@@ -30,6 +30,7 @@ xquery version "3.1";
 module namespace xqh = 'quodatum:xqdoca.mod-html';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
@@ -57,6 +58,7 @@ as document-node()
 let $xqd:=$file?xqdoc
 let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
 let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $ns:=xqd:namespaces($xqd)
 let $d:=<div>
        <h1>
 			<span class="badge badge-info">{ $file?namespace }</span>&#160;
@@ -72,11 +74,11 @@ let $d:=<div>
       }
 		</h1>
 {
-         xqh:toc($xqd,$opts,$file),
+         xqh:toc($xqd,$opts,$file,$ns),
          xqh:summary($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions),
+         xqh:functions($xqd/xqdoc:functions,$ns),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           <div class="div2">
@@ -110,7 +112,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
     </div>
   };
   
-declare function xqh:toc($xqd,$opts,$file)
+declare function xqh:toc($xqd,$opts,$file,$ns as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -176,15 +178,10 @@ as element(nav){
 										<a href="#{$name}">
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
 											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
-                      {if($restxq) then 
-                        <div class="badge badge-success" style="float:right"	title="RESTXQ:">R</div>
-                      else
-                        ()}
-                       {if($update) then 
-                        <div class="badge badge-danger" style="float:right"	title="Updating">U</div>
-                      else
-                        ()}  
-                      </span>
+                      <div style="float:right">
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                        </div>
+                        </span>  
 										</a>
 									</li>
 							}
@@ -295,26 +292,32 @@ return
 		</div>
 };  
 
-declare function xqh:functions($funs as element(xqdoc:functions))
+declare function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
 as element(div)
 {
   <div class="div2">
 			<h2><a id="functions"/>4 Functions</h2>
 		{ for $f in $funs/xqdoc:function
-      order by  lower-case($f/xqdoc:name)
+      group by $name:=$f/xqdoc:name
+      order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos)),
+	   return xqh:function($f,(4,$pos),$ns),
       if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
 		</div>
 };
 
 (:~   o/p details for function $funs has all defined arities
+ : @param $section no.
  :)
-declare function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
+declare function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $ns as map(*))
 as element(div)
 {
+    let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
+
 	  return
 		<div class="div3">
 			<h3><a id="{$id}"/>{ page:section($section) } { $id }
@@ -322,8 +325,16 @@ as element(div)
 				<a href="#{$id}" >#</a>
 				</div>
 			</h3>
-
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
+      { $funs!<a id="{ $id }#{ @arity }"/> }
+     <p>Arities: {  $funs 
+                  ! <span >
+                      <a href="#{ $id }#{ @arity }">#{ string(@arity) }</a>
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                      
+                    </span>
+                          
+                 }</p>
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
 			<dt class="label">Signature</dt>
 			<dd>
 			{$funs!xqh:function-signature(.) }
@@ -347,6 +358,8 @@ as element(div)
      { $funs/xqdoc:annotations!xqh:annotations(.) }
 		</div>
 };
+
+
 
 (:~ 
  :

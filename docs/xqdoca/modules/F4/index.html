@@ -1,20 +1,21 @@
 <!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
         </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.mod-html</span>&nbsp;
-			<small>library module</small><span title="RestXQ" class="badge badge-success" style="float:right">R</span></h1><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-htmlmod.xqm</h1>
-<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Library to support html5 rendering of single xqdoc source</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>See also:
-          <a href="https://github.com/Quodatum/xqdoca">https://github.com/Quodatum/xqdoca</a></p><p>__source : lib/generators/module.xqm</p></dd></dl><div> Imported by <a href="../../imports.html#quodatum:xqdoca.mod-html">*</a></div><ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul><nav id="toc"><h2><a href="../../index.html">main</a>
+			<small>library module</small></h1><nav id="toc"><h2><a href="../../index.html">main</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.mod-html</span></h3><ol class="toc"><li><a href="#main"><span class="secno">1 </span><span class="content">Introduction</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><ol class="toc"><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li></ol></li><li><ol class="toc"><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqh:annotations"><span class="secno">4.1</span><span class="content" title="">xqh:annotations<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:custom"><span class="secno">4.2</span><span class="content" title="">xqh:custom<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:description"><span class="secno">4.3</span><span class="content" title="">xqh:description<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:error"><span class="secno">4.4</span><span class="content" title="">xqh:error<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:function"><span class="secno">4.5</span><span class="content" title="">xqh:function<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:function-signature"><span class="secno">4.6</span><span class="content" title="">xqh:function-signature<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:functions"><span class="secno">4.7</span><span class="content" title="">xqh:functions<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:imports"><span class="secno">4.8</span><span class="content" title="">xqh:imports<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:invoked"><span class="secno">4.9</span><span class="content" title="">xqh:invoked<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:is-url"><span class="secno">4.10</span><span class="content" title="">xqh:is-url<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:namespaces"><span class="secno">4.11</span><span class="content" title="">xqh:namespaces<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:parameters"><span class="secno">4.12</span><span class="content" title="">xqh:parameters<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:restxq"><span class="secno">4.13</span><span class="content" title="">xqh:restxq<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:return"><span class="secno">4.14</span><span class="content" title="">xqh:return<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:see"><span class="secno">4.15</span><span class="content" title="">xqh:see<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:summary"><span class="secno">4.16</span><span class="content" title="">xqh:summary<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:tags"><span class="secno">4.17</span><span class="content" title="">xqh:tags<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:toc"><span class="secno">4.18</span><span class="content" title="">xqh:toc<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:variable"><span class="secno">4.19</span><span class="content" title="">xqh:variable<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:variables"><span class="secno">4.20</span><span class="content" title="">xqh:variables<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:when"><span class="secno">4.21</span><span class="content" title="">xqh:when<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:xqdoc"><span class="secno">4.22</span><span class="content" title="">xqh:xqdoc<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:xqdoc-html2"><span class="secno">4.23</span><span class="content" title="">xqh:xqdoc-html2<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li><li><a href="#xqh:xqparse"><span class="secno">4.24</span><span class="content" title="">xqh:xqparse<div class="badge badge-success" style="float:right" title="RESTXQ:">R</div><div class="badge badge-danger" style="float:right" title="Updating">U</div></span></a></li></ol></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><ol class="toc"><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p><span class="badge badge-info">this</span> module is imported by
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.mod-html</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqh:annotations"><span class="secno">4.1</span><span class="content" title="">xqh:annotations<div style="float:right"></div></span></a></li><li><a href="#xqh:custom"><span class="secno">4.2</span><span class="content" title="">xqh:custom<div style="float:right"></div></span></a></li><li><a href="#xqh:description"><span class="secno">4.3</span><span class="content" title="">xqh:description<div style="float:right"></div></span></a></li><li><a href="#xqh:error"><span class="secno">4.4</span><span class="content" title="">xqh:error<div style="float:right"></div></span></a></li><li><a href="#xqh:function"><span class="secno">4.5</span><span class="content" title="">xqh:function<div style="float:right"></div></span></a></li><li><a href="#xqh:function-signature"><span class="secno">4.6</span><span class="content" title="">xqh:function-signature<div style="float:right"></div></span></a></li><li><a href="#xqh:functions"><span class="secno">4.7</span><span class="content" title="">xqh:functions<div style="float:right"></div></span></a></li><li><a href="#xqh:imports"><span class="secno">4.8</span><span class="content" title="">xqh:imports<div style="float:right"></div></span></a></li><li><a href="#xqh:invoked"><span class="secno">4.9</span><span class="content" title="">xqh:invoked<div style="float:right"></div></span></a></li><li><a href="#xqh:is-url"><span class="secno">4.10</span><span class="content" title="">xqh:is-url<div style="float:right"></div></span></a></li><li><a href="#xqh:namespaces"><span class="secno">4.11</span><span class="content" title="">xqh:namespaces<div style="float:right"></div></span></a></li><li><a href="#xqh:parameters"><span class="secno">4.12</span><span class="content" title="">xqh:parameters<div style="float:right"></div></span></a></li><li><a href="#xqh:restxq"><span class="secno">4.13</span><span class="content" title="">xqh:restxq<div style="float:right"></div></span></a></li><li><a href="#xqh:return"><span class="secno">4.14</span><span class="content" title="">xqh:return<div style="float:right"></div></span></a></li><li><a href="#xqh:see"><span class="secno">4.15</span><span class="content" title="">xqh:see<div style="float:right"></div></span></a></li><li><a href="#xqh:summary"><span class="secno">4.16</span><span class="content" title="">xqh:summary<div style="float:right"></div></span></a></li><li><a href="#xqh:tags"><span class="secno">4.17</span><span class="content" title="">xqh:tags<div style="float:right"></div></span></a></li><li><a href="#xqh:toc"><span class="secno">4.18</span><span class="content" title="">xqh:toc<div style="float:right"></div></span></a></li><li><a href="#xqh:variable"><span class="secno">4.19</span><span class="content" title="">xqh:variable<div style="float:right"></div></span></a></li><li><a href="#xqh:variables"><span class="secno">4.20</span><span class="content" title="">xqh:variables<div style="float:right"></div></span></a></li><li><a href="#xqh:when"><span class="secno">4.21</span><span class="content" title="">xqh:when<div style="float:right"></div></span></a></li><li><a href="#xqh:xqdoc"><span class="secno">4.22</span><span class="content" title="">xqh:xqdoc<div style="float:right"></div></span></a></li><li><a href="#xqh:xqdoc-html2"><span class="secno">4.23</span><span class="content" title="">xqh:xqdoc-html2<div style="float:right"></div></span></a></li><li><a href="#xqh:xqparse"><span class="secno">4.24</span><span class="content" title="">xqh:xqparse<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-htmlmod.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Library to support html5 rendering of single xqdoc source</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>See also:
+          <a href="https://github.com/Quodatum/xqdoca">https://github.com/Quodatum/xqdoca</a></p><p>__source : lib/generators/module.xqm</p></dd></dl>,
+		<div> Imported by <a href="../../imports.html#quodatum:xqdoca.mod-html">*</a></div>,
+    <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
+    This module is imported by
     <span class="badge badge-info">0</span> modules, it imports
-    <span class="badge badge-info">2</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span><a href="../../modules/F7/index.html" title="lib\model.xqm">quodatum:xqdoca.model</a></span></div><div><span><a href="../../modules/F12/index.html" title="lib\xqdoc-page.xqm">quodatum:xqdoca.page</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="xqh:annotations"></a>4.1&nbsp;xqh:annotations<div style="float:right"><a href="#xqh:annotations">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:annotations</code>
+    <span class="badge badge-info">3</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;">(None)</div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;"><div><span>quodatum:xqdoca.model<a href="../../modules/F8/index.html" title="lib\model.xqm">🔗</a></span></div><div><span>quodatum:xqdoca.model.annotations<a href="../../modules/F12/index.html" title="lib\xqdoc-anno.xqm">🔗</a></span></div><div><span>quodatum:xqdoca.page<a href="../../modules/F15/index.html" title="lib\xqdoc-page.xqm">🔗</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="xqh:annotations"></a>4.1&nbsp;xqh:annotations<div style="float:right"><a href="#xqh:annotations">#</a></div></h3><a id="xqh:annotations#1"></a><p>Arities: <span><a href="#xqh:annotations#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:annotations</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:annotations)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:annotations)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:annotations($v as element(xqdoc:annotations))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:annotations)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:annotations($v as element(xqdoc:annotations))
 as element(*)
 {
 		&lt;details&gt;
@@ -34,50 +35,54 @@ as element(*)
     }&lt;/tbody&gt;
 			&lt;/table&gt;
 		&lt;/details&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:custom"></a>4.2&nbsp;xqh:custom<div style="float:right"><a href="#xqh:custom">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:custom</code>
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:custom"></a>4.2&nbsp;xqh:custom<div style="float:right"><a href="#xqh:custom">#</a></div></h3><a id="xqh:custom#1"></a><p>Arities: <span><a href="#xqh:custom#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:custom</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:custom)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(p)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:custom)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(p)</code></li></ul></dd><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:custom($v as element(xqdoc:custom))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(p)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:custom)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(p)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:custom($v as element(xqdoc:custom))
 as element(p)
 {
 		&lt;p&gt;{ $v/@tag/string() }: { $v/* }&lt;/p&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:description"></a>4.3&nbsp;xqh:description<div style="float:right"><a href="#xqh:description">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:description</code>
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:description"></a>4.3&nbsp;xqh:description<div style="float:right"><a href="#xqh:description">#</a></div></h3><a id="xqh:description#1"></a><p>Arities: <span><a href="#xqh:description#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:description</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:description)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:description)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:description($v as element(xqdoc:description))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:description)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:description($v as element(xqdoc:description))
 as element(*)*{
   		&lt;dt class="label"&gt;Summary&lt;/dt&gt;,
 		&lt;dd&gt;
 			{ $v/(node()|text()) }
 		&lt;/dd&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:error"></a>4.4&nbsp;xqh:error<div style="float:right"><a href="#xqh:error">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:error</code>
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:error"></a>4.4&nbsp;xqh:error<div style="float:right"><a href="#xqh:error">#</a></div></h3><a id="xqh:error#1"></a><p>Arities: <span><a href="#xqh:error#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:error</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:error)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:error)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:error($v as element(xqdoc:error))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:error)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:error($v as element(xqdoc:error))
 {
 		&lt;dt class="label"&gt;Error&lt;/dt&gt;,
 		&lt;dd&gt;
 		{ $v/(node()|text()) }
 		&lt;/dd&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:function"></a>4.5&nbsp;xqh:function<div style="float:right"><a href="#xqh:function">#</a></div></h3><dt class="label">Summary</dt><dd>o/p details for function $funs has all defined arities</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:function</code>
-		  ( 
-			<code class="arg">$funs</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:function)*</code>, <code class="arg">$section</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyAtomicType*</code>
-	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>funs<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:function)*</code></li><li>section<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyAtomicType*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 11 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>function-signature#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>parameters#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>return#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>error#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>annotations#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>section#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
+      </details></div><div class="div3"><h3><a id="xqh:function"></a>4.5&nbsp;xqh:function<div style="float:right"><a href="#xqh:function">#</a></div></h3><a id="xqh:function#3"></a><p>Arities: <span><a href="#xqh:function#3">#3</a></span></p><dt class="label">Summary</dt><dd>o/p details for function $funs has all defined arities</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:function</code>
+		  ( 
+			<code class="arg">$funs</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:function)*</code>, <code class="arg">$section</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyAtomicType*</code>, <code class="arg">$ns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>funs<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:function)*</code></li><li>section<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyAtomicType*</code> no.</li><li>ns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $ns as map(*))
 as element(div)
 {
+    let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
+
 	  return
 		&lt;div class="div3"&gt;
 			&lt;h3&gt;&lt;a id="{$id}"/&gt;{ page:section($section) } { $id }
@@ -85,8 +90,16 @@ as element(div)
 				&lt;a href="#{$id}" &gt;#&lt;/a&gt;
 				&lt;/div&gt;
 			&lt;/h3&gt;
-
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
+      { $funs!&lt;a id="{ $id }#{ @arity }"/&gt; }
+     &lt;p&gt;Arities: {  $funs 
+                  ! &lt;span &gt;
+                      &lt;a href="#{ $id }#{ @arity }"&gt;#{ string(@arity) }&lt;/a&gt;
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                      
+                    &lt;/span&gt;
+                          
+                 }&lt;/p&gt;
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=&gt;head(),xqh:description#1) }
 			&lt;dt class="label"&gt;Signature&lt;/dt&gt;
 			&lt;dd&gt;
 			{$funs!xqh:function-signature(.) }
@@ -94,8 +107,12 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      { $funs/xqdoc:annotations!xqh:annotations(.) }
+      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      &lt;details&gt;
+        &lt;summary&gt;Source&lt;/summary&gt;
+        { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
+      &lt;/details&gt;
+     
       
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
@@ -103,18 +120,15 @@ as element(div)
       &lt;summary&gt;External functions that invoke this function&lt;/summary&gt;
       todo
       &lt;/details&gt;
-       &lt;details&gt;
-      &lt;summary&gt;Source&lt;/summary&gt;
-      { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
-      &lt;/details&gt;
+     { $funs/xqdoc:annotations!xqh:annotations(.) }
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:function-signature"></a>4.6&nbsp;xqh:function-signature<div style="float:right"><a href="#xqh:function-signature">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:function-signature</code>
+}</code></pre></details><details><summary>References 15 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>sort#3</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>head#3</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>function-signature#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>parameters#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>return#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>error#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>annotations#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.model.annotations</td><td>badges#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>section#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:function-signature"></a>4.6&nbsp;xqh:function-signature<div style="float:right"><a href="#xqh:function-signature">#</a></div></h3><a id="xqh:function-signature#1"></a><p>Arities: <span><a href="#xqh:function-signature#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:function-signature</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:function)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:function)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 7 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>last#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:function-signature($v as element(xqdoc:function))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:function)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:function-signature($v as element(xqdoc:function))
 as element(div){
 		&lt;div class="proto"&gt;
 			&lt;code class="function"&gt;{ $v/xqdoc:name/string() }&lt;/code&gt;
@@ -134,31 +148,32 @@ as element(div){
 			&lt;/code&gt;
       
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:functions"></a>4.7&nbsp;xqh:functions<div style="float:right"><a href="#xqh:functions">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:functions</code>
-		  ( 
-			<code class="arg">$funs</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:functions)</code>
-	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>funs<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:functions)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>lower-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>function#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+}</code></pre></details><details><summary>References 7 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>last#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:functions($funs as element(xqdoc:functions))
+      </details></div><div class="div3"><h3><a id="xqh:functions"></a>4.7&nbsp;xqh:functions<div style="float:right"><a href="#xqh:functions">#</a></div></h3><a id="xqh:functions#2"></a><p>Arities: <span><a href="#xqh:functions#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:functions</code>
+		  ( 
+			<code class="arg">$funs</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:functions)</code>, <code class="arg">$ns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>funs<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:functions)</code></li><li>ns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
 as element(div)
 {
   &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="functions"/&gt;4 Functions&lt;/h2&gt;
 		{ for $f in $funs/xqdoc:function
-      order by  lower-case($f/xqdoc:name)
+      group by $name:=$f/xqdoc:name
+      order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos)),
+	   return xqh:function($f,(4,$pos),$ns),
       if(empty( $funs/xqdoc:function)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:imports"></a>4.8&nbsp;xqh:imports<div style="float:right"><a href="#xqh:imports">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:imports</code>
+}</code></pre></details><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>function#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:imports"></a>4.8&nbsp;xqh:imports<div style="float:right"><a href="#xqh:imports">#</a></div></h3><a id="xqh:imports#2"></a><p>Arities: <span><a href="#xqh:imports#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:imports</code>
 		  ( 
 			<code class="arg">$xqd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:xqdoc)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 8 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.model</td><td>imports#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>link-module#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>link-module#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>calls#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
 as element(div){
   let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
   let $importing:=xqd:imports($model)?($uri)
@@ -168,7 +183,7 @@ as element(div){
     &lt;h2&gt;&lt;a id="imports"/&gt;2 Imports&lt;/h2&gt;
 
     &lt;p&gt;
-    &lt;span class="badge badge-info"&gt;this&lt;/span&gt; module is imported by
+    This module is imported by
     &lt;span class="badge badge-info"&gt;{ count($importing) }&lt;/span&gt; modules, it imports
     &lt;span class="badge badge-info"&gt;{ count($imports/xqdoc:import) }&lt;/span&gt; modules.
     &lt;/p&gt;
@@ -183,13 +198,13 @@ as element(div){
   }
  
     &lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:invoked"></a>4.9&nbsp;xqh:invoked<div style="float:right"><a href="#xqh:invoked">#</a></div></h3><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:invoked</code>
+}</code></pre></details><details><summary>References 8 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.model</td><td>imports#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>link-module#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>link-module#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>calls#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:invoked"></a>4.9&nbsp;xqh:invoked<div style="float:right"><a href="#xqh:invoked">#</a></div></h3><a id="xqh:invoked#1"></a><p>Arities: <span><a href="#xqh:invoked#1">#1</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:invoked</code>
 		  ( 
 			<code class="arg">$invoked</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:invoked)*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>invoked<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:invoked)*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 5 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>distinct-values#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:invoked($invoked as element(xqdoc:invoked)*)
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>invoked<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:invoked)*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:invoked($invoked as element(xqdoc:invoked)*)
 {
  let $msg:= ``[References `{ count($invoked) }` functions from `{ count(distinct-values($invoked/xqdoc:uri)) }` modules ]``
  return &lt;details&gt;
@@ -214,24 +229,24 @@ as element(div){
       &lt;/tbody&gt;
       &lt;/table&gt;
       &lt;/details&gt; 
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:is-url"></a>4.10&nbsp;xqh:is-url<div style="float:right"><a href="#xqh:is-url">#</a></div></h3><dt class="label">Summary</dt><dd>true() if $url represents a url</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:is-url</code>
+}</code></pre></details><details><summary>References 5 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>distinct-values#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:is-url"></a>4.10&nbsp;xqh:is-url<div style="float:right"><a href="#xqh:is-url">#</a></div></h3><a id="xqh:is-url#1"></a><p>Arities: <span><a href="#xqh:is-url#1">#1</a></span></p><dt class="label">Summary</dt><dd>true() if $url represents a url</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:is-url</code>
 		  ( 
 			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
 	 )
 			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:boolean</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code></li></ul></dd><p>See also:
-          <a href="http://urlregex.com/">http://urlregex.com/</a></p><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>matches#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:is-url($url as xs:string)
+          <a href="http://urlregex.com/">http://urlregex.com/</a></p><details><summary>Source</summary><pre><code class="language-xquery">function xqh:is-url($url as xs:string)
 as xs:boolean
 {
   matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:namespaces"></a>4.11&nbsp;xqh:namespaces<div style="float:right"><a href="#xqh:namespaces">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:namespaces</code>
-		  ( 
-			<code class="arg">$namespaces</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:namespaces)</code>
-	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>namespaces<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:namespaces)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 3 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>lower-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>matches#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:namespaces($namespaces as element(xqdoc:namespaces))
+      </details></div><div class="div3"><h3><a id="xqh:namespaces"></a>4.11&nbsp;xqh:namespaces<div style="float:right"><a href="#xqh:namespaces">#</a></div></h3><a id="xqh:namespaces#2"></a><p>Arities: <span><a href="#xqh:namespaces#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:namespaces</code>
+		  ( 
+			<code class="arg">$namespaces</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:namespaces)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>namespaces<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:namespaces)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
 as element(div)
 {
      &lt;div class="div2"&gt;
@@ -250,18 +265,18 @@ as element(div)
           return
 						&lt;tr&gt;
 							&lt;td&gt;{string($ns/@prefix) }&lt;/td&gt;
-							&lt;td&gt;{ string($ns/@uri) }&lt;/td&gt;
+							&lt;td&gt;{ page:link-module(string($ns/@uri),$model) }&lt;/td&gt;
 						&lt;/tr&gt;
 			}&lt;/tbody&gt;
 			&lt;/table&gt;
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:parameters"></a>4.12&nbsp;xqh:parameters<div style="float:right"><a href="#xqh:parameters">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:parameters</code>
+}</code></pre></details><details><summary>References 4 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>lower-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>link-module#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:parameters"></a>4.12&nbsp;xqh:parameters<div style="float:right"><a href="#xqh:parameters">#</a></div></h3><a id="xqh:parameters#1"></a><p>Arities: <span><a href="#xqh:parameters#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:parameters</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:parameters)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:parameters)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>References 11 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>starts-with#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>starts-with#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring-after#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:parameters($v as element(xqdoc:parameters))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:parameters)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:parameters($v as element(xqdoc:parameters))
 as element(*)*
 {
 	&lt;dt class="label"&gt;Parameters&lt;/dt&gt;,
@@ -285,26 +300,26 @@ as element(*)*
                 &lt;/li&gt;
     }&lt;/ul&gt;
 		&lt;/dd&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:restxq"></a>4.13&nbsp;xqh:restxq<div style="float:right"><a href="#xqh:restxq">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:restxq</code>
+}</code></pre></details><details><summary>References 11 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>normalize-space#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>starts-with#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>starts-with#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>substring-after#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:restxq"></a>4.13&nbsp;xqh:restxq<div style="float:right"><a href="#xqh:restxq">#</a></div></h3><a id="xqh:restxq#1"></a><p>Arities: <span><a href="#xqh:restxq#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:restxq</code>
 		  ( 
 			<code class="arg">$xqd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:restxq($xqd)
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:restxq($xqd)
 as element(div)
 {
    &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="restxq"/&gt;6 RestXQ&lt;/h2&gt;
       &lt;p&gt;None&lt;/p&gt;
     &lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:return"></a>4.14&nbsp;xqh:return<div style="float:right"><a href="#xqh:return">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:return</code>
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:return"></a>4.14&nbsp;xqh:return<div style="float:right"><a href="#xqh:return">#</a></div></h3><a id="xqh:return#1"></a><p>Arities: <span><a href="#xqh:return#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:return</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:return)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:return)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:return($v as element(xqdoc:return))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:return)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:return($v as element(xqdoc:return))
 as element(*)*
 {
 		&lt;dt class="label"&gt;Return&lt;/dt&gt;,
@@ -321,7 +336,9 @@ as element(*)*
 				&lt;/li&gt;
 			&lt;/ul&gt;
 		&lt;/dd&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:see"></a>4.15&nbsp;xqh:see<div style="float:right"><a href="#xqh:see">#</a></div></h3><dt class="label">Summary</dt><dd>The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
+}</code></pre></details><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:see"></a>4.15&nbsp;xqh:see<div style="float:right"><a href="#xqh:see">#</a></div></h3><a id="xqh:see#1"></a><p>Arities: <span><a href="#xqh:see#1">#1</a></span></p><dt class="label">Summary</dt><dd>The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
 a specific function (or variable) defined in a library or main module contained in xqDoc, or arbitrary text. To link to  
 an external site, use a complete URL such as http://www.xquery.com. To link to a library or main module contained in  
   
@@ -339,9 +356,7 @@ text, simply include the 'text'. Multiple @see tags can be specified (one per li
           <a href="xqdoc/xqdoc-display#$months">$months</a></p><p>See also:
           <a href="xqdoc/xqdoc-display">month variable</a></p><p>See also:
           <a href="http://www.xquery.com">xquery</a></p><p>See also:
-          some text</p><details><summary>References 5 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>tokenize#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>is-url#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:see($v as element(xqdoc:see))
+          some text</p><details><summary>Source</summary><pre><code class="language-xquery">function xqh:see($v as element(xqdoc:see))
 as element(p)
 {
   let $items:=tokenize($v,";")
@@ -352,31 +367,18 @@ as element(p)
           case count($items) eq 2 return &lt;a href="{ $first }#{ $items[2] }"&gt;{ $items[2] }&lt;/a&gt;
           default return if(xqh:is-url($first)) then &lt;a href="{ $first }"&gt;{ $first }&lt;/a&gt; else $first
         }&lt;/p&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:summary"></a>4.16&nbsp;xqh:summary<div style="float:right"><a href="#xqh:summary">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:summary</code>
+}</code></pre></details><details><summary>References 5 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>tokenize#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>is-url#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:summary"></a>4.16&nbsp;xqh:summary<div style="float:right"><a href="#xqh:summary">#</a></div></h3><a id="xqh:summary#2"></a><p>Arities: <span><a href="#xqh:summary#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:summary</code>
 		  ( 
 			<code class="arg">$mod</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:module)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>mod<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:module)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 6 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:summary($mod as element(xqdoc:module),
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>mod<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:module)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
-   let $restxq:= true()
-   return(	&lt;h1&gt;
-			&lt;span class="badge badge-info"&gt;{ $mod/xqdoc:uri/string() }&lt;/span&gt;&amp;#160;
-			&lt;small&gt;{ $mod/@type/string() } module&lt;/small&gt;
-     { if($restxq) then
-          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
-        else ()  
-       }
-      {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
-        else
-        ()
-      }
-		&lt;/h1&gt;,
-    
+    &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
 		&lt;dl&gt;
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			&lt;dt&gt;Tags&lt;/dt&gt;
@@ -390,14 +392,14 @@ as element(p)
      &lt;li style="display:inline"&gt;&lt;a href="xqdoc.xml" target="xqdoc"&gt;xqdoc.xml&lt;/a&gt;, &lt;/li&gt;
      &lt;li style="display:inline"&gt;&lt;a href="xqparse.xml" target="xqparse"&gt;xqparse.xml&lt;/a&gt;&lt;/li&gt;
      &lt;/ul&gt;
-  )
-  }</code></pre></details></div><div class="div3"><h3><a id="xqh:tags"></a>4.17&nbsp;xqh:tags<div style="float:right"><a href="#xqh:tags">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:tags</code>
+    &lt;/div&gt;
+  }</code></pre></details><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:tags"></a>4.17&nbsp;xqh:tags<div style="float:right"><a href="#xqh:tags">#</a></div></h3><a id="xqh:tags#1"></a><p>Arities: <span><a href="#xqh:tags#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:tags</code>
 		  ( 
 			<code class="arg">$tags</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>tags<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>References 5 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>see#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:tags($tags as element(*)*)
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>tags<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:tags($tags as element(*)*)
 {
  for $tag in $tags return
 typeswitch ($tag)
@@ -406,13 +408,13 @@ typeswitch ($tag)
   case element (xqdoc:version) return&lt;p&gt;Version: {string($tag)}&lt;/p&gt;
   case element (xqdoc:custom) return&lt;p&gt;{ $tag/@tag/string()} : {string($tag)}&lt;/p&gt;  
   default return()
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:toc"></a>4.18&nbsp;xqh:toc<div style="float:right"><a href="#xqh:toc">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:toc</code>
-		  ( 
-			<code class="arg">$xqd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
-	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(nav)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(nav)</code></li></ul></dd><details><summary>References 9 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+}</code></pre></details><details><summary>References 5 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>see#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
       todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:toc($xqd,$opts,$file)
+      </details></div><div class="div3"><h3><a id="xqh:toc"></a>4.18&nbsp;xqh:toc<div style="float:right"><a href="#xqh:toc">#</a></div></h3><a id="xqh:toc#4"></a><p>Arities: <span><a href="#xqh:toc#4">#4</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:toc</code>
+		  ( 
+			<code class="arg">$xqd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$ns</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(nav)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>ns<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(nav)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:toc($xqd,$opts,$file,$ns as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -427,9 +429,9 @@ as element(nav){
 			&lt;/h3&gt;
 			&lt;ol class="toc"&gt;
 				&lt;li&gt;
-					&lt;a href="#main"&gt;
+					&lt;a href="#summary"&gt;
 						&lt;span class="secno"&gt;1 &lt;/span&gt;
-						&lt;span class="content"&gt;Introduction&lt;/span&gt;
+						&lt;span class="content"&gt;Summary&lt;/span&gt;
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
@@ -438,33 +440,30 @@ as element(nav){
             &lt;span class="content"&gt;Imports&lt;/span&gt;
           &lt;/a&gt;
         &lt;/li&gt;
+				
+          &lt;li&gt;
+            &lt;a href="#variables"&gt;
+              &lt;span class="secno"&gt;3 &lt;/span&gt;
+              &lt;span class="content"&gt;Variables&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;ol class="toc"&gt;
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
+                &lt;li&gt;
+                  &lt;a href="#{$id}"&gt;
+                    &lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
+                    &lt;span class="content"&gt;{ $id }&lt;/span&gt;
+                  &lt;/a&gt;
+                &lt;/li&gt;
+            }
+            &lt;/ol&gt;
+          &lt;/li&gt;
+				
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
-							&lt;a href="#variables"&gt;
-								&lt;span class="secno"&gt;3 &lt;/span&gt;
-								&lt;span class="content"&gt;Variables&lt;/span&gt;
-							&lt;/a&gt;
-							&lt;ol class="toc"&gt;
-              {for $var  in $vars
-              order by $var/xqdoc:name
-              let $id:=concat('$',$var/xqdoc:name)
-              count $pos
-              return
-									&lt;li&gt;
-										&lt;a href="#{$id}"&gt;
-											&lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
-											&lt;span class="content"&gt;{ $id }&lt;/span&gt;
-										&lt;/a&gt;
-									&lt;/li&gt;
-							}
-							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-				&lt;/li&gt;
-				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
+
 							&lt;a href="#functions"&gt;
 								&lt;span class="secno"&gt;4 &lt;/span&gt;
 								&lt;span class="content"&gt;Functions&lt;/span&gt;
@@ -481,23 +480,16 @@ as element(nav){
 										&lt;a href="#{$name}"&gt;
 											&lt;span class="secno"&gt;{ concat('4.',$pos[1]) }&lt;/span&gt;
 											&lt;span class="content" title="{$fun[1]/xqdoc:description/string()}"&gt;{ $name }
-                      {if($restxq) then 
-                        &lt;div class="badge badge-success" style="float:right"	title="RESTXQ:"&gt;R&lt;/div&gt;
-                      else
-                        ()}
-                       {if($update) then 
-                        &lt;div class="badge badge-danger" style="float:right"	title="Updating"&gt;U&lt;/div&gt;
-                      else
-                        ()}  
-                      &lt;/span&gt;
+                      &lt;div style="float:right"&gt;
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                        &lt;/div&gt;
+                        &lt;/span&gt;  
 										&lt;/a&gt;
 									&lt;/li&gt;
 							}
 							
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+		
 				&lt;/li&gt;
 				&lt;li&gt;
 					&lt;a href="#namespaces"&gt;
@@ -506,8 +498,6 @@ as element(nav){
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
 							&lt;a href="#restxq"&gt;
 								&lt;span class="secno"&gt;6 &lt;/span&gt;
 								&lt;span class="content"&gt;Restxq&lt;/span&gt;
@@ -530,9 +520,7 @@ as element(nav){
 									&lt;/li&gt;
 								&lt;/xsl:for-each-group&gt;
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+				
 				&lt;/li&gt;
        	&lt;li&gt;
 					&lt;a href="#source"&gt;
@@ -542,13 +530,13 @@ as element(nav){
 				&lt;/li&gt; 
 			&lt;/ol&gt;
 		&lt;/nav&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:variable"></a>4.19&nbsp;xqh:variable<div style="float:right"><a href="#xqh:variable">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:variable</code>
+}</code></pre></details><details><summary>References 10 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>true#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.model.annotations</td><td>badges#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:variable"></a>4.19&nbsp;xqh:variable<div style="float:right"><a href="#xqh:variable">#</a></div></h3><a id="xqh:variable#2"></a><p>Arities: <span><a href="#xqh:variable#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:variable</code>
 		  ( 
 			<code class="arg">$v</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:variable)</code>, <code class="arg">$section</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyAtomicType*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:variable)</code></li><li>section<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyAtomicType*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 6 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>section#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:variable)</code></li><li>section<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyAtomicType*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
 as element(div)
 {
 let $id:= concat('$',$v/xqdoc:name)
@@ -565,13 +553,13 @@ return
       {xqh:tags($v/xqdoc:comment/(* except xqdoc:description)) }
       { xqh:when($v/xqdoc:annotation,xqh:annotations#1) }
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:variables"></a>4.20&nbsp;xqh:variables<div style="float:right"><a href="#xqh:variables">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:variables</code>
+}</code></pre></details><details><summary>References 6 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>concat#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>tags#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>section#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:variables"></a>4.20&nbsp;xqh:variables<div style="float:right"><a href="#xqh:variables">#</a></div></h3><a id="xqh:variables#1"></a><p>Arities: <span><a href="#xqh:variables#1">#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:variables</code>
 		  ( 
 			<code class="arg">$vars</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:variables)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>vars<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:variables)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>lower-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>variable#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:variables($vars as element(xqdoc:variables))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(div)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>vars<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(xqdoc:variables)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(div)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:variables($vars as element(xqdoc:variables))
 as element(div)
 {
   &lt;div class="div2"&gt;
@@ -585,28 +573,30 @@ as element(div)
      if(empty( $vars/xqdoc:variable)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:when"></a>4.21&nbsp;xqh:when<div style="float:right"><a href="#xqh:when">#</a></div></h3><dt class="label">Summary</dt><dd>run function when value is non empty</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:when</code>
+}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>lower-case#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>variable#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:when"></a>4.21&nbsp;xqh:when<div style="float:right"><a href="#xqh:when">#</a></div></h3><a id="xqh:when#2"></a><p>Arities: <span><a href="#xqh:when#2">#2</a></span></p><dt class="label">Summary</dt><dd>run function when value is non empty</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:when</code>
 		  ( 
 			<code class="arg">$value</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$fun</code><code class="as">&nbsp;as&nbsp;</code><code class="type">function(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>value<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>fun<code class="as">&nbsp;as&nbsp;</code><code class="return-type">function(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:when($value,$fun as function(*))
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>value<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>fun<code class="as">&nbsp;as&nbsp;</code><code class="return-type">function(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:when($value,$fun as function(*))
 {
  if($value) then $fun($value) else ()
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:xqdoc"></a>4.22&nbsp;xqh:xqdoc<div style="float:right"><a href="#xqh:xqdoc">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:xqdoc</code>
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details></div><div class="div3"><h3><a id="xqh:xqdoc"></a>4.22&nbsp;xqh:xqdoc<div style="float:right"><a href="#xqh:xqdoc">#</a></div></h3><a id="xqh:xqdoc#3"></a><p>Arities: <span><a href="#xqh:xqdoc#3">#3</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:xqdoc</code>
 		  ( 
 			<code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqdoc</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqDoc file for the source module</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqdoc.xml</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xml</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqdoc($file as map(*),
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqdoc($file as map(*),
                   $opts as map(*),
                   $model as map(*)
                   )
 {
   $file?xqdoc
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:xqdoc-html2"></a>4.23&nbsp;xqh:xqdoc-html2<div style="float:right"><a href="#xqh:xqdoc-html2">#</a></div></h3><dt class="label">Summary</dt><dd>transform xqdoc to html 
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqdoc</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqDoc file for the source module</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqdoc.xml</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xml</xqdoc:literal></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="xqh:xqdoc-html2"></a>4.23&nbsp;xqh:xqdoc-html2<div style="float:right"><a href="#xqh:xqdoc-html2">#</a></div></h3><a id="xqh:xqdoc-html2#3"></a><p>Arities: <span><a href="#xqh:xqdoc-html2#3">#3</a></span></p><dt class="label">Summary</dt><dd>transform xqdoc to html 
 <pre xmlns:xqdoc="http://www.xqdoc.org/1.0">map { "root": "../../", 
        "cache": false(), 
        "resources": "resources/", 
@@ -617,22 +607,37 @@ as element(div)
 		  ( 
 			<code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">module</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">Html5 report on the XQuery source</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">index.html</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">html5</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>References 9 functions from 3 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>variables#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>functions#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>restxq#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>summary#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>imports#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>toc#3</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>wrap#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqdoc-html2($file as map(*),
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqdoc-html2($file as map(*),
                             $opts as map(*),
                             $model as map(*)
                             )
 as document-node()                         
 {
-let $xqd:=$file?xqdoc 
-let $d:=&lt;div&gt;{
+let $xqd:=$file?xqdoc
+let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
+let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $ns:=xqd:namespaces($xqd)
+let $d:=&lt;div&gt;
+       &lt;h1&gt;
+			&lt;span class="badge badge-info"&gt;{ $file?namespace }&lt;/span&gt;&amp;#160;
+			&lt;small&gt;{ $xqd/xqdoc:module/@type/string() } module&lt;/small&gt;
+     { if($restxq) then
+          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
+        else ()  
+       }
+      {if($updating) then
+              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
+        else
+        ()
+      }
+		&lt;/h1&gt;
+{
+         xqh:toc($xqd,$opts,$file,$ns),
          xqh:summary($xqd/xqdoc:module,$opts),
-         xqh:toc($xqd,$opts,$file),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:functions($xqd/xqdoc:functions,$ns),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           &lt;div class="div2"&gt;
             &lt;h2 &gt;&lt;a id="source"/&gt;7 Source Code&lt;/h2&gt;
@@ -641,19 +646,21 @@ let $d:=&lt;div&gt;{
        }&lt;/div&gt;
 
  return document{ page:wrap($d, $opts )  }                 
-}</code></pre></details></div><div class="div3"><h3><a id="xqh:xqparse"></a>4.24&nbsp;xqh:xqparse<div style="float:right"><a href="#xqh:xqparse">#</a></div></h3><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:xqparse</code>
+}</code></pre></details><details><summary>References 12 functions from 4 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>variables#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>restxq#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>summary#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>imports#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>functions#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>when#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>namespaces#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.mod-html</td><td>toc#4</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.model</td><td>namespaces#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>wrap#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">module</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">Html5 report on the XQuery source</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">index.html</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">html5</xqdoc:literal></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="xqh:xqparse"></a>4.24&nbsp;xqh:xqparse<div style="float:right"><a href="#xqh:xqparse">#</a></div></h3><a id="xqh:xqparse#3"></a><p>Arities: <span><a href="#xqh:xqparse#3">#3</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqh:xqparse</code>
 		  ( 
 			<code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse file for the source module</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse.xml</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xml</xqdoc:literal></code></td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqparse($file as map(*),
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqh:xqparse($file as map(*),
                   $opts as map(*),
                   $model as map(*)
                   )
 {
   $file?xqparse
-}</code></pre></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td></td><td>https://github.com/Quodatum/xqdoca</td></tr><tr><td>page</td><td>quodatum:xqdoca.page</td></tr><tr><td>xqd</td><td>quodatum:xqdoca.model</td></tr><tr><td>xqdoc</td><td>http://www.xqdoc.org/1.0</td></tr><tr><td>xqdoca</td><td>https://github.com/Quodatum/xqdoca</td></tr><tr><td>xqh</td><td>quodatum:xqdoca.mod-html</td></tr><tr><td>xsl</td><td>http://www.w3.org/1999/XSL/Transform</td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
+}</code></pre></details><details><summary>External functions that invoke this function</summary>
+      todo
+      </details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse file for the source module</xqdoc:literal></code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xqparse.xml</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">xml</xqdoc:literal></code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td></td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr><tr><td>page</td><td><span>quodatum:xqdoca.page<a href="../../modules/F15/index.html" title="lib\xqdoc-page.xqm">🔗</a></span></td></tr><tr><td>xqa</td><td><span>quodatum:xqdoca.model.annotations<a href="../../modules/F12/index.html" title="lib\xqdoc-anno.xqm">🔗</a></span></td></tr><tr><td>xqd</td><td><span>quodatum:xqdoca.model<a href="../../modules/F8/index.html" title="lib\model.xqm">🔗</a></span></td></tr><tr><td>xqdoc</td><td><span class="badge badge-warning" title="Externally defined">http://www.xqdoc.org/1.0</span></td></tr><tr><td>xqdoca</td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr><tr><td>xqh</td><td><span>quodatum:xqdoca.mod-html<a href="../../modules/F4/index.html" title="lib\generators\module.xqm">🔗</a></span></td></tr><tr><td>xsl</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/1999/XSL/Transform</span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
  :
@@ -685,6 +692,7 @@ let $d:=&lt;div&gt;{
 module namespace xqh = 'quodatum:xqdoca.mod-html';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
@@ -709,14 +717,31 @@ function xqh:xqdoc-html2($file as map(*),
                             )
 as document-node()                         
 {
-let $xqd:=$file?xqdoc 
-let $d:=&lt;div&gt;{
+let $xqd:=$file?xqdoc
+let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
+let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
+let $ns:=xqd:namespaces($xqd)
+let $d:=&lt;div&gt;
+       &lt;h1&gt;
+			&lt;span class="badge badge-info"&gt;{ $file?namespace }&lt;/span&gt;&amp;#160;
+			&lt;small&gt;{ $xqd/xqdoc:module/@type/string() } module&lt;/small&gt;
+     { if($restxq) then
+          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
+        else ()  
+       }
+      {if($updating) then
+              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
+        else
+        ()
+      }
+		&lt;/h1&gt;
+{
+         xqh:toc($xqd,$opts,$file,$ns),
          xqh:summary($xqd/xqdoc:module,$opts),
-         xqh:toc($xqd,$opts,$file),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces#1),
+         xqh:functions($xqd/xqdoc:functions,$ns),
+         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd),
           &lt;div class="div2"&gt;
             &lt;h2 &gt;&lt;a id="source"/&gt;7 Source Code&lt;/h2&gt;
@@ -731,21 +756,8 @@ declare function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
  {
-   let $restxq:= true()
-   return(	&lt;h1&gt;
-			&lt;span class="badge badge-info"&gt;{ $mod/xqdoc:uri/string() }&lt;/span&gt;&amp;#160;
-			&lt;small&gt;{ $mod/@type/string() } module&lt;/small&gt;
-     { if($restxq) then
-          &lt;span  title="RestXQ" class="badge badge-success" style="float:right"&gt;R&lt;/span&gt;
-        else ()  
-       }
-      {if($mod//xqdoc:annotations/xqdoc:annotation[@name='updating']) then
-              &lt;div class="badge badge-danger" title="Updating" style="float:right"&gt;U&lt;/div&gt;
-        else
-        ()
-      }
-		&lt;/h1&gt;,
-    
+    &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
 		&lt;dl&gt;
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			&lt;dt&gt;Tags&lt;/dt&gt;
@@ -759,10 +771,10 @@ declare function xqh:summary($mod as element(xqdoc:module),
      &lt;li style="display:inline"&gt;&lt;a href="xqdoc.xml" target="xqdoc"&gt;xqdoc.xml&lt;/a&gt;, &lt;/li&gt;
      &lt;li style="display:inline"&gt;&lt;a href="xqparse.xml" target="xqparse"&gt;xqparse.xml&lt;/a&gt;&lt;/li&gt;
      &lt;/ul&gt;
-  )
+    &lt;/div&gt;
   };
   
-declare function xqh:toc($xqd,$opts,$file)
+declare function xqh:toc($xqd,$opts,$file,$ns as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -777,9 +789,9 @@ as element(nav){
 			&lt;/h3&gt;
 			&lt;ol class="toc"&gt;
 				&lt;li&gt;
-					&lt;a href="#main"&gt;
+					&lt;a href="#summary"&gt;
 						&lt;span class="secno"&gt;1 &lt;/span&gt;
-						&lt;span class="content"&gt;Introduction&lt;/span&gt;
+						&lt;span class="content"&gt;Summary&lt;/span&gt;
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
@@ -788,33 +800,30 @@ as element(nav){
             &lt;span class="content"&gt;Imports&lt;/span&gt;
           &lt;/a&gt;
         &lt;/li&gt;
+				
+          &lt;li&gt;
+            &lt;a href="#variables"&gt;
+              &lt;span class="secno"&gt;3 &lt;/span&gt;
+              &lt;span class="content"&gt;Variables&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;ol class="toc"&gt;
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
+                &lt;li&gt;
+                  &lt;a href="#{$id}"&gt;
+                    &lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
+                    &lt;span class="content"&gt;{ $id }&lt;/span&gt;
+                  &lt;/a&gt;
+                &lt;/li&gt;
+            }
+            &lt;/ol&gt;
+          &lt;/li&gt;
+				
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
-							&lt;a href="#variables"&gt;
-								&lt;span class="secno"&gt;3 &lt;/span&gt;
-								&lt;span class="content"&gt;Variables&lt;/span&gt;
-							&lt;/a&gt;
-							&lt;ol class="toc"&gt;
-              {for $var  in $vars
-              order by $var/xqdoc:name
-              let $id:=concat('$',$var/xqdoc:name)
-              count $pos
-              return
-									&lt;li&gt;
-										&lt;a href="#{$id}"&gt;
-											&lt;span class="secno"&gt;{ concat('3.',$pos) }&lt;/span&gt;
-											&lt;span class="content"&gt;{ $id }&lt;/span&gt;
-										&lt;/a&gt;
-									&lt;/li&gt;
-							}
-							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-				&lt;/li&gt;
-				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
+
 							&lt;a href="#functions"&gt;
 								&lt;span class="secno"&gt;4 &lt;/span&gt;
 								&lt;span class="content"&gt;Functions&lt;/span&gt;
@@ -831,23 +840,16 @@ as element(nav){
 										&lt;a href="#{$name}"&gt;
 											&lt;span class="secno"&gt;{ concat('4.',$pos[1]) }&lt;/span&gt;
 											&lt;span class="content" title="{$fun[1]/xqdoc:description/string()}"&gt;{ $name }
-                      {if($restxq) then 
-                        &lt;div class="badge badge-success" style="float:right"	title="RESTXQ:"&gt;R&lt;/div&gt;
-                      else
-                        ()}
-                       {if($update) then 
-                        &lt;div class="badge badge-danger" style="float:right"	title="Updating"&gt;U&lt;/div&gt;
-                      else
-                        ()}  
-                      &lt;/span&gt;
+                      &lt;div style="float:right"&gt;
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                        &lt;/div&gt;
+                        &lt;/span&gt;  
 										&lt;/a&gt;
 									&lt;/li&gt;
 							}
 							
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+		
 				&lt;/li&gt;
 				&lt;li&gt;
 					&lt;a href="#namespaces"&gt;
@@ -856,8 +858,6 @@ as element(nav){
 					&lt;/a&gt;
 				&lt;/li&gt;
 				&lt;li&gt;
-					&lt;ol class="toc"&gt;
-						&lt;li&gt;
 							&lt;a href="#restxq"&gt;
 								&lt;span class="secno"&gt;6 &lt;/span&gt;
 								&lt;span class="content"&gt;Restxq&lt;/span&gt;
@@ -880,9 +880,7 @@ as element(nav){
 									&lt;/li&gt;
 								&lt;/xsl:for-each-group&gt;
 							&lt;/ol&gt;
-						&lt;/li&gt;
-					&lt;/ol&gt;
-
+				
 				&lt;/li&gt;
        	&lt;li&gt;
 					&lt;a href="#source"&gt;
@@ -904,7 +902,7 @@ as element(div){
     &lt;h2&gt;&lt;a id="imports"/&gt;2 Imports&lt;/h2&gt;
 
     &lt;p&gt;
-    &lt;span class="badge badge-info"&gt;this&lt;/span&gt; module is imported by
+    This module is imported by
     &lt;span class="badge badge-info"&gt;{ count($importing) }&lt;/span&gt; modules, it imports
     &lt;span class="badge badge-info"&gt;{ count($imports/xqdoc:import) }&lt;/span&gt; modules.
     &lt;/p&gt;
@@ -956,26 +954,32 @@ return
 		&lt;/div&gt;
 };  
 
-declare function xqh:functions($funs as element(xqdoc:functions))
+declare function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
 as element(div)
 {
   &lt;div class="div2"&gt;
 			&lt;h2&gt;&lt;a id="functions"/&gt;4 Functions&lt;/h2&gt;
 		{ for $f in $funs/xqdoc:function
-      order by  lower-case($f/xqdoc:name)
+      group by $name:=$f/xqdoc:name
+      order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos)),
+	   return xqh:function($f,(4,$pos),$ns),
       if(empty( $funs/xqdoc:function)) then &lt;p&gt;None&lt;/p&gt; else ()
    }
 		&lt;/div&gt;
 };
 
 (:~   o/p details for function $funs has all defined arities
+ : @param $section no.
  :)
-declare function xqh:function($funs as element(xqdoc:function)*,$section as xs:anyAtomicType*)
+declare function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $ns as map(*))
 as element(div)
 {
+    let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
+
 	  return
 		&lt;div class="div3"&gt;
 			&lt;h3&gt;&lt;a id="{$id}"/&gt;{ page:section($section) } { $id }
@@ -983,8 +987,16 @@ as element(div)
 				&lt;a href="#{$id}" &gt;#&lt;/a&gt;
 				&lt;/div&gt;
 			&lt;/h3&gt;
-
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description[1],xqh:description#1) }
+      { $funs!&lt;a id="{ $id }#{ @arity }"/&gt; }
+     &lt;p&gt;Arities: {  $funs 
+                  ! &lt;span &gt;
+                      &lt;a href="#{ $id }#{ @arity }"&gt;#{ string(@arity) }&lt;/a&gt;
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                      
+                    &lt;/span&gt;
+                          
+                 }&lt;/p&gt;
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=&gt;head(),xqh:description#1) }
 			&lt;dt class="label"&gt;Signature&lt;/dt&gt;
 			&lt;dd&gt;
 			{$funs!xqh:function-signature(.) }
@@ -992,8 +1004,12 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]/xqdoc:return!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      { $funs/xqdoc:annotations!xqh:annotations(.) }
+      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      &lt;details&gt;
+        &lt;summary&gt;Source&lt;/summary&gt;
+        { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
+      &lt;/details&gt;
+     
       
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
      
@@ -1001,12 +1017,11 @@ as element(div)
       &lt;summary&gt;External functions that invoke this function&lt;/summary&gt;
       todo
       &lt;/details&gt;
-       &lt;details&gt;
-      &lt;summary&gt;Source&lt;/summary&gt;
-      { $funs! &lt;pre&gt;&lt;code class="language-xquery"&gt;{ xqdoc:body/string() }&lt;/code&gt;&lt;/pre&gt; }
-      &lt;/details&gt;
+     { $funs/xqdoc:annotations!xqh:annotations(.) }
 		&lt;/div&gt;
 };
+
+
 
 (:~ 
  :
@@ -1107,7 +1122,7 @@ as xs:boolean
 };
 
 
-declare function xqh:namespaces($namespaces as element(xqdoc:namespaces))
+declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
 as element(div)
 {
      &lt;div class="div2"&gt;
@@ -1126,7 +1141,7 @@ as element(div)
           return
 						&lt;tr&gt;
 							&lt;td&gt;{string($ns/@prefix) }&lt;/td&gt;
-							&lt;td&gt;{ string($ns/@uri) }&lt;/td&gt;
+							&lt;td&gt;{ page:link-module(string($ns/@uri),$model) }&lt;/td&gt;
 						&lt;/tr&gt;
 			}&lt;/tbody&gt;
 			&lt;/table&gt;
@@ -1264,4 +1279,4 @@ function xqh:xqparse($file as map(*),
   $file?xqparse
 };</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at 2019-05-22T11:24:21.502+01:00</p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-05-24T10:38:32.959+01:00">10.38am on Friday, May 24th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

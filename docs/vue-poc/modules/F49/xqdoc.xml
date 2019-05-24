@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:22:52.354+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>post-test.xq</xqdoc:uri><xqdoc:body>(: plant uml post test :)
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:30:30.92+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>post-test.xq</xqdoc:uri><xqdoc:body>(: plant uml post test :)
 let $target:="http://www.plantuml.com/plantuml/uml"
 let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;
   &lt;multipart media-type="multipart/form-data"&gt; 
@@ -13,7 +13,7 @@ alice -&gt; bob2
 @enduml
 ]``
 let $r:= http:send-request($req,$target,($uml,"svg"))
-return $r[2]</xqdoc:body></xqdoc:module><xqdoc:namespaces/><xqdoc:imports/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $target:="http://www.plantuml.com/plantuml/uml"
+return $r[2]</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $target:="http://www.plantuml.com/plantuml/uml"
 let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;
   &lt;multipart media-type="multipart/form-data"&gt; 
        &lt;header name="Content-Disposition" value='form-data; name="uml"'/&gt;   
@@ -27,7 +27,7 @@ alice -&gt; bob2
 @enduml
 ]``
 let $r:= http:send-request($req,$target,($uml,"svg"))
-return $r[2]</xqdoc:body><xqdoc:body>let $target:="http://www.plantuml.com/plantuml/uml"
+return $r[2]</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/http-client</xqdoc:uri><xqdoc:name>send-request</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>req</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable><xqdoc:body>let $target:="http://www.plantuml.com/plantuml/uml"
 let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;
   &lt;multipart media-type="multipart/form-data"&gt; 
        &lt;header name="Content-Disposition" value='form-data; name="uml"'/&gt;   
@@ -41,4 +41,4 @@ alice -&gt; bob2
 @enduml
 ]``
 let $r:= http:send-request($req,$target,($uml,"svg"))
-return $r[2]</xqdoc:body><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/http-client</xqdoc:uri><xqdoc:name>send-request</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>req</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>r</xqdoc:name></xqdoc:ref-variable></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+return $r[2]</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

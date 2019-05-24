@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-22T11:25:31.961+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>databases.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Main page.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/databases.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:14.137+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>databases.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Main page.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/databases.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Main page.
  :
  : @author Christian Grün, BaseX Team 2005-19, BSD License

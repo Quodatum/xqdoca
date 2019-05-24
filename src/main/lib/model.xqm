@@ -44,21 +44,23 @@ declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 (:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
-
-declare variable $xqd:platforms:= map{
-  "basex": map{"parser": 42}
+(:~  files to process from extensions :)
+declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
+as xs:string*
+{
+  file:list($efolder,true(),$extensions)
 };
 
 (:~
  : load and parse source xquery files
  : @param $efolder root path for source files
+ : @param $files files to process as relative paths
  : @param $platform target XQuery engine e.g "basex"
  : @return state map
  :)
-declare function xqd:snap($efolder as xs:string, $platform as xs:string, $extensions as xs:string)
+declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
 as map(*)
 {
-let $files:= file:list($efolder,true(),$extensions)
 let $folder:= translate($efolder,"\","/")
 return map{ 
              "base-uri": $folder,
@@ -78,8 +80,11 @@ return map{
 
 };
 
-
-
+declare function xqd:snap($efolder as xs:string, $platform as xs:string)
+as map(*)
+{
+ xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
+};
 
 (:~ generate xqdoc
  : result is <XQuery> or <ERROR>
@@ -204,7 +209,7 @@ as element(xqdoc:annotation)*
 (:~ 
  : return annotations with namespace and name
   :)
-declare function xqd:methods($annots  as element(xqdoc:annotations),
+declare function xqd:methods($annots  as element(xqdoc:annotations)?,
                                  $annotns as xs:string,
                                  $aname as xs:string) 
 as element(xqdoc:annotation)*
@@ -216,11 +221,29 @@ as element(xqdoc:annotation)*
 };
 
 
+(:~ 
+ : return updating annotations 
+  :)
+declare function xqd:an-updating($annots  as element(xqdoc:annotations)?) 
+as element(xqdoc:annotation)*
+{
+   xqd:methods($annots,"http://www.w3.org/2012/xquery", "updating")
+};
+
+(:~ 
+ : return rest annotations 
+  :)
+declare function xqd:an-restxq($annots  as element(xqdoc:annotations)?) 
+as element(xqdoc:annotation)*
+{
+   xqd:methods($annots,"http://exquery.org/ns/restxq", "path")
+};
 
 (:~ 
  : all namespaces in xqdoc as map{prefix.. uri}
   :)
 declare function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
+as map(*)
 {
 $xqdoc/xqdoc:namespaces/xqdoc:namespace
 !map:entry(string(@prefix),string(@uri))
@@ -272,3 +295,12 @@ as map(*)*
 xqd:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
 };
  
+(:~ expand specials in target :)
+declare function xqd:target($target as xs:string,$opts as map(*))
+as xs:string
+{
+ let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1) 
+return $target
+=>replace("\{project\}",$opts?project)
+=>replace("\{webpath\}",if(exists($f)) then $f("webpath") else "webpath")
+}; 

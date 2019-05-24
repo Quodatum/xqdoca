@@ -17,18 +17,13 @@ xquery version "3.1";
  
  (:~
  : <h1>xqdoc-html.xqm</h1>
- : <p>Library to support html5 rendering of xqdoc</p>
+ : <p>annotation report</p>
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-(:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
- :)
+
 module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
 
@@ -85,10 +80,16 @@ function _:annotations($model,$opts)
              {_:summary($model,$opts)}
              <div class="div2">
                  <h2><a id="annotations"/>2 Annotations</h2>
-                 <ul>{
+                 <p>There are { map:size($ns-map) } annotation namespaces in use.</p>
+                 {
                  for $ns in map:keys($ns-map)
-                 return <li>{ $ns }</li>
-               }</ul>
+                 order by $ns
+                 count $c
+                 return <div class="div3">
+                        <h2><a id="{ $ns }"/>{ $ns }</h2>
+                        <p>todo</p>
+                        </div>
+               }
              </div>       
   </div>
   return  page:wrap($body,$opts)
