@@ -156,7 +156,7 @@ as element(div)
                         {for $a in $ns-map?($ns)
                         group by $name:=$a?annotation?name
                         order by lower-case($name)
-                        return <a href="annotations.html" class="badge badge-info" style="margin-right:1em;">{$name}
+                        return <a href="annotations.html#{ $ns }" class="badge badge-info" style="margin-right:1em;">{$name}
                                  <span class="badge badge-light">{count($a)}</span>
                                </a>
                       }</div>
@@ -202,18 +202,17 @@ as element(table)
                     else
                         $file?xqdoc/xqdoc:module/@type/string()
          order by $type, $file?namespace
-         let $ns:=xqd:namespaces($file?xqdoc)
+         let $ns:=$file?prefixes
          let $annots:= for $a in $file?annotations
                        group by $ns:=$a?annotation?uri
                        order by $ns
                        return $ns
-          let $updating  :=count(xqd:anno-updating($file?annotations))
-        let $rest  :=count(xqd:anno-rest($file?annotations))
+       
         return  <tr>
                 <td>{  $type }</td>
                  <td>{page:link-module($file) }</td>
                 
-                 <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $ns) }</td>       
+                 <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
                  <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
               </tr>

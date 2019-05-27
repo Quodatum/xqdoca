@@ -32,6 +32,7 @@ module namespace xqh = 'quodatum:xqdoca.mod-html';
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../xqdoc-namespace.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
@@ -40,7 +41,7 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
 (:~ transform xqdoc to html 
  : <pre>map { "root": "../../", 
  :        "cache": false(), 
- :        "resources": "resources/", 
+ :         "resources": "resources/", 
  :        "filename": "src\main\lib\parsepaths.xq", 
  :        "show-private": true(),  
  :         "project": "xqdoca", 
@@ -56,31 +57,22 @@ function xqh:xqdoc-html2($file as map(*),
 as document-node()                         
 {
 let $xqd:=$file?xqdoc
-let $restxq:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='rest:path'] (: @TODO FIX THIS:)
-let $updating:= $xqd//xqdoc:annotations/xqdoc:annotation[@name='updating']
-let $ns:=xqd:namespaces($xqd)
+let $_:=trace(concat($file?path,"->",$file?href),"module: ")
+
 let $d:=<div>
        <h1>
 			<span class="badge badge-info">{ $file?namespace }</span>&#160;
 			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
-     { if($restxq) then
-          <span  title="RestXQ" class="badge badge-success" style="float:right">R</span>
-        else ()  
-       }
-      {if($updating) then
-              <div class="badge badge-danger" title="Updating" style="float:right">U</div>
-        else
-        ()
-      }
+      <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file)}</div>
 		</h1>
 {
-         xqh:toc($xqd,$opts,$file,$ns),
+         xqh:toc($xqd,$opts,$file),
          xqh:summary($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables),
-         xqh:functions($xqd/xqdoc:functions,$ns),
+         xqh:functions($xqd/xqdoc:functions, $file, $model),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
-         xqh:restxq($xqd),
+         xqh:restxq($xqd,$file),
           <div class="div2">
             <h2 ><a id="source"/>7 Source Code</h2>
             <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
@@ -93,6 +85,7 @@ let $d:=<div>
 declare function xqh:summary($mod as element(xqdoc:module),
                             $opts as map(*)
                             )
+ as element(div)
  {
     <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
@@ -112,7 +105,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
     </div>
   };
   
-declare function xqh:toc($xqd,$opts,$file,$ns as map(*))
+declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
   let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
@@ -170,8 +163,6 @@ as element(nav){
                 {for $fun  in $funs
               group by $name:=$fun/xqdoc:name
               order by $name
-              let $restxq:=true()
-              let $update:=true()
               count $pos
               return
 									<li>
@@ -179,7 +170,7 @@ as element(nav){
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
 											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
                       <div style="float:right">
-                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$ns)}
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file)}
                         </div>
                         </span>  
 										</a>
@@ -292,7 +283,11 @@ return
 		</div>
 };  
 
-declare function xqh:functions($funs as element(xqdoc:functions),$ns as map(*))
+declare function xqh:functions(
+                     $funs as element(xqdoc:functions),
+                     $file as map(*),
+                     $model as map(*)
+                   )
 as element(div)
 {
   <div class="div2">
@@ -301,7 +296,7 @@ as element(div)
       group by $name:=$f/xqdoc:name
       order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos),$ns),
+	   return xqh:function($f,(4,$pos),$file, $model ),
       if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
 		</div>
@@ -310,26 +305,31 @@ as element(div)
 (:~   o/p details for function $funs has all defined arities
  : @param $section no.
  :)
-declare function xqh:function($funs as element(xqdoc:function)*,
+declare
+ %basex:inline(0) 
+function xqh:function($funs as element(xqdoc:function)*,
                               $section as xs:anyAtomicType*,
-                              $ns as map(*))
+                              $file as map(*),
+                              $model as map(*))
 as element(div)
 {
     let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $id:=$funs[1]/xqdoc:name/string()
-
+    let $qmap:= xqn:qmap-fun($id,$file?prefixes)
 	  return
 		<div class="div3">
-			<h3><a id="{$id}"/>{ page:section($section) } { $id }
+			<h3><a id="{$id}"/> { 
+                $funs!<a id="{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }"/> 
+              , page:section($section) } { $id }
 			  <div style="float:right">
 				<a href="#{$id}" >#</a>
 				</div>
 			</h3>
-      { $funs!<a id="{ $id }#{ @arity }"/> }
+     
      <p>Arities: {  $funs 
-                  ! <span >
-                      <a href="#{ $id }#{ @arity }">#{ string(@arity) }</a>
-                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$ns) }
+                  ! <span style="margin-left:1em" >
+                      <a href="#{ $id }#{ @arity }">{ $id}#{ string(@arity) }</a>
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file) }
                       
                     </span>
                           
@@ -348,46 +348,52 @@ as element(div)
         { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
       </details>
      
-      
-      { xqh:when ($funs/xqdoc:invoked,xqh:invoked#1) }
+       
+      { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
      
-       <details>
-      <summary>External functions that invoke this function</summary>
-      todo
-      </details>
+      
+       {
+          let $hits:=$model?files?xqdoc//xqdoc:function[xqdoc:invoked[xqdoc:name = $qmap?name
+                                                                
+                                                                  ]]
+                                    (:[@arity=$funs/@arity 
+                                    and xqdoc:uri= $qname?uri 
+                                    and xqdoc:name = $qname?name ]:)
+          let $sum:= count($hits) || "- External functions that invoke this function"
+          let $this:= head($hits)
+          return  <details>
+                    <summary>{$sum}</summary>
+                    <h4>{$this/xqdoc:name/string()}</h4>
+                    <pre>{serialize($this) }</pre>
+                    </details>
+     }
      { $funs/xqdoc:annotations!xqh:annotations(.) }
 		</div>
 };
 
 
 
-(:~ 
- :
+(:~
+ : list of functions called  
  :)
-declare function xqh:invoked($invoked as element(xqdoc:invoked)*)
+declare
+function xqh:invoked(
+       $invoked as element(xqdoc:invoked)*,
+       $file as map(*),
+       $model as map(*)
+     )
+as element(details)
 {
  let $msg:= ``[References `{ count($invoked) }` functions from `{ count(distinct-values($invoked/xqdoc:uri)) }` modules ]``
+
  return <details>
       <summary>{ $msg }</summary>
-      <table class="data">
-      <thead>
-      <tr>
-      <td>Type</td>
-      <td>uri</td>
-      <td>Name</td>
-      </tr>
-      </thead>
-      <tbody>
-      {for $i in $invoked
-      order by $i/xqdoc:uri,$i/@arity
-      return <tr>
-      <td>Fn</td>
-       <td>{ $i/xqdoc:uri/string() }</td>
-       <td>{ $i/xqdoc:name/string() || "#" || $i/@arity }</td>
-       </tr>
-    }
-      </tbody>
-      </table>
+      <ul> {for $i in $invoked
+       let $name:= concat($i/xqdoc:name,"#",$i/@arity)
+       order by $i/xqdoc:uri,$name
+      
+      return <li>{ page:link-function($i/xqdoc:uri, $name, $file, $model) }</li>
+     } </ul>
       </details> 
 };
 
@@ -423,7 +429,7 @@ as element(p)
           {switch(true())
           case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
           case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
-          default return if(xqh:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
+          default return if(page:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
         }</p>
 };
   
@@ -449,15 +455,6 @@ as element(*)
 		</details>
 };
 
-(:~ 
- :true() if $url represents a url
- :@see http://urlregex.com/ 
- :)
-declare function xqh:is-url($url as xs:string)
-as xs:boolean
-{
-  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]","j")
-};
 
 
 declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
@@ -580,12 +577,27 @@ typeswitch ($tag)
   default return()
 };
  
-declare function xqh:restxq($xqd)
+declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {
-   <div class="div2">
+   let $ns:= $file?prefixes
+   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest(?,$ns))
+   return <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
-      <p>None</p>
+      <p>Paths defined {count($rest)}.</p>
+      <table class="data">
+      <thead><tr>
+        <th>Path</th>
+        <th>Details</th>
+      </tr></thead>
+      <tbody>{ for $r in $rest
+               let $path:= $r/xqdoc:literal/string()
+               let $f:=$r/../../concat(xqdoc:name,'#',@arity)
+               order by $path
+        return <tr>
+          <td><a href="#{$f}">{ $path }</a></td><td>{ $f }</td></tr>
+    }</tbody>
+      </table>
     </div>
 };
 

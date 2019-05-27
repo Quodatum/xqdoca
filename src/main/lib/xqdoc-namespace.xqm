@@ -36,15 +36,25 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
  }
  :</pre>
  :)
-declare function xqn:qname($e as xs:string, $lookup as function(xs:string) as xs:string)
+declare 
+%private
+function xqn:qmap($e as xs:string, $default as xs:string, $prefixes as map(*))
 as map(*)
 {
  let $n:=tokenize($e,":")
 let $prefix:=if(count($n)=1)then () else $n[1]
-let $n2:=if(count($n)=1)then  $n[1] else $n[2]
+let $name:=if(count($n)=1)then  $n[1] else $n[2]
+let $uri:=if(empty($prefix)) then
+              $default
+          else if( map:contains($prefixes,$prefix)) then
+              $prefixes?($prefix)
+          else 
+               let $_:= trace($e,"qmap: ")
+                   let $_:= trace($prefixes,"ERROR qmap: ")
+               return ("*** " || $e)
 return map{
-           "uri": $lookup($prefix),
-           "name": $n2} 
+           "uri": $uri,
+           "name": $name} 
 };
 
 declare function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
@@ -53,6 +63,40 @@ as xs:boolean
   $a?name=$name and $a?uri=$uri
 };
 
+(:~ 
+ : @return {namespace}name
+  :)
+declare function xqn:qcode($name,$prefixes)
+as xs:string
+{
+  let $a:=xqn:qmap-fun($name,$prefixes)
+  return xqn:clark-name( $a?uri, $a?name )
+};
+
+(:~ 
+ : @return clark-notation
+  :)
+declare function xqn:clark-name($uri as xs:string, 
+                                $name as xs:string)
+as xs:string
+{
+  ``[{`{ $uri }`}`{ $name }`]``
+};
+
+(:~ 
+ : @return prefix:name if available or clark-notation
+  :)
+declare function xqn:prefixed-name($uri as xs:string, 
+                                $name as xs:string,
+                                $prefixes as map(*))
+as xs:string
+{
+  let $prefix:= map:for-each($prefixes,function($k,$v){ if($v=$uri)then $k else () })=>head() 
+  return if($prefix) then
+           concat(head($prefix),":",$name)
+         else
+           xqn:clark-name( $uri, $name )
+};
 
 (:~ namespace for prefix
  : @param $prefix prefix to lookup
@@ -64,14 +108,17 @@ declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $m
 as xs:string{
   if(empty($prefix)) then
     $default
-  else if(map:contains($map,$prefix))then 
+  else if(map:contains($map, $prefix))then 
    $map?($prefix)
    else
-   "**ERROR" || $prefix
+   let $_:=trace($map,"prefixes")
+   return "*** " || trace($prefix,"**prefix not found:" ),
+   error()
 };
 
 (:~  parse URIQualifiedName into parts
  : @param $e is URIQualifiedName
+ : @todo use regx
  :)
 declare function xqn:uriqname($e as element(URIQualifiedName))
 as map(*)
@@ -82,24 +129,23 @@ return map{"uri": substring($n[1],3),
 };
 
 (:~  map of static namespaces :)
-declare function xqn:static-prefix-map()
+declare function xqn:static-prefix-map($platform as xs:string)
 as map(*)
 {
- fetch:text(resolve-uri("../etc/static/basex.json",static-base-uri()))
+ fetch:text(resolve-uri(``[../etc/static/`{ $platform }`.json]``,static-base-uri()))
  =>parse-json() 
 };
 
 (:~  expand annotation name :)
-declare function xqn:qname-anno($e as xs:string,$prefixes as map(*))
+declare function xqn:qmap-anno($e as xs:string,$prefixes as map(*))
 as map(*)
 {
-let $lookup:=xqn:map-prefix(?,"http://www.w3.org/2012/xquery", $prefixes)
-return xqn:qname($e , $lookup)
+ xqn:qmap($e , "http://www.w3.org/2012/xquery", $prefixes)
 };
+
 (:~  expand function name :)
-declare function xqn:qname-fun($e as xs:string,$prefixes as map(*))
+declare function xqn:qmap-fun($e as xs:string,$prefixes as map(*))
 as map(*)
 {
-let $lookup:=xqn:map-prefix(?,"http://www.w3.org/2005/xpath-functions", $prefixes)
-return xqn:qname($e , $lookup)
+ xqn:qmap($e , "http://www.w3.org/2005/xpath-functions", $prefixes)
 };

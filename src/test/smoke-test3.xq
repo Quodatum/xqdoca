@@ -6,6 +6,6 @@ declare variable $efolder as xs:anyURI  external := xs:anyURI("C:/Users/andy/git
 
 
 let $state:=xqd:snap($efolder,"basex")
-let $x:= $state?files[2]?xqparse 
-  let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($x))
-return $x//QName!xqn:qname(.,$expand)
+let $f:= $state?files[2]
+  let $ns:=$f?namespaces
+return $f?xparse//QName!xqn:qmap-fun(.,$ns)

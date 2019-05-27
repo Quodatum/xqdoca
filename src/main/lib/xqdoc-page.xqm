@@ -25,6 +25,7 @@ xquery version "3.1";
  
 
 module namespace page = 'quodatum:xqdoca.page';
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
 (:~ link to module :)
 declare 
@@ -56,21 +57,51 @@ as element(span)
     <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a> 
    </span>
 };
-(:~  connections list :)
+
+(:~ link to fun or var
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function($uri as xs:string,
+                            $name as xs:string,
+                            $file as map(*),
+                            $model as map(*))                       
+as element(span)
+{  
+   let $files:= $model?files[?namespace=$uri]
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return if(empty($files)) then
+           <span class="badge badge-warning" title="Externally defined">{ $clark }</span>
+        else
+           let $file:=head($files)
+           return <span>
+            <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
+           </span>
+};
+
+(:~
+ :  connections 3 column list 
+ :)
 declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-  <div style="display: flex;width:100%; justify-content: space-between;">
-    <div style="width:30%;">{ if (count($calls-this)) then
-                                 $calls-this!<div >{.}</div>
-                              else "(None)"   
-                             }</div>
-     <div><div>imports</div>&#x2192;</div>
-    <div class="badge badge-info">this</div>
-     <div><div>imports</div>&#x2192;</div>
-    <div style="width:30%;">{ if(count($called-by-this)) then
+      <div style="display: flex;width:100%; justify-content: space-between;">
+        <div style="width:40%;">{ if (count($calls-this)) then
+                                     $calls-this!<div style="text-align: right;" >{.}</div>
+                                  else "(None)"   
+      }</div>
+                      
+     <div style="display: flex; flex-direction: column; justify-content: center;">
+         <div><div>imports</div>&#x2192;</div>
+        <div class="badge badge-info">this</div>
+        <div><div>imports</div>&#x2192;</div>
+     </div>
+     
+    <div style="width:40%;">{ if(count($called-by-this)) then
                                 $called-by-this!<div>{.}</div>
                               else
                                ("(None)")
@@ -205,4 +236,14 @@ declare function page:badge($label as xs:string,$color as xs:string)
 as element(span)
 {
   <span class="badge badge-{$color}" title="Updating">{$label}</span>
+};
+
+(:~ 
+ :true() if $url represents a url
+ :@see http://urlregex.com/ 
+ :)
+declare function page:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]","j")
 };

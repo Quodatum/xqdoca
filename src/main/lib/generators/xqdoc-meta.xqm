@@ -46,7 +46,6 @@ let $f:=function($v,$this){
   case   map(*) return map:for-each($v,
                      function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
                 })
-  case   array(*) return "array"
   default return $v!<_>{.}</_>
 }
 return $f($opts,$f)

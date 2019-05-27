@@ -98,7 +98,7 @@ as map(*){
 declare function xqo:render( $model as map(*),$opts as map(*))
 as map(*)*
 {
-  let $funs:=xqo:load-generators()
+  let $funs:=xqo:load-generators("generators/")
   let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$opts?outputs?global] 
   let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$opts?outputs?module]
   (: add found renderers info to opts :)
@@ -129,10 +129,10 @@ as map(*)*
 (:~
  : dynamically load functions from *.xqm modules from generators directory into static context
  :)
-declare function xqo:load-generators()
+declare function xqo:load-generators($path as xs:string)
 as function(*)*
 {
-  let $base:=resolve-uri("generators/",static-base-uri())
-  for $f in file:list($base,true(),"*.xqm")
-  return inspect:functions(resolve-uri($f,$base))
+  let $base:=resolve-uri($path,static-base-uri())
+  return file:list($base,true(),"*.xqm")
+       ! inspect:functions(resolve-uri(.,$base))
 };

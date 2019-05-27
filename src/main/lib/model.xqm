@@ -41,7 +41,9 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 
-(:~  @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods :)
+(:~ 
+ : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
+ :)
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 (:~  files to process from extensions :)
@@ -69,13 +71,14 @@ return map{
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace("FILE: "))
                       let $spath:=translate($file,"\","/")
-                      let $xqdoc:=xqd:analyse($full,$platform,map{"_source": $spath})
+                      let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
                       let $base:=map{
                         "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
-                        "namespace": $xqdoc?xqdoc/xqdoc:module/xqdoc:uri/string()
+                        "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(),
+                        "prefixes": xqd:namespaces( $a?xqdoc)
                       }
-                      return map:merge(($base,$xqdoc))  
+                      return map:merge(($base,$a))  
            }
 
 };
@@ -127,12 +130,12 @@ as map(*)
   }
   (: add enrichments from parse tree :)
   let $parse:=xqp:parse($src,$platform)
-  let $enh:=try{
-                          xqp:enrich($enh,$parse) 
-                    }   catch * { 
-                            let $_:= trace($err:description ,"Enrich error: ")
-                            return $enh
-                    } (: parse fails :)
+  let $prefixes:=map:merge((
+                 xqd:namespaces($enh),
+                 xqn:static-prefix-map($platform)
+               ))
+  let $enh:= xqp:enrich($enh,$parse,$prefixes) 
+                   
   return map{"xqdoc": $enh, 
              "xqparse": $parse,
              "annotations":xqd:anno($enh)
@@ -142,11 +145,12 @@ as map(*)
 (:~ 
  : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
  :)
-declare function xqd:anno($xqdoc)
-as map(*)*{
+declare function xqd:anno($xqdoc as element(xqdoc:xqdoc))
+as map(*)*
+{
   let $ns:= xqd:namespaces($xqdoc)
  for $a in $xqdoc//xqdoc:annotation
- let $name:=xqn:qname-anno($a/@name,$ns)
+ let $name:=xqn:qmap-anno($a/@name,$ns)
  return map{"annotation":$name, "xqdoc": $a} 
 };
          
@@ -242,12 +246,14 @@ as element(xqdoc:annotation)*
 (:~ 
  : all namespaces in xqdoc as map{prefix.. uri}
   :)
-declare function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
+declare 
+%private 
+function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
 as map(*)
 {
-$xqdoc/xqdoc:namespaces/xqdoc:namespace
-!map:entry(string(@prefix),string(@uri))
-=>map:merge()
+  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
+  !map:entry(string(@prefix),string(@uri))
+  =>map:merge()
 };
 
 declare function xqd:where-imported($uri as xs:string,$model as map(*))
@@ -267,35 +273,8 @@ return map:entry( $ns,  $f)
 )
 };
 
-(:~ 
- : filter annotation by uri and name
- : @param $uri 1st item is uri, if 2nd then match name
- :)
-declare function xqd:filter-annot($annots as map(*)*,$uri as xs:string*)
-as map(*)*
-{
-  let $hit:=$annots?annotation[?uri=$uri[1]]
-  return if(count($uri) eq 1) then
-            $hit
-         else
-           $hit[?name=$uri[2]]
-};
 
-(:~  filter for updating :)
-declare function xqd:anno-updating($anno as map(*)*)
-as map(*)*
-{
-xqd:filter-annot($anno,("http://www.w3.org/2012/xquery", "updating"))
-};
-
-(:~  filter for rest :)
-declare function xqd:anno-rest($anno as map(*)*)
-as map(*)*
-{
-xqd:filter-annot($anno,("http://exquery.org/ns/restxq", "path"))
-};
- 
-(:~ expand specials in target :)
+(:~ expand specials in target url :)
 declare function xqd:target($target as xs:string,$opts as map(*))
 as xs:string
 {

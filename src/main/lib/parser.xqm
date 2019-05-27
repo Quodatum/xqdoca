@@ -37,13 +37,32 @@ declare variable $xqp:ns-fn:="http://www.w3.org/2005/xpath-functions";
 declare variable $xqp:xparse_opts:=map{
   "basex":  map{ "lang":"xquery", "version":"3.1 basex",  "flatten":true() }
 };
-                                     
+
+ (:~  Enrich trapping errors
+ :)
+declare function xqp:enrich-catch($xqdoc as element(xqdoc:xqdoc),
+                                  $xqparse as element(*),
+                                  $prefixes)
+as element(xqdoc:xqdoc)
+{
+try{
+      xqp:enrich($xqdoc,$xqparse,$prefixes) 
+    }   catch * { 
+      let $_:= trace($err:description ,"Enrich error: ")
+      return $xqdoc
+} 
+};
+                                    
 (:~  Enrich BaseX built-in xqDoc by
  : adding function source and X-ref info
  :)
-declare function xqp:enrich($xqdoc as element(xqdoc:xqdoc),$xqparse as element(XQuery))
+declare function xqp:enrich(
+                     $xqdoc as element(xqdoc:xqdoc),
+                     $xqparse as element(XQuery),
+                     $prefixes as map(*))
 as element(xqdoc:xqdoc)
 {
+ 
    (: add xqDoc-main for main modules :)
    let $body:= $xqparse//MainModule/*[2]
   let $xqdoc:= $xqdoc transform with {
@@ -55,22 +74,22 @@ as element(xqdoc:xqdoc)
                 replace node xqdoc:imports with xqdoc:namespaces
               }          
   let $fmap:=map:merge((
-                xqp:funmap($xqparse),
+                xqp:funmap($xqparse,$prefixes),
                 if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
          ))
          
 
-  let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+
    
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
-    let $name:=xqn:qname($f/xqdoc:name,$expand)
+    let $name:=xqn:qmap-fun($f/xqdoc:name,$prefixes)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then
                    (   
-                    insert node xqp:references($parse,$expand) into $f,
+                    insert node xqp:references($parse,$prefixes) into $f,
                     insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f
                   )
                else
@@ -85,19 +104,19 @@ as element(xqdoc:xqdoc)
  : @param $expand function to map prefixes to namespaces
  : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
  :)
-declare function xqp:references($e as element(*),$expand as function(*))
+declare function xqp:references($e as element(*),$prefixes as map(*))
 as element(*)*
 {
-  $e//FunctionCall!xqp:funcall(.,$expand),
-  $e//ArrowExpr!xqp:invoke-arrow(.,$expand),
-  $e//VarRef!xqp:ref-variable(.,$expand) 
+  $e//FunctionCall!xqp:funcall(.,$prefixes),
+  $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes),
+  $e//VarRef!xqp:ref-variable(.,$prefixes) 
 };
 
 
 (:~  build invoked nodes for function call
  : @param $e is FunctionCall or ArrowExpr 
  :)
-declare function xqp:funcall($e as element(*),$expand as function(*))
+declare function xqp:funcall($e as element(*),$prefixes as map(*))
 as element(xqdoc:invoked)*
 {
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
@@ -105,7 +124,7 @@ let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqn:qname($fname,$expand)
+let $qname:=xqn:qmap-fun($fname,$prefixes)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -114,14 +133,14 @@ let $qname:=xqn:qname($fname,$expand)
 (:~  build invoked nodes for arrow expression
  : @param $e is FunctionCall or ArrowExpr 
  :)
-declare function xqp:invoke-arrow($e as element(ArrowExpr),$expand as function(*))
+declare function xqp:invoke-arrow($e as element(ArrowExpr),$prefixes as function(*))
 as element(xqdoc:invoked)*
 {
 for $arrow in $e/TOKEN[. = "=&gt;"]
 let $fname:=$arrow/following-sibling::*[1]
 let $arglist:=$arrow/following-sibling::*[2]
 let $arity:=1+count($arglist/*[not(TOKEN)])
-let $qname:=xqn:qname($fname,$expand)
+let $qname:=xqn:qmap-fun($fname,$prefixes)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -131,12 +150,12 @@ let $qname:=xqn:qname($fname,$expand)
 (:~  build invoked nodes for function call
  : @param $e is variable reference @@TODO
  :)
-declare function xqp:ref-variable($e as element(*),$expand as function(*))
+declare function xqp:ref-variable($e as element(*),$prefixes as map(*))
 as element(xqdoc:ref-variable)
 {
 
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqn:qname($fname,$expand)
+let $qname:=xqn:qmap-fun($fname,$prefixes)
  return <xqdoc:ref-variable >
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -160,24 +179,23 @@ as map(*)
 
 
 (:~  map of known namespaces including static :)
-declare function xqp:prefixes($e as element())
+declare function xqp:prefixes($e as element(),$platform as xs:string)
 as map(*)
 {(
   xqp:namespaces($e),
- xqn:static-prefix-map()
+ xqn:static-prefix-map($platform)
 ) =>map:merge()
 };
 
 (:~  map of function declarations
  : @result map where keys are Qname with # arity items are xqParse trees
  :)
-declare function xqp:funmap($e as element(XQuery))
+declare function xqp:funmap($e as element(XQuery),$prefixes as map(*))
 as map(*)
 {
- let $expand:=xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($e))
  let $items:=for $f in $e//FunctionDecl
              let $name:=if($f/QName[1]) then
-                              xqn:qname($f/QName[1],$expand)
+                              xqn:qmap-fun($f/QName[1],$prefixes)
                         else if($f/URIQualifiedName) then
                                 xqn:uriqname($f/URIQualifiedName)
                         else 
@@ -207,7 +225,19 @@ as map(*)
    else
     ()
  };
- 
+ (:~ 
+ : all namespaces in xqdoc as map{prefix.. uri}
+  :)
+declare 
+%private 
+function xqp:namespaces-xqdoc($xqdoc as element(xqdoc:xqdoc))
+as map(*)
+{
+  $xqdoc/xqdoc:namespaces/xqdoc:namespace
+  !map:entry(string(@prefix),string(@uri))
+  =>map:merge()
+};
+
 (:~ parse XQuery 
  : result is <XQuery> or <ERROR>
  :)

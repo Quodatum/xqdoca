@@ -24,7 +24,7 @@ xquery version "3.1";
  :)
 (:~
  : Generate documentation for for XQuery sources
- : @return info about the run (json format)
+ : @return info about the run (json format) 
  :)
 
 
@@ -38,9 +38,9 @@ declare option db:chop 'true';
  : @default C:/Users/andy/git/xqdoca 
  :)
 declare variable $efolder as xs:anyURI  external :=
-              xs:anyURI(db:option("webpath") ||"/vue-poc/")
+              (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              (: xs:anyURI(file:parent(static-base-uri())) :)
+              xs:anyURI(file:parent(static-base-uri()))
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 ;
 
