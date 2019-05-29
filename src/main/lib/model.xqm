@@ -73,17 +73,19 @@ return map{
                       let $full:=concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
                       let $spath:=translate($file,"\","/")
                       let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
+                      let $isParsed:=$a?xqparse instance of element(XQuery)
                       let $base:=map{
                         "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
-                        "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(),
+                        "parsed": $isParsed,
                         "prefixes": xqd:namespaces( $a?xqdoc),
-                        "default-fn-uri": if($a?xqparse instance of element(XQuery)) then
-                                                 xqp:default-fn-uri($a?xqparse)
-                                          else
-                                             ()
+                        "annotations": xqd:anno($a?xqdoc) (: sequence map{annotation:, xqdoc: } :)
                       }
-                      return map:merge(($base,$a))  
+                      let $extras:= if($isParsed) then
+                                        map{  "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                                              "default-fn-uri": xqp:default-fn-uri($a?xqparse)}
+                                    else ()
+                      return map:merge(($base,$a,$extras))  
            }
 
 };
@@ -142,8 +144,7 @@ as map(*)
   let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
                    
   return map{"xqdoc": $enh, 
-             "xqparse": $parse,
-             "annotations":xqd:anno($enh)
+             "xqparse": $parse
               }
 };
 

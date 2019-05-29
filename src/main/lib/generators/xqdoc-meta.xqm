@@ -34,7 +34,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
  : metadata. 
  :)
 declare 
-%xqdoca:global("meta","xqDoca run configuration report (XML)")
+%xqdoca:global("meta","xqDocA run configuration report (XML)")
 %xqdoca:output("xqdoca.xml","xml") 
 function _:restxq($model,$opts)
 {

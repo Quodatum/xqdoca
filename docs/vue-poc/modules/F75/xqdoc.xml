@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>create-db.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>create vue-poc db</xqdoc:description></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>create-db.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>create vue-poc db</xqdoc:description></xqdoc:comment><xqdoc:body>(:~
  : create vue-poc db
  :)
 import module namespace dbtools = 'quodatum.dbtools'  at "../lib/dbtools.xqm";

@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>images.xq</xqdoc:uri><xqdoc:body>(: clean tiddly images
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>images.xq</xqdoc:uri><xqdoc:body>(: clean tiddly images
 :)
 declare variable $SRC:="Z:\home\tiddly\quodatum\tiddlers\";
 

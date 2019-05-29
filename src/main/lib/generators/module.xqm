@@ -366,7 +366,7 @@ as element(div)
                     <summary>{$sum}</summary>
                     <ul>
                      { $hits!<li>{
-                       page:link-function2(?qname?uri, ?name, ?file) 
+                       page:link-function2(?qname?uri, ?name, ?file,true()) 
                      }</li> }
                  
                     </ul>              
@@ -394,7 +394,7 @@ as element(details)
        group by $key:= $i/xqdoc:uri || $name
        order by $key
        return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
- let $msg:= ``[References `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
+ let $msg:= ``[Invokes `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
 
  return <details>
       <summary>{ $msg }</summary>

@@ -29,6 +29,7 @@ module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
@@ -39,11 +40,7 @@ declare
 %xqdoca:output("annotations.html","html5") 
 function _:annotations($model,$opts)
 {
-  let $ns-map:=map:merge(
-          for $a in $model?files?annotations
-          group by $uri:=$a?annotation?uri
-           return map:entry($uri,$a)
-         )
+  let $ns-map:=xqa:annotations($model)
   let $body:=<div>
                  <h1>
                   <span class="badge badge-success">
@@ -62,20 +59,7 @@ function _:annotations($model,$opts)
             <h3>
                Contents
             </h3>
-            <ol class="toc">
-                <li>
-                    <a href="#main">
-                        <span class="secno">1 </span>
-                        <span class="content">Introduction</span>
-                    </a>
-                </li>
-                 <li>
-                    <a href="#annotations">
-                        <span class="secno">2 </span>
-                        <span class="content">Annotations</span>
-                    </a>
-                </li>
-             </ol>
+           {_:toc(map:keys($ns-map)=>sort())}
            </nav>
              {_:summary($model,$opts)}
              <div class="div2">
@@ -86,13 +70,44 @@ function _:annotations($model,$opts)
                  order by $ns
                  count $c
                  return <div class="div3">
-                        <h2><a id="{ $ns }"/>{ $ns }</h2>
-                        <p>todo</p>
-                        </div>
-               }
-             </div>       
-  </div>
+                            <h3><a id="{ $ns }"/>{page:section((2,$c))} { $ns }</h3>
+                            {for $a in $ns-map?($ns)
+                            group by $name:=$a?annotation?name
+                            order by lower-case($name)
+                            return _:anno-calls($ns,$name,$a) 
+                      } </div>       
+           }</div>
+      </div>
   return  page:wrap($body,$opts)
+};
+
+declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
+{
+ <div class="div4">
+     <h4><a id="{ $ns }#{ $name }"/>{ $ns }#{$name}
+      <div style="float:right"><span class="badge badge-info">{count($a)}</span></div>
+     </h4>
+    
+     <table class="data">
+       <thead><tr>
+         <th>Function</th>
+         <th>Values</th>
+       </tr></thead>
+       <tbody>{
+          for $a2 in $a
+          return <tr>
+                    <td>{
+                       let $x:= xqa:container($a2?xqdoc,$a2?file)
+                       return if($x instance of map(*)) then 
+                                page:link-function2($x?uri,$x?name,$a2?file,false()) 
+                              else 
+                                ()
+                     }</td>
+                    <td>{$a2?xqdoc/xqdoc:literal!<span style="margin-right:2em">{.}</span>}</td>
+                </tr>
+       }</tbody>
+     </table>
+</div>        
 };
 
 declare function _:summary($model,$opts)
@@ -105,4 +120,19 @@ as element(div)
    { page:view-list( $opts(".renderers")?global,"annotations")}
  </div>
 };
-    
+
+declare function _:toc($ns as xs:string*)
+as element(ol)
+{
+ let $t:=<directory>
+      <f target="#summary" name="Summary"/>
+      <directory target="#annotations" name="Annotations">{
+     $ns!<f target="#{.}" name="{.}" />
+      }</directory>
+     </directory>
+ return <ol class="toc">
+        {$t/*!page:tree-list(.,position(),page:toc-render#2)}
+        </ol>    
+};
+
+

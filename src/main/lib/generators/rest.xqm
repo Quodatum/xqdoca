@@ -68,7 +68,7 @@ as element(div)
 {
   <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
-    <p>This page summaries the rest interface.</p>
+    <p>This page summaries the RestXQ interface.</p>
     <p>Other perspectives:</p>
    { page:view-list( $opts(".renderers")?global,"restxq")}
  </div>

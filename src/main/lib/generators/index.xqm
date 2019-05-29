@@ -73,7 +73,7 @@ let $d:=<div>
                                   <file target="#perspectives" name="Other perspectives"/>
                                    
                                 </directory>,
-                                xqhtml:toc-render#2
+                                page:toc-render#2
                               )
              
                   , xqhtml:summary($model,$opts)
@@ -100,18 +100,7 @@ let $d:=<div>
 return document{ page:wrap($d, $opts ) }
 };
 
-declare function xqhtml:toc-render($pos as xs:string,$el as element(*))
-as element(*)
-{
-let $c:=(
-<span class="secno">{$pos}</span>,
-<span class="content">{$el/@name/string()}</span>
-)
-return if($el/@target) then
- <a href="{$el/@target}">{ $c }</a>
-else
- $c
-};
+
 
 declare function xqhtml:summary($model,$opts)
 as element(div)
@@ -123,7 +112,7 @@ as element(div)
     <li>{ count($model?files) } modules. </li>
     <li>{ $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.</li>
     </ul>
-     <p>Source folder : { $model?base-uri }</p> 
+     <p>Source folder : <code>{ $model?base-uri }</code>.</p> 
  </div>
 };
 
@@ -151,14 +140,15 @@ as element(div)
                for $ns in map:keys($ns-map)
                order by $ns
                return <section>
-                        <h3>{ $ns }</h3>
+                        <h3><a id="{$ns}"/>{ $ns }</h3>
                         <div>
                         {for $a in $ns-map?($ns)
                         group by $name:=$a?annotation?name
                         order by lower-case($name)
-                        return <a href="annotations.html#{ $ns }" class="badge badge-info" style="margin-right:1em;">{$name}
-                                 <span class="badge badge-light">{count($a)}</span>
-                               </a>
+                        return <span style="margin-right:1em;">
+                                  <a href="annotations.html#{ $ns }#{ $name }" >{$name}</a>
+                                  <span class="badge badge-info">{count($a)}</span>
+                               </span>
                       }</div>
                      </section>
       }</div>
@@ -181,8 +171,11 @@ as element(div)
 };
 
 declare function xqhtml:modtable($files as map(*)*)
-as element(table)
+as element(div)
 {
+  <div>{if (count($files)=0) then
+          <p>None</p>
+        else
      <table class="data">
     <thead>
     <tr>
@@ -219,11 +212,12 @@ as element(table)
         }
     </tbody>
     </table>
+  }</div>
 };
 
 (:~ import page :)
 declare 
-%xqdoca:global("import","Summary of import usage")
+%xqdoca:global("imports","Summary of import usage")
 %xqdoca:output("imports.html","html5") 
 function xqhtml:imports($model,$opts)
 {

@@ -1,0 +1,71 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T23:09:38.214+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.meta</xqdoc:uri><xqdoc:name>xqdoc-meta.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>meta.xqm</h1>
+<p>Generate meta data about the <code>xqDocA</code> run</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/xqdoc-meta.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;meta.xqm&lt;/h1&gt;
+ : &lt;p&gt;Generate meta data about the &lt;code&gt;xqDocA&lt;/code&gt; run&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+ 
+(:~
+ : Generate meta
+ :)
+module namespace _ = 'quodatum:xqdoca.generator.meta';
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+
+(:~
+ : metadata. 
+ :)
+declare 
+%xqdoca:global("meta","xqDocA run configuration report (XML)")
+%xqdoca:output("xqdoca.xml","xml") 
+function _:restxq($model,$opts)
+{
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.meta"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>metadata.</xqdoc:description></xqdoc:comment><xqdoc:name>_:restxq</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">meta</xqdoc:literal><xqdoc:literal type="xs:string">xqDocA run configuration report (XML)</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoca.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("meta", "xqDocA run configuration report (XML)") %Q{https://github.com/Quodatum/xqdoca}output("xqdoca.xml", "xml") function _:restxq($model as item()*, $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>for-each</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>k</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>k</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:restxq($model,$opts)
+{
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

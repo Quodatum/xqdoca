@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-dbimport.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Import a file or directory into a database</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-dbimport.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Import a file or directory into a database</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
 : Import a file or directory into a database
 : @author andy bunce
 : @since july 2018

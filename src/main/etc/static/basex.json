@@ -51,5 +51,8 @@
 "ws":  "http://basex.org/modules/ws",
 "perm": "http://basex.org/modules/perm",
 "rest": "http://exquery.org/ns/restxq",
-"basex": "http://basex.org"
+"basex": "http://basex.org",
+"session": "http://basex.org/modules/session",
+"sessions": "http://basex.org/modules/sessions",
+"geo": "http://expath.org/ns/geo"
 }

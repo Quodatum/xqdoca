@@ -1,0 +1,229 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T23:09:38.214+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.annotations</xqdoc:uri><xqdoc:name>annotations.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
+<p>annotation report</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/annotations.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-html.xqm&lt;/h1&gt;
+ : &lt;p&gt;annotation report&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ :)
+ 
+
+module namespace _ = 'quodatum:xqdoca.generator.annotations';
+
+
+import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+
+(:~ annotations page :)
+declare 
+%xqdoca:global("annotations","Summary of Annotation use")
+%xqdoca:output("annotations.html","html5") 
+function _:annotations($model,$opts)
+{
+  let $ns-map:=xqa:annotations($model)
+  let $body:=&lt;div&gt;
+                 &lt;h1&gt;
+                  &lt;span class="badge badge-success"&gt;
+                      { $opts?project }
+                  &lt;/span&gt;
+                  &amp;#160;Annotations 
+              &lt;/h1&gt;
+               &lt;nav id="toc"&gt;
+                        &lt;h2&gt;
+                            &lt;a href="index.html" class="badge badge-success"&gt;
+                                { $model?project }
+                            &lt;/a&gt;
+                            / Annotations
+                        &lt;/h2&gt;
+           
+            &lt;h3&gt;
+               Contents
+            &lt;/h3&gt;
+           {_:toc(map:keys($ns-map)=&gt;sort())}
+           &lt;/nav&gt;
+             {_:summary($model,$opts)}
+             &lt;div class="div2"&gt;
+                 &lt;h2&gt;&lt;a id="annotations"/&gt;2 Annotations&lt;/h2&gt;
+                 &lt;p&gt;There are { map:size($ns-map) } annotation namespaces in use.&lt;/p&gt;
+                 {
+                 for $ns in map:keys($ns-map)
+                 order by $ns
+                 count $c
+                 return &lt;div class="div3"&gt;
+                            &lt;h3&gt;&lt;a id="{ $ns }"/&gt;{page:section((2,$c))} { $ns }&lt;/h3&gt;
+                            {for $a in $ns-map?($ns)
+                            group by $name:=$a?annotation?name
+                            order by lower-case($name)
+                            return _:anno-calls($ns,$name,$a) 
+                      } &lt;/div&gt;       
+           }&lt;/div&gt;
+      &lt;/div&gt;
+  return  page:wrap($body,$opts)
+};
+
+declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
+{
+ &lt;div class="div4"&gt;
+     &lt;h4&gt;&lt;a id="{ $ns }#{ $name }"/&gt;{ $ns }#{$name}
+      &lt;div style="float:right"&gt;&lt;span class="badge badge-info"&gt;{count($a)}&lt;/span&gt;&lt;/div&gt;
+     &lt;/h4&gt;
+    
+     &lt;table class="data"&gt;
+       &lt;thead&gt;&lt;tr&gt;
+         &lt;th&gt;Function&lt;/th&gt;
+         &lt;th&gt;Values&lt;/th&gt;
+       &lt;/tr&gt;&lt;/thead&gt;
+       &lt;tbody&gt;{
+          for $a2 in $a
+          return &lt;tr&gt;
+                    &lt;td&gt;{
+                       let $x:= xqa:container($a2?xqdoc,$a2?file)
+                       return if($x instance of map(*)) then 
+                                page:link-function2($x?uri,$x?name,$a2?file,false()) 
+                              else 
+                                ()
+                     }&lt;/td&gt;
+                    &lt;td&gt;{$a2?xqdoc/xqdoc:literal!&lt;span style="margin-right:2em"&gt;{.}&lt;/span&gt;}&lt;/td&gt;
+                &lt;/tr&gt;
+       }&lt;/tbody&gt;
+     &lt;/table&gt;
+&lt;/div&gt;        
+};
+
+declare function _:summary($model,$opts)
+as element(div)
+{
+  &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
+    &lt;p&gt;This page itemizes the use of annotations in this project.&lt;/p&gt;
+    &lt;p&gt;Other perspectives:&lt;/p&gt;
+   { page:view-list( $opts(".renderers")?global,"annotations")}
+ &lt;/div&gt;
+};
+
+declare function _:toc($ns as xs:string*)
+as element(ol)
+{
+ let $t:=&lt;directory&gt;
+      &lt;f target="#summary" name="Summary"/&gt;
+      &lt;directory target="#annotations" name="Annotations"&gt;{
+     $ns!&lt;f target="#{.}" name="{.}" /&gt;
+      }&lt;/directory&gt;
+     &lt;/directory&gt;
+ return &lt;ol class="toc"&gt;
+        {$t/*!page:tree-list(.,position(),page:toc-render#2)}
+        &lt;/ol&gt;    
+};
+
+
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.annotations"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>annotations page</xqdoc:description></xqdoc:comment><xqdoc:name>_:annotations</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">annotations</xqdoc:literal><xqdoc:literal type="xs:string">Summary of Annotation use</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">annotations.html</xqdoc:literal><xqdoc:literal type="xs:string">html5</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("annotations", "Summary of Annotation use") %Q{https://github.com/Quodatum/xqdoca}output("annotations.html", "html5") function _:annotations($model as item()*, $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.generator.annotations</xqdoc:uri><xqdoc:name>toc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.annotations</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>section</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.generator.annotations</xqdoc:uri><xqdoc:name>anno-calls</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>body</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:annotations($model,$opts)
+{
+  let $ns-map:=xqa:annotations($model)
+  let $body:=&lt;div&gt;
+                 &lt;h1&gt;
+                  &lt;span class="badge badge-success"&gt;
+                      { $opts?project }
+                  &lt;/span&gt;
+                  &amp;#160;Annotations 
+              &lt;/h1&gt;
+               &lt;nav id="toc"&gt;
+                        &lt;h2&gt;
+                            &lt;a href="index.html" class="badge badge-success"&gt;
+                                { $model?project }
+                            &lt;/a&gt;
+                            / Annotations
+                        &lt;/h2&gt;
+           
+            &lt;h3&gt;
+               Contents
+            &lt;/h3&gt;
+           {_:toc(map:keys($ns-map)=&gt;sort())}
+           &lt;/nav&gt;
+             {_:summary($model,$opts)}
+             &lt;div class="div2"&gt;
+                 &lt;h2&gt;&lt;a id="annotations"/&gt;2 Annotations&lt;/h2&gt;
+                 &lt;p&gt;There are { map:size($ns-map) } annotation namespaces in use.&lt;/p&gt;
+                 {
+                 for $ns in map:keys($ns-map)
+                 order by $ns
+                 count $c
+                 return &lt;div class="div3"&gt;
+                            &lt;h3&gt;&lt;a id="{ $ns }"/&gt;{page:section((2,$c))} { $ns }&lt;/h3&gt;
+                            {for $a in $ns-map?($ns)
+                            group by $name:=$a?annotation?name
+                            order by lower-case($name)
+                            return _:anno-calls($ns,$name,$a) 
+                      } &lt;/div&gt;       
+           }&lt;/div&gt;
+      &lt;/div&gt;
+  return  page:wrap($body,$opts)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>_:anno-calls</xqdoc:name><xqdoc:signature>declare function _:anno-calls($ns as xs:string, $name as xs:string, $a as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>container</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-function2</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>false</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a2</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:anno-calls($ns as xs:string, $name as xs:string,$a)
+{
+ &lt;div class="div4"&gt;
+     &lt;h4&gt;&lt;a id="{ $ns }#{ $name }"/&gt;{ $ns }#{$name}
+      &lt;div style="float:right"&gt;&lt;span class="badge badge-info"&gt;{count($a)}&lt;/span&gt;&lt;/div&gt;
+     &lt;/h4&gt;
+    
+     &lt;table class="data"&gt;
+       &lt;thead&gt;&lt;tr&gt;
+         &lt;th&gt;Function&lt;/th&gt;
+         &lt;th&gt;Values&lt;/th&gt;
+       &lt;/tr&gt;&lt;/thead&gt;
+       &lt;tbody&gt;{
+          for $a2 in $a
+          return &lt;tr&gt;
+                    &lt;td&gt;{
+                       let $x:= xqa:container($a2?xqdoc,$a2?file)
+                       return if($x instance of map(*)) then 
+                                page:link-function2($x?uri,$x?name,$a2?file,false()) 
+                              else 
+                                ()
+                     }&lt;/td&gt;
+                    &lt;td&gt;{$a2?xqdoc/xqdoc:literal!&lt;span style="margin-right:2em"&gt;{.}&lt;/span&gt;}&lt;/td&gt;
+                &lt;/tr&gt;
+       }&lt;/tbody&gt;
+     &lt;/table&gt;
+&lt;/div&gt;        
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>_:summary</xqdoc:name><xqdoc:signature>declare function _:summary($model as item()*, $opts as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>view-list</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:summary($model,$opts)
+as element(div)
+{
+  &lt;div class="div2"&gt;
+    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
+    &lt;p&gt;This page itemizes the use of annotations in this project.&lt;/p&gt;
+    &lt;p&gt;Other perspectives:&lt;/p&gt;
+   { page:view-list( $opts(".renderers")?global,"annotations")}
+ &lt;/div&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>_:toc</xqdoc:name><xqdoc:signature>declare function _:toc($ns as xs:string*) as element(ol)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(ol)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>tree-list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>position</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>t</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:toc($ns as xs:string*)
+as element(ol)
+{
+ let $t:=&lt;directory&gt;
+      &lt;f target="#summary" name="Summary"/&gt;
+      &lt;directory target="#annotations" name="Annotations"&gt;{
+     $ns!&lt;f target="#{.}" name="{.}" /&gt;
+      }&lt;/directory&gt;
+     &lt;/directory&gt;
+ return &lt;ol class="toc"&gt;
+        {$t/*!page:tree-list(.,position(),page:toc-render#2)}
+        &lt;/ol&gt;    
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -82,18 +82,20 @@ as element(span)
 };
 
 (:~ link to fun or var in file
- : @param name of form 'fun#arity] or ''$name' 
+ : @param name of form 'fun#arity' or ''$name' 
+ : @param fromModule where called from
 :)
 declare 
 function page:link-function2($uri as xs:string,
                              $name as xs:string,
-                             $file as map(*)
+                             $file as map(*),
+                             $fromModule as xs:boolean
                            )                       
 as element(span)
 {  
    let $clark:= xqn:clark-name($uri,$name)
    let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
-   let $root:="../../"
+   let $root:=if($fromModule) then "../../" else ""
    return  <span>
             <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
            </span>
@@ -170,7 +172,8 @@ as element(html)
 (:~ 
  : build toc 
  : @param $name title
- : @param $toc xml 
+ : @param $tree xml 
+ : @param $decorate function called on leafs
  :)
 declare function page:toc3($name as xs:string,$tree as element(directory),$decorate as function(*))
 as element(nav)
@@ -187,7 +190,8 @@ as element(nav)
           }</ol>
         </nav> 
 };
-(:~  section numbering util :)
+
+(:~  section numbering util return dott joined string :)
 declare function page:section($pos as xs:anyAtomicType*)
 as xs:string{
   string-join($pos,".") || "&#160;"
@@ -195,7 +199,7 @@ as xs:string{
 
 (:~ tree to list
  : @param tree file (@name.@target) directory elements 
- : @param $seq starting section number 
+ : @param $seq  section number as sequence of levels
 :)
 declare function page:tree-list($tree as element(*),$seq as xs:integer*,$render as function(*))
 as element(li){
@@ -208,6 +212,23 @@ as element(li){
           else ()
         }</li>
  
+};
+
+(:~ 
+ : simple toc render 
+ : @see tree-list
+ :)
+declare function page:toc-render($pos as xs:string,$el as element(*))
+as element(*)
+{
+let $c:=(
+<span class="secno">{$pos}</span>,
+<span class="content">{$el/@name/string()}</span>
+)
+return if($el/@target) then
+ <a href="{$el/@target}">{ $c }</a>
+else
+ <span>{$c}</span>
 };
 
 (:~ formated datetime

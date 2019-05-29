@@ -34,13 +34,13 @@ import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
  
-(:~   URL of the root folder to document
+(:~  URL of the root folder to document
  : @default C:/Users/andy/git/xqdoca  
  :)
 declare variable $efolder as xs:anyURI  external :=
               (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
-              xs:anyURI(db:option("webpath") ||"/dba/")
-              (: xs:anyURI(file:parent(static-base-uri())) :)
+              (: xs:anyURI(db:option("webpath") ||"/dba/") :)
+              xs:anyURI(file:parent(static-base-uri()))
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 ;
 
@@ -69,7 +69,7 @@ let $options:=map{
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)
 let $target:=xqd:target($target,$options)   
-(: arbitary result :)
+(: arbitary result for reporting :)
 let $result:=   <json type="object">
                     <extra>XQdoc generated</extra>
                     <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>

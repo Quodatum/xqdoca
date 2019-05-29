@@ -1,7 +1,6 @@
 xquery version "3.1";
 (:~
  : simple swagger generation 
- : NOTE this is just shell no detail provided
  :
  : @author Andy Bunce
  : @version 0.1
@@ -9,6 +8,9 @@ xquery version "3.1";
  
 module namespace _ = 'quodatum:xqdoca.generator.swagger';
 
+(:~ 
+ :  This is just shell NO detail provided!!
+ :)
 declare 
 %Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
 %Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
