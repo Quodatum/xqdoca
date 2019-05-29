@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>xqdoca.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>xqdoca.xq</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:57:38.902+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>xqdoca.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>xqdoca.xq</h1>
 <p>Driver for xquery documentation generator </p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -25,7 +25,7 @@
  :)
 (:~
  : Generate documentation for for XQuery sources
- : @return info about the run (json format)
+ : @return info about the run (json format) 
  :)
 
 
@@ -35,13 +35,13 @@ import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
  
-(:~  URL of the root folder to document
- : @default C:/Users/andy/git/xqdoca 
+(:~   URL of the root folder to document
+ : @default C:/Users/andy/git/xqdoca  
  :)
 declare variable $efolder as xs:anyURI  external :=
-              xs:anyURI(db:option("webpath") ||"/vue-poc/")
+              (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              (: xs:anyURI(file:parent(static-base-uri())) :)
+              xs:anyURI(file:parent(static-base-uri()))
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 ;
 
@@ -63,7 +63,8 @@ let $options:=map{
                "outputs":  map{
                     "global": ("index","restxq","imports","annotations","meta"),
                     "module": ("xqdoc","xqparse","module")  
-                }    
+                },
+                "show-private": true()    
                }
                
 (: generate  outputs :)
@@ -79,7 +80,7 @@ return (
        xqo:export-resources($target),
        update:output($result)
 )
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:store</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="xqo" uri="quodatum:xqdoca.outputs"/><xqdoc:namespace prefix="store" uri="quodatum:store"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>efolder</xqdoc:name><xqdoc:comment><xqdoc:description>URL of the root folder to document</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/xqdoca</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>platform</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>exts</xqdoc:name><xqdoc:comment><xqdoc:description>source file extensions to parse</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>target</xqdoc:name><xqdoc:comment><xqdoc:description>location to save outputs as a base-uri</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $files:=xqd:find-sources($efolder,$exts)
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:store</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="xqo" uri="quodatum:xqdoca.outputs"/><xqdoc:namespace prefix="store" uri="quodatum:store"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>efolder</xqdoc:name><xqdoc:comment><xqdoc:description>URL of the root folder to document</xqdoc:description><xqdoc:custom tag="default">C:/Users/andy/git/xqdoca</xqdoc:custom></xqdoc:comment><xqdoc:type>xs:anyURI</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>platform</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>exts</xqdoc:name><xqdoc:comment><xqdoc:description>source file extensions to parse</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>target</xqdoc:name><xqdoc:comment><xqdoc:description>location to save outputs as a base-uri</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $files:=xqd:find-sources($efolder,$exts)
 let $model:= xqd:snap($efolder,$files,$platform) 
 let $options:=map{
                "project": $model?project, 
@@ -87,7 +88,8 @@ let $options:=map{
                "outputs":  map{
                     "global": ("index","restxq","imports","annotations","meta"),
                     "module": ("xqdoc","xqparse","module")  
-                }    
+                },
+                "show-private": true()    
                }
                
 (: generate  outputs :)
@@ -102,7 +104,7 @@ return (
        store:store($pages,$target),
        xqo:export-resources($target),
        update:output($result)
-)</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>find-sources</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>snap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:store</xqdoc:uri><xqdoc:name>store</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>export-resources</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pages</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pages</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:body>let $files:=xqd:find-sources($efolder,$exts)
+)</xqdoc:body><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>find-sources</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>snap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:store</xqdoc:uri><xqdoc:name>store</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>export-resources</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>options</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pages</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pages</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:body>let $files:=xqd:find-sources($efolder,$exts)
 let $model:= xqd:snap($efolder,$files,$platform) 
 let $options:=map{
                "project": $model?project, 
@@ -110,7 +112,8 @@ let $options:=map{
                "outputs":  map{
                     "global": ("index","restxq","imports","annotations","meta"),
                     "module": ("xqdoc","xqparse","module")  
-                }    
+                },
+                "show-private": true()    
                }
                
 (: generate  outputs :)

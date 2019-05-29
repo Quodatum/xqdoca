@@ -64,19 +64,24 @@ declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform 
 as map(*)
 {
 let $folder:= translate($efolder,"\","/")
+let $_:=trace(count($files),"files :")
 return map{ 
              "base-uri": $folder,
              "platform": $platform,
              "project": tokenize($folder,"/")[last()-1],
              "files": for $file at $pos in $files
-                      let $full:=concat($efolder || "/", $file=>trace("FILE: "))
+                      let $full:=concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
                       let $spath:=translate($file,"\","/")
                       let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
                       let $base:=map{
                         "path": $file,
                         "href": ``[modules/F`{ $pos }`/]``,
                         "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(),
-                        "prefixes": xqd:namespaces( $a?xqdoc)
+                        "prefixes": xqd:namespaces( $a?xqdoc),
+                        "default-fn-uri": if($a?xqparse instance of element(XQuery)) then
+                                                 xqp:default-fn-uri($a?xqparse)
+                                          else
+                                             ()
                       }
                       return map:merge(($base,$a))  
            }
@@ -134,7 +139,7 @@ as map(*)
                  xqd:namespaces($enh),
                  xqn:static-prefix-map($platform)
                ))
-  let $enh:= xqp:enrich($enh,$parse,$prefixes) 
+  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
                    
   return map{"xqdoc": $enh, 
              "xqparse": $parse,
@@ -150,7 +155,7 @@ as map(*)*
 {
   let $ns:= xqd:namespaces($xqdoc)
  for $a in $xqdoc//xqdoc:annotation
- let $name:=xqn:qmap-anno($a/@name,$ns)
+ let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
  return map{"annotation":$name, "xqdoc": $a} 
 };
          

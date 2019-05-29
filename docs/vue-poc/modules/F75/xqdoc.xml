@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:30:30.92+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>create-db.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>create vue-poc db</xqdoc:description></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>create-db.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>create vue-poc db</xqdoc:description></xqdoc:comment><xqdoc:body>(:~
  : create vue-poc db
  :)
 import module namespace dbtools = 'quodatum.dbtools'  at "../lib/dbtools.xqm";
@@ -10,7 +10,7 @@ declare variable $data-uri:=resolve-uri("../data/vue-poc/");
                             $target-db
                            ,$data-uri
                            ,file:list($data-uri,fn:true())
-                          ,hof:id#1))</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dbtools" uri="quodatum.dbtools"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>target-db</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>data-uri</xqdoc:name><xqdoc:type occurrence="?">xs:anyURI</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>(dbtools:sync-from-files(
+                          ,hof:id#1))</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dbtools" uri="quodatum.dbtools"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>target-db</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>data-uri</xqdoc:name><xqdoc:type occurrence="?">xs:anyURI</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>(dbtools:sync-from-files(
                             $target-db
                            ,$data-uri
                            ,file:list($data-uri,fn:true())

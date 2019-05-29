@@ -1,60 +1,71 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.swagger</xqdoc:uri><xqdoc:name>swagger1.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>simple swagger generation 
-NOTE this is just shell no detail provided</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/swagger1.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:~
- : simple swagger generation 
- : NOTE this is just shell no detail provided
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:57:38.902+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.meta</xqdoc:uri><xqdoc:name>xqdoc-meta.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>meta.xqm</h1>
+<p>Generate meta data about the <code>xqDocA</code> run</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/xqdoc-meta.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;meta.xqm&lt;/h1&gt;
+ : &lt;p&gt;Generate meta data about the &lt;code&gt;xqDocA&lt;/code&gt; run&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-module namespace _ = 'quodatum:xqdoca.generator.swagger';
+(:~
+ : Generate meta
+ :)
+module namespace _ = 'quodatum:xqdoca.generator.meta';
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
+
+(:~
+ : metadata. 
+ :)
 declare 
-%Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
-function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
+%xqdoca:global("meta","xqDoca run configuration report (XML)")
+%xqdoca:output("xqdoca.xml","xml") 
+function _:restxq($model,$opts)
 {
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
 };
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.swagger"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:swagger</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="global"><xqdoc:literal type="xs:string">swagger1</xqdoc:literal><xqdoc:literal type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output"><xqdoc:literal type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("swagger1", "Swagger file (JSON format) from restxq annotations.") %Q{https://github.com/Quodatum/xqdoca}output("swagger.json", "json") function _:swagger($model as map(*), $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.meta"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>metadata.</xqdoc:description></xqdoc:comment><xqdoc:name>_:restxq</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">meta</xqdoc:literal><xqdoc:literal type="xs:string">xqDoca run configuration report (XML)</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoca.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("meta", "xqDoca run configuration report (XML)") %Q{https://github.com/Quodatum/xqdoca}output("xqdoca.xml", "xml") function _:restxq($model as item()*, $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>for-each</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>k</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>k</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:restxq($model,$opts)
 {
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

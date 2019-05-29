@@ -1,233 +1,60 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>rest.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
-<p>Library to support html5 rendering of xqdoc</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/rest.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;xqdoc-html.xqm&lt;/h1&gt;
- : &lt;p&gt;Library to support html5 rendering of xqdoc&lt;/p&gt;
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:57:38.902+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.swagger</xqdoc:uri><xqdoc:name>swagger1.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>simple swagger generation 
+NOTE this is just shell no detail provided</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/swagger1.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+ : simple swagger generation 
+ : NOTE this is just shell no detail provided
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-(:~
- : Generate RESTXQ XQuery  documentation in html
- :)
-module namespace _ = 'quodatum:xqdoca.generator.rest';
+module namespace _ = 'quodatum:xqdoca.generator.swagger';
 
-import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
-import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
-import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
-declare namespace xqdoc="http://www.xqdoc.org/1.0";
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-
-
-(:~
- : rest interface html for page. 
- :)
 declare 
-%xqdoca:global("restxq","Summary of REST interface")
-%xqdoca:output("restxq.html","html5") 
-function _:restxq($model,$opts)
+%Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
+%Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
+function _:swagger($model as map(*),
+                            $opts as map(*)
+                            )                           
 {
-let $annots:= xqd:rxq-paths($model) 
-let $tree:=$annots?uri 
-let $tree:=tree:build($tree)=&gt;trace("TREE: ")
-let $body:= &lt;div&gt;
-              &lt;h1&gt;
-                 Project &lt;span class="badge badge-info"&gt;
-                      { $opts?project }
-                  &lt;/span&gt;
-                  &amp;#160;RestXQ documentation 
-              &lt;/h1&gt;
-            {_:toc($model,$tree)}
-            {_:summary($model,$opts)}
-           &lt;div class="div2"&gt;
-             &lt;h2&gt;&lt;a id="rest"/&gt;2 Rest interface paths&lt;/h2&gt;
-             &lt;ul&gt;{$annots!_:path-to-html(.)}&lt;/ul&gt;
-           &lt;/div&gt;
-           &lt;/div&gt;
-return  page:wrap($body,$opts)
+&lt;json type="object"&gt;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;
+   &lt;info type="object"&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
+    &lt;contact type="object"&gt;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;
+    &lt;/contact&gt;
+    &lt;license type="object"&gt;
+      &lt;name&gt;MIT&lt;/name&gt;
+    &lt;/license&gt;
+  &lt;/info&gt;
+  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
+  &lt;basePath&gt;/api&lt;/basePath&gt;
+&lt;/json&gt;
 };
 
-declare function _:summary($model,$opts)
-as element(div)
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.swagger"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:swagger</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="global"><xqdoc:literal type="xs:string">swagger1</xqdoc:literal><xqdoc:literal type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output"><xqdoc:literal type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("swagger1", "Swagger file (JSON format) from restxq annotations.") %Q{https://github.com/Quodatum/xqdoca}output("swagger.json", "json") function _:swagger($model as map(*), $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:swagger($model as map(*),
+                            $opts as map(*)
+                            )                           
 {
-  &lt;div class="div2"&gt;
-    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
-    &lt;p&gt;This page summaries the rest interface.&lt;/p&gt;
-    &lt;p&gt;Other perspectives:&lt;/p&gt;
-   { page:view-list( $opts(".renderers")?global,"restxq")}
- &lt;/div&gt;
-};
-
-(:~  html for a path :)          
-declare function _:path-to-html($rep as map(*))
-as element(div)
-{
-  &lt;div class="div4"&gt;
-       &lt;h4&gt;&lt;a id="{ $rep?uri }"/&gt;{ $rep?uri }&lt;/h4&gt;
-       &lt;ul&gt;{
-       let $methods as map(*) :=$rep?methods
-       for $method in map:keys($methods)
-       let $d:=$methods?($method)
-       let $id:=head($d?function)
-       return &lt;li&gt;
-                    &lt;a href="{$d?uri}index.html#{$id }"&gt;{ $method }&lt;/a&gt;
-                    &lt;div&gt;{$d?description}&lt;/div&gt;
-              &lt;/li&gt;
-       }&lt;/ul&gt;
-   &lt;/div&gt;
-};
-
-(:~  toc :)
-declare function _:toc($model as map(*),$tree)
-as element(nav)
-{
-     &lt;nav id="toc"&gt;
-            &lt;h2&gt;
-                 &lt;a href="index.html" class="badge badge-success"&gt;
-                    { $model?project }
-                &lt;/a&gt;
-                / RestXQ
-            &lt;/h2&gt;
-           &lt;h3&gt;
-               Contents
-            &lt;/h3&gt;
-            &lt;ol class="toc"&gt;
-                &lt;li&gt;
-                    &lt;a href="#summary"&gt;
-                        &lt;span class="secno"&gt;1 &lt;/span&gt;
-                        &lt;span class="content"&gt;Summary&lt;/span&gt;
-                    &lt;/a&gt;
-                &lt;/li&gt;
-                 &lt;li  &gt;
-                    &lt;a href="#rest"&gt;
-                        &lt;span class="secno"&gt;2 &lt;/span&gt;
-                        &lt;span class="content"&gt;Rest Paths&lt;/span&gt;
-                    &lt;/a&gt;
-                &lt;/li&gt;
-                { $tree/*!page:tree-list(.,2,_:toc-render#2) } 
-             &lt;/ol&gt;
-           &lt;/nav&gt;
-};
-
-
-declare function _:toc-render($pos as xs:string,$el as element(*))
-as element(*)*
-{
-let $c:=(
-&lt;span class="secno"&gt;{$pos}&lt;/span&gt;,
-&lt;span class="content"&gt;{$el/@name/string()}&lt;/span&gt;
-)
-return if($el/@target) then
- &lt;a href="#{$el/@target}"&gt;
- { $c }
- &lt;div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}"&gt;X&lt;/div&gt;
-  &lt;/a&gt;
-else
- $c
-};
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:data.tree</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.rest"/><xqdoc:namespace prefix="tree" uri="quodatum:data.tree"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>rest interface html for page.</xqdoc:description></xqdoc:comment><xqdoc:name>_:restxq</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">restxq</xqdoc:literal><xqdoc:literal type="xs:string">Summary of REST interface</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">restxq.html</xqdoc:literal><xqdoc:literal type="xs:string">html5</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("restxq", "Summary of REST interface") %Q{https://github.com/Quodatum/xqdoca}output("restxq.html", "html5") function _:restxq($model as item()*, $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>rxq-paths</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>build</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>toc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>path-to-html</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annots</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tree</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tree</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annots</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>body</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:restxq($model,$opts)
-{
-let $annots:= xqd:rxq-paths($model) 
-let $tree:=$annots?uri 
-let $tree:=tree:build($tree)=&gt;trace("TREE: ")
-let $body:= &lt;div&gt;
-              &lt;h1&gt;
-                 Project &lt;span class="badge badge-info"&gt;
-                      { $opts?project }
-                  &lt;/span&gt;
-                  &amp;#160;RestXQ documentation 
-              &lt;/h1&gt;
-            {_:toc($model,$tree)}
-            {_:summary($model,$opts)}
-           &lt;div class="div2"&gt;
-             &lt;h2&gt;&lt;a id="rest"/&gt;2 Rest interface paths&lt;/h2&gt;
-             &lt;ul&gt;{$annots!_:path-to-html(.)}&lt;/ul&gt;
-           &lt;/div&gt;
-           &lt;/div&gt;
-return  page:wrap($body,$opts)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>_:summary</xqdoc:name><xqdoc:signature>declare function _:summary($model as item()*, $opts as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>view-list</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:summary($model,$opts)
-as element(div)
-{
-  &lt;div class="div2"&gt;
-    &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;
-    &lt;p&gt;This page summaries the rest interface.&lt;/p&gt;
-    &lt;p&gt;Other perspectives:&lt;/p&gt;
-   { page:view-list( $opts(".renderers")?global,"restxq")}
- &lt;/div&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>html for a path</xqdoc:description></xqdoc:comment><xqdoc:name>_:path-to-html</xqdoc:name><xqdoc:signature>declare function _:path-to-html($rep as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>rep</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>rep</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>rep</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>rep</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>methods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>methods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>method</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>method</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:path-to-html($rep as map(*))
-as element(div)
-{
-  &lt;div class="div4"&gt;
-       &lt;h4&gt;&lt;a id="{ $rep?uri }"/&gt;{ $rep?uri }&lt;/h4&gt;
-       &lt;ul&gt;{
-       let $methods as map(*) :=$rep?methods
-       for $method in map:keys($methods)
-       let $d:=$methods?($method)
-       let $id:=head($d?function)
-       return &lt;li&gt;
-                    &lt;a href="{$d?uri}index.html#{$id }"&gt;{ $method }&lt;/a&gt;
-                    &lt;div&gt;{$d?description}&lt;/div&gt;
-              &lt;/li&gt;
-       }&lt;/ul&gt;
-   &lt;/div&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>toc</xqdoc:description></xqdoc:comment><xqdoc:name>_:toc</xqdoc:name><xqdoc:signature>declare function _:toc($model as map(*), $tree as item()*) as element(nav)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>tree</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(nav)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>tree-list</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tree</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:toc($model as map(*),$tree)
-as element(nav)
-{
-     &lt;nav id="toc"&gt;
-            &lt;h2&gt;
-                 &lt;a href="index.html" class="badge badge-success"&gt;
-                    { $model?project }
-                &lt;/a&gt;
-                / RestXQ
-            &lt;/h2&gt;
-           &lt;h3&gt;
-               Contents
-            &lt;/h3&gt;
-            &lt;ol class="toc"&gt;
-                &lt;li&gt;
-                    &lt;a href="#summary"&gt;
-                        &lt;span class="secno"&gt;1 &lt;/span&gt;
-                        &lt;span class="content"&gt;Summary&lt;/span&gt;
-                    &lt;/a&gt;
-                &lt;/li&gt;
-                 &lt;li  &gt;
-                    &lt;a href="#rest"&gt;
-                        &lt;span class="secno"&gt;2 &lt;/span&gt;
-                        &lt;span class="content"&gt;Rest Paths&lt;/span&gt;
-                    &lt;/a&gt;
-                &lt;/li&gt;
-                { $tree/*!page:tree-list(.,2,_:toc-render#2) } 
-             &lt;/ol&gt;
-           &lt;/nav&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>_:toc-render</xqdoc:name><xqdoc:signature>declare function _:toc-render($pos as xs:string, $el as element()) as element()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>pos</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>el</xqdoc:name><xqdoc:type>element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>c</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:toc-render($pos as xs:string,$el as element(*))
-as element(*)*
-{
-let $c:=(
-&lt;span class="secno"&gt;{$pos}&lt;/span&gt;,
-&lt;span class="content"&gt;{$el/@name/string()}&lt;/span&gt;
-)
-return if($el/@target) then
- &lt;a href="#{$el/@target}"&gt;
- { $c }
- &lt;div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}"&gt;X&lt;/div&gt;
-  &lt;/a&gt;
-else
- $c
+&lt;json type="object"&gt;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;
+   &lt;info type="object"&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
+    &lt;contact type="object"&gt;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;
+    &lt;/contact&gt;
+    &lt;license type="object"&gt;
+      &lt;name&gt;MIT&lt;/name&gt;
+    &lt;/license&gt;
+  &lt;/info&gt;
+  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
+  &lt;basePath&gt;/api&lt;/basePath&gt;
+&lt;/json&gt;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

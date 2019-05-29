@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>xqdoc-page.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-links.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:57:38.902+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>xqdoc-page.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-links.xqm</h1>
 <p>html utilities</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-page.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -26,6 +26,7 @@
  
 
 module namespace page = 'quodatum:xqdoca.page';
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
 (:~ link to module :)
 declare 
@@ -37,8 +38,8 @@ as element(span)
  return if(empty($files)) then
            &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $uri }&lt;/span&gt;
         else
-           &lt;span&gt;{ $files[1]?namespace }
-           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;🔗&lt;/a&gt;
+           &lt;span&gt;
+           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;{ $files[1]?namespace }&lt;/a&gt;
            {for $file at $pos in tail($files)
            return ("&amp;#160;",
                 &lt;a  href="{ $root }{ $file?href }index.html" title="{ $file?path }"&gt;
@@ -57,21 +58,69 @@ as element(span)
     &lt;a href="{ $file?href }index.html" title="{ $file?path }"&gt;{ $file?namespace }&lt;/a&gt; 
    &lt;/span&gt;
 };
-(:~  connections list :)
+
+(:~ link to fun or var in file
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function($uri as xs:string,
+                            $name as xs:string,
+                            $file as map(*),
+                            $model as map(*))                       
+as element(span)
+{  
+   let $files:= $model?files[?namespace=$uri]
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return if(empty($files)) then
+           &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $clark }&lt;/span&gt;
+        else
+           let $file:=head($files)
+           return &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+};
+
+(:~ link to fun or var in file
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function2($uri as xs:string,
+                             $name as xs:string,
+                             $file as map(*)
+                           )                       
+as element(span)
+{  
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return  &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+};
+
+(:~
+ :  connections 3 column list 
+ :)
 declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-  &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
-    &lt;div style="width:30%;"&gt;{ if (count($calls-this)) then
-                                 $calls-this!&lt;div &gt;{.}&lt;/div&gt;
-                              else "(None)"   
-                             }&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div style="width:30%;"&gt;{ if(count($called-by-this)) then
+      &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
+        &lt;div style="width:40%;"&gt;{ if (count($calls-this)) then
+                                     $calls-this!&lt;div style="text-align: right;" &gt;{.}&lt;/div&gt;
+                                  else "(None)"   
+      }&lt;/div&gt;
+                      
+     &lt;div style="display: flex; flex-direction: column; justify-content: center;"&gt;
+         &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+        &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
+        &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+     &lt;/div&gt;
+     
+    &lt;div style="width:40%;"&gt;{ if(count($called-by-this)) then
                                 $called-by-this!&lt;div&gt;{.}&lt;/div&gt;
                               else
                                ("(None)")
@@ -202,11 +251,22 @@ as element(table)
 &lt;/table&gt;
 };
 
-declare function page:badge($label as xs:string,$color as xs:string)
+declare function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
-  &lt;span class="badge badge-{$color}" title="Updating"&gt;{$label}&lt;/span&gt;
-};</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>link to module</xqdoc:description></xqdoc:comment><xqdoc:name>page:link-module</xqdoc:name><xqdoc:signature>declare function page:link-module($uri as xs:string, $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tail</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-module($uri as xs:string,$model as map(*))                       
+  &lt;span class="badge badge-{$color}" title="{ $title }"&gt;{$label}&lt;/span&gt;
+};
+
+(:~ 
+ :true() if $url represents a url
+ :@see http://urlregex.com/ 
+ :)
+declare function page:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>link to module</xqdoc:description></xqdoc:comment><xqdoc:name>page:link-module</xqdoc:name><xqdoc:signature>declare function page:link-module($uri as xs:string, $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tail</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-module($uri as xs:string,$model as map(*))                       
 as element(span)
 {
  let $files:=$model?files[?namespace=$uri]
@@ -214,8 +274,8 @@ as element(span)
  return if(empty($files)) then
            &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $uri }&lt;/span&gt;
         else
-           &lt;span&gt;{ $files[1]?namespace }
-           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;🔗&lt;/a&gt;
+           &lt;span&gt;
+           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;{ $files[1]?namespace }&lt;/a&gt;
            {for $file at $pos in tail($files)
            return ("&amp;#160;",
                 &lt;a  href="{ $root }{ $file?href }index.html" title="{ $file?path }"&gt;
@@ -229,20 +289,53 @@ as element(span)
    &lt;span&gt;
     &lt;a href="{ $file?href }index.html" title="{ $file?path }"&gt;{ $file?namespace }&lt;/a&gt; 
    &lt;/span&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>connections list</xqdoc:description></xqdoc:comment><xqdoc:name>page:calls</xqdoc:name><xqdoc:signature>declare function page:calls($calls-this as item()*, $this as item()*, $called-by-this as item()*) as element(div)?</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>calls-this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>called-by-this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>link to fun or var in file</xqdoc:description><xqdoc:param>name of form 'fun#arity] or ''$name'</xqdoc:param></xqdoc:comment><xqdoc:name>page:link-function</xqdoc:name><xqdoc:signature>declare function page:link-function($uri as xs:string, $name as xs:string, $file as map(*), $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>clark-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>prefixed-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-function($uri as xs:string,
+                            $name as xs:string,
+                            $file as map(*),
+                            $model as map(*))                       
+as element(span)
+{  
+   let $files:= $model?files[?namespace=$uri]
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return if(empty($files)) then
+           &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $clark }&lt;/span&gt;
+        else
+           let $file:=head($files)
+           return &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>link to fun or var in file</xqdoc:description><xqdoc:param>name of form 'fun#arity] or ''$name'</xqdoc:param></xqdoc:comment><xqdoc:name>page:link-function2</xqdoc:name><xqdoc:signature>declare function page:link-function2($uri as xs:string, $name as xs:string, $file as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>clark-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>prefixed-name</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-function2($uri as xs:string,
+                             $name as xs:string,
+                             $file as map(*)
+                           )                       
+as element(span)
+{  
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return  &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>connections 3 column list</xqdoc:description></xqdoc:comment><xqdoc:name>page:calls</xqdoc:name><xqdoc:signature>declare function page:calls($calls-this as item()*, $this as item()*, $called-by-this as item()*) as element(div)?</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>calls-this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>called-by-this</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>calls-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>called-by-this</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-  &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
-    &lt;div style="width:30%;"&gt;{ if (count($calls-this)) then
-                                 $calls-this!&lt;div &gt;{.}&lt;/div&gt;
-                              else "(None)"   
-                             }&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div style="width:30%;"&gt;{ if(count($called-by-this)) then
+      &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
+        &lt;div style="width:40%;"&gt;{ if (count($calls-this)) then
+                                     $calls-this!&lt;div style="text-align: right;" &gt;{.}&lt;/div&gt;
+                                  else "(None)"   
+      }&lt;/div&gt;
+                      
+     &lt;div style="display: flex; flex-direction: column; justify-content: center;"&gt;
+         &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+        &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
+        &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+     &lt;/div&gt;
+     
+    &lt;div style="width:40%;"&gt;{ if(count($called-by-this)) then
                                 $called-by-this!&lt;div&gt;{.}&lt;/div&gt;
                               else
                                ("(None)")
@@ -337,8 +430,12 @@ as element(table)
   }    
  &lt;/tbody&gt;
 &lt;/table&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>page:badge</xqdoc:name><xqdoc:signature>declare function page:badge($label as xs:string, $color as xs:string) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>label</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>color</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>color</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:badge($label as xs:string,$color as xs:string)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>page:badge</xqdoc:name><xqdoc:signature>declare function page:badge($label as xs:string, $color as xs:string, $title as xs:string) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>label</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>color</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>title</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>color</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>title</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
-  &lt;span class="badge badge-{$color}" title="Updating"&gt;{$label}&lt;/span&gt;
+  &lt;span class="badge badge-{$color}" title="{ $title }"&gt;{$label}&lt;/span&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>true() if $url represents a url</xqdoc:description><xqdoc:see>http://urlregex.com/</xqdoc:see></xqdoc:comment><xqdoc:name>page:is-url</xqdoc:name><xqdoc:signature>declare function page:is-url($url as xs:string) as xs:boolean</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>matches</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

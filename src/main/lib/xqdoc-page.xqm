@@ -37,8 +37,8 @@ as element(span)
  return if(empty($files)) then
            <span class="badge badge-warning" title="Externally defined">{ $uri }</span>
         else
-           <span>{ $files[1]?namespace }
-           <a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }">🔗</a>
+           <span>
+           <a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }">{ $files[1]?namespace }</a>
            {for $file at $pos in tail($files)
            return ("&#160;",
                 <a  href="{ $root }{ $file?href }index.html" title="{ $file?path }">
@@ -58,7 +58,7 @@ as element(span)
    </span>
 };
 
-(:~ link to fun or var
+(:~ link to fun or var in file
  : @param name of form 'fun#arity] or ''$name' 
 :)
 declare 
@@ -77,6 +77,24 @@ as element(span)
         else
            let $file:=head($files)
            return <span>
+            <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
+           </span>
+};
+
+(:~ link to fun or var in file
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function2($uri as xs:string,
+                             $name as xs:string,
+                             $file as map(*)
+                           )                       
+as element(span)
+{  
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return  <span>
             <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
            </span>
 };
@@ -232,10 +250,10 @@ as element(table)
 </table>
 };
 
-declare function page:badge($label as xs:string,$color as xs:string)
+declare function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
-  <span class="badge badge-{$color}" title="Updating">{$label}</span>
+  <span class="badge badge-{$color}" title="{ $title }">{$label}</span>
 };
 
 (:~ 

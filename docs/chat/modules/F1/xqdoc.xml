@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:51.407+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>chat-util.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Simple WebSocket chat. Utility functions.</xqdoc:description><xqdoc:author>BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">chat-util.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T13:02:57.532+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>chat-util.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Simple WebSocket chat. Utility functions.</xqdoc:description><xqdoc:author>BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">chat-util.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Simple WebSocket chat. Utility functions.
  : @author BaseX Team 2005-19, BSD License
  :)

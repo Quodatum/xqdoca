@@ -8,4 +8,5 @@ declare variable $chat as xs:anyURI  external := xs:anyURI("C:\Users\andy\basex.
 
 let $files:=xqd:find-sources($efolder,"*.xqm,*.xq,*.xquery")
 let $model:= xqd:snap($efolder,$files,"basex") 
-return $model?files?xqdoc/xqdoc:imports/xqdoc:import
+for $file in $model?files
+return map{"path": $file?path,"prefixes": $file?prefixes, "href": $file?href }

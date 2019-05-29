@@ -1,26 +1,24 @@
 <!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
         </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.page</span>&nbsp;
-			<small>library module</small></h1><nav id="toc"><h2><a href="../../index.html">main</a>
+			<small>library module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html">main</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.page</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#page:badge"><span class="secno">4.1</span><span class="content" title="">page:badge<div style="float:right"></div></span></a></li><li><a href="#page:calls"><span class="secno">4.2</span><span class="content" title="">page:calls<div style="float:right"></div></span></a></li><li><a href="#page:date"><span class="secno">4.3</span><span class="content" title="">page:date<div style="float:right"></div></span></a></li><li><a href="#page:link-module"><span class="secno">4.4</span><span class="content" title="">page:link-module<div style="float:right"></div></span></a></li><li><a href="#page:section"><span class="secno">4.5</span><span class="content" title="">page:section<div style="float:right"></div></span></a></li><li><a href="#page:toc3"><span class="secno">4.6</span><span class="content" title="">page:toc3<div style="float:right"></div></span></a></li><li><a href="#page:tree-list"><span class="secno">4.7</span><span class="content" title="">page:tree-list<div style="float:right"></div></span></a></li><li><a href="#page:view-list"><span class="secno">4.8</span><span class="content" title="">page:view-list<div style="float:right"></div></span></a></li><li><a href="#page:wrap"><span class="secno">4.9</span><span class="content" title="">page:wrap<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-links.xqm</h1>
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.page</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#page:badge"><span class="secno">4.1</span><span class="content" title="">page:badge<div style="float:right"></div></span></a></li><li><a href="#page:calls"><span class="secno">4.2</span><span class="content" title="">page:calls<div style="float:right"></div></span></a></li><li><a href="#page:date"><span class="secno">4.3</span><span class="content" title="">page:date<div style="float:right"></div></span></a></li><li><a href="#page:is-url"><span class="secno">4.4</span><span class="content" title="">page:is-url<div style="float:right"></div></span></a></li><li><a href="#page:link-function"><span class="secno">4.5</span><span class="content" title="">page:link-function<div style="float:right"></div></span></a></li><li><a href="#page:link-function2"><span class="secno">4.6</span><span class="content" title="">page:link-function2<div style="float:right"></div></span></a></li><li><a href="#page:link-module"><span class="secno">4.7</span><span class="content" title="">page:link-module<div style="float:right"></div></span></a></li><li><a href="#page:section"><span class="secno">4.8</span><span class="content" title="">page:section<div style="float:right"></div></span></a></li><li><a href="#page:toc3"><span class="secno">4.9</span><span class="content" title="">page:toc3<div style="float:right"></div></span></a></li><li><a href="#page:tree-list"><span class="secno">4.10</span><span class="content" title="">page:tree-list<div style="float:right"></div></span></a></li><li><a href="#page:view-list"><span class="secno">4.11</span><span class="content" title="">page:view-list<div style="float:right"></div></span></a></li><li><a href="#page:wrap"><span class="secno">4.12</span><span class="content" title="">page:wrap<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-links.xqm</h1>
 <p xmlns:xqdoc="http://www.xqdoc.org/1.0">html utilities</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>__source : lib/xqdoc-page.xqm</p></dd></dl>,
 		<div> Imported by <a href="../../imports.html#quodatum:xqdoca.page">*</a></div>,
     <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">5</span> modules, it imports
-    <span class="badge badge-info">0</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:30%;"><div><span>quodatum:xqdoca.generator.annotations<a href="../../modules/F1/index.html" title="lib\generators\annotations.xqm">🔗</a></span></div><div><span>quodatum:build.xqdoc-html<a href="../../modules/F2/index.html" title="lib\generators\index.xqm">🔗</a></span></div><div><span>quodatum:xqdoca.mod-html<a href="../../modules/F4/index.html" title="lib\generators\module.xqm">🔗</a></span></div><div><span>quodatum:xqdoca.generator.rest<a href="../../modules/F5/index.html" title="lib\generators\rest.xqm">🔗</a></span></div><div><span>quodatum:xqdoca.model.annotations<a href="../../modules/F12/index.html" title="lib\xqdoc-anno.xqm">🔗</a></span></div></div><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div><div style="width:30%;">(None)</div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="page:badge"></a>4.1&nbsp;page:badge<div style="float:right"><a href="#page:badge">#</a></div></h3><a id="page:badge#2"></a><p>Arities: <span><a href="#page:badge#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:badge</code>
+    <span class="badge badge-info">1</span> modules.
+    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:40%;"><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="lib\generators\annotations.xqm">quodatum:xqdoca.generator.annotations</a></span></div><div style="text-align: right;"><span><a href="../../modules/F2/index.html" title="lib\generators\index.xqm">quodatum:xqdoca.generator.index</a></span></div><div style="text-align: right;"><span><a href="../../modules/F3/index.html" title="lib\generators\module.xqm">quodatum:xqdoca.mod-html</a></span></div><div style="text-align: right;"><span><a href="../../modules/F4/index.html" title="lib\generators\rest.xqm">quodatum:xqdoca.generator.rest</a></span></div><div style="text-align: right;"><span><a href="../../modules/F12/index.html" title="lib\xqdoc-anno.xqm">quodatum:xqdoca.model.annotations</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="width:40%;"><div><span><a href="../../modules/F13/index.html" title="lib\xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="page:badge"></a><a id="{quodatum:xqdoca.page}badge#3"></a>4.1&nbsp;page:badge<div style="float:right"><a href="#page:badge">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:badge#3">page:badge#3</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:badge</code>
 		  ( 
-			<code class="arg">$label</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$color</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$label</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$color</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$title</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(span)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>label<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>color<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(span)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function page:badge($label as xs:string,$color as xs:string)
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(span)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>label<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>color<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>title<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(span)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
-  &lt;span class="badge badge-{$color}" title="Updating"&gt;{$label}&lt;/span&gt;
-}</code></pre></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:calls"></a>4.2&nbsp;page:calls<div style="float:right"><a href="#page:calls">#</a></div></h3><a id="page:calls#3"></a><p>Arities: <span><a href="#page:calls#3">#3</a></span></p><dt class="label">Summary</dt><dd>connections list</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:calls</code>
+  &lt;span class="badge badge-{$color}" title="{ $title }"&gt;{$label}&lt;/span&gt;
+}</code></pre></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F12/index.html#{quodatum:xqdoca.model.annotations}badges#2" title="lib\xqdoc-anno.xqm">xqa:badges#2</a></span></li></ul></details></div><div class="div3"><h3><a id="page:calls"></a><a id="{quodatum:xqdoca.page}calls#3"></a>4.2&nbsp;page:calls<div style="float:right"><a href="#page:calls">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:calls#3">page:calls#3</a></span></p><dt class="label">Summary</dt><dd>connections 3 column list</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:calls</code>
 		  ( 
 			<code class="arg">$calls-this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$called-by-this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
 	 )
@@ -29,23 +27,25 @@ as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-  &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
-    &lt;div style="width:30%;"&gt;{ if (count($calls-this)) then
-                                 $calls-this!&lt;div &gt;{.}&lt;/div&gt;
-                              else "(None)"   
-                             }&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div style="width:30%;"&gt;{ if(count($called-by-this)) then
+      &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
+        &lt;div style="width:40%;"&gt;{ if (count($calls-this)) then
+                                     $calls-this!&lt;div style="text-align: right;" &gt;{.}&lt;/div&gt;
+                                  else "(None)"   
+      }&lt;/div&gt;
+                      
+     &lt;div style="display: flex; flex-direction: column; justify-content: center;"&gt;
+         &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+        &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
+        &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+     &lt;/div&gt;
+     
+    &lt;div style="width:40%;"&gt;{ if(count($called-by-this)) then
                                 $called-by-this!&lt;div&gt;{.}&lt;/div&gt;
                               else
                                ("(None)")
      }&lt;/div&gt;
 &lt;/div&gt; 
-}</code></pre></details><details><summary>References 4 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>count#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:date"></a>4.3&nbsp;page:date<div style="float:right"><a href="#page:date">#</a></div></h3><a id="page:date#0"></a><a id="page:date#1"></a><p>Arities: <span><a href="#page:date#0">#0</a></span><span><a href="#page:date#1">#1</a></span></p><dt class="label">Summary</dt><dd>formated datetime</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:date</code>
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}imports#2" title="lib\generators\module.xqm">xqh:imports#2</a></span></li></ul></details></div><div class="div3"><h3><a id="page:date"></a><a id="{quodatum:xqdoca.page}date#0"></a><a id="{quodatum:xqdoca.page}date#1"></a>4.3&nbsp;page:date<div style="float:right"><a href="#page:date">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:date#0">page:date#0</a></span><span style="margin-left:1em"><a href="#page:date#1">page:date#1</a></span></p><dt class="label">Summary</dt><dd>formated datetime</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:date</code>
 		  ( 
 			
 	 )
@@ -61,9 +61,53 @@ as element(span)
 as element(span)
 {
   &lt;span title="{ $when }" &gt;{ format-dateTime($when, "[h].[m01][Pn] on [FNn], [MNn] [D1o] [Y0000]") }&lt;/span&gt;
-}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>current-dateTime#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>format-dateTime#2</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>date#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:link-module"></a>4.4&nbsp;page:link-module<div style="float:right"><a href="#page:link-module">#</a></div></h3><a id="page:link-module#1"></a><a id="page:link-module#2"></a><p>Arities: <span><a href="#page:link-module#1">#1</a></span><span><a href="#page:link-module#2">#2</a></span></p><dt class="label">Summary</dt><dd>link to module</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:link-module</code>
+}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}current-dateTime#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}format-dateTime#2</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}date#1" title="lib\xqdoc-page.xqm">page:date#1</a></span></li></ul></details><details><summary>Invoked by 3 functions from 2 modules</summary><ul><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}index-html2#2" title="lib\generators\index.xqm">xqhtml:index-html2#2</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}wrap#2" title="lib\xqdoc-page.xqm">page:wrap#2</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}date#0" title="lib\xqdoc-page.xqm">page:date#0</a></span></li></ul></details></div><div class="div3"><h3><a id="page:is-url"></a><a id="{quodatum:xqdoca.page}is-url#1"></a>4.4&nbsp;page:is-url<div style="float:right"><a href="#page:is-url">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:is-url#1">page:is-url#1</a></span></p><dt class="label">Summary</dt><dd>true() if $url represents a url</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:is-url</code>
+		  ( 
+			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:boolean</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code></li></ul></dd><p>See also:
+          <a href="http://urlregex.com/">http://urlregex.com/</a></p><details><summary>Source</summary><pre><code class="language-xquery">function page:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}matches#3</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}see#1" title="lib\generators\module.xqm">xqh:see#1</a></span></li></ul></details></div><div class="div3"><h3><a id="page:link-function"></a><a id="{quodatum:xqdoca.page}link-function#4"></a>4.5&nbsp;page:link-function<div style="float:right"><a href="#page:link-function">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:link-function#4">page:link-function#4</a></span></p><dt class="label">Summary</dt><dd>link to fun or var in file</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:link-function</code>
+		  ( 
+			<code class="arg">$uri</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(span)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>uri<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> of form 'fun#arity] or ''$name'</li><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(span)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function page:link-function($uri as xs:string,
+                            $name as xs:string,
+                            $file as map(*),
+                            $model as map(*))                       
+as element(span)
+{  
+   let $files:= $model?files[?namespace=$uri]
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return if(empty($files)) then
+           &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $clark }&lt;/span&gt;
+        else
+           let $file:=head($files)
+           return &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+}</code></pre></details><details><summary>References 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}head#1</span></li><li><span><a href="../../modules/F13/index.html#{quodatum:xqdoca.namespaces}clark-name#2" title="lib\xqdoc-namespace.xqm">xqn:clark-name#2</a></span></li><li><span><a href="../../modules/F13/index.html#{quodatum:xqdoca.namespaces}prefixed-name#3" title="lib\xqdoc-namespace.xqm">xqn:prefixed-name#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}invoked#3" title="lib\generators\module.xqm">xqh:invoked#3</a></span></li></ul></details></div><div class="div3"><h3><a id="page:link-function2"></a><a id="{quodatum:xqdoca.page}link-function2#3"></a>4.6&nbsp;page:link-function2<div style="float:right"><a href="#page:link-function2">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:link-function2#3">page:link-function2#3</a></span></p><dt class="label">Summary</dt><dd>link to fun or var in file</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:link-function2</code>
+		  ( 
+			<code class="arg">$uri</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+	 )
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(span)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>uri<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> of form 'fun#arity] or ''$name'</li><li>file<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(span)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function page:link-function2($uri as xs:string,
+                             $name as xs:string,
+                             $file as map(*)
+                           )                       
+as element(span)
+{  
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return  &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+}</code></pre></details><details><summary>References 2 functions from 1 modules </summary><ul><li><span><a href="../../modules/F13/index.html#{quodatum:xqdoca.namespaces}clark-name#2" title="lib\xqdoc-namespace.xqm">xqn:clark-name#2</a></span></li><li><span><a href="../../modules/F13/index.html#{quodatum:xqdoca.namespaces}prefixed-name#3" title="lib\xqdoc-namespace.xqm">xqn:prefixed-name#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}function#4" title="lib\generators\module.xqm">xqh:function#4</a></span></li></ul></details></div><div class="div3"><h3><a id="page:link-module"></a><a id="{quodatum:xqdoca.page}link-module#1"></a><a id="{quodatum:xqdoca.page}link-module#2"></a>4.7&nbsp;page:link-module<div style="float:right"><a href="#page:link-module">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:link-module#1">page:link-module#1</a></span><span style="margin-left:1em"><a href="#page:link-module#2">page:link-module#2</a></span></p><dt class="label">Summary</dt><dd>link to module</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:link-module</code>
 		  ( 
 			<code class="arg">$file</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
@@ -85,8 +129,8 @@ as element(span)
  return if(empty($files)) then
            &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $uri }&lt;/span&gt;
         else
-           &lt;span&gt;{ $files[1]?namespace }
-           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;🔗&lt;/a&gt;
+           &lt;span&gt;
+           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;{ $files[1]?namespace }&lt;/a&gt;
            {for $file at $pos in tail($files)
            return ("&amp;#160;",
                 &lt;a  href="{ $root }{ $file?href }index.html" title="{ $file?path }"&gt;
@@ -94,18 +138,14 @@ as element(span)
                 &lt;/a&gt;
                 )
          }&lt;/span&gt; 
-}</code></pre></details><details><summary>References 2 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>empty#1</td></tr><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>tail#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:section"></a>4.5&nbsp;page:section<div style="float:right"><a href="#page:section">#</a></div></h3><a id="page:section#1"></a><p>Arities: <span><a href="#page:section#1">#1</a></span></p><dt class="label">Summary</dt><dd>section numbering util</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:section</code>
+}</code></pre></details><details><summary>References 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tail#1</span></li></ul></details><details><summary>Invoked by 3 functions from 2 modules</summary><ul><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}modtable#1" title="lib\generators\index.xqm">xqhtml:modtable#1</a></span></li><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}imports#2" title="lib\generators\module.xqm">xqh:imports#2</a></span></li><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}namespaces#2" title="lib\generators\module.xqm">xqh:namespaces#2</a></span></li></ul></details></div><div class="div3"><h3><a id="page:section"></a><a id="{quodatum:xqdoca.page}section#1"></a>4.8&nbsp;page:section<div style="float:right"><a href="#page:section">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:section#1">page:section#1</a></span></p><dt class="label">Summary</dt><dd>section numbering util</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:section</code>
 		  ( 
 			<code class="arg">$pos</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyAtomicType*</code>
 	 )
 			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>pos<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyAtomicType*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function page:section($pos as xs:anyAtomicType*)
 as xs:string{
   string-join($pos,".") || "&amp;#160;"
-}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>string-join#2</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:toc3"></a>4.6&nbsp;page:toc3<div style="float:right"><a href="#page:toc3">#</a></div></h3><a id="page:toc3#3"></a><p>Arities: <span><a href="#page:toc3#3">#3</a></span></p><dt class="label">Summary</dt><dd>build toc</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:toc3</code>
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-join#2</span></li></ul></details><details><summary>Invoked by 3 functions from 2 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}variable#2" title="lib\generators\module.xqm">xqh:variable#2</a></span></li><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}function#4" title="lib\generators\module.xqm">xqh:function#4</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}tree-list#3" title="lib\xqdoc-page.xqm">page:tree-list#3</a></span></li></ul></details></div><div class="div3"><h3><a id="page:toc3"></a><a id="{quodatum:xqdoca.page}toc3#3"></a>4.9&nbsp;page:toc3<div style="float:right"><a href="#page:toc3">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:toc3#3">page:toc3#3</a></span></p><dt class="label">Summary</dt><dd>build toc</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:toc3</code>
 		  ( 
 			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$tree</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(directory)</code>, <code class="arg">$decorate</code><code class="as">&nbsp;as&nbsp;</code><code class="type">function(*)</code>
 	 )
@@ -123,9 +163,7 @@ as element(nav)
              $tree/*! page:tree-list(.,position(),$decorate)
           }&lt;/ol&gt;
         &lt;/nav&gt; 
-}</code></pre></details><details><summary>References 2 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>position#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>tree-list#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:tree-list"></a>4.7&nbsp;page:tree-list<div style="float:right"><a href="#page:tree-list">#</a></div></h3><a id="page:tree-list#3"></a><p>Arities: <span><a href="#page:tree-list#3">#3</a></span></p><dt class="label">Summary</dt><dd>tree to list</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:tree-list</code>
+}</code></pre></details><details><summary>References 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}position#1</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}tree-list#3" title="lib\xqdoc-page.xqm">page:tree-list#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}index-html2#2" title="lib\generators\index.xqm">xqhtml:index-html2#2</a></span></li></ul></details></div><div class="div3"><h3><a id="page:tree-list"></a><a id="{quodatum:xqdoca.page}tree-list#3"></a>4.10&nbsp;page:tree-list<div style="float:right"><a href="#page:tree-list">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:tree-list#3">page:tree-list#3</a></span></p><dt class="label">Summary</dt><dd>tree to list</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:tree-list</code>
 		  ( 
 			<code class="arg">$tree</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()</code>, <code class="arg">$seq</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer*</code>, <code class="arg">$render</code><code class="as">&nbsp;as&nbsp;</code><code class="type">function(*)</code>
 	 )
@@ -140,9 +178,7 @@ as element(li){
           else ()
         }&lt;/li&gt;
  
-}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>position#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>section#1</td></tr><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>tree-list#3</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:view-list"></a>4.8&nbsp;page:view-list<div style="float:right"><a href="#page:view-list">#</a></div></h3><a id="page:view-list#2"></a><p>Arities: <span><a href="#page:view-list#2">#2</a></span></p><dt class="label">Summary</dt><dd>table of renderers</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:view-list</code>
+}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}position#1</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}section#1" title="lib\xqdoc-page.xqm">page:section#1</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}tree-list#3" title="lib\xqdoc-page.xqm">page:tree-list#3</a></span></li></ul></details><details><summary>Invoked by 3 functions from 2 modules</summary><ul><li><span><a href="../../modules/F4/index.html#{quodatum:xqdoca.generator.rest}toc#2" title="lib\generators\rest.xqm">_:toc#2</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}toc3#3" title="lib\xqdoc-page.xqm">page:toc3#3</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}tree-list#3" title="lib\xqdoc-page.xqm">page:tree-list#3</a></span></li></ul></details></div><div class="div3"><h3><a id="page:view-list"></a><a id="{quodatum:xqdoca.page}view-list#2"></a>4.11&nbsp;page:view-list<div style="float:right"><a href="#page:view-list">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:view-list#2">page:view-list#2</a></span></p><dt class="label">Summary</dt><dd>table of renderers</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:view-list</code>
 		  ( 
 			<code class="arg">$renderers</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)*</code>, <code class="arg">$exclude</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string*</code>
 	 )
@@ -164,9 +200,7 @@ as element(table)
   }    
  &lt;/tbody&gt;
 &lt;/table&gt;
-}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>not#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div><div class="div3"><h3><a id="page:wrap"></a>4.9&nbsp;page:wrap<div style="float:right"><a href="#page:wrap">#</a></div></h3><a id="page:wrap#2"></a><p>Arities: <span><a href="#page:wrap#2">#2</a></span></p><dt class="label">Summary</dt><dd>generate standard page wrapper
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li></ul></details><details><summary>Invoked by 3 functions from 3 modules</summary><ul><li><span><a href="../../modules/F1/index.html#{quodatum:xqdoca.generator.annotations}summary#2" title="lib\generators\annotations.xqm">_:summary#2</a></span></li><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}perspectives#2" title="lib\generators\index.xqm">xqhtml:perspectives#2</a></span></li><li><span><a href="../../modules/F4/index.html#{quodatum:xqdoca.generator.rest}summary#2" title="lib\generators\rest.xqm">_:summary#2</a></span></li></ul></details></div><div class="div3"><h3><a id="page:wrap"></a><a id="{quodatum:xqdoca.page}wrap#2"></a>4.12&nbsp;page:wrap<div style="float:right"><a href="#page:wrap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#page:wrap#2">page:wrap#2</a></span></p><dt class="label">Summary</dt><dd>generate standard page wrapper
 uses $opts?resources</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">page:wrap</code>
 		  ( 
 			<code class="arg">$body</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
@@ -205,9 +239,7 @@ as element(html)
        
       &lt;/body&gt;
     &lt;/html&gt;
-}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>quodatum:xqdoca.page</td><td>date#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>page</td><td><span>quodatum:xqdoca.page<a href="../../modules/F15/index.html" title="lib\xqdoc-page.xqm">🔗</a></span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
+}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><ul><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.page}date#1" title="lib\xqdoc-page.xqm">page:date#1</a></span></li></ul></details><details><summary>Invoked by 5 functions from 4 modules</summary><ul><li><span><a href="../../modules/F1/index.html#{quodatum:xqdoca.generator.annotations}annotations#2" title="lib\generators\annotations.xqm">_:annotations#2</a></span></li><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}index-html2#2" title="lib\generators\index.xqm">xqhtml:index-html2#2</a></span></li><li><span><a href="../../modules/F2/index.html#{quodatum:xqdoca.generator.index}imports#2" title="lib\generators\index.xqm">xqhtml:imports#2</a></span></li><li><span><a href="../../modules/F3/index.html#{quodatum:xqdoca.mod-html}xqdoc-html2#3" title="lib\generators\module.xqm">xqh:xqdoc-html2#3</a></span></li><li><span><a href="../../modules/F4/index.html#{quodatum:xqdoca.generator.rest}restxq#2" title="lib\generators\rest.xqm">_:restxq#2</a></span></li></ul></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>page</td><td><span><a href="../../modules/F15/index.html" title="lib\xqdoc-page.xqm">quodatum:xqdoca.page</a></span></td></tr><tr><td>xqn</td><td><span><a href="../../modules/F13/index.html" title="lib\xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
  :
@@ -234,6 +266,7 @@ as element(html)
  
 
 module namespace page = 'quodatum:xqdoca.page';
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
 (:~ link to module :)
 declare 
@@ -245,8 +278,8 @@ as element(span)
  return if(empty($files)) then
            &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $uri }&lt;/span&gt;
         else
-           &lt;span&gt;{ $files[1]?namespace }
-           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;🔗&lt;/a&gt;
+           &lt;span&gt;
+           &lt;a href="{ $root }{ $files[1]?href }index.html" title="{ $files[1]?path }"&gt;{ $files[1]?namespace }&lt;/a&gt;
            {for $file at $pos in tail($files)
            return ("&amp;#160;",
                 &lt;a  href="{ $root }{ $file?href }index.html" title="{ $file?path }"&gt;
@@ -265,21 +298,69 @@ as element(span)
     &lt;a href="{ $file?href }index.html" title="{ $file?path }"&gt;{ $file?namespace }&lt;/a&gt; 
    &lt;/span&gt;
 };
-(:~  connections list :)
+
+(:~ link to fun or var in file
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function($uri as xs:string,
+                            $name as xs:string,
+                            $file as map(*),
+                            $model as map(*))                       
+as element(span)
+{  
+   let $files:= $model?files[?namespace=$uri]
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return if(empty($files)) then
+           &lt;span class="badge badge-warning" title="Externally defined"&gt;{ $clark }&lt;/span&gt;
+        else
+           let $file:=head($files)
+           return &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+};
+
+(:~ link to fun or var in file
+ : @param name of form 'fun#arity] or ''$name' 
+:)
+declare 
+function page:link-function2($uri as xs:string,
+                             $name as xs:string,
+                             $file as map(*)
+                           )                       
+as element(span)
+{  
+   let $clark:= xqn:clark-name($uri,$name)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $root:="../../"
+   return  &lt;span&gt;
+            &lt;a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }"&gt;{ $pname }&lt;/a&gt; 
+           &lt;/span&gt;
+};
+
+(:~
+ :  connections 3 column list 
+ :)
 declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-  &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
-    &lt;div style="width:30%;"&gt;{ if (count($calls-this)) then
-                                 $calls-this!&lt;div &gt;{.}&lt;/div&gt;
-                              else "(None)"   
-                             }&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
-     &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
-    &lt;div style="width:30%;"&gt;{ if(count($called-by-this)) then
+      &lt;div style="display: flex;width:100%; justify-content: space-between;"&gt;
+        &lt;div style="width:40%;"&gt;{ if (count($calls-this)) then
+                                     $calls-this!&lt;div style="text-align: right;" &gt;{.}&lt;/div&gt;
+                                  else "(None)"   
+      }&lt;/div&gt;
+                      
+     &lt;div style="display: flex; flex-direction: column; justify-content: center;"&gt;
+         &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+        &lt;div class="badge badge-info"&gt;this&lt;/div&gt;
+        &lt;div&gt;&lt;div&gt;imports&lt;/div&gt;&amp;#x2192;&lt;/div&gt;
+     &lt;/div&gt;
+     
+    &lt;div style="width:40%;"&gt;{ if(count($called-by-this)) then
                                 $called-by-this!&lt;div&gt;{.}&lt;/div&gt;
                               else
                                ("(None)")
@@ -410,10 +491,21 @@ as element(table)
 &lt;/table&gt;
 };
 
-declare function page:badge($label as xs:string,$color as xs:string)
+declare function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
-  &lt;span class="badge badge-{$color}" title="Updating"&gt;{$label}&lt;/span&gt;
-};</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+  &lt;span class="badge badge-{$color}" title="{ $title }"&gt;{$label}&lt;/span&gt;
+};
+
+(:~ 
+ :true() if $url represents a url
+ :@see http://urlregex.com/ 
+ :)
+declare function page:is-url($url as xs:string)
+as xs:boolean
+{
+  matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
+};
+</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-24T10:38:32.959+01:00">10.38am on Friday, May 24th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-05-29T12:57:38.902+01:00">12.57pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

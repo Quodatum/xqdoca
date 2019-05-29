@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:51.407+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>chat.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Simple WebSocket chat. RESTXQ functions.</xqdoc:description><xqdoc:author>BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">chat.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T13:02:57.532+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>chat.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Simple WebSocket chat. RESTXQ functions.</xqdoc:description><xqdoc:author>BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">chat.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Simple WebSocket chat. RESTXQ functions.
  : @author BaseX Team 2005-19, BSD License
  :)
@@ -142,91 +142,4 @@ declare %private function chat:wrap(
     &lt;/body&gt;
   &lt;/html&gt;
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>chat/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="chat" uri="chat"/><xqdoc:namespace prefix="chat-util" uri="chat/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Login or main page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:chat</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/chat") %output:method("html") function chat:chat() as element()</xqdoc:signature><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>**ERRORsession</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>main</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>login</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function chat:chat() as element() {
-  if(session:get($chat-util:id)) then (
-    chat:main()
-  ) else (
-    chat:login()
-  )
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Checks the user input, registers the user and reloads the chat.</xqdoc:description><xqdoc:param>$name  user name</xqdoc:param><xqdoc:param>$pass  password</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>chat:login-check</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat/login-check</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">pass</xqdoc:literal><xqdoc:literal type="xs:string">{$pass}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/chat/login-check") %rest:query-param("name", "{$name}") %rest:query-param("pass", "{$pass}") function chat:login-check($name as xs:string, $pass as xs:string) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pass</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>check</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>**ERRORsession</xqdoc:uri><xqdoc:name>set</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pass</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function chat:login-check(
-  $name  as xs:string,
-  $pass  as xs:string
-) as element(rest:response) {
-  try {
-    user:check($name, $pass),
-    session:set($chat-util:id, $name)
-  } catch user:* {
-    (: login fails: no session info is set :)
-  },
-  web:redirect('/chat')
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Logs out the current user, notifies all WebSocket clients, and redirects to the login page.</xqdoc:description><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>chat:logout</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat/logout</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/chat/logout") function chat:logout() as element(rest:response)</xqdoc:signature><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>**ERRORsession</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>close</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>**ERRORsession</xqdoc:uri><xqdoc:name>delete</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function chat:logout() as element(rest:response) {
-  session:get($chat-util:id) ! chat-util:close(.),
-  session:delete($chat-util:id),
-  web:redirect('/chat')
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the HTML login page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:login</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:login() as element(html)</xqdoc:signature><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:body>function chat:login() as element(html) {
-  chat:wrap((
-    &lt;div class='warning'&gt;Please enter your credentials:&lt;/div&gt;,
-    &lt;form action='/chat/login-check' method='post'&gt;
-      &lt;div class='small'/&gt;
-      &lt;table&gt;
-        &lt;tr&gt;
-          &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
-          &lt;td&gt;
-            &lt;input size='30' name='name' id='user' autofocus=''/&gt;
-          &lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;&lt;b&gt;Password:&lt;/b&gt;&lt;/td&gt;
-          &lt;td&gt;{
-            &lt;input size='30' type='password' name='pass'/&gt;,
-            &lt;button type='submit'&gt;Login&lt;/button&gt;
-          }&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/table&gt;
-    &lt;/form&gt;
-  ), ())
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the HTML main page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:main</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:main() as element(html)</xqdoc:signature><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>chat</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:body>function chat:main() as element(html) {
-  chat:wrap((
-    &lt;p&gt;
-      &lt;input type='text' size='60' autofocus='true' placeholder='Message to all users…'
-             id='input' onkeydown='keyDown(event)' autocomplete='off'/&gt;
-    &lt;/p&gt;,
-    &lt;table width='100%'&gt;
-      &lt;tr&gt;
-        &lt;td width='100'&gt;
-          &lt;div class='note'&gt;USERS (&lt;b&gt;online&lt;/b&gt;)&lt;/div&gt;
-          &lt;div id='users'/&gt;
-        &lt;/td&gt;
-        &lt;td class='vertical'/&gt;
-        &lt;td&gt;
-          &lt;div class='note'&gt;CHAT MESSAGES&lt;/div&gt;
-          &lt;div id='messages'/&gt;
-        &lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/table&gt;
-  ), &lt;script type='text/javascript' src='/static/chat.js'/&gt;)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns an HTML page.</xqdoc:description><xqdoc:param>$contents  page contents</xqdoc:param><xqdoc:param>$login     login page</xqdoc:param><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:wrap</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:wrap($contents as item()*, $headers as element()*) as element(html)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>contents</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>headers</xqdoc:name><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>**ERRORsession</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>headers</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>chat/util</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>contents</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function chat:wrap(
-  $contents  as item()*,
-  $headers   as element()*
-) as element(html) {
-  &lt;html&gt;
-    &lt;head&gt;
-      &lt;meta charset='utf-8'/&gt;
-      &lt;title&gt;BaseX WebSocket Chat&lt;/title&gt;
-      &lt;meta name='author' content='BaseX Team 2005-19, BSD License'/&gt;
-      &lt;link rel='stylesheet' type='text/css' href='/static/style.css'/&gt;
-      { $headers }
-    &lt;/head&gt;
-    &lt;body&gt;
-      &lt;span class='right'&gt;
-        {
-          for $id in session:get($chat-util:id)
-          return &lt;span&gt;&lt;b&gt;{ $id }&lt;/b&gt; (&lt;a href='/chat/logout'&gt;logout&lt;/a&gt;)&lt;/span&gt;
-        }
-        &amp;#xa0; &lt;a href='/'&gt;&lt;img src='static/basex.svg' class='img'/&gt;&lt;/a&gt;
-      &lt;/span&gt;
-      &lt;h1&gt;BaseX WebSocket Chat&lt;/h1&gt;
-      { $contents }
-    &lt;/body&gt;
-  &lt;/html&gt;
-}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="chat" uri="chat"/><xqdoc:namespace prefix="chat-util" uri="chat/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>chat/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Login or main page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:chat</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/chat") %output:method("html") function chat:chat() as element()</xqdoc:signature><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Checks the user input, registers the user and reloads the chat.</xqdoc:description><xqdoc:param>$name  user name</xqdoc:param><xqdoc:param>$pass  password</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>chat:login-check</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat/login-check</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">pass</xqdoc:literal><xqdoc:literal type="xs:string">{$pass}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/chat/login-check") %rest:query-param("name", "{$name}") %rest:query-param("pass", "{$pass}") function chat:login-check($name as xs:string, $pass as xs:string) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pass</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Logs out the current user, notifies all WebSocket clients, and redirects to the login page.</xqdoc:description><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>chat:logout</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/chat/logout</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/chat/logout") function chat:logout() as element(rest:response)</xqdoc:signature><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the HTML login page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:login</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:login() as element(html)</xqdoc:signature><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the HTML main page.</xqdoc:description><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:main</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:main() as element(html)</xqdoc:signature><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Returns an HTML page.</xqdoc:description><xqdoc:param>$contents  page contents</xqdoc:param><xqdoc:param>$login     login page</xqdoc:param><xqdoc:return>HTML page</xqdoc:return></xqdoc:comment><xqdoc:name>chat:wrap</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function chat:wrap($contents as item()*, $headers as element()*) as element(html)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>contents</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>headers</xqdoc:name><xqdoc:type occurrence="*">element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

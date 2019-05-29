@@ -33,21 +33,46 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';
+declare variable $xqa:noteworthy:=(
+  map{
+    "uri":'http://www.w3.org/2012/xquery',
+    "name":'updating',
+    "title":'Updating',
+    'icon': 'U',
+    "class": 'danger'
+  },
+    map{
+    "uri":'http://www.w3.org/2012/xquery',
+    "name":'private',
+    "title":'Private',
+    'icon': 'P',
+    "class": 'dark'
+  },
+   map{
+    "uri":'http://exquery.org/ns/restxq',
+    "name":'path',
+    "title":'RESTXQ',
+    "icon": 'U',
+    "class": 'success'
+  }
+);
 
 (:~
- : html badges for known namespaces 
- : @param $ns map{prefix->uri} :)
+ : html badges for annotations with known namespaces 
+ :)
 declare function xqa:badges($annos as element(xqdoc:annotation)*, $file as map(*))
 {
- if( xqa:has-updating($annos,$file?prefixes)) then page:badge("U","danger") else (),
- if( xqa:has-rest($annos,$file?prefixes)) then  page:badge("R","success")  else ()  
+  let $prefixes:=$file?prefixes
+  for $badge in $xqa:noteworthy
+  where   some $a in $annos satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)
+  return  page:badge($badge?icon, $badge?class, $badge?title)
 };
 
-
+(:
 declare function xqa:is-updating($a  as element(xqdoc:annotation),$ns as map(*))
 as xs:boolean
 {
-   xqn:eq(xqn:qmap-anno($a/@name,$ns), "http://www.w3.org/2012/xquery","updating")
+   xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsANN,"updating")
 };
 
 declare function xqa:has-updating($annots  as element(xqdoc:annotation)*,$ns as map(*))
@@ -55,11 +80,12 @@ as xs:boolean
 {
   some $a in $annots satisfies xqa:is-updating($a,$ns)
 };
+:)
 
 declare function xqa:is-rest($a  as element(xqdoc:annotation),$ns as map(*))
 as xs:boolean
 {
-  xqn:eq(xqn:qmap-anno($a/@name,$ns), "http://exquery.org/ns/restxq","path")
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,"path")
 };
 
 declare function xqa:has-rest($annots  as element(xqdoc:annotation)*,$ns as map(*))

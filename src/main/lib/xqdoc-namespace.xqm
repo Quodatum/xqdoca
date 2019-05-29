@@ -37,8 +37,7 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
  :</pre>
  :)
 declare 
-%private
-function xqn:qmap($e as xs:string, $default as xs:string, $prefixes as map(*))
+function xqn:qmap($e as xs:string, $prefixes as map(*), $default as xs:string)
 as map(*)
 {
  let $n:=tokenize($e,":")
@@ -49,9 +48,10 @@ let $uri:=if(empty($prefix)) then
           else if( map:contains($prefixes,$prefix)) then
               $prefixes?($prefix)
           else 
-               let $_:= trace($e,"qmap: ")
+               let $_:= trace($e,"e: ")
+                 let $_:= trace($default,"default: ")
                    let $_:= trace($prefixes,"ERROR qmap: ")
-               return ("*** " || $e)
+               return error()
 return map{
            "uri": $uri,
            "name": $name} 
@@ -74,7 +74,7 @@ as xs:string
 };
 
 (:~ 
- : @return clark-notation
+ : return clark-notation '{uri}name'
   :)
 declare function xqn:clark-name($uri as xs:string, 
                                 $name as xs:string)
@@ -136,16 +136,11 @@ as map(*)
  =>parse-json() 
 };
 
-(:~  expand annotation name :)
-declare function xqn:qmap-anno($e as xs:string,$prefixes as map(*))
-as map(*)
-{
- xqn:qmap($e , "http://www.w3.org/2012/xquery", $prefixes)
-};
+
 
 (:~  expand function name :)
 declare function xqn:qmap-fun($e as xs:string,$prefixes as map(*))
 as map(*)
 {
- xqn:qmap($e , "http://www.w3.org/2005/xpath-functions", $prefixes)
+ xqn:qmap($e, $prefixes,  "http://www.w3.org/2005/xpath-functions")
 };

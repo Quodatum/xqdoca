@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:30:30.92+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.api.data</xqdoc:uri><xqdoc:name>users.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>users</xqdoc:description><xqdoc:custom tag="__source">features/users/users.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>module namespace d = 'quodatum.api.data';
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.api.data</xqdoc:uri><xqdoc:name>users.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>users</xqdoc:description><xqdoc:custom tag="__source">features/users/users.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>module namespace d = 'quodatum.api.data';
 
 (:~
  :  users

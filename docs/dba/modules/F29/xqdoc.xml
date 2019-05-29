@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:14.137+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>log-download.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Download log file.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">logs/log-download.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T13:02:16.323+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>log-download.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Download log file.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">logs/log-download.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Download log file.
  :
  : @author Christian Grün, BaseX Team 2005-19, BSD License

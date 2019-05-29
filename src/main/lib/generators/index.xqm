@@ -29,7 +29,7 @@ xquery version "3.1";
  : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
  : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
-module namespace xqhtml = 'quodatum:build.xqdoc-html';
+module namespace xqhtml = 'quodatum:xqdoca.generator.index';
 
 import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";

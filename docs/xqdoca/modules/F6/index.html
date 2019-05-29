@@ -1,79 +1,88 @@
 <!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>main - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.generator.swagger</span>&nbsp;
-			<small>library module</small></h1><nav id="toc"><h2><a href="../../index.html">main</a>
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.generator.meta</span>&nbsp;
+			<small>library module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html">main</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.generator.swagger</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#_:swagger"><span class="secno">4.1</span><span class="content" title="">_:swagger<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd>simple swagger generation 
-NOTE this is just shell no detail provided</dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>__source : lib/generators/swagger1.xqm</p></dd></dl>,
-		<div> Imported by <a href="../../imports.html#quodatum:xqdoca.generator.swagger">*</a></div>,
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.generator.meta</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#_:restxq"><span class="secno">4.1</span><span class="content" title="">_:restxq<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">meta.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Generate meta data about the <code>xqDocA</code> run</p></dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.1</p><p>__source : lib/generators/xqdoc-meta.xqm</p></dd></dl>,
+		<div> Imported by <a href="../../imports.html#quodatum:xqdoca.generator.meta">*</a></div>,
     <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">0</span> modules, it imports
     <span class="badge badge-info">0</span> modules.
     </p></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="_:swagger"></a>4.1&nbsp;_:swagger<div style="float:right"><a href="#_:swagger">#</a></div></h3><a id="_:swagger#2"></a><p>Arities: <span><a href="#_:swagger#2">#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:swagger</code>
+			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="_:restxq"></a><a id="{quodatum:xqdoca.generator.meta}restxq#2"></a>4.1&nbsp;_:restxq<div style="float:right"><a href="#_:restxq">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#_:restxq#2">_:restxq#2</a></span></p><dt class="label">Summary</dt><dd>metadata.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:restxq</code>
 		  ( 
-			<code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$model</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
+			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function _:restxq($model,$opts)
 {
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
-}</code></pre></details><details><summary>References 1 functions from 1 modules </summary><table class="data"><thead><tr><td>Type</td><td>uri</td><td>Name</td></tr></thead><tbody><tr><td>Fn</td><td>http://www.w3.org/2005/xpath-functions</td><td>current-dateTime#1</td></tr></tbody></table></details><details><summary>External functions that invoke this function</summary>
-      todo
-      </details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%global</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">swagger1</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></code></td></tr><tr><td><code class="function">%output</code></td><td><code class="arg"><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal xmlns:xqdoc="http://www.xqdoc.org/1.0" type="xs:string">json</xqdoc:literal></code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td></td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr><tr><td>_</td><td><span>quodatum:xqdoca.generator.swagger<a href="../../modules/F6/index.html" title="lib\generators\swagger1.xqm">🔗</a></span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
-(:~
- : simple swagger generation 
- : NOTE this is just shell no detail provided
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
+}</code></pre></details><details><summary>References 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}for-each#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}current-dateTime#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}starts-with#2</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:global</code></td><td><code class="arg">meta,xqDoca run configuration report (XML)</code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg">xqdoca.xml,xml</code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td></td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr><tr><td>_</td><td><span><a href="../../modules/F6/index.html" title="lib\generators\xqdoc-meta.xqm">quodatum:xqdoca.generator.meta</a></span></td></tr><tr><td>xqdoca</td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">xquery version "3.1";
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;meta.xqm&lt;/h1&gt;
+ : &lt;p&gt;Generate meta data about the &lt;code&gt;xqDocA&lt;/code&gt; run&lt;/p&gt;
  :
  : @author Andy Bunce
  : @version 0.1
  :)
  
-module namespace _ = 'quodatum:xqdoca.generator.swagger';
+(:~
+ : Generate meta
+ :)
+module namespace _ = 'quodatum:xqdoca.generator.meta';
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
+
+(:~
+ : metadata. 
+ :)
 declare 
-%Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
-function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
+%xqdoca:global("meta","xqDoca run configuration report (XML)")
+%xqdoca:output("xqdoca.xml","xml") 
+function _:restxq($model,$opts)
 {
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
+&lt;xqdoca created="{current-dateTime()}"&gt;
+{
+let $f:=function($v,$this){
+  typeswitch($v)
+  case xs:anyAtomicType return $v
+  case   map(*) return map:for-each($v,
+                     function($k,$v){ if(starts-with($k,".")) then () else element {$k} { $this($v,$this)}
+                })
+  default return $v!&lt;_&gt;{.}&lt;/_&gt;
+}
+return $f($opts,$f)
+}
+&lt;/xqdoca&gt;
 };
-
 </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-24T10:38:32.959+01:00">10.38am on Friday, May 24th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-05-29T12:57:38.902+01:00">12.57pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

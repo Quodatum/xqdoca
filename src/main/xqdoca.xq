@@ -22,9 +22,9 @@ xquery version "3.1";
  : @author Andy Bunce
  : @version 0.2 
  :)
-(:~
+(:~ 
  : Generate documentation for for XQuery sources
- : @return info about the run (json format) 
+ : @return info about the run (json format)  
  :)
 
 
@@ -34,13 +34,13 @@ import module namespace store = 'quodatum:store' at "lib/store.xqm";
 
 declare option db:chop 'true';
  
-(:~  URL of the root folder to document
- : @default C:/Users/andy/git/xqdoca 
+(:~   URL of the root folder to document
+ : @default C:/Users/andy/git/xqdoca  
  :)
 declare variable $efolder as xs:anyURI  external :=
               (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
-              (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              xs:anyURI(file:parent(static-base-uri()))
+              xs:anyURI(db:option("webpath") ||"/dba/")
+              (: xs:anyURI(file:parent(static-base-uri())) :)
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 ;
 
@@ -62,7 +62,8 @@ let $options:=map{
                "outputs":  map{
                     "global": ("index","restxq","imports","annotations","meta"),
                     "module": ("xqdoc","xqparse","module")  
-                }    
+                },
+                "show-private": true()    
                }
                
 (: generate  outputs :)

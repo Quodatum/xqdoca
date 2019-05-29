@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:30:30.92+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>save-thumb-format.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>save in multiple formats</xqdoc:description></xqdoc:comment><xqdoc:body>(:~  save in multiple formats  :)
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:58:24.547+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>save-thumb-format.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>save in multiple formats</xqdoc:description></xqdoc:comment><xqdoc:body>(:~  save in multiple formats  :)
 
 import module namespace t="expkg-zone58:image.thumbnailator";
 
@@ -15,7 +15,7 @@ let $task:=&lt;thumbnail&gt;
 let $thumb:= file:resolve-path("Pictures/2002/05 may/2005/DSCF1313.JPG", $cfg:IMAGEDIR)
 =&gt;fetch:binary()
 =&gt;t:task($task)
-return file:write-binary(``[c:\tmp\thumb.`{$type}`]``,$thumb)</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="t" uri="expkg-zone58:image.thumbnailator"/><xqdoc:namespace prefix="cfg" uri="quodatum:media.image.configure"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>cfg:IMAGEDIR</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $types:=("gif","jpg","png")
+return file:write-binary(``[c:\tmp\thumb.`{$type}`]``,$thumb)</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>expkg-zone58:image.thumbnailator</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="t" uri="expkg-zone58:image.thumbnailator"/><xqdoc:namespace prefix="cfg" uri="quodatum:media.image.configure"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>cfg:IMAGEDIR</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $types:=("gif","jpg","png")
 for $type in $types
 let $task:=&lt;thumbnail&gt;
               &lt;size width="100" height="100"/&gt;

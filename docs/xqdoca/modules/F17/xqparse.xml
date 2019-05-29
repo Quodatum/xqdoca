@@ -24,7 +24,7 @@
  :)
 (:~
  : Generate documentation for for XQuery sources
- : @return info about the run (json format)
+ : @return info about the run (json format) 
  :)
 
 
@@ -34,13 +34,13 @@
 
 <OptionDecl><TOKEN>declare</TOKEN> <TOKEN>option</TOKEN> <QName>db:chop</QName> <StringLiteral>'true'</StringLiteral></OptionDecl><TOKEN>;</TOKEN>
  
-(:~  URL of the root folder to document
- : @default C:/Users/andy/git/xqdoca 
+(:~   URL of the root folder to document
+ : @default C:/Users/andy/git/xqdoca  
  :)
 <AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>efolder</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN>
-              <FunctionCall><QName>xs:anyURI</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><FunctionCall><QName>db:option</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"webpath"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN><StringLiteral>"/vue-poc/"</StringLiteral></StringConcatExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl>
+              (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              (: xs:anyURI(file:parent(static-base-uri())) :)
+              <FunctionCall><QName>xs:anyURI</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>file:parent</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl>
               (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
 <TOKEN>;</TOKEN>
 
@@ -62,7 +62,8 @@
                <MapConstructorEntry><StringLiteral>"outputs"</StringLiteral><TOKEN>:</TOKEN>  <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
                     <MapConstructorEntry><StringLiteral>"global"</StringLiteral><TOKEN>:</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"index"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"restxq"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"imports"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"annotations"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"meta"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></MapConstructorEntry><TOKEN>,</TOKEN>
                     <MapConstructorEntry><StringLiteral>"module"</StringLiteral><TOKEN>:</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>"xqdoc"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xqparse"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"module"</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></MapConstructorEntry>  
-                <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry>    
+                <TOKEN>}</TOKEN></MapConstructor></MapConstructorEntry><TOKEN>,</TOKEN>
+                <MapConstructorEntry><StringLiteral>"show-private"</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry>    
                <TOKEN>}</TOKEN></MapConstructor></LetBinding></LetClause>
                
 (: generate  outputs :)

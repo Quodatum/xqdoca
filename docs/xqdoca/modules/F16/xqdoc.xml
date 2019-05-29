@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-24T10:38:32.959+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>check-environment.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>check-environment.xq</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T12:57:38.902+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>check-environment.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>check-environment.xq</h1>
 <p>Validate dependancies </p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -38,7 +38,7 @@
       "xqdoca dependancies are all installed."
       
 
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces/><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $ex-parse:="0.6.12"
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $ex-parse:="0.6.12"
   let $basex:="9.2.2"
   return 
   

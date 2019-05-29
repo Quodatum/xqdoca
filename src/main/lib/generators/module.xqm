@@ -107,8 +107,8 @@ declare function xqh:summary($mod as element(xqdoc:module),
   
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
-  let $vars:=$xqd//xqdoc:variable[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
-  let $funs:=$xqd//xqdoc:function[$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')]
+  let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
+  let $funs:=$xqd//xqdoc:function   (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
 	return	<nav id="toc">
 			<h2>
 			    <a href="{ $opts?root || "index.html" }" >{ $opts?project }</a>
@@ -306,7 +306,6 @@ as element(div)
  : @param $section no.
  :)
 declare
- %basex:inline(0) 
 function xqh:function($funs as element(xqdoc:function)*,
                               $section as xs:anyAtomicType*,
                               $file as map(*),
@@ -353,18 +352,24 @@ as element(div)
      
       
        {
-          let $hits:=$model?files?xqdoc//xqdoc:function[xqdoc:invoked[xqdoc:name = $qmap?name
-                                                                
-                                                                  ]]
-                                    (:[@arity=$funs/@arity 
-                                    and xqdoc:uri= $qname?uri 
-                                    and xqdoc:name = $qname?name ]:)
-          let $sum:= count($hits) || "- External functions that invoke this function"
-          let $this:= head($hits)
+          let $hits:=for $file in $model?files, $f in $file?xqdoc//xqdoc:function
+                     where $f[xqdoc:invoked[
+                                         xqdoc:name = $qmap?name
+                                     and @arity=$funs/@arity 
+                                     and xqdoc:uri= $qmap?uri 
+                                ]]
+                    let $qname:=xqn:qmap($f/xqdoc:name,$file?prefixes,$file?default-fn-uri)                         
+                    return map{"file": $file, "name": concat($qname?name,"#",$f/@arity), "qname": $qname}
+                    
+          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
           return  <details>
                     <summary>{$sum}</summary>
-                    <h4>{$this/xqdoc:name/string()}</h4>
-                    <pre>{serialize($this) }</pre>
+                    <ul>
+                     { $hits!<li>{
+                       page:link-function2(?qname?uri, ?name, ?file) 
+                     }</li> }
+                 
+                    </ul>              
                     </details>
      }
      { $funs/xqdoc:annotations!xqh:annotations(.) }
@@ -384,15 +389,17 @@ function xqh:invoked(
      )
 as element(details)
 {
- let $msg:= ``[References `{ count($invoked) }` functions from `{ count(distinct-values($invoked/xqdoc:uri)) }` modules ]``
+ let $di:=for $i in $invoked
+       let $name:= concat($i/xqdoc:name,"#",$i/@arity)
+       group by $key:= $i/xqdoc:uri || $name
+       order by $key
+       return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
+ let $msg:= ``[References `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
 
  return <details>
       <summary>{ $msg }</summary>
-      <ul> {for $i in $invoked
-       let $name:= concat($i/xqdoc:name,"#",$i/@arity)
-       order by $i/xqdoc:uri,$name
-      
-      return <li>{ page:link-function($i/xqdoc:uri, $name, $file, $model) }</li>
+      <ul> {
+         $di! <li>{ page:link-function(?uri, ?name, $file, $model) }</li>
      } </ul>
       </details> 
 };
@@ -447,7 +454,7 @@ as element(*)
                   <code class="function">%{ $a/@name/string() }</code>
                 </td>
                 <td>
-                  <code class="arg">{ $a/xqdoc:literal }</code>
+                  <code class="arg">{ string-join($a/xqdoc:literal,",") }</code>
                 </td>
               </tr>
     }</tbody>
@@ -584,7 +591,10 @@ as element(div)
    let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest(?,$ns))
    return <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
-      <p>Paths defined {count($rest)}.</p>
+      {if(empty($rest)) then
+            <p>None</p>
+       else(
+      <p>Paths defined {count($rest)}.</p>,
       <table class="data">
       <thead><tr>
         <th>Path</th>
@@ -597,7 +607,8 @@ as element(div)
         return <tr>
           <td><a href="#{$f}">{ $path }</a></td><td>{ $f }</td></tr>
     }</tbody>
-      </table>
+      </table>)
+    }
     </div>
 };
 
