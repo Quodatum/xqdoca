@@ -38,7 +38,19 @@ import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
-
+(:~  page sections :)
+declare variable $xqhtml:toc:=
+<directory name="foo">
+  <file name="Summary" target="#summary"/>
+  <directory target="#ns" name="Modules">
+     <file name="Main modules" target="#ns_main"/>
+     <file name="Library modules" target="#ns_library"/>
+   </directory>
+  <file target="#file" name="Files"/>
+  <file target="#annotation" name="Annotations"/>
+  <file target="#perspectives" name="Other perspectives"/>
+   
+</directory>;
 
 
 (:~ transform files to html
@@ -48,7 +60,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare 
 %xqdoca:global("index","Index of sources")
 %xqdoca:output("index.html","html5") 
-function xqhtml:index-html2($model as map(*),
+function xqhtml:index-html($model as map(*),
                             $opts as map(*)
                             )
 as document-node()                            
@@ -61,36 +73,31 @@ let $d:=<div>
                   &#160;XQuery source documentation 
               </h1>
               <h2>Built { page:date() }</h2>
-             { page:toc3($opts?project, 
-                                <directory name="foo">
-                                  <file name="Summary" target="#summary"/>
-                                  <directory target="#ns" name="Modules">
-                                   <file name="Main modules" target="#ns_main"/>
-                                    <file name="Library modules" target="#ns_library"/>
-                                   </directory>
-                                  <file target="#file" name="Files"/>
-                                  <file target="#annotation" name="Annotations"/>
-                                  <file target="#perspectives" name="Other perspectives"/>
-                                   
-                                </directory>,
-                                page:toc-render#2
-                              )
-             
-                  , xqhtml:summary($model,$opts)
-                  , xqhtml:modules($model,$opts)
+             { 
+             page:toc3($opts?project, $xqhtml:toc, page:toc-render#2 ),      
+             xqhtml:summary($model,$opts),
+             xqhtml:modules($model,$opts)
  }
          
                <div class="div2">
                   <h2><a id="file"/>3 Files</h2>
-                  <ul>{ 
-                  for $file  at $pos in $model?files
-                  return  <li>
-                            <a href="{ $file?href }index.html">
-                               { $file?path }
-                            </a>      
-                            { $pos }
-                        </li>
-                  }</ul>
+                  
+                  {
+                   let $t:=tree:build( $model?files?path)
+                   let $fmap:=map:merge($model?files!map:entry(?path,?href))
+                   let $f:=function($pos,$el){
+                      if($el/@target) then
+                        let $href:=substring($el/@target,2)
+                        let $a:=map:get($fmap,$href) 
+                        return <a href="{ $a }index.html">{ $el/@name/string() }</a>
+                      else
+                         $el/@name/string() 
+                   }
+                   let $l:=$t/*!page:tree-list(.,(),$f)
+                   return <ol>
+                   { $l }
+                   </ol>
+                  }
               </div>
 
              {xqhtml:annot($model,$opts)
@@ -202,7 +209,7 @@ as element(div)
                        return $ns
        
         return  <tr>
-                <td>{  $type }</td>
+                <td title="{ $file?default-fn-uri }">{  $type }</td>
                  <td>{page:link-module($file) }</td>
                 
                  <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       

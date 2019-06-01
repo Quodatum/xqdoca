@@ -28,7 +28,8 @@
 
 (:~  parse qname into parts
  : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+ : @param $prefixes map of namespaces
+ : @param $default namespace for no prefix
  : @return &lt;pre&gt;
  map{
     "uri": ..,
@@ -63,15 +64,6 @@
   <AndExpr><ComparisonExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>name</NCName></Lookup></PostfixExpr><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></ComparisonExpr> <TOKEN>and</TOKEN> <ComparisonExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></ComparisonExpr></AndExpr>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-(:~ 
- : @return {namespace}name
-  :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qcode</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>name</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>prefixes</QName></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <QName>xs:string</QName>
-<EnclosedExpr><TOKEN>{</TOKEN>
-  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>a</QName><TOKEN>:=</TOKEN><FunctionCall><QName>xqn:qmap-fun</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
-  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>xqn:clark-name</QName><ArgumentList><TOKEN>(</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>name</NCName></Lookup></PostfixExpr> <TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
 (:~ 
  : return clark-notation '{uri}name'
@@ -134,16 +126,6 @@
 <EnclosedExpr><TOKEN>{</TOKEN>
  <ArrowExpr><FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>../etc/static/</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>platform</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>.json</StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
  <TOKEN>=&gt;</TOKEN><QName>parse-json</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr> 
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
-
-
-
-(:~  expand function name :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qmap-fun</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>prefixes</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
-<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
-<EnclosedExpr><TOKEN>{</TOKEN>
- <FunctionCall><QName>xqn:qmap</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>,</TOKEN>  <StringLiteral>"http://www.w3.org/2005/xpath-functions"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
-
 
 <EOF/></XQuery>

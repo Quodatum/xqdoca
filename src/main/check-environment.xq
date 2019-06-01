@@ -22,6 +22,7 @@ xquery version "3.1";
  : @author Andy Bunce
  : @version 0.2
  :)
+ declare namespace ex-pkg="http://expath.org/ns/pkg";
 (:~
  : raise error if environment incorrect 
  :)

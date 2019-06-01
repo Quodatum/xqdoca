@@ -75,17 +75,15 @@ return map{
                       let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
                       let $isParsed:=$a?xqparse instance of element(XQuery)
                       let $base:=map{
-                        "path": $file,
+                        "path": translate($file,"\","/"),
                         "href": ``[modules/F`{ $pos }`/]``,
                         "parsed": $isParsed,
                         "prefixes": xqd:namespaces( $a?xqdoc),
-                        "annotations": xqd:anno($a?xqdoc) (: sequence map{annotation:, xqdoc: } :)
-                      }
-                      let $extras:= if($isParsed) then
-                                        map{  "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                                              "default-fn-uri": xqp:default-fn-uri($a?xqparse)}
-                                    else ()
-                      return map:merge(($base,$a,$extras))  
+                        "annotations": xqd:anno($a?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+                        "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                        "default-fn-uri": xqp:default-fn-uri($a?xqparse) 
+                           }
+                      return map:merge(($base,$a))  
            }
 
 };
@@ -190,13 +188,15 @@ as map(*)*
 {
   for $f at $index in $model?files
   for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
+  let $function:= $annot/../..
+  
   return map{
                 "id": $index,
                 "uri": $f?href,
                 "path": $f?path,
                 "annot": $annot,
-                "function": $annot/../../(xqdoc:name/string(),@arity/string()),
-                "description": $annot/../../xqdoc:comment/xqdoc:description/node() 
+                "function": $function/concat(xqdoc:name,'#',@arity),
+                "description": $function/xqdoc:comment/xqdoc:description/node() 
                  }
 };
 
@@ -228,25 +228,6 @@ as element(xqdoc:annotation)*
    let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
   return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
 
-};
-
-
-(:~ 
- : return updating annotations 
-  :)
-declare function xqd:an-updating($annots  as element(xqdoc:annotations)?) 
-as element(xqdoc:annotation)*
-{
-   xqd:methods($annots,"http://www.w3.org/2012/xquery", "updating")
-};
-
-(:~ 
- : return rest annotations 
-  :)
-declare function xqd:an-restxq($annots  as element(xqdoc:annotations)?) 
-as element(xqdoc:annotation)*
-{
-   xqd:methods($annots,"http://exquery.org/ns/restxq", "path")
 };
 
 (:~ 

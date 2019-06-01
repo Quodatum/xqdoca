@@ -1,29 +1,348 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>chat - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">chat</span>&nbsp;
-			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html">chat</a>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca">
+    <title>chat - xqDocA
+        </title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+    <link rel="stylesheet" type="text/css" href="../../resources/prism.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/page.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/query.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/base.css">
+  </head>
+  <body class="home" id="top">
+    <div id="main">
+      <div>
+        <h1>
+          <span class="badge badge-info">chat</span>&nbsp;
+			<small>library module</small>
+          <div style="float:right">
+            <span class="badge badge-dark" title="Private">P</span>
+            <span class="badge badge-success" title="RESTXQ">R</span>
+            <span class="badge badge-info" title="Other annotations">A</span>
+          </div>
+        </h1>
+        <nav id="toc">
+          <h2>
+            <a href="../../index.html">chat</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">chat</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#chat:chat"><span class="secno">4.1</span><span class="content" title="">chat:chat<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li><li><a href="#chat:login"><span class="secno">4.2</span><span class="content" title="">chat:login<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#chat:login-check"><span class="secno">4.3</span><span class="content" title="">chat:login-check<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li><li><a href="#chat:logout"><span class="secno">4.4</span><span class="content" title="">chat:logout<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li><li><a href="#chat:main"><span class="secno">4.5</span><span class="content" title="">chat:main<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#chat:wrap"><span class="secno">4.6</span><span class="content" title="">chat:wrap<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd>Simple WebSocket chat. RESTXQ functions.</dd><dt>Tags</dt><dd><p>Author: BaseX Team 2005-19, BSD License</p><p>__source : chat.xqm</p></dd></dl>,
-		<div> Imported by <a href="../../imports.html#chat">*</a></div>,
-    <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
+       </h2>
+          <h3>
+            <a id="contents"></a>
+            <span class="">chat</span>
+          </h3>
+          <ol class="toc">
+            <li>
+              <a href="#summary">
+                <span class="secno">1 </span>
+                <span class="content">Summary</span>
+              </a>
+            </li>
+            <li>
+              <a href="#imports">
+                <span class="secno">2 </span>
+                <span class="content">Imports</span>
+              </a>
+            </li>
+            <li>
+              <a href="#variables">
+                <span class="secno">3 </span>
+                <span class="content">Variables</span>
+              </a>
+              <ol class="toc"></ol>
+            </li>
+            <li>
+              <a href="#functions">
+                <span class="secno">4 </span>
+                <span class="content">Functions</span>
+              </a>
+              <ol class="toc">
+                <li>
+                  <a href="#chat:chat">
+                    <span class="secno">4.1</span>
+                    <span class="content" title="">chat:chat<div style="float:right">
+                        <span class="badge badge-success" title="RESTXQ">R</span>
+                        <span class="badge badge-info" title="Other annotations">A</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#chat:login">
+                    <span class="secno">4.2</span>
+                    <span class="content" title="">chat:login<div style="float:right">
+                        <span class="badge badge-dark" title="Private">P</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#chat:login-check">
+                    <span class="secno">4.3</span>
+                    <span class="content" title="">chat:login-check<div style="float:right">
+                        <span class="badge badge-success" title="RESTXQ">R</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#chat:logout">
+                    <span class="secno">4.4</span>
+                    <span class="content" title="">chat:logout<div style="float:right">
+                        <span class="badge badge-success" title="RESTXQ">R</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#chat:main">
+                    <span class="secno">4.5</span>
+                    <span class="content" title="">chat:main<div style="float:right">
+                        <span class="badge badge-dark" title="Private">P</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#chat:wrap">
+                    <span class="secno">4.6</span>
+                    <span class="content" title="">chat:wrap<div style="float:right">
+                        <span class="badge badge-dark" title="Private">P</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a href="#namespaces">
+                <span class="secno">5 </span>
+                <span class="content">Namespaces</span>
+              </a>
+            </li>
+            <li>
+              <a href="#restxq">
+                <span class="secno">6 </span>
+                <span class="content">Restxq</span>
+              </a>
+              <ol class="toc">
+                <xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()">
+                  <xsl:sort select="current-grouping-key()"></xsl:sort>
+                  <xsl:variable name="id" select="current-grouping-key()"></xsl:variable>
+                  <li>
+                    <a href="# TODO">
+                      <span class="secno">
+                        <xsl:value-of select="concat('5.',position())"></xsl:value-of>
+                      </span>
+                      <span class="content">
+                        <xsl:value-of select="current-grouping-key()"></xsl:value-of>
+                      </span>
+                    </a>
+                  </li>
+                </xsl:for-each-group>
+              </ol>
+            </li>
+            <li>
+              <a href="#source">
+                <span class="secno">7 </span>
+                <span class="content">Source</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        <div class="div2">
+          <h2>
+            <a id="summary"></a>1 Summary</h2>
+          <dl>
+            <dt class="label">Summary</dt>
+            <dd>Simple WebSocket chat. RESTXQ functions.</dd>
+            <dt>Tags</dt>
+            <dd>
+              <p>Author: BaseX Team 2005-19, BSD License</p>
+              <p>__source : chat.xqm</p>
+            </dd>
+          </dl>,
+		<div> Imported by <a href="../../imports.html#chat">*</a>
+          </div>,
+    <ul>
+            <li style="display:inline">Raw XML files: </li>
+            <li style="display:inline">
+              <a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
+            <li style="display:inline">
+              <a href="xqparse.xml" target="xqparse">xqparse.xml</a>
+            </li>
+          </ul>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="imports"></a>2 Imports</h2>
+          <p>
     This module is imported by
     <span class="badge badge-info">0</span> modules, it imports
     <span class="badge badge-info">1</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:40%;">(None)</div><div style="display: flex; flex-direction: column; justify-content: center;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="width:40%;"><div><span><a href="../../modules/F1/index.html" title="chat-util.xqm">chat/util</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="chat:chat"></a><a id="{chat}chat#0"></a>4.1&nbsp;chat:chat<div style="float:right"><a href="#chat:chat">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:chat#0">chat:chat#0</a><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Login or main page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:chat</code>
+    </p>
+          <div style="display: flex;width:100%; justify-content: space-between;">
+            <div style="width:40%;">(None)</div>
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+              <div>
+                <div>imports</div>→</div>
+              <div class="badge badge-info">this</div>
+              <div>
+                <div>imports</div>→</div>
+            </div>
+            <div style="width:40%;">
+              <div>
+                <span>
+                  <a href="../../modules/F1/index.html" title="chat-util.xqm">chat/util</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="variables"></a>3 Variables
+			</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="functions"></a>4 Functions</h2>
+          <div class="div3">
+            <h3>
+              <a id="chat:chat"></a>
+              <a id="{chat}chat#0"></a>4.1&nbsp;chat:chat<div style="float:right">
+                <a href="#chat:chat">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}chat#0">chat:chat#0</a>
+                <span class="badge badge-success" title="RESTXQ">R</span>
+                <span class="badge badge-info" title="Other annotations">A</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Login or main page.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:chat</code>
 		  ( 
 			
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:chat() as element() {
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:chat() as element() {
   if(session:get($chat-util:id)) then (
     chat:main()
   ) else (
     chat:login()
   )
-}</code></pre></details><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span><a href="../../modules/F3/index.html#{chat}login#1" title="chat.xqm">chat:login#1</a></span></li><li><span><a href="../../modules/F3/index.html#{chat}main#1" title="chat.xqm">chat:main#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg">/chat</code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg">html</code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="chat:login"></a><a id="{chat}login#0"></a>4.2&nbsp;chat:login<div style="float:right"><a href="#chat:login">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:login#0">chat:login#0</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Returns the HTML login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:login</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}login#1" title="chat.xqm">chat:login#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}main#1" title="chat.xqm">chat:main#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:path</code>
+                    </td>
+                    <td>
+                      <code class="arg">/chat</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code class="function">%output:method</code>
+                    </td>
+                    <td>
+                      <code class="arg">html</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="chat:login"></a>
+              <a id="{chat}login#0"></a>4.2&nbsp;chat:login<div style="float:right">
+                <a href="#chat:login">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}login#0">chat:login#0</a>
+                <span class="badge badge-dark" title="Private">P</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns the HTML login page.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:login</code>
 		  ( 
 			
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:login() as element(html) {
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(html)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:login() as element(html) {
   chat:wrap((
     &lt;div class='warning'&gt;Please enter your credentials:&lt;/div&gt;,
     &lt;form action='/chat/login-check' method='post'&gt;
@@ -45,11 +364,91 @@
       &lt;/table&gt;
     &lt;/form&gt;
   ), ())
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span><a href="../../modules/F3/index.html#{chat}wrap#2" title="chat.xqm">chat:wrap#2</a></span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="chat:login-check"></a><a id="{chat}login-check#2"></a>4.3&nbsp;chat:login-check<div style="float:right"><a href="#chat:login-check">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:login-check#2">chat:login-check#2</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>Checks the user input, registers the user and reloads the chat.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:login-check</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}wrap#2" title="chat.xqm">chat:wrap#2</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%private</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="chat:login-check"></a>
+              <a id="{chat}login-check#2"></a>4.3&nbsp;chat:login-check<div style="float:right">
+                <a href="#chat:login-check">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}login-check#2">chat:login-check#2</a>
+                <span class="badge badge-success" title="RESTXQ">R</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Checks the user input, registers the user and reloads the chat.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:login-check</code>
 		  ( 
-			<code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$pass</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$name</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>, <code class="arg">$pass</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> user name</li><li>pass<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> password</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:login-check(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>name<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> user name</li>
+                <li>pass<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> password</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(rest:response)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:login-check(
   $name  as xs:string,
   $pass  as xs:string
 ) as element(rest:response) {
@@ -60,19 +459,190 @@
     (: login fails: no session info is set :)
   },
   web:redirect('/chat')
-}</code></pre></details><details><summary>Invokes 3 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}set#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/user}check#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg"></code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">/chat/login-check</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">name,{$name}</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">pass,{$pass}</code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="chat:logout"></a><a id="{chat}logout#0"></a>4.4&nbsp;chat:logout<div style="float:right"><a href="#chat:logout">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:logout#0">chat:logout#0</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>Logs out the current user, notifies all WebSocket clients, and redirects to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:logout</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}set#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/user}check#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:POST</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:path</code>
+                    </td>
+                    <td>
+                      <code class="arg">/chat/login-check</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:query-param</code>
+                    </td>
+                    <td>
+                      <code class="arg">name,{$name}</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:query-param</code>
+                    </td>
+                    <td>
+                      <code class="arg">pass,{$pass}</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="chat:logout"></a>
+              <a id="{chat}logout#0"></a>4.4&nbsp;chat:logout<div style="float:right">
+                <a href="#chat:logout">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}logout#0">chat:logout#0</a>
+                <span class="badge badge-success" title="RESTXQ">R</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Logs out the current user, notifies all WebSocket clients, and redirects to the login page.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:logout</code>
 		  ( 
 			
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:logout() as element(rest:response) {
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(rest:response)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:logout() as element(rest:response) {
   session:get($chat-util:id) ! chat-util:close(.),
   session:delete($chat-util:id),
   web:redirect('/chat')
-}</code></pre></details><details><summary>Invokes 4 functions from 3 modules </summary><ul><li><span><a href="../../modules/F1/index.html#{chat/util}close#1" title="chat-util.xqm">chat-util:close#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}delete#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg">/chat/logout</code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="chat:main"></a><a id="{chat}main#0"></a>4.5&nbsp;chat:main<div style="float:right"><a href="#chat:main">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:main#0">chat:main#0</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Returns the HTML main page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:main</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 4 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F1/index.html#{chat/util}close#1" title="chat-util.xqm">chat-util:close#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}delete#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%rest:path</code>
+                    </td>
+                    <td>
+                      <code class="arg">/chat/logout</code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="chat:main"></a>
+              <a id="{chat}main#0"></a>4.5&nbsp;chat:main<div style="float:right">
+                <a href="#chat:main">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}main#0">chat:main#0</a>
+                <span class="badge badge-dark" title="Private">P</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns the HTML main page.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:main</code>
 		  ( 
 			
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:main() as element(html) {
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(html)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:main() as element(html) {
   chat:wrap((
     &lt;p&gt;
       &lt;input type='text' size='60' autofocus='true' placeholder='Message to all users…'
@@ -92,11 +662,92 @@
       &lt;/tr&gt;
     &lt;/table&gt;
   ), &lt;script type='text/javascript' src='/static/chat.js'/&gt;)
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span><a href="../../modules/F3/index.html#{chat}wrap#2" title="chat.xqm">chat:wrap#2</a></span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="chat:wrap"></a><a id="{chat}wrap#2"></a>4.6&nbsp;chat:wrap<div style="float:right"><a href="#chat:wrap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#chat:wrap#2">chat:wrap#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Returns an HTML page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">chat:wrap</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}wrap#2" title="chat.xqm">chat:wrap#2</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%private</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="chat:wrap"></a>
+              <a id="{chat}wrap#2"></a>4.6&nbsp;chat:wrap<div style="float:right">
+                <a href="#chat:wrap">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{chat}wrap#2">chat:wrap#2</a>
+                <span class="badge badge-dark" title="Private">P</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns an HTML page.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">chat:wrap</code>
 		  ( 
-			<code class="arg">$contents</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$headers</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()*</code>
+			<code class="arg">$contents</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$headers</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>contents<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> page contents</li><li>headers<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function chat:wrap(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>contents<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code> page contents</li>
+                <li>headers<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element()*</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(html)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function chat:wrap(
   $contents  as item()*,
   $headers   as element()*
 ) as element(html) {
@@ -120,7 +771,136 @@
       { $contents }
     &lt;/body&gt;
   &lt;/html&gt;
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span></li></ul></details><details><summary>Invoked by 2 functions from 1 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{chat}login#0" title="chat.xqm">chat:login#0</a></span></li><li><span><a href="../../modules/F3/index.html#{chat}main#0" title="chat.xqm">chat:main#0</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>chat</td><td><span><a href="../../modules/F3/index.html" title="chat.xqm">chat</a></span></td></tr><tr><td>chat-util</td><td><span><a href="../../modules/F1/index.html" title="chat-util.xqm">chat/util</a></span></td></tr><tr><td>output</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2010/xslt-xquery-serialization</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 3.</p><table class="data"><thead><tr><th>Path</th><th>Details</th></tr></thead><tbody><tr><td><a href="#chat:chat#0">/chat</a></td><td>chat:chat#0</td></tr><tr><td><a href="#chat:login-check#2">/chat/login-check</a></td><td>chat:login-check#2</td></tr><tr><td><a href="#chat:logout#0">/chat/logout</a></td><td>chat:logout#0</td></tr></tbody></table></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/session}get#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 2 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}login" title="chat.xqm">chat:login</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{chat}main" title="chat.xqm">chat:main</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%private</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="namespaces"></a>5 Namespaces</h2>
+          <p>The following namespaces are defined:</p>
+          <table class="data" style="float:none">
+            <thead>
+              <tr>
+                <th>Prefix</th>
+                <th>Uri</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ann</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span>
+                </td>
+              </tr>
+              <tr>
+                <td>chat</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F3/index.html" title="chat.xqm">chat</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>chat-util</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F1/index.html" title="chat-util.xqm">chat/util</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>output</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://www.w3.org/2010/xslt-xquery-serialization</span>
+                </td>
+              </tr>
+              <tr>
+                <td>rest</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="restxq"></a>6 RestXQ</h2>
+          <p>Paths defined 3.</p>
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="#chat:chat#0">/chat</a>
+                </td>
+                <td>chat:chat#0</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="#chat:login-check#2">/chat/login-check</a>
+                </td>
+                <td>chat:login-check#2</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="#chat:logout#0">/chat/logout</a>
+                </td>
+                <td>chat:logout#0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="source"></a>7 Source Code</h2>
+          <pre>
+            <code class="language-xquery">(:~
  : Simple WebSocket chat. RESTXQ functions.
  : @author BaseX Team 2005-19, BSD License
  :)
@@ -264,6 +1044,17 @@ declare %private function chat:wrap(
     &lt;/body&gt;
   &lt;/html&gt;
 };
-</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+</code>
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-29T23:09:52.168+01:00">11.09pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-01T11:13:48.877+01:00">11.13am on Saturday, June 1st 2019</span>
+      </p>
+    </div>
+    <script src="../../resources/prism.js" type="text/javascript"></script>
+  </body>
+</html>

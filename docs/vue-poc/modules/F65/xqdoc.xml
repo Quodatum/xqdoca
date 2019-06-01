@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>store-test.xq</xqdoc:uri><xqdoc:body>import module namespace store = 'quodatum.store' at "store.xqm";
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:02:48.049+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>store-test.xq</xqdoc:uri><xqdoc:body>import module namespace store = 'quodatum.store' at "store.xqm";
 let $d:=&lt;doc&gt;test&lt;/doc&gt;
 let $r:=map{"uri":"foo/test.xml","serialization":map{},"document":$d}
 let $base:="xmldb:/vuepoc-test/123/"

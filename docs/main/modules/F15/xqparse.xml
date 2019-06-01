@@ -27,9 +27,17 @@
 <LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>page</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.page'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
 <Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqn</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.namespaces'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>"xqdoc-namespace.xqm"</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
 
-(:~ link to module :)
-<AnnotatedDecl><TOKEN>declare</TOKEN> 
-<FunctionDecl><TOKEN>function</TOKEN> <QName>page:link-module</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>                       
+(:~ make html hrefable id :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>page:id</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>id</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <StringConcatExpr><StringLiteral>"ID_"</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>escape-html-uri</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></StringConcatExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : generate link to module with namespace 
+ :)
+ <AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>page:link-module</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>                       
 <TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>span</QName><TOKEN>)</TOKEN></ElementTest>
 <EnclosedExpr><TOKEN>{</TOKEN>
  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>files</QName><TOKEN>:=</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup><Predicate><TOKEN>[</TOKEN><ComparisonExpr><UnaryLookup><TOKEN>?</TOKEN><NCName>namespace</NCName></UnaryLookup><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></ComparisonExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr></LetBinding></LetClause>
@@ -59,7 +67,7 @@
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
 (:~ link to fun or var in file
- : @param name of form 'fun#arity] or ''$name' 
+ : @param name of form 'fun#arity or '$name' 
 :)
 <AnnotatedDecl><TOKEN>declare</TOKEN> 
 <FunctionDecl><TOKEN>function</TOKEN> <QName>page:link-function</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
@@ -81,6 +89,7 @@
 </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><TOKEN>&lt;/</TOKEN><QName>span</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></ReturnClause></FLWORExpr></IfExpr></ReturnClause></FLWORExpr>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
+ 
 (:~ link to fun or var in file
  : @param name of form 'fun#arity' or ''$name' 
  : @param fromModule where called from
@@ -208,7 +217,7 @@
   <ReturnClause><TOKEN>return</TOKEN> <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>li</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
          <Expr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>render</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>pos</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>tree</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr><TOKEN>,</TOKEN>
          <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><InstanceofExpr><VarRef><TOKEN>$</TOKEN><QName>tree</QName></VarRef>  <TOKEN>instance</TOKEN> <TOKEN>of</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>directory</QName><TOKEN>)</TOKEN></ElementTest></InstanceofExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN>
-          <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>ol</QName><DirAttributeList><S> </S><QName>class</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><QuotAttrContentChar>t</QuotAttrContentChar><QuotAttrContentChar>o</QuotAttrContentChar><QuotAttrContentChar>c</QuotAttrContentChar><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>tree</QName></VarRef><TOKEN>/</TOKEN><AxisStep><Wildcard>*</Wildcard><PredicateList/></AxisStep><TOKEN>!</TOKEN><FunctionCall><QName>page:tree-list</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>seq</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>position</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>render</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>ol</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
+          <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>ol</QName><S> </S><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>tree</QName></VarRef><TOKEN>/</TOKEN><AxisStep><Wildcard>*</Wildcard><PredicateList/></AxisStep><TOKEN>!</TOKEN><FunctionCall><QName>page:tree-list</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>seq</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>position</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>render</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>ol</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
           <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></Expr>
         <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>li</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></ReturnClause></FLWORExpr>
  
@@ -271,6 +280,9 @@
 </ElementContentChar><TOKEN>&lt;/</TOKEN><QName>table</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
+(:~ 
+ : Coloured &lt;span/&gt; as bootstrap badge
+ :)
 <AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>page:badge</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>label</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>color</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>title</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
 <TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>span</QName><TOKEN>)</TOKEN></ElementTest>
 <EnclosedExpr><TOKEN>{</TOKEN>

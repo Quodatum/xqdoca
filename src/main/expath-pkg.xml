@@ -1,0 +1,6 @@
+<package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
+	version="0.5.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
+	<title>XQdocA</title>
+    <dependency processor="http://basex.org/" version="9.2.2" />
+    <dependency name="http://expkg-zone58.github.io/ex-xparse" version="0.6.12" />
+</package>

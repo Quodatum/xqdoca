@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T23:09:38.214+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>xqdoc-namespace.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-namespaces.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:13:26.337+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>xqdoc-namespace.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-namespaces.xqm</h1>
 <p>namespace and qname utils</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-namespace.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -29,7 +29,8 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
  : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+ : @param $prefixes map of namespaces
+ : @param $default namespace for no prefix
  : @return &lt;pre&gt;
  map{
     "uri": ..,
@@ -64,15 +65,6 @@ as xs:boolean
   $a?name=$name and $a?uri=$uri
 };
 
-(:~ 
- : @return {namespace}name
-  :)
-declare function xqn:qcode($name,$prefixes)
-as xs:string
-{
-  let $a:=xqn:qmap-fun($name,$prefixes)
-  return xqn:clark-name( $a?uri, $a?name )
-};
 
 (:~ 
  : return clark-notation '{uri}name'
@@ -137,17 +129,7 @@ as map(*)
  =&gt;parse-json() 
 };
 
-
-
-(:~  expand function name :)
-declare function xqn:qmap-fun($e as xs:string,$prefixes as map(*))
-as map(*)
-{
- xqn:qmap($e, $prefixes,  "http://www.w3.org/2005/xpath-functions")
-};
-
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>parse qname into parts</xqdoc:description><xqdoc:param>$e is from QName or TOKEN in some cases e.g "count"</xqdoc:param><xqdoc:param>$lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))</xqdoc:param><xqdoc:return><pre>
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>parse qname into parts</xqdoc:description><xqdoc:param>$e is from QName or TOKEN in some cases e.g "count"</xqdoc:param><xqdoc:param>$prefixes map of namespaces</xqdoc:param><xqdoc:param>$default namespace for no prefix</xqdoc:param><xqdoc:return><pre>
  map{
     "uri": ..,
      "name": ..} 
@@ -174,11 +156,6 @@ return map{
 as xs:boolean
 {
   $a?name=$name and $a?uri=$uri
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description/><xqdoc:return>{namespace}name</xqdoc:return></xqdoc:comment><xqdoc:name>xqn:qcode</xqdoc:name><xqdoc:signature>declare function xqn:qcode($name as item()*, $prefixes as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>prefixes</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>qmap-fun</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>clark-name</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqn:qcode($name,$prefixes)
-as xs:string
-{
-  let $a:=xqn:qmap-fun($name,$prefixes)
-  return xqn:clark-name( $a?uri, $a?name )
 }</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>return clark-notation '{uri}name'</xqdoc:description></xqdoc:comment><xqdoc:name>xqn:clark-name</xqdoc:name><xqdoc:signature>declare function xqn:clark-name($uri as xs:string, $name as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqn:clark-name($uri as xs:string, 
                                 $name as xs:string)
 as xs:string
@@ -215,8 +192,4 @@ as map(*)
 {
  fetch:text(resolve-uri(``[../etc/static/`{ $platform }`.json]``,static-base-uri()))
  =&gt;parse-json() 
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>expand function name</xqdoc:description></xqdoc:comment><xqdoc:name>xqn:qmap-fun</xqdoc:name><xqdoc:signature>declare function xqn:qmap-fun($e as xs:string, $prefixes as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>e</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>prefixes</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>qmap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>e</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqn:qmap-fun($e as xs:string,$prefixes as map(*))
-as map(*)
-{
- xqn:qmap($e, $prefixes,  "http://www.w3.org/2005/xpath-functions")
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

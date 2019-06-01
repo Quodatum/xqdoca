@@ -1,29 +1,365 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>vue-poc - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">vue-poc/query-a</span>&nbsp;
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></h1><nav id="toc"><h2><a href="../../index.html">vue-poc</a>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca">
+    <title>vue-poc - xqDocA
+        </title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+    <link rel="stylesheet" type="text/css" href="../../resources/prism.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/page.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/query.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/base.css">
+  </head>
+  <body class="home" id="top">
+    <div id="main">
+      <div>
+        <h1>
+          <span class="badge badge-info">vue-poc/query-a</span>&nbsp;
+			<small>library module</small>
+          <div style="float:right">
+            <span class="badge badge-danger" title="Updating">U</span>
+          </div>
+        </h1>
+        <nav id="toc">
+          <h2>
+            <a href="../../index.html">vue-poc</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">vue-poc/query-a</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#query-a:cast"><span class="secno">4.1</span><span class="content" title="">query-a:cast<div style="float:right"></div></span></a></li><li><a href="#query-a:inspect"><span class="secno">4.2</span><span class="content" title="">query-a:inspect<div style="float:right"></div></span></a></li><li><a href="#query-a:params"><span class="secno">4.3</span><span class="content" title="">query-a:params<div style="float:right"></div></span></a></li><li><a href="#query-a:run"><span class="secno">4.4</span><span class="content" title="">query-a:run<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#query-a:run-json"><span class="secno">4.5</span><span class="content" title="">query-a:run-json<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#query-a:update"><span class="secno">4.6</span><span class="content" title="">query-a:update<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd>evaluTE query library</dd><dt>Tags</dt><dd><p>Author: Andy Bunce, 2018</p><p>__source : lib/query-a.xqm</p></dd></dl>,
-		<div> Imported by <a href="../../imports.html#vue-poc/query-a">*</a></div>,
-    <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
+       </h2>
+          <h3>
+            <a id="contents"></a>
+            <span class="">vue-poc/query-a</span>
+          </h3>
+          <ol class="toc">
+            <li>
+              <a href="#summary">
+                <span class="secno">1 </span>
+                <span class="content">Summary</span>
+              </a>
+            </li>
+            <li>
+              <a href="#imports">
+                <span class="secno">2 </span>
+                <span class="content">Imports</span>
+              </a>
+            </li>
+            <li>
+              <a href="#variables">
+                <span class="secno">3 </span>
+                <span class="content">Variables</span>
+              </a>
+              <ol class="toc"></ol>
+            </li>
+            <li>
+              <a href="#functions">
+                <span class="secno">4 </span>
+                <span class="content">Functions</span>
+              </a>
+              <ol class="toc">
+                <li>
+                  <a href="#query-a:cast">
+                    <span class="secno">4.1</span>
+                    <span class="content" title="">query-a:cast<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#query-a:inspect">
+                    <span class="secno">4.2</span>
+                    <span class="content" title="">query-a:inspect<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#query-a:params">
+                    <span class="secno">4.3</span>
+                    <span class="content" title="">query-a:params<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#query-a:run">
+                    <span class="secno">4.4</span>
+                    <span class="content" title="">query-a:run<div style="float:right">
+                        <span class="badge badge-danger" title="Updating">U</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#query-a:run-json">
+                    <span class="secno">4.5</span>
+                    <span class="content" title="">query-a:run-json<div style="float:right">
+                        <span class="badge badge-danger" title="Updating">U</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#query-a:update">
+                    <span class="secno">4.6</span>
+                    <span class="content" title="">query-a:update<div style="float:right">
+                        <span class="badge badge-danger" title="Updating">U</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a href="#namespaces">
+                <span class="secno">5 </span>
+                <span class="content">Namespaces</span>
+              </a>
+            </li>
+            <li>
+              <a href="#restxq">
+                <span class="secno">6 </span>
+                <span class="content">Restxq</span>
+              </a>
+              <ol class="toc">
+                <xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()">
+                  <xsl:sort select="current-grouping-key()"></xsl:sort>
+                  <xsl:variable name="id" select="current-grouping-key()"></xsl:variable>
+                  <li>
+                    <a href="# TODO">
+                      <span class="secno">
+                        <xsl:value-of select="concat('5.',position())"></xsl:value-of>
+                      </span>
+                      <span class="content">
+                        <xsl:value-of select="current-grouping-key()"></xsl:value-of>
+                      </span>
+                    </a>
+                  </li>
+                </xsl:for-each-group>
+              </ol>
+            </li>
+            <li>
+              <a href="#source">
+                <span class="secno">7 </span>
+                <span class="content">Source</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        <div class="div2">
+          <h2>
+            <a id="summary"></a>1 Summary</h2>
+          <dl>
+            <dt class="label">Summary</dt>
+            <dd>evaluTE query library</dd>
+            <dt>Tags</dt>
+            <dd>
+              <p>Author: Andy Bunce, 2018</p>
+              <p>__source : lib/query-a.xqm</p>
+            </dd>
+          </dl>,
+		<div> Imported by <a href="../../imports.html#vue-poc/query-a">*</a>
+          </div>,
+    <ul>
+            <li style="display:inline">Raw XML files: </li>
+            <li style="display:inline">
+              <a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
+            <li style="display:inline">
+              <a href="xqparse.xml" target="xqparse">xqparse.xml</a>
+            </li>
+          </ul>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="imports"></a>2 Imports</h2>
+          <p>
     This module is imported by
     <span class="badge badge-info">4</span> modules, it imports
     <span class="badge badge-info">1</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:40%;"><div style="text-align: right;"><span><a href="../../modules/F6/index.html" title="features\edit\edit.xqm">quodatum:vue.api</a>&nbsp;<a href="../../modules/F27/index.html" title="features\tasks\model.build\rxq-model.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F36/index.html" title="features\tasks\xqdoc\rxq-xqdoc.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F80/index.html" title="api.xqm"><span class="badge badge-info">4</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F6/index.html" title="features\edit\edit.xqm">quodatum:vue.api</a>&nbsp;<a href="../../modules/F27/index.html" title="features\tasks\model.build\rxq-model.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F36/index.html" title="features\tasks\xqdoc\rxq-xqdoc.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F80/index.html" title="api.xqm"><span class="badge badge-info">4</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F40/index.html" title="features\tasks\rxq-tasks.xqm">quodatum:vue.tasks</a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="features\validate\rq-validate.xqm">quodatum:vue.api.validate</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="width:40%;"><div><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/request</span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="query-a:cast"></a><a id="{vue-poc/query-a}cast#2"></a>4.1&nbsp;query-a:cast<div style="float:right"><a href="#query-a:cast">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:cast#2">query-a:cast#2</a></span></p><dt class="label">Summary</dt><dd>convert type</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:cast</code>
+    </p>
+          <div style="display: flex;width:100%; justify-content: space-between;">
+            <div style="width:40%;">
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F6/index.html" title="features/edit/edit.xqm">quodatum:vue.api</a>&nbsp;<a href="../../modules/F27/index.html" title="features/tasks/model.build/rxq-model.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F36/index.html" title="features/tasks/xqdoc/rxq-xqdoc.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F80/index.html" title="api.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F6/index.html" title="features/edit/edit.xqm">quodatum:vue.api</a>&nbsp;<a href="../../modules/F27/index.html" title="features/tasks/model.build/rxq-model.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F36/index.html" title="features/tasks/xqdoc/rxq-xqdoc.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F80/index.html" title="api.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F40/index.html" title="features/tasks/rxq-tasks.xqm">quodatum:vue.tasks</a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="features/validate/rq-validate.xqm">quodatum:vue.api.validate</a>
+                </span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+              <div>
+                <div>imports</div>→</div>
+              <div class="badge badge-info">this</div>
+              <div>
+                <div>imports</div>→</div>
+            </div>
+            <div style="width:40%;">
+              <div>
+                <span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/request</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="variables"></a>3 Variables
+			</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="functions"></a>4 Functions</h2>
+          <div class="div3">
+            <h3>
+              <a id="query-a:cast"></a>
+              <a id="{vue-poc/query-a}cast#2"></a>4.1&nbsp;query-a:cast<div style="float:right">
+                <a href="#query-a:cast">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}cast#2">query-a:cast#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>convert type</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:cast</code>
 		  ( 
-			<code class="arg">$val</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()</code>, <code class="arg">$type</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$val</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()</code>, <code class="arg">$type</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">item()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>val<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()</code></li><li>type<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:cast($val as item(),$type as xs:string)
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">item()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>val<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()</code>
+                </li>
+                <li>type<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:cast($val as item(),$type as xs:string)
 as item() 
 {
   switch($type)
    case "xs:anyURI" return xs:anyURI($val)
    default          return $val
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}anyURI#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F64/index.html#{vue-poc/query-a}params#1" title="lib\query-a.xqm">query-a:params#1</a></span></li></ul></details></div><div class="div3"><h3><a id="query-a:inspect"></a><a id="{vue-poc/query-a}inspect#1"></a>4.2&nbsp;query-a:inspect<div style="float:right"><a href="#query-a:inspect">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:inspect#1">query-a:inspect#1</a></span></p><dt class="label">Summary</dt><dd>attributes of a stored query including parameters and updating status.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:inspect</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}anyURI#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F64/index.html#{vue-poc/query-a}params" title="lib/query-a.xqm">query-a:params</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="query-a:inspect"></a>
+              <a id="{vue-poc/query-a}inspect#1"></a>4.2&nbsp;query-a:inspect<div style="float:right">
+                <a href="#query-a:inspect">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}inspect#1">query-a:inspect#1</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>attributes of a stored query including parameters and updating status.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:inspect</code>
 		  ( 
-			<code class="arg">$mod</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyURI</code>
+			<code class="arg">$mod</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:anyURI</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(json)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>mod<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyURI</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(json)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:inspect($mod as xs:anyURI)
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(json)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>mod<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:anyURI</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(json)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:inspect($mod as xs:anyURI)
 as element(json)
 {
 let $updating:=xquery:parse-uri($mod)/@updating/string()
@@ -45,11 +381,97 @@ return &lt;json type="object"&gt;
    $vars!element{@name}{default_tag/string()}
    }&lt;/values&gt;
    &lt;/json&gt;
-}</code></pre></details><details><summary>Invokes 3 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}module#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}parse-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li></ul></details><details><summary>Invoked by 4 functions from 4 modules</summary><ul><li><span><a href="../../modules/F27/index.html#{quodatum:vue.api}settings#0" title="features\tasks\model.build\rxq-model.xqm">vue-api:settings#0</a></span></li><li><span><a href="../../modules/F36/index.html#{quodatum:vue.api}settings#0" title="features\tasks\xqdoc\rxq-xqdoc.xqm">vue-api:settings#0</a></span></li><li><span><a href="../../modules/F40/index.html#{quodatum:vue.tasks}task#1" title="features\tasks\rxq-tasks.xqm">vue-rest:task#1</a></span></li><li><span><a href="../../modules/F44/index.html#{quodatum:vue.api.validate}parameters#0" title="features\validate\rq-validate.xqm">tx:parameters#0</a></span></li></ul></details></div><div class="div3"><h3><a id="query-a:params"></a><a id="{vue-poc/query-a}params#1"></a>4.3&nbsp;query-a:params<div style="float:right"><a href="#query-a:params">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:params#1">query-a:params#1</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:params</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}module#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}parse-uri#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 4 functions from 4 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F27/index.html#{quodatum:vue.api}settings" title="features/tasks/model.build/rxq-model.xqm">vue-api:settings</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F36/index.html#{quodatum:vue.api}settings" title="features/tasks/xqdoc/rxq-xqdoc.xqm">vue-api:settings</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F40/index.html#{quodatum:vue.tasks}task" title="features/tasks/rxq-tasks.xqm">vue-rest:task</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F44/index.html#{quodatum:vue.api.validate}parameters" title="features/validate/rq-validate.xqm">tx:parameters</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="query-a:params"></a>
+              <a id="{vue-poc/query-a}params#1"></a>4.3&nbsp;query-a:params<div style="float:right">
+                <a href="#query-a:params">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}params#1">query-a:params#1</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd></dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:params</code>
 		  ( 
-			<code class="arg">$mod</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyURI</code>
+			<code class="arg">$mod</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:anyURI</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>mod<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyURI</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:params($mod as xs:anyURI)
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>mod<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:anyURI</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:params($mod as xs:anyURI)
 as map(*)
 {
   let $vars:=inspect:module($mod=&gt;trace("params"))/variable[@external="true"]
@@ -58,11 +480,117 @@ as map(*)
               map:entry(@name,query-a:cast(request:parameter(@name/string()),@type))
 
            )
-}</code></pre></details><details><summary>Invokes 8 functions from 5 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}module#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://exquery.org/ns/request}parameter#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://exquery.org/ns/request}parameter-names#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li><li><span><a href="../../modules/F64/index.html#{vue-poc/query-a}cast#2" title="lib\query-a.xqm">query-a:cast#2</a></span></li></ul></details><details><summary>Invoked by 4 functions from 4 modules</summary><ul><li><span><a href="../../modules/F27/index.html#{quodatum:vue.api}model#0" title="features\tasks\model.build\rxq-model.xqm">vue-api:model#0</a></span></li><li><span><a href="../../modules/F36/index.html#{quodatum:vue.api}model#0" title="features\tasks\xqdoc\rxq-xqdoc.xqm">vue-api:model#0</a></span></li><li><span><a href="../../modules/F40/index.html#{quodatum:vue.tasks}runtask#1" title="features\tasks\rxq-tasks.xqm">vue-rest:runtask#1</a></span></li><li><span><a href="../../modules/F44/index.html#{quodatum:vue.api.validate}run#0" title="features\validate\rq-validate.xqm">tx:run#0</a></span></li></ul></details></div><div class="div3"><h3><a id="query-a:run"></a><a id="{vue-poc/query-a}run#2"></a>4.4&nbsp;query-a:run<div style="float:right"><a href="#query-a:run">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:run#2">query-a:run#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:run</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 8 functions from 5 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}module#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://exquery.org/ns/request}parameter#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://exquery.org/ns/request}parameter-names#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F64/index.html#{vue-poc/query-a}cast#2" title="lib/query-a.xqm">query-a:cast#2</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 4 functions from 4 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F27/index.html#{quodatum:vue.api}model" title="features/tasks/model.build/rxq-model.xqm">vue-api:model</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F36/index.html#{quodatum:vue.api}model" title="features/tasks/xqdoc/rxq-xqdoc.xqm">vue-api:model</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F40/index.html#{quodatum:vue.tasks}runtask" title="features/tasks/rxq-tasks.xqm">vue-rest:runtask</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F44/index.html#{quodatum:vue.api.validate}run" title="features/validate/rq-validate.xqm">tx:run</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="query-a:run"></a>
+              <a id="{vue-poc/query-a}run#2"></a>4.4&nbsp;query-a:run<div style="float:right">
+                <a href="#query-a:run">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}run#2">query-a:run#2</a>
+                <span class="badge badge-danger" title="Updating">U</span>
+              </span>
+            </p>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:run</code>
 		  ( 
-			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyURI</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$query</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:anyURI</code>, <code class="arg">$params</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyURI</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:run($query as xs:anyURI,$params as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>query<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:anyURI</code>
+                </li>
+                <li>params<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:run($query as xs:anyURI,$params as map(*))
 { 
 let $updating:=xquery:parse-uri($query)/@updating/boolean(.)
 return if($updating) then
@@ -72,21 +600,291 @@ return if($updating) then
                &lt;res&gt;{ xquery:invoke($query,$params)}&lt;/res&gt;
                &lt;params&gt;todo&lt;/params&gt;
        &lt;/json&gt;=&gt;update:output()
-}</code></pre></details><details><summary>Invokes 5 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke-update#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}parse-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F40/index.html#{quodatum:vue.tasks}runtask#1" title="features\tasks\rxq-tasks.xqm">vue-rest:runtask#1</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="query-a:run-json"></a><a id="{vue-poc/query-a}run-json#2"></a>4.5&nbsp;query-a:run-json<div style="float:right"><a href="#query-a:run-json">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:run-json#2">query-a:run-json#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:run-json</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 5 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke-update#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}parse-uri#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F40/index.html#{quodatum:vue.tasks}runtask" title="features/tasks/rxq-tasks.xqm">vue-rest:runtask</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%updating</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="query-a:run-json"></a>
+              <a id="{vue-poc/query-a}run-json#2"></a>4.5&nbsp;query-a:run-json<div style="float:right">
+                <a href="#query-a:run-json">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}run-json#2">query-a:run-json#2</a>
+                <span class="badge badge-danger" title="Updating">U</span>
+              </span>
+            </p>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:run-json</code>
 		  ( 
-			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyURI</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$query</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:anyURI</code>, <code class="arg">$params</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyURI</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:run-json($query as xs:anyURI,$params as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>query<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:anyURI</code>
+                </li>
+                <li>params<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">empty-sequence()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:run-json($query as xs:anyURI,$params as map(*))
 { 
   xquery:invoke($query,$params)=&gt;update:output()
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F44/index.html#{quodatum:vue.api.validate}run#0" title="features\validate\rq-validate.xqm">tx:run#0</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="query-a:update"></a><a id="{vue-poc/query-a}update#2"></a>4.6&nbsp;query-a:update<div style="float:right"><a href="#query-a:update">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#query-a:update#2">query-a:update#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">query-a:update</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F44/index.html#{quodatum:vue.api.validate}run" title="features/validate/rq-validate.xqm">tx:run</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%updating</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="query-a:update"></a>
+              <a id="{vue-poc/query-a}update#2"></a>4.6&nbsp;query-a:update<div style="float:right">
+                <a href="#query-a:update">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{vue-poc/query-a}update#2">query-a:update#2</a>
+                <span class="badge badge-danger" title="Updating">U</span>
+              </span>
+            </p>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">query-a:update</code>
 		  ( 
-			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:anyURI</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$query</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:anyURI</code>, <code class="arg">$params</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:anyURI</code></li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function query-a:update($query as xs:anyURI,$params as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>query<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:anyURI</code>
+                </li>
+                <li>params<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">empty-sequence()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function query-a:update($query as xs:anyURI,$params as map(*))
 {
     xquery:invoke-update($query,$params)
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke-update#2</span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F27/index.html#{quodatum:vue.api}model#0" title="features\tasks\model.build\rxq-model.xqm">vue-api:model#0</a></span></li><li><span><a href="../../modules/F36/index.html#{quodatum:vue.api}model#0" title="features\tasks\xqdoc\rxq-xqdoc.xqm">vue-api:model#0</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>query-a</td><td><span><a href="../../modules/F64/index.html" title="lib\query-a.xqm">vue-poc/query-a</a></span></td></tr><tr><td>request</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/request</span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke-update#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 2 functions from 2 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F27/index.html#{quodatum:vue.api}model" title="features/tasks/model.build/rxq-model.xqm">vue-api:model</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F36/index.html#{quodatum:vue.api}model" title="features/tasks/xqdoc/rxq-xqdoc.xqm">vue-api:model</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%updating</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="namespaces"></a>5 Namespaces</h2>
+          <p>The following namespaces are defined:</p>
+          <table class="data" style="float:none">
+            <thead>
+              <tr>
+                <th>Prefix</th>
+                <th>Uri</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ann</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span>
+                </td>
+              </tr>
+              <tr>
+                <td>query-a</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F64/index.html" title="lib/query-a.xqm">vue-poc/query-a</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>request</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/request</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="restxq"></a>6 RestXQ</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="source"></a>7 Source Code</h2>
+          <pre>
+            <code class="language-xquery">(:~
  : evaluTE query library
  :
  : @author Andy Bunce, 2018
@@ -180,6 +978,17 @@ function query-a:update($query as xs:anyURI,$params as map(*))
     xquery:invoke-update($query,$params)
 };
 
-</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+</code>
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-29T22:37:23.991+01:00">10.37pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-01T11:02:48.049+01:00">11.02am on Saturday, June 1st 2019</span>
+      </p>
+    </div>
+    <script src="../../resources/prism.js" type="text/javascript"></script>
+  </body>
+</html>

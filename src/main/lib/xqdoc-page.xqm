@@ -27,9 +27,17 @@ xquery version "3.1";
 module namespace page = 'quodatum:xqdoca.page';
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
-(:~ link to module :)
-declare 
-function page:link-module($uri as xs:string,$model as map(*))                       
+(:~ make html hrefable id :)
+declare function page:id($id as xs:string)
+as xs:string
+{
+ "ID_" || escape-html-uri($id)
+};
+
+(:~
+ : generate link to module with namespace 
+ :)
+ declare function page:link-module($uri as xs:string,$model as map(*))                       
 as element(span)
 {
  let $files:=$model?files[?namespace=$uri]
@@ -59,7 +67,7 @@ as element(span)
 };
 
 (:~ link to fun or var in file
- : @param name of form 'fun#arity] or ''$name' 
+ : @param name of form 'fun#arity or '$name' 
 :)
 declare 
 function page:link-function($uri as xs:string,
@@ -81,6 +89,7 @@ as element(span)
            </span>
 };
 
+ 
 (:~ link to fun or var in file
  : @param name of form 'fun#arity' or ''$name' 
  : @param fromModule where called from
@@ -208,7 +217,7 @@ as element(li){
   return <li>{
          $render($pos,$tree),
          if($tree  instance of element(directory))then
-          <ol class="toc">{ $tree/*!page:tree-list(.,($seq,position()),$render) }</ol>
+          <ol >{ $tree/*!page:tree-list(.,($seq,position()),$render) }</ol>
           else ()
         }</li>
  
@@ -271,6 +280,9 @@ as element(table)
 </table>
 };
 
+(:~ 
+ : Coloured <span/> as bootstrap badge
+ :)
 declare function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {

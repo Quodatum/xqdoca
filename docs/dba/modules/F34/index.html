@@ -1,27 +1,1045 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>dba - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/util</span>&nbsp;
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html">dba</a>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca">
+    <title>dba - xqDocA
+        </title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+    <link rel="stylesheet" type="text/css" href="../../resources/prism.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/page.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/query.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/base.css">
+  </head>
+  <body class="home" id="top">
+    <div id="main">
+      <div>
+        <h1>
+          <span class="badge badge-info">dba/util</span>&nbsp;
+			<small>library module</small>
+          <div style="float:right">
+            <span class="badge badge-danger" title="Updating">U</span>
+            <span class="badge badge-dark" title="Private">P</span>
+          </div>
+        </h1>
+        <nav id="toc">
+          <h2>
+            <a href="../../index.html">dba</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">dba/util</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#util:capitalize"><span class="secno">4.1</span><span class="content" title="">util:capitalize<div style="float:right"></div></span></a></li><li><a href="#util:chop"><span class="secno">4.2</span><span class="content" title="">util:chop<div style="float:right"></div></span></a></li><li><a href="#util:end"><span class="secno">4.3</span><span class="content" title="">util:end<div style="float:right"></div></span></a></li><li><a href="#util:info"><span class="secno">4.4</span><span class="content" title="">util:info<div style="float:right"></div></span></a></li><li><a href="#util:item-join"><span class="secno">4.5</span><span class="content" title="">util:item-join<div style="float:right"></div></span></a></li><li><a href="#util:query"><span class="secno">4.6</span><span class="content" title="">util:query<div style="float:right"></div></span></a></li><li><a href="#util:query-options"><span class="secno">4.7</span><span class="content" title="">util:query-options<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#util:redirect"><span class="secno">4.8</span><span class="content" title="">util:redirect<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#util:start"><span class="secno">4.9</span><span class="content" title="">util:start<div style="float:right"></div></span></a></li><li><a href="#util:update-query"><span class="secno">4.10</span><span class="content" title="">util:update-query<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd>Utility functions.</dd><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p><p>__source : modules/util.xqm</p></dd></dl>,
-		<div> Imported by <a href="../../imports.html#dba/util">*</a></div>,
-    <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
+       </h2>
+          <h3>
+            <a id="contents"></a>
+            <span class="">dba/util</span>
+          </h3>
+          <ol class="toc">
+            <li>
+              <a href="#summary">
+                <span class="secno">1 </span>
+                <span class="content">Summary</span>
+              </a>
+            </li>
+            <li>
+              <a href="#imports">
+                <span class="secno">2 </span>
+                <span class="content">Imports</span>
+              </a>
+            </li>
+            <li>
+              <a href="#variables">
+                <span class="secno">3 </span>
+                <span class="content">Variables</span>
+              </a>
+              <ol class="toc"></ol>
+            </li>
+            <li>
+              <a href="#functions">
+                <span class="secno">4 </span>
+                <span class="content">Functions</span>
+              </a>
+              <ol class="toc">
+                <li>
+                  <a href="#util:capitalize">
+                    <span class="secno">4.1</span>
+                    <span class="content" title="">util:capitalize<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:chop">
+                    <span class="secno">4.2</span>
+                    <span class="content" title="">util:chop<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:end">
+                    <span class="secno">4.3</span>
+                    <span class="content" title="">util:end<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:info">
+                    <span class="secno">4.4</span>
+                    <span class="content" title="">util:info<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:item-join">
+                    <span class="secno">4.5</span>
+                    <span class="content" title="">util:item-join<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:query">
+                    <span class="secno">4.6</span>
+                    <span class="content" title="">util:query<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:query-options">
+                    <span class="secno">4.7</span>
+                    <span class="content" title="">util:query-options<div style="float:right">
+                        <span class="badge badge-dark" title="Private">P</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:redirect">
+                    <span class="secno">4.8</span>
+                    <span class="content" title="">util:redirect<div style="float:right">
+                        <span class="badge badge-danger" title="Updating">U</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:start">
+                    <span class="secno">4.9</span>
+                    <span class="content" title="">util:start<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#util:update-query">
+                    <span class="secno">4.10</span>
+                    <span class="content" title="">util:update-query<div style="float:right">
+                        <span class="badge badge-danger" title="Updating">U</span>
+                      </div>
+                    </span>
+                  </a>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a href="#namespaces">
+                <span class="secno">5 </span>
+                <span class="content">Namespaces</span>
+              </a>
+            </li>
+            <li>
+              <a href="#restxq">
+                <span class="secno">6 </span>
+                <span class="content">Restxq</span>
+              </a>
+              <ol class="toc">
+                <xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()">
+                  <xsl:sort select="current-grouping-key()"></xsl:sort>
+                  <xsl:variable name="id" select="current-grouping-key()"></xsl:variable>
+                  <li>
+                    <a href="# TODO">
+                      <span class="secno">
+                        <xsl:value-of select="concat('5.',position())"></xsl:value-of>
+                      </span>
+                      <span class="content">
+                        <xsl:value-of select="current-grouping-key()"></xsl:value-of>
+                      </span>
+                    </a>
+                  </li>
+                </xsl:for-each-group>
+              </ol>
+            </li>
+            <li>
+              <a href="#source">
+                <span class="secno">7 </span>
+                <span class="content">Source</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        <div class="div2">
+          <h2>
+            <a id="summary"></a>1 Summary</h2>
+          <dl>
+            <dt class="label">Summary</dt>
+            <dd>Utility functions.</dd>
+            <dt>Tags</dt>
+            <dd>
+              <p>Author: Christian Grün, BaseX Team 2005-19, BSD License</p>
+              <p>__source : modules/util.xqm</p>
+            </dd>
+          </dl>,
+		<div> Imported by <a href="../../imports.html#dba/util">*</a>
+          </div>,
+    <ul>
+            <li style="display:inline">Raw XML files: </li>
+            <li style="display:inline">
+              <a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
+            <li style="display:inline">
+              <a href="xqparse.xml" target="xqparse">xqparse.xml</a>
+            </li>
+          </ul>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="imports"></a>2 Imports</h2>
+          <p>
     This module is imported by
     <span class="badge badge-info">29</span> modules, it imports
     <span class="badge badge-info">2</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:40%;"><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F1/index.html" title="databases\resources\backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases\resources\db-add.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F3/index.html" title="databases\resources\db-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F4/index.html" title="databases\resources\db-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F5/index.html" title="databases\resources\db-query.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F6/index.html" title="databases\resources\db-rename.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F7/index.html" title="databases\resources\db-replace.xqm"><span class="badge badge-info">7</span></a>&nbsp;<a href="../../modules/F8/index.html" title="databases\resources\resource.xqm"><span class="badge badge-info">8</span></a>&nbsp;<a href="../../modules/F10/index.html" title="databases\database.xqm"><span class="badge badge-info">9</span></a>&nbsp;<a href="../../modules/F12/index.html" title="databases\db-alter.xqm"><span class="badge badge-info">10</span></a>&nbsp;<a href="../../modules/F13/index.html" title="databases\db-copy.xqm"><span class="badge badge-info">11</span></a>&nbsp;<a href="../../modules/F14/index.html" title="databases\db-create.xqm"><span class="badge badge-info">12</span></a>&nbsp;<a href="../../modules/F15/index.html" title="databases\db-drop.xqm"><span class="badge badge-info">13</span></a>&nbsp;<a href="../../modules/F16/index.html" title="databases\db-optimize.xqm"><span class="badge badge-info">14</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files\dir-create.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F19/index.html" title="files\file-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F20/index.html" title="files\file-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F22/index.html" title="files\file-stop.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F23/index.html" title="files\file-upload.xqm"><span class="badge badge-info">6</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files\dir-create.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F19/index.html" title="files\file-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F20/index.html" title="files\file-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F22/index.html" title="files\file-stop.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F23/index.html" title="files\file-upload.xqm"><span class="badge badge-info">6</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F17/index.html" title="files\dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files\dir-create.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F19/index.html" title="files\file-delete.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F20/index.html" title="files\file-download.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F22/index.html" title="files\file-stop.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F23/index.html" title="files\file-upload.xqm"><span class="badge badge-info">6</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F25/index.html" title="jobs\job-result.xqm">dba/jobs</a>&nbsp;<a href="../../modules/F26/index.html" title="jobs\job-stop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F27/index.html" title="jobs\jobs.xqm"><span class="badge badge-info">3</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F25/index.html" title="jobs\job-result.xqm">dba/jobs</a>&nbsp;<a href="../../modules/F26/index.html" title="jobs\job-stop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F27/index.html" title="jobs\jobs.xqm"><span class="badge badge-info">3</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F28/index.html" title="logs\log-delete.xqm">dba/logs</a>&nbsp;<a href="../../modules/F29/index.html" title="logs\log-download.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F30/index.html" title="logs\logs.xqm"><span class="badge badge-info">3</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F35/index.html" title="queries\queries.xqm">dba/queries</a>&nbsp;<a href="../../modules/F36/index.html" title="queries\query-close.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F37/index.html" title="queries\query-eval.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F38/index.html" title="queries\query-open.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F39/index.html" title="queries\query-save.xqm"><span class="badge badge-info">5</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F40/index.html" title="sessions\session-kill.xqm">dba/sessions</a>&nbsp;<a href="../../modules/F41/index.html" title="sessions\sessions.xqm"><span class="badge badge-info">2</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F40/index.html" title="sessions\session-kill.xqm">dba/sessions</a>&nbsp;<a href="../../modules/F41/index.html" title="sessions\sessions.xqm"><span class="badge badge-info">2</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users\pattern-drop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F46/index.html" title="users\user-create.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F47/index.html" title="users\user-drop.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F48/index.html" title="users\user-edit.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F49/index.html" title="users\user.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F50/index.html" title="users\users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users\pattern-drop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F46/index.html" title="users\user-create.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F47/index.html" title="users\user-drop.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F48/index.html" title="users\user-edit.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F49/index.html" title="users\user.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F50/index.html" title="users\users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users\pattern-drop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F46/index.html" title="users\user-create.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F47/index.html" title="users\user-drop.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F48/index.html" title="users\user-edit.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F49/index.html" title="users\user.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F50/index.html" title="users\users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users\pattern-drop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F46/index.html" title="users\user-create.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F47/index.html" title="users\user-drop.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F48/index.html" title="users\user-edit.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F49/index.html" title="users\user.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F50/index.html" title="users\users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F44/index.html" title="users\pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users\pattern-drop.xqm"><span class="badge badge-info">2</span></a>&nbsp;<a href="../../modules/F46/index.html" title="users\user-create.xqm"><span class="badge badge-info">3</span></a>&nbsp;<a href="../../modules/F47/index.html" title="users\user-drop.xqm"><span class="badge badge-info">4</span></a>&nbsp;<a href="../../modules/F48/index.html" title="users\user-edit.xqm"><span class="badge badge-info">5</span></a>&nbsp;<a href="../../modules/F49/index.html" title="users\user.xqm"><span class="badge badge-info">6</span></a>&nbsp;<a href="../../modules/F50/index.html" title="users\users.xqm"><span class="badge badge-info">7</span></a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="width:40%;"><div><span><a href="../../modules/F32/index.html" title="modules\options.xqm">dba/options</a></span></div><div><span><a href="../../modules/F33/index.html" title="modules\session.xqm">dba/session</a></span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><p>None</p></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="util:capitalize"></a><a id="{dba/util}capitalize#1"></a>4.1&nbsp;util:capitalize<div style="float:right"><a href="#util:capitalize">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:capitalize#1">util:capitalize#1</a></span></p><dt class="label">Summary</dt><dd>Capitalizes a string.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:capitalize</code>
+    </p>
+          <div style="display: flex;width:100%; justify-content: space-between;">
+            <div style="width:40%;">
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F1/index.html" title="databases/resources/backup-download.xqm">dba/databases</a>&nbsp;<a href="../../modules/F2/index.html" title="databases/resources/db-add.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F3/index.html" title="databases/resources/db-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F4/index.html" title="databases/resources/db-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F5/index.html" title="databases/resources/db-query.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F6/index.html" title="databases/resources/db-rename.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F7/index.html" title="databases/resources/db-replace.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F8/index.html" title="databases/resources/resource.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>&nbsp;<a href="../../modules/F9/index.html" title="databases/backups.xqm">
+                    <span class="badge badge-info">9</span>
+                  </a>&nbsp;<a href="../../modules/F10/index.html" title="databases/database.xqm">
+                    <span class="badge badge-info">10</span>
+                  </a>&nbsp;<a href="../../modules/F11/index.html" title="databases/databases.xqm">
+                    <span class="badge badge-info">11</span>
+                  </a>&nbsp;<a href="../../modules/F12/index.html" title="databases/db-alter.xqm">
+                    <span class="badge badge-info">12</span>
+                  </a>&nbsp;<a href="../../modules/F13/index.html" title="databases/db-copy.xqm">
+                    <span class="badge badge-info">13</span>
+                  </a>&nbsp;<a href="../../modules/F14/index.html" title="databases/db-create.xqm">
+                    <span class="badge badge-info">14</span>
+                  </a>&nbsp;<a href="../../modules/F15/index.html" title="databases/db-drop.xqm">
+                    <span class="badge badge-info">15</span>
+                  </a>&nbsp;<a href="../../modules/F16/index.html" title="databases/db-optimize.xqm">
+                    <span class="badge badge-info">16</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F17/index.html" title="files/dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files/dir-create.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F19/index.html" title="files/file-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F20/index.html" title="files/file-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F21/index.html" title="files/file-start.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F22/index.html" title="files/file-stop.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F23/index.html" title="files/file-upload.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F24/index.html" title="files/files.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F17/index.html" title="files/dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files/dir-create.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F19/index.html" title="files/file-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F20/index.html" title="files/file-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F21/index.html" title="files/file-start.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F22/index.html" title="files/file-stop.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F23/index.html" title="files/file-upload.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F24/index.html" title="files/files.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F17/index.html" title="files/dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files/dir-create.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F19/index.html" title="files/file-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F20/index.html" title="files/file-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F21/index.html" title="files/file-start.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F22/index.html" title="files/file-stop.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F23/index.html" title="files/file-upload.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F24/index.html" title="files/files.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F17/index.html" title="files/dir-change.xqm">dba/files</a>&nbsp;<a href="../../modules/F18/index.html" title="files/dir-create.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F19/index.html" title="files/file-delete.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F20/index.html" title="files/file-download.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F21/index.html" title="files/file-start.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F22/index.html" title="files/file-stop.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F23/index.html" title="files/file-upload.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>&nbsp;<a href="../../modules/F24/index.html" title="files/files.xqm">
+                    <span class="badge badge-info">8</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F25/index.html" title="jobs/job-result.xqm">dba/jobs</a>&nbsp;<a href="../../modules/F26/index.html" title="jobs/job-stop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F27/index.html" title="jobs/jobs.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F25/index.html" title="jobs/job-result.xqm">dba/jobs</a>&nbsp;<a href="../../modules/F26/index.html" title="jobs/job-stop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F27/index.html" title="jobs/jobs.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F28/index.html" title="logs/log-delete.xqm">dba/logs</a>&nbsp;<a href="../../modules/F29/index.html" title="logs/log-download.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F30/index.html" title="logs/logs.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F31/index.html" title="modules/html.xqm">dba/html</a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F35/index.html" title="queries/queries.xqm">dba/queries</a>&nbsp;<a href="../../modules/F36/index.html" title="queries/query-close.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F37/index.html" title="queries/query-eval.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F38/index.html" title="queries/query-open.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F39/index.html" title="queries/query-save.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F40/index.html" title="sessions/session-kill.xqm">dba/sessions</a>&nbsp;<a href="../../modules/F41/index.html" title="sessions/sessions.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F40/index.html" title="sessions/session-kill.xqm">dba/sessions</a>&nbsp;<a href="../../modules/F41/index.html" title="sessions/sessions.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="users/pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users/pattern-drop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F46/index.html" title="users/user-create.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F47/index.html" title="users/user-drop.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F48/index.html" title="users/user-edit.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F49/index.html" title="users/user.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F50/index.html" title="users/users.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="users/pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users/pattern-drop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F46/index.html" title="users/user-create.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F47/index.html" title="users/user-drop.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F48/index.html" title="users/user-edit.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F49/index.html" title="users/user.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F50/index.html" title="users/users.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="users/pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users/pattern-drop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F46/index.html" title="users/user-create.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F47/index.html" title="users/user-drop.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F48/index.html" title="users/user-edit.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F49/index.html" title="users/user.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F50/index.html" title="users/users.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="users/pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users/pattern-drop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F46/index.html" title="users/user-create.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F47/index.html" title="users/user-drop.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F48/index.html" title="users/user-edit.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F49/index.html" title="users/user.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F50/index.html" title="users/users.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F44/index.html" title="users/pattern-add.xqm">dba/users</a>&nbsp;<a href="../../modules/F45/index.html" title="users/pattern-drop.xqm">
+                    <span class="badge badge-info">2</span>
+                  </a>&nbsp;<a href="../../modules/F46/index.html" title="users/user-create.xqm">
+                    <span class="badge badge-info">3</span>
+                  </a>&nbsp;<a href="../../modules/F47/index.html" title="users/user-drop.xqm">
+                    <span class="badge badge-info">4</span>
+                  </a>&nbsp;<a href="../../modules/F48/index.html" title="users/user-edit.xqm">
+                    <span class="badge badge-info">5</span>
+                  </a>&nbsp;<a href="../../modules/F49/index.html" title="users/user.xqm">
+                    <span class="badge badge-info">6</span>
+                  </a>&nbsp;<a href="../../modules/F50/index.html" title="users/users.xqm">
+                    <span class="badge badge-info">7</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+              <div>
+                <div>imports</div>→</div>
+              <div class="badge badge-info">this</div>
+              <div>
+                <div>imports</div>→</div>
+            </div>
+            <div style="width:40%;">
+              <div>
+                <span>
+                  <a href="../../modules/F32/index.html" title="modules/options.xqm">dba/options</a>
+                </span>
+              </div>
+              <div>
+                <span>
+                  <a href="../../modules/F33/index.html" title="modules/session.xqm">dba/session</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="variables"></a>3 Variables
+			</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="functions"></a>4 Functions</h2>
+          <div class="div3">
+            <h3>
+              <a id="util:capitalize"></a>
+              <a id="{dba/util}capitalize#1"></a>4.1&nbsp;util:capitalize<div style="float:right">
+                <a href="#util:capitalize">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}capitalize#1">util:capitalize#1</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Capitalizes a string.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:capitalize</code>
 		  ( 
-			<code class="arg">$string</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$string</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>string<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:capitalize(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>string<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> string</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:string</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:capitalize(
   $string  as xs:string
 ) as xs:string {
   upper-case(substring($string, 1, 1)) || substring($string, 2)
-}</code></pre></details><details><summary>Invokes 3 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}upper-case#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F27/index.html#{dba/jobs}jobs#4" title="jobs\jobs.xqm">dba:jobs#4</a></span></li></ul></details></div><div class="div3"><h3><a id="util:chop"></a><a id="{dba/util}chop#2"></a>4.2&nbsp;util:chop<div style="float:right"><a href="#util:chop">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:chop#2">util:chop#2</a></span></p><dt class="label">Summary</dt><dd>Chops a string result to the maximum number of allowed characters.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:chop</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}upper-case#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F27/index.html#{dba/jobs}jobs" title="jobs/jobs.xqm">dba:jobs</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:chop"></a>
+              <a id="{dba/util}chop#2"></a>4.2&nbsp;util:chop<div style="float:right">
+                <a href="#util:chop">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}chop#2">util:chop#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Chops a string result to the maximum number of allowed characters.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:chop</code>
 		  ( 
-			<code class="arg">$string</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$max</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>
+			<code class="arg">$string</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>, <code class="arg">$max</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:integer</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>string<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> string</li><li>max<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> maximum number of characters</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:chop(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>string<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> string</li>
+                <li>max<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:integer</code> maximum number of characters</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:string</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:chop(
   $string  as xs:string,
   $max     as xs:integer
 ) as xs:string {
@@ -30,11 +1048,92 @@
   ) else (
     $string
   )
-}</code></pre></details><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-length#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#3</span></li></ul></details><details><summary>Invoked by 3 functions from 3 modules</summary><ul><li><span><a href="../../modules/F27/index.html#{dba/jobs}jobs#4" title="jobs\jobs.xqm">dba:jobs#4</a></span></li><li><span><a href="../../modules/F34/index.html#{dba/util}query#2" title="modules\util.xqm">util:query#2</a></span></li><li><span><a href="../../modules/F41/index.html#{dba/sessions}sessions#3" title="sessions\sessions.xqm">dba:sessions#3</a></span></li></ul></details></div><div class="div3"><h3><a id="util:end"></a><a id="{dba/util}end#2"></a>4.3&nbsp;util:end<div style="float:right"><a href="#util:end">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:end#2">util:end#2</a></span></p><dt class="label">Summary</dt><dd>Returns the index of the last result to generate.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:end</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-length#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#3</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 3 functions from 3 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F27/index.html#{dba/jobs}jobs" title="jobs/jobs.xqm">dba:jobs</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F34/index.html#{dba/util}query" title="modules/util.xqm">util:query</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F41/index.html#{dba/sessions}sessions" title="sessions/sessions.xqm">dba:sessions</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:end"></a>
+              <a id="{dba/util}end#2"></a>4.3&nbsp;util:end<div style="float:right">
+                <a href="#util:end">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}end#2">util:end#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns the index of the last result to generate.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:end</code>
 		  ( 
-			<code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>, <code class="arg">$sort</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$page</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:integer</code>, <code class="arg">$sort</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> current page</li><li>sort<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> sort key</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:end(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>page<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:integer</code> current page</li>
+                <li>sort<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> sort key</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:integer</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:end(
   $page  as xs:integer,
   $sort  as xs:string
 ) as xs:integer {
@@ -43,32 +1142,280 @@
   ) else (
     999999999
   )
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span><a href="../../modules/F32/index.html#{dba/options}get#1" title="modules\options.xqm">options:get#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F10/index.html#{dba/databases}database#6" title="databases\database.xqm">dba:database#6</a></span></li></ul></details></div><div class="div3"><h3><a id="util:info"></a><a id="{dba/util}info#3"></a>4.4&nbsp;util:info<div style="float:right"><a href="#util:info">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:info#3">util:info#3</a></span></p><dt class="label">Summary</dt><dd>Returns a count info for the specified items.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:info</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F32/index.html#{dba/options}get#1" title="modules/options.xqm">options:get#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F10/index.html#{dba/databases}database" title="databases/database.xqm">dba:database</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:info"></a>
+              <a id="{dba/util}info#3"></a>4.4&nbsp;util:info<div style="float:right">
+                <a href="#util:info">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}info#3">util:info#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns a count info for the specified items.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:info</code>
 		  ( 
-			<code class="arg">$items</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$action</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$items</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$name</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>, <code class="arg">$action</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> items</li><li>name<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> name of item (singular form)</li><li>action<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> action label (past tense)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:info(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>items<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code> items</li>
+                <li>name<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> name of item (singular form)</li>
+                <li>action<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> action label (past tense)</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:string</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:info(
   $items   as item()*,
   $name    as xs:string,
   $action  as xs:string
 ) as xs:string {
   let $count := count($items)
   return $count || ' ' || $name || (if($count &gt; 1) then 's were ' else ' was ') || $action || '.'
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li></ul></details><details><summary>Invoked by 11 functions from 11 modules</summary><ul><li><span><a href="../../modules/F3/index.html#{dba/databases}db-delete#2" title="databases\resources\db-delete.xqm">dba:db-delete#2</a></span></li><li><span><a href="../../modules/F15/index.html#{dba/databases}db-drop#1" title="databases\db-drop.xqm">dba:db-drop#1</a></span></li><li><span><a href="../../modules/F16/index.html#{dba/databases}drop#1" title="databases\db-optimize.xqm">dba:drop#1</a></span></li><li><span><a href="../../modules/F19/index.html#{dba/files}file-delete#1" title="files\file-delete.xqm">dba:file-delete#1</a></span></li><li><span><a href="../../modules/F22/index.html#{dba/files}file-stop#1" title="files\file-stop.xqm">dba:file-stop#1</a></span></li><li><span><a href="../../modules/F23/index.html#{dba/files}file-upload#1" title="files\file-upload.xqm">dba:file-upload#1</a></span></li><li><span><a href="../../modules/F26/index.html#{dba/jobs}job-stop#2" title="jobs\job-stop.xqm">dba:job-stop#2</a></span></li><li><span><a href="../../modules/F28/index.html#{dba/logs}drop#1" title="logs\log-delete.xqm">dba:drop#1</a></span></li><li><span><a href="../../modules/F40/index.html#{dba/sessions}drop#1" title="sessions\session-kill.xqm">dba:drop#1</a></span></li><li><span><a href="../../modules/F45/index.html#{dba/users}pattern-drop#2" title="users\pattern-drop.xqm">dba:pattern-drop#2</a></span></li><li><span><a href="../../modules/F47/index.html#{dba/users}user-drop#1" title="users\user-drop.xqm">dba:user-drop#1</a></span></li></ul></details></div><div class="div3"><h3><a id="util:item-join"></a><a id="{dba/util}item-join#2"></a>4.5&nbsp;util:item-join<div style="float:right"><a href="#util:item-join">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:item-join#2">util:item-join#2</a></span></p><dt class="label">Summary</dt><dd>Joins sequence entries.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:item-join</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 11 functions from 11 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{dba/databases}db-delete" title="databases/resources/db-delete.xqm">dba:db-delete</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F15/index.html#{dba/databases}db-drop" title="databases/db-drop.xqm">dba:db-drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F16/index.html#{dba/databases}drop" title="databases/db-optimize.xqm">dba:drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F19/index.html#{dba/files}file-delete" title="files/file-delete.xqm">dba:file-delete</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F22/index.html#{dba/files}file-stop" title="files/file-stop.xqm">dba:file-stop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F23/index.html#{dba/files}file-upload" title="files/file-upload.xqm">dba:file-upload</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F26/index.html#{dba/jobs}job-stop" title="jobs/job-stop.xqm">dba:job-stop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F28/index.html#{dba/logs}drop" title="logs/log-delete.xqm">dba:drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F40/index.html#{dba/sessions}drop" title="sessions/session-kill.xqm">dba:drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F45/index.html#{dba/users}pattern-drop" title="users/pattern-drop.xqm">dba:pattern-drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F47/index.html#{dba/users}user-drop" title="users/user-drop.xqm">dba:user-drop</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:item-join"></a>
+              <a id="{dba/util}item-join#2"></a>4.5&nbsp;util:item-join<div style="float:right">
+                <a href="#util:item-join">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}item-join#2">util:item-join#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Joins sequence entries.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:item-join</code>
 		  ( 
-			<code class="arg">$items</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$sep</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()</code>
+			<code class="arg">$items</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$sep</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> items</li><li>sep<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()</code> separator</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:item-join(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>items<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code> items</li>
+                <li>sep<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()</code> separator</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:item-join(
   $items  as item()*,
   $sep    as item()
 ) as item()* {
   for $item at $pos in $items
   return ($sep[$pos &gt; 1], $item)
-}</code></pre></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details></div><div class="div3"><h3><a id="util:query"></a><a id="{dba/util}query#2"></a>4.6&nbsp;util:query<div style="float:right"><a href="#util:query">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:query#2">util:query#2</a></span></p><dt class="label">Summary</dt><dd>Evaluates a query and returns the result.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:query</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:query"></a>
+              <a id="{dba/util}query#2"></a>4.6&nbsp;util:query<div style="float:right">
+                <a href="#util:query">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}query#2">util:query#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Evaluates a query and returns the result.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:query</code>
 		  ( 
-			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>, <code class="arg">$context</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$query</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string?</code>, <code class="arg">$context</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> query string</li><li>context<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> initial context value</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:query(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>query<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string?</code> query string</li>
+                <li>context<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code> initial context value</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:string</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:query(
   $query    as xs:string?,
   $context  as item()*
 ) as xs:string {
@@ -76,31 +1423,356 @@
   let $result := xquery:eval($query, map { '': $context }, util:query-options())
   (: serialize more characters than requested, because limit represents number of bytes :)
   return util:chop(serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex' }), $limit)
-}</code></pre></details><details><summary>Invokes 5 functions from 4 modules </summary><ul><li><span><a href="../../modules/F32/index.html#{dba/options}get#1" title="modules\options.xqm">options:get#1</a></span></li><li><span><a href="../../modules/F34/index.html#{dba/util}chop#2" title="modules\util.xqm">util:chop#2</a></span></li><li><span><a href="../../modules/F34/index.html#{dba/util}query-options#1" title="modules\util.xqm">util:query-options#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}serialize#2</span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F5/index.html#{dba/databases}db-query#3" title="databases\resources\db-query.xqm">dba:db-query#3</a></span></li><li><span><a href="../../modules/F37/index.html#{dba/queries}query-eval#1" title="queries\query-eval.xqm">dba:query-eval#1</a></span></li></ul></details></div><div class="div3"><h3><a id="util:query-options"></a><a id="{dba/util}query-options#0"></a>4.7&nbsp;util:query-options<div style="float:right"><a href="#util:query-options">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:query-options#0">util:query-options#0</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Returns the options for evaluating a query.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:query-options</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 5 functions from 4 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F32/index.html#{dba/options}get#1" title="modules/options.xqm">options:get#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F34/index.html#{dba/util}chop#2" title="modules/util.xqm">util:chop#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F34/index.html#{dba/util}query-options#1" title="modules/util.xqm">util:query-options#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}serialize#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 2 functions from 2 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F5/index.html#{dba/databases}db-query" title="databases/resources/db-query.xqm">dba:db-query</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F37/index.html#{dba/queries}query-eval" title="queries/query-eval.xqm">dba:query-eval</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:query-options"></a>
+              <a id="{dba/util}query-options#0"></a>4.7&nbsp;util:query-options<div style="float:right">
+                <a href="#util:query-options">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}query-options#0">util:query-options#0</a>
+                <span class="badge badge-dark" title="Private">P</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns the options for evaluating a query.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:query-options</code>
 		  ( 
 			
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:query-options() as map(*) {
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:query-options() as map(*) {
   map {
     'timeout'   : options:get($options:TIMEOUT),
     'memory'    : options:get($options:MEMORY),
     'permission': options:get($options:PERMISSION),
     'base-uri'  : session:directory() || '/' || session:get($session:QUERY)
   }
-}</code></pre></details><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span><a href="../../modules/F32/index.html#{dba/options}get#1" title="modules\options.xqm">options:get#1</a></span></li><li><span><a href="../../modules/F33/index.html#{dba/session}directory#1" title="modules\session.xqm">session:directory#1</a></span></li><li><span><a href="../../modules/F33/index.html#{dba/session}get#1" title="modules\session.xqm">session:get#1</a></span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="util:redirect"></a><a id="{dba/util}redirect#2"></a>4.8&nbsp;util:redirect<div style="float:right"><a href="#util:redirect">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:redirect#2">util:redirect#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>Convenience function for redirecting to another page from update operations.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:redirect</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F32/index.html#{dba/options}get#1" title="modules/options.xqm">options:get#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F33/index.html#{dba/session}directory#1" title="modules/session.xqm">session:directory#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F33/index.html#{dba/session}get#1" title="modules/session.xqm">session:get#1</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%private</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:redirect"></a>
+              <a id="{dba/util}redirect#2"></a>4.8&nbsp;util:redirect<div style="float:right">
+                <a href="#util:redirect">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}redirect#2">util:redirect#2</a>
+                <span class="badge badge-danger" title="Updating">U</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Convenience function for redirecting to another page from update operations.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:redirect</code>
 		  ( 
-			<code class="arg">$url</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$url</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>, <code class="arg">$params</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> URL</li><li>params<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code> query parameters</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:redirect(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>url<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> URL</li>
+                <li>params<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code> query parameters</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">empty-sequence()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:redirect(
   $url     as xs:string,
   $params  as map(*)
 ) as empty-sequence() {
   update:output(web:redirect($url, $params))
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#2</span></li></ul></details><details><summary>Invoked by 15 functions from 14 modules</summary><ul><li><span><a href="../../modules/F2/index.html#{dba/databases}db-add-post#5" title="databases\resources\db-add.xqm">dba:db-add-post#5</a></span></li><li><span><a href="../../modules/F3/index.html#{dba/databases}db-delete#2" title="databases\resources\db-delete.xqm">dba:db-delete#2</a></span></li><li><span><a href="../../modules/F6/index.html#{dba/databases}db-rename#3" title="databases\resources\db-rename.xqm">dba:db-rename#3</a></span></li><li><span><a href="../../modules/F7/index.html#{dba/databases}db-replace-post#3" title="databases\resources\db-replace.xqm">dba:db-replace-post#3</a></span></li><li><span><a href="../../modules/F12/index.html#{dba/databases}alter#2" title="databases\db-alter.xqm">dba:alter#2</a></span></li><li><span><a href="../../modules/F13/index.html#{dba/databases}db-copy#2" title="databases\db-copy.xqm">dba:db-copy#2</a></span></li><li><span><a href="../../modules/F14/index.html#{dba/databases}create#3" title="databases\db-create.xqm">dba:create#3</a></span></li><li><span><a href="../../modules/F15/index.html#{dba/databases}db-drop#1" title="databases\db-drop.xqm">dba:db-drop#1</a></span></li><li><span><a href="../../modules/F16/index.html#{dba/databases}db-optimize#4" title="databases\db-optimize.xqm">dba:db-optimize#4</a></span></li><li><span><a href="../../modules/F16/index.html#{dba/databases}drop#1" title="databases\db-optimize.xqm">dba:drop#1</a></span></li><li><span><a href="../../modules/F44/index.html#{dba/users}create#3" title="users\pattern-add.xqm">dba:create#3</a></span></li><li><span><a href="../../modules/F45/index.html#{dba/users}pattern-drop#2" title="users\pattern-drop.xqm">dba:pattern-drop#2</a></span></li><li><span><a href="../../modules/F46/index.html#{dba/users}user-create#3" title="users\user-create.xqm">dba:user-create#3</a></span></li><li><span><a href="../../modules/F47/index.html#{dba/users}user-drop#1" title="users\user-drop.xqm">dba:user-drop#1</a></span></li><li><span><a href="../../modules/F48/index.html#{dba/users}user-edit#4" title="users\user-edit.xqm">dba:user-edit#4</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div><div class="div3"><h3><a id="util:start"></a><a id="{dba/util}start#2"></a>4.9&nbsp;util:start<div style="float:right"><a href="#util:start">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:start#2">util:start#2</a></span></p><dt class="label">Summary</dt><dd>Returns the index of the first result to generate.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:start</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/update}output#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 15 functions from 14 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F2/index.html#{dba/databases}db-add-post" title="databases/resources/db-add.xqm">dba:db-add-post</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F3/index.html#{dba/databases}db-delete" title="databases/resources/db-delete.xqm">dba:db-delete</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F6/index.html#{dba/databases}db-rename" title="databases/resources/db-rename.xqm">dba:db-rename</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F7/index.html#{dba/databases}db-replace-post" title="databases/resources/db-replace.xqm">dba:db-replace-post</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F12/index.html#{dba/databases}alter" title="databases/db-alter.xqm">dba:alter</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F13/index.html#{dba/databases}db-copy" title="databases/db-copy.xqm">dba:db-copy</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F14/index.html#{dba/databases}create" title="databases/db-create.xqm">dba:create</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F15/index.html#{dba/databases}db-drop" title="databases/db-drop.xqm">dba:db-drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F16/index.html#{dba/databases}db-optimize" title="databases/db-optimize.xqm">dba:db-optimize</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F16/index.html#{dba/databases}drop" title="databases/db-optimize.xqm">dba:drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F44/index.html#{dba/users}create" title="users/pattern-add.xqm">dba:create</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F45/index.html#{dba/users}pattern-drop" title="users/pattern-drop.xqm">dba:pattern-drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F46/index.html#{dba/users}user-create" title="users/user-create.xqm">dba:user-create</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F47/index.html#{dba/users}user-drop" title="users/user-drop.xqm">dba:user-drop</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F48/index.html#{dba/users}user-edit" title="users/user-edit.xqm">dba:user-edit</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%updating</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:start"></a>
+              <a id="{dba/util}start#2"></a>4.9&nbsp;util:start<div style="float:right">
+                <a href="#util:start">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}start#2">util:start#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Returns the index of the first result to generate.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:start</code>
 		  ( 
-			<code class="arg">$page</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:integer</code>, <code class="arg">$sort</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
+			<code class="arg">$page</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:integer</code>, <code class="arg">$sort</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>page<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:integer</code> current page</li><li>sort<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code> sort key</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:start(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:integer</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>page<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:integer</code> current page</li>
+                <li>sort<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code> sort key</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:integer</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:start(
   $page  as xs:integer,
   $sort  as xs:string
 ) as xs:integer {
@@ -109,15 +1781,182 @@
   ) else (
     1
   )
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span><a href="../../modules/F32/index.html#{dba/options}get#1" title="modules\options.xqm">options:get#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F10/index.html#{dba/databases}database#6" title="databases\database.xqm">dba:database#6</a></span></li></ul></details></div><div class="div3"><h3><a id="util:update-query"></a><a id="{dba/util}update-query#1"></a>4.10&nbsp;util:update-query<div style="float:right"><a href="#util:update-query">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#util:update-query#1">util:update-query#1</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>Runs an updating query.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">util:update-query</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F32/index.html#{dba/options}get#1" title="modules/options.xqm">options:get#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F10/index.html#{dba/databases}database" title="databases/database.xqm">dba:database</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="util:update-query"></a>
+              <a id="{dba/util}update-query#1"></a>4.10&nbsp;util:update-query<div style="float:right">
+                <a href="#util:update-query">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{dba/util}update-query#1">util:update-query#1</a>
+                <span class="badge badge-danger" title="Updating">U</span>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>Runs an updating query.</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">util:update-query</code>
 		  ( 
-			<code class="arg">$query</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string?</code>
+			<code class="arg">$query</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string?</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>query<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string?</code> query string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function util:update-query(
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>query<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string?</code> query string</li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">empty-sequence()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function util:update-query(
   $query  as xs:string?
 ) as empty-sequence() {
   xquery:eval-update($query, map { }, util:query-options())
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span><a href="../../modules/F34/index.html#{dba/util}query-options#1" title="modules\util.xqm">util:query-options#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval-update#3</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F37/index.html#{dba/queries}query-update#1" title="queries\query-eval.xqm">dba:query-update#1</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg"></code></td></tr></tbody></table></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>options</td><td><span><a href="../../modules/F32/index.html" title="modules\options.xqm">dba/options</a></span></td></tr><tr><td>session</td><td><span><a href="../../modules/F33/index.html" title="modules\session.xqm">dba/session</a></span></td></tr><tr><td>util</td><td><span><a href="../../modules/F34/index.html" title="modules\util.xqm">dba/util</a></span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F34/index.html#{dba/util}query-options#1" title="modules/util.xqm">util:query-options#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval-update#3</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F37/index.html#{dba/queries}query-update" title="queries/query-eval.xqm">dba:query-update</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Annotations</summary>
+              <table class="data">
+                <tbody>
+                  <tr>
+                    <td>
+                      <code class="function">%updating</code>
+                    </td>
+                    <td>
+                      <code class="arg"></code>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </details>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="namespaces"></a>5 Namespaces</h2>
+          <p>The following namespaces are defined:</p>
+          <table class="data" style="float:none">
+            <thead>
+              <tr>
+                <th>Prefix</th>
+                <th>Uri</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ann</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span>
+                </td>
+              </tr>
+              <tr>
+                <td>options</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F32/index.html" title="modules/options.xqm">dba/options</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>session</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F33/index.html" title="modules/session.xqm">dba/session</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>util</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F34/index.html" title="modules/util.xqm">dba/util</a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="restxq"></a>6 RestXQ</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="source"></a>7 Source Code</h2>
+          <pre>
+            <code class="language-xquery">(:~
  : Utility functions.
  :
  : @author Christian Grün, BaseX Team 2005-19, BSD License
@@ -270,6 +2109,17 @@ declare %updating function util:redirect(
 ) as empty-sequence() {
   update:output(web:redirect($url, $params))
 };
-</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+</code>
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-29T23:09:12.478+01:00">11.09pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-01T11:12:28.195+01:00">11.12am on Saturday, June 1st 2019</span>
+      </p>
+    </div>
+    <script src="../../resources/prism.js" type="text/javascript"></script>
+  </body>
+</html>

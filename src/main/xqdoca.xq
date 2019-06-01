@@ -38,10 +38,11 @@ declare option db:chop 'true';
  : @default C:/Users/andy/git/xqdoca  
  :)
 declare variable $efolder as xs:anyURI  external :=
-              (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
+              xs:anyURI(db:option("webpath") ||"/vue-poc/")
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              xs:anyURI(file:parent(static-base-uri()))
-              (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
+              (: xs:anyURI(file:parent(static-base-uri())) :)
+              (: xs:anyURI(db:option("webpath") ||"/chat/") :)
+              (: xs:anyURI(db:option("webpath") ||"/graphxq/") :) 
 ;
 
 

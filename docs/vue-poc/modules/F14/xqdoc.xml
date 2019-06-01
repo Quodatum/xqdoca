@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-06-keywords.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>get keywords
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:02:48.049+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-06-keywords.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>get keywords
 <keyword name="2 orlop" count="31">
   <dates earliest="2010-08-05T15:40:54" latest="2011-03-06T18:04:28"/>
   <idref>14569796 14569818 </idref>

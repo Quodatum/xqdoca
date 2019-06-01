@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T23:09:38.214+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>xqdoc-page.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-links.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:13:26.337+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>xqdoc-page.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-links.xqm</h1>
 <p>html utilities</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-page.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -28,9 +28,17 @@
 module namespace page = 'quodatum:xqdoca.page';
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 
-(:~ link to module :)
-declare 
-function page:link-module($uri as xs:string,$model as map(*))                       
+(:~ make html hrefable id :)
+declare function page:id($id as xs:string)
+as xs:string
+{
+ "ID_" || escape-html-uri($id)
+};
+
+(:~
+ : generate link to module with namespace 
+ :)
+ declare function page:link-module($uri as xs:string,$model as map(*))                       
 as element(span)
 {
  let $files:=$model?files[?namespace=$uri]
@@ -60,7 +68,7 @@ as element(span)
 };
 
 (:~ link to fun or var in file
- : @param name of form 'fun#arity] or ''$name' 
+ : @param name of form 'fun#arity or '$name' 
 :)
 declare 
 function page:link-function($uri as xs:string,
@@ -82,6 +90,7 @@ as element(span)
            &lt;/span&gt;
 };
 
+ 
 (:~ link to fun or var in file
  : @param name of form 'fun#arity' or ''$name' 
  : @param fromModule where called from
@@ -209,7 +218,7 @@ as element(li){
   return &lt;li&gt;{
          $render($pos,$tree),
          if($tree  instance of element(directory))then
-          &lt;ol class="toc"&gt;{ $tree/*!page:tree-list(.,($seq,position()),$render) }&lt;/ol&gt;
+          &lt;ol &gt;{ $tree/*!page:tree-list(.,($seq,position()),$render) }&lt;/ol&gt;
           else ()
         }&lt;/li&gt;
  
@@ -272,6 +281,9 @@ as element(table)
 &lt;/table&gt;
 };
 
+(:~ 
+ : Coloured &lt;span/&gt; as bootstrap badge
+ :)
 declare function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
@@ -287,7 +299,11 @@ as xs:boolean
 {
   matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;amp;@#/%=~_|]","j")
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>link to module</xqdoc:description></xqdoc:comment><xqdoc:name>page:link-module</xqdoc:name><xqdoc:signature>declare function page:link-module($uri as xs:string, $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tail</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-module($uri as xs:string,$model as map(*))                       
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>make html hrefable id</xqdoc:description></xqdoc:comment><xqdoc:name>page:id</xqdoc:name><xqdoc:signature>declare function page:id($id as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>escape-html-uri</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:id($id as xs:string)
+as xs:string
+{
+ "ID_" || escape-html-uri($id)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>generate link to module with namespace</xqdoc:description></xqdoc:comment><xqdoc:name>page:link-module</xqdoc:name><xqdoc:signature>declare function page:link-module($uri as xs:string, $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tail</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-module($uri as xs:string,$model as map(*))                       
 as element(span)
 {
  let $files:=$model?files[?namespace=$uri]
@@ -310,7 +326,7 @@ as element(span)
    &lt;span&gt;
     &lt;a href="{ $file?href }index.html" title="{ $file?path }"&gt;{ $file?namespace }&lt;/a&gt; 
    &lt;/span&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>link to fun or var in file</xqdoc:description><xqdoc:param>name of form 'fun#arity] or ''$name'</xqdoc:param></xqdoc:comment><xqdoc:name>page:link-function</xqdoc:name><xqdoc:signature>declare function page:link-function($uri as xs:string, $name as xs:string, $file as map(*), $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>clark-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>prefixed-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-function($uri as xs:string,
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>link to fun or var in file</xqdoc:description><xqdoc:param>name of form 'fun#arity or '$name'</xqdoc:param></xqdoc:comment><xqdoc:name>page:link-function</xqdoc:name><xqdoc:signature>declare function page:link-function($uri as xs:string, $name as xs:string, $file as map(*), $model as map(*)) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>clark-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>prefixed-name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>root</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>clark</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:link-function($uri as xs:string,
                             $name as xs:string,
                             $file as map(*),
                             $model as map(*))                       
@@ -422,7 +438,7 @@ as element(li){
   return &lt;li&gt;{
          $render($pos,$tree),
          if($tree  instance of element(directory))then
-          &lt;ol class="toc"&gt;{ $tree/*!page:tree-list(.,($seq,position()),$render) }&lt;/ol&gt;
+          &lt;ol &gt;{ $tree/*!page:tree-list(.,($seq,position()),$render) }&lt;/ol&gt;
           else ()
         }&lt;/li&gt;
  
@@ -463,7 +479,7 @@ as element(table)
   }    
  &lt;/tbody&gt;
 &lt;/table&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>page:badge</xqdoc:name><xqdoc:signature>declare function page:badge($label as xs:string, $color as xs:string, $title as xs:string) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>label</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>color</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>title</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>color</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>title</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Coloured <span/> as bootstrap badge</xqdoc:description></xqdoc:comment><xqdoc:name>page:badge</xqdoc:name><xqdoc:signature>declare function page:badge($label as xs:string, $color as xs:string, $title as xs:string) as element(span)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>label</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>color</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>title</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(span)</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>color</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>title</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function page:badge($label as xs:string,$color as xs:string,$title as xs:string)
 as element(span)
 {
   &lt;span class="badge badge-{$color}" title="{ $title }"&gt;{$label}&lt;/span&gt;

@@ -28,7 +28,8 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
  : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $lookup function e.g xqn:map-prefix(?,$xqp:ns-fn, xqp:prefixes($xqparse))
+ : @param $prefixes map of namespaces
+ : @param $default namespace for no prefix
  : @return <pre>
  map{
     "uri": ..,
@@ -63,15 +64,6 @@ as xs:boolean
   $a?name=$name and $a?uri=$uri
 };
 
-(:~ 
- : @return {namespace}name
-  :)
-declare function xqn:qcode($name,$prefixes)
-as xs:string
-{
-  let $a:=xqn:qmap-fun($name,$prefixes)
-  return xqn:clark-name( $a?uri, $a?name )
-};
 
 (:~ 
  : return clark-notation '{uri}name'
@@ -135,14 +127,4 @@ as map(*)
  fetch:text(resolve-uri(``[../etc/static/`{ $platform }`.json]``,static-base-uri()))
  =>parse-json() 
 };
-
-
-
-(:~  expand function name :)
-declare function xqn:qmap-fun($e as xs:string,$prefixes as map(*))
-as map(*)
-{
- xqn:qmap($e, $prefixes,  "http://www.w3.org/2005/xpath-functions")
-};
-
 

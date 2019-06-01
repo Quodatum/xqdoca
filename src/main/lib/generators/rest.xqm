@@ -45,7 +45,7 @@ function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model) 
 let $tree:=$annots?uri 
-let $tree:=tree:build($tree)=>trace("TREE: ")
+let $tree:=tree:build($tree)
 let $body:= <div>
               <h1>
                  Project <span class="badge badge-info">
@@ -57,11 +57,12 @@ let $body:= <div>
             {_:summary($model,$opts)}
            <div class="div2">
              <h2><a id="rest"/>2 Rest interface paths</h2>
-             <ul>{$annots!_:path-to-html(.)}</ul>
+             {$annots!_:path-to-html(.)}
            </div>
            </div>
 return  page:wrap($body,$opts)
 };
+
 
 declare function _:summary($model,$opts)
 as element(div)
@@ -74,19 +75,22 @@ as element(div)
  </div>
 };
 
-(:~  html for a path :)          
+(:~  html for a path
+ : 
+ :)          
 declare function _:path-to-html($rep as map(*))
 as element(div)
 {
-  <div class="div4">
-       <h4><a id="{ $rep?uri }"/>{ $rep?uri }</h4>
+  <div class="div3">
+       <h3><a id="{ page:id($rep?uri) }"/>{ $rep?uri }
+       <div style="float:right;"><a href="#{ page:id($rep?uri) }">#</a></div></h3>
        <ul>{
        let $methods as map(*) :=$rep?methods
        for $method in map:keys($methods)
        let $d:=$methods?($method)
        let $id:=head($d?function)
        return <li>
-                    <a href="{$d?uri}index.html#{$id }">{ $method }</a>
+                    <a href="{$d?uri}index.html#{ $rep?function }">{ $method }</a>
                     <div>{$d?description}</div>
               </li>
        }</ul>
@@ -134,7 +138,7 @@ let $c:=(
 <span class="content">{$el/@name/string()}</span>
 )
 return if($el/@target) then
- <a href="#{$el/@target}">
+ <a href="#{ page:id(substring($el/@target,2)) }">
  { $c }
  <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}">X</div>
   </a>

@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T22:37:23.991+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.test.components</xqdoc:uri><xqdoc:name>components.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>support tree view</xqdoc:description><xqdoc:author>apb</xqdoc:author><xqdoc:custom tag="exampletag">some value</xqdoc:custom><xqdoc:custom tag="__source">features/components/components.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:02:48.049+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.test.components</xqdoc:uri><xqdoc:name>components.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>support tree view</xqdoc:description><xqdoc:author>apb</xqdoc:author><xqdoc:custom tag="exampletag">some value</xqdoc:custom><xqdoc:custom tag="__source">features/components/components.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : support tree view
  : @author apb
  : @exampletag some value

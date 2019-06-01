@@ -22,10 +22,11 @@
  : @author Andy Bunce
  : @version 0.2
  :)
+ <MainModule><Prolog><NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>ex-pkg</NCName><TOKEN>=</TOKEN><StringLiteral>"http://expath.org/ns/pkg"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN></Prolog>
 (:~
  : raise error if environment incorrect 
  :)
-  <MainModule><Prolog/><FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ex-parse</QName><TOKEN>:=</TOKEN><StringLiteral>"0.6.12"</StringLiteral></LetBinding></LetClause>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ex-parse</QName><TOKEN>:=</TOKEN><StringLiteral>"0.6.12"</StringLiteral></LetBinding></LetClause>
   <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>basex</QName><TOKEN>:=</TOKEN><StringLiteral>"9.2.2"</StringLiteral></LetBinding></LetClause>
   <ReturnClause><TOKEN>return</TOKEN> 
   

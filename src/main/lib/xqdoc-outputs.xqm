@@ -40,7 +40,7 @@ declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","ou
 
 (:~ defined serialization options :)
 declare variable $xqo:outputs:=map{
-                                     "html5": map{"method": "html", "version":"5.0", "indent": "no"},
+                                     "html5": map{"method": "html", "version":"5.0", "indent": "yes"},
                                      "xml": map{"indent": "no"},
                                      "json": map{"method": "json"}
                                    };

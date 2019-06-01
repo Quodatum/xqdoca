@@ -97,7 +97,7 @@ as element(xqdoc:xqdoc)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then
                    (   
-                    insert node xqp:references($parse,$prefixes) into $f,
+                    insert node xqp:references($parse,$prefixes, $def-fn) into $f,
                     insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f
                   )
                else
@@ -107,10 +107,14 @@ as element(xqdoc:xqdoc)
  
   return $xqdoc
 };
-declare function xqp:default-fn-uri($xqparse as element(XQuery))
+
+(:~ default function namespace
+ : NOTE if parse failed will return "http://www.w3.org/2005/xpath-functions"
+ :)
+declare function xqp:default-fn-uri($xqparse as element(*))
 as xs:string
 {
-  let $def-fn:= $xqparse/*/Prolog/DefaultNamespaceDecl
+  let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl
   return if( empty($def-fn) ) then
                     "http://www.w3.org/2005/xpath-functions"
                   else
@@ -121,12 +125,12 @@ as xs:string
  : @param $expand function to map prefixes to namespaces
  : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
  :)
-declare function xqp:references($e as element(*),$prefixes as map(*))
+declare function xqp:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)
 as element(*)*
 {
-  $e//FunctionCall!xqp:invoke-fn(.,$prefixes),
-  $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes),
-  $e//VarRef!xqp:ref-variable(.,$prefixes) 
+  $e//FunctionCall!xqp:invoke-fn(.,$prefixes, $def-fn),
+  $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes, $def-fn),
+  $e//VarRef!xqp:ref-variable(.,$prefixes, $def-fn) 
 };
 
 
@@ -135,7 +139,8 @@ as element(*)*
  :)
 declare function xqp:invoke-fn(
                  $e as element(FunctionCall),
-                 $prefixes as map(*))
+                 $prefixes as map(*),
+                 $def-fn)
 as element(xqdoc:invoked)*
 {
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
@@ -143,7 +148,7 @@ let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqn:qmap-fun($fname,$prefixes)
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -152,14 +157,16 @@ let $qname:=xqn:qmap-fun($fname,$prefixes)
 (:~  build invoked nodes for arrow expression
  : @param $e is FunctionCall or ArrowExpr 
  :)
-declare function xqp:invoke-arrow($e as element(ArrowExpr),$prefixes as function(*))
+declare function xqp:invoke-arrow($e as element(ArrowExpr),
+                                  $prefixes as function(*),
+                                  $def-fn as xs:string)
 as element(xqdoc:invoked)*
 {
 for $arrow in $e/TOKEN[. = "=&gt;"]
 let $fname:=$arrow/following-sibling::*[1]
 let $arglist:=$arrow/following-sibling::*[2]
 let $arity:=1+count($arglist/*[not(TOKEN)])
-let $qname:=xqn:qmap-fun($fname,$prefixes)
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
@@ -169,12 +176,12 @@ let $qname:=xqn:qmap-fun($fname,$prefixes)
 (:~  build invoked nodes for function call
  : @param $e is variable reference @@TODO
  :)
-declare function xqp:ref-variable($e as element(*),$prefixes as map(*))
+declare function xqp:ref-variable($e as element(*),$prefixes as map(*), $def-fn as xs:string)
 as element(xqdoc:ref-variable)
 {
 
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqn:qmap-fun($fname,$prefixes)
+let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
  return <xqdoc:ref-variable >
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>

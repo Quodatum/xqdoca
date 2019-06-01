@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-05-29T23:09:38.214+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>xqdoca.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>xqdoca.xq</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:13:26.337+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>xqdoca.xq</xqdoc:uri><xqdoc:comment><xqdoc:description><h1>xqdoca.xq</h1>
 <p>Driver for xquery documentation generator </p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -41,8 +41,9 @@ declare option db:chop 'true';
 declare variable $efolder as xs:anyURI  external :=
               (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              xs:anyURI(file:parent(static-base-uri()))
-              (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
+              (: xs:anyURI(file:parent(static-base-uri())) :)
+              (: xs:anyURI(db:option("webpath") ||"/chat/") :)
+              xs:anyURI(db:option("webpath") ||"/graphxq/") 
 ;
 
 

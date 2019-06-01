@@ -313,21 +313,21 @@ function xqh:function($funs as element(xqdoc:function)*,
 as element(div)
 {
     let $funs:=sort($funs,(),function($f){$f/@arity})
-		let $id:=$funs[1]/xqdoc:name/string()
-    let $qmap:= xqn:qmap-fun($id,$file?prefixes)
+		let $name:=$funs[1]/xqdoc:name/string()
+    let $qmap:= xqn:qmap($name, $file?prefixes, $file?default-fn-uri)
 	  return
 		<div class="div3">
-			<h3><a id="{$id}"/> { 
+			<h3><a id="{$name}"/> { 
                 $funs!<a id="{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }"/> 
-              , page:section($section) } { $id }
+              , page:section($section) } { $name }
 			  <div style="float:right">
-				<a href="#{$id}" >#</a>
+				<a href="#{ $name }" >#</a>
 				</div>
 			</h3>
      
      <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
-                      <a href="#{ $id }#{ @arity }">{ $id}#{ string(@arity) }</a>
+                      <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">{ $name}#{ string(@arity) }</a>
                       { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file) }
                       
                     </span>
@@ -366,7 +366,7 @@ as element(div)
                     <summary>{$sum}</summary>
                     <ul>
                      { $hits!<li>{
-                       page:link-function2(?qname?uri, ?name, ?file,true()) 
+                       page:link-function2(?qname?uri, ?qname?name, ?file, true()) 
                      }</li> }
                  
                     </ul>              

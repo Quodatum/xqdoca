@@ -1,37 +1,529 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>vue-poc - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"><link rel="stylesheet" type="text/css" href="../../resources/prism.css"><link rel="stylesheet" type="text/css" href="../../resources/page.css"><link rel="stylesheet" type="text/css" href="../../resources/query.css"><link rel="stylesheet" type="text/css" href="../../resources/base.css"></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">http://quodatum.com/ns/pipeline</span>&nbsp;
-			<small>library module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html">vue-poc</a>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca">
+    <title>vue-poc - xqDocA
+        </title>
+    <link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png">
+    <link rel="stylesheet" type="text/css" href="../../resources/prism.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/page.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/query.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/base.css">
+  </head>
+  <body class="home" id="top">
+    <div id="main">
+      <div>
+        <h1>
+          <span class="badge badge-info">http://quodatum.com/ns/pipeline</span>&nbsp;
+			<small>library module</small>
+          <div style="float:right"></div>
+        </h1>
+        <nav id="toc">
+          <h2>
+            <a href="../../index.html">vue-poc</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">http://quodatum.com/ns/pipeline</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$qipe:outputs"><span class="secno">3.1</span><span class="content">$qipe:outputs</span></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#qipe:dir"><span class="secno">4.1</span><span class="content" title="">qipe:dir<div style="float:right"></div></span></a></li><li><a href="#qipe:identity"><span class="secno">4.2</span><span class="content" title="">qipe:identity<div style="float:right"></div></span></a></li><li><a href="#qipe:load"><span class="secno">4.3</span><span class="content" title="">qipe:load<div style="float:right"></div></span></a></li><li><a href="#qipe:log"><span class="secno">4.4</span><span class="content" title="">qipe:log<div style="float:right"></div></span></a></li><li><a href="#qipe:pipeline"><span class="secno">4.5</span><span class="content" title="">qipe:pipeline<div style="float:right"></div></span></a></li><li><a href="#qipe:relax-ng"><span class="secno">4.6</span><span class="content" title="">qipe:relax-ng<div style="float:right"></div></span></a></li><li><a href="#qipe:resolve"><span class="secno">4.7</span><span class="content" title="">qipe:resolve<div style="float:right"></div></span></a></li><li><a href="#qipe:run"><span class="secno">4.8</span><span class="content" title="">qipe:run<div style="float:right"></div></span></a></li><li><a href="#qipe:schematron"><span class="secno">4.9</span><span class="content" title="">qipe:schematron<div style="float:right"></div></span></a></li><li><a href="#qipe:step"><span class="secno">4.10</span><span class="content" title="">qipe:step<div style="float:right"></div></span></a></li><li><a href="#qipe:store"><span class="secno">4.11</span><span class="content" title="">qipe:store<div style="float:right"></div></span></a></li><li><a href="#qipe:validate"><span class="secno">4.12</span><span class="content" title="">qipe:validate<div style="float:right"></div></span></a></li><li><a href="#qipe:validate-dtd"><span class="secno">4.13</span><span class="content" title="">qipe:validate-dtd<div style="float:right"></div></span></a></li><li><a href="#qipe:validate-pipeline"><span class="secno">4.14</span><span class="content" title="">qipe:validate-pipeline<div style="float:right"></div></span></a></li><li><a href="#qipe:validate-xsd"><span class="secno">4.15</span><span class="content" title="">qipe:validate-xsd<div style="float:right"></div></span></a></li><li><a href="#qipe:xquery"><span class="secno">4.16</span><span class="content" title="">qipe:xquery<div style="float:right"></div></span></a></li><li><a href="#qipe:xslt"><span class="secno">4.17</span><span class="content" title="">qipe:xslt<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">Restxq</span></a><ol class="toc"><xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()"><xsl:sort select="current-grouping-key()"></xsl:sort><xsl:variable name="id" select="current-grouping-key()"></xsl:variable><li><a href="# TODO"><span class="secno"><xsl:value-of select="concat('5.',position())"></xsl:value-of></span><span class="content"><xsl:value-of select="current-grouping-key()"></xsl:value-of></span></a></li></xsl:for-each-group></ol></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><div class="div2"><h2><a id="summary"></a>1 Summary</h2><dl><dt class="label">Summary</dt><dd>pipeline library</dd><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>date : nov 2017 jun 2018</p><p>__source : lib/pipeline.xqm</p></dd></dl>,
-		<div> Imported by <a href="../../imports.html#http://quodatum.com/ns/pipeline">*</a></div>,
-    <ul><li style="display:inline">Raw XML files: </li><li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li><li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li></ul></div><div class="div2"><h2><a id="imports"></a>2 Imports</h2><p>
+       </h2>
+          <h3>
+            <a id="contents"></a>
+            <span class="">http://quodatum.com/ns/pipeline</span>
+          </h3>
+          <ol class="toc">
+            <li>
+              <a href="#summary">
+                <span class="secno">1 </span>
+                <span class="content">Summary</span>
+              </a>
+            </li>
+            <li>
+              <a href="#imports">
+                <span class="secno">2 </span>
+                <span class="content">Imports</span>
+              </a>
+            </li>
+            <li>
+              <a href="#variables">
+                <span class="secno">3 </span>
+                <span class="content">Variables</span>
+              </a>
+              <ol class="toc">
+                <li>
+                  <a href="#$qipe:outputs">
+                    <span class="secno">3.1</span>
+                    <span class="content">$qipe:outputs</span>
+                  </a>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a href="#functions">
+                <span class="secno">4 </span>
+                <span class="content">Functions</span>
+              </a>
+              <ol class="toc">
+                <li>
+                  <a href="#qipe:dir">
+                    <span class="secno">4.1</span>
+                    <span class="content" title="">qipe:dir<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:identity">
+                    <span class="secno">4.2</span>
+                    <span class="content" title="">qipe:identity<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:load">
+                    <span class="secno">4.3</span>
+                    <span class="content" title="">qipe:load<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:log">
+                    <span class="secno">4.4</span>
+                    <span class="content" title="">qipe:log<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:pipeline">
+                    <span class="secno">4.5</span>
+                    <span class="content" title="">qipe:pipeline<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:relax-ng">
+                    <span class="secno">4.6</span>
+                    <span class="content" title="">qipe:relax-ng<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:resolve">
+                    <span class="secno">4.7</span>
+                    <span class="content" title="">qipe:resolve<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:run">
+                    <span class="secno">4.8</span>
+                    <span class="content" title="">qipe:run<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:schematron">
+                    <span class="secno">4.9</span>
+                    <span class="content" title="">qipe:schematron<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:step">
+                    <span class="secno">4.10</span>
+                    <span class="content" title="">qipe:step<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:store">
+                    <span class="secno">4.11</span>
+                    <span class="content" title="">qipe:store<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:validate">
+                    <span class="secno">4.12</span>
+                    <span class="content" title="">qipe:validate<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:validate-dtd">
+                    <span class="secno">4.13</span>
+                    <span class="content" title="">qipe:validate-dtd<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:validate-pipeline">
+                    <span class="secno">4.14</span>
+                    <span class="content" title="">qipe:validate-pipeline<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:validate-xsd">
+                    <span class="secno">4.15</span>
+                    <span class="content" title="">qipe:validate-xsd<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:xquery">
+                    <span class="secno">4.16</span>
+                    <span class="content" title="">qipe:xquery<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#qipe:xslt">
+                    <span class="secno">4.17</span>
+                    <span class="content" title="">qipe:xslt<div style="float:right"></div>
+                    </span>
+                  </a>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <a href="#namespaces">
+                <span class="secno">5 </span>
+                <span class="content">Namespaces</span>
+              </a>
+            </li>
+            <li>
+              <a href="#restxq">
+                <span class="secno">6 </span>
+                <span class="content">Restxq</span>
+              </a>
+              <ol class="toc">
+                <xsl:for-each-group xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="qd:restxq($funs)" group-by="doc:literal/string()">
+                  <xsl:sort select="current-grouping-key()"></xsl:sort>
+                  <xsl:variable name="id" select="current-grouping-key()"></xsl:variable>
+                  <li>
+                    <a href="# TODO">
+                      <span class="secno">
+                        <xsl:value-of select="concat('5.',position())"></xsl:value-of>
+                      </span>
+                      <span class="content">
+                        <xsl:value-of select="current-grouping-key()"></xsl:value-of>
+                      </span>
+                    </a>
+                  </li>
+                </xsl:for-each-group>
+              </ol>
+            </li>
+            <li>
+              <a href="#source">
+                <span class="secno">7 </span>
+                <span class="content">Source</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        <div class="div2">
+          <h2>
+            <a id="summary"></a>1 Summary</h2>
+          <dl>
+            <dt class="label">Summary</dt>
+            <dd>pipeline library</dd>
+            <dt>Tags</dt>
+            <dd>
+              <p>Author: Andy Bunce</p>
+              <p>Version: 0.2</p>
+              <p>date : nov 2017 jun 2018</p>
+              <p>__source : lib/pipeline.xqm</p>
+            </dd>
+          </dl>,
+		<div> Imported by <a href="../../imports.html#http://quodatum.com/ns/pipeline">*</a>
+          </div>,
+    <ul>
+            <li style="display:inline">Raw XML files: </li>
+            <li style="display:inline">
+              <a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
+            <li style="display:inline">
+              <a href="xqparse.xml" target="xqparse">xqparse.xml</a>
+            </li>
+          </ul>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="imports"></a>2 Imports</h2>
+          <p>
     This module is imported by
     <span class="badge badge-info">1</span> modules, it imports
     <span class="badge badge-info">2</span> modules.
-    </p><div style="display: flex;width:100%; justify-content: space-between;"><div style="width:40%;"><div style="text-align: right;"><span><a href="../../modules/F23/index.html" title="features\pipeline\pipe.xq">pipe.xq</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="width:40%;"><div><span class="badge badge-warning" title="Externally defined">http://github.com/Schematron/schematron-basex</span></div><div><span class="badge badge-warning" title="Externally defined">quodatum:file.walker</span></div></div></div></div><div class="div2"><h2><a id="variables"></a>3 Variables
-			</h2><div class="div3"><h3><a id="$qipe:outputs"></a>3.1&nbsp;$qipe:outputs</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div></div><div class="div2"><h2><a id="functions"></a>4 Functions</h2><div class="div3"><h3><a id="qipe:dir"></a><a id="{http://quodatum.com/ns/pipeline}dir#3"></a>4.1&nbsp;qipe:dir<div style="float:right"><a href="#qipe:dir">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:dir#3">qipe:dir#3</a></span></p><dt class="label">Summary</dt><dd>append directory-list  to accumulator</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:dir</code>
+    </p>
+          <div style="display: flex;width:100%; justify-content: space-between;">
+            <div style="width:40%;">
+              <div style="text-align: right;">
+                <span>
+                  <a href="../../modules/F23/index.html" title="features/pipeline/pipe.xq">pipe.xq</a>
+                </span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+              <div>
+                <div>imports</div>→</div>
+              <div class="badge badge-info">this</div>
+              <div>
+                <div>imports</div>→</div>
+            </div>
+            <div style="width:40%;">
+              <div>
+                <span class="badge badge-warning" title="Externally defined">http://github.com/Schematron/schematron-basex</span>
+              </div>
+              <div>
+                <span class="badge badge-warning" title="Externally defined">quodatum:file.walker</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="variables"></a>3 Variables
+			</h2>
+          <div class="div3">
+            <h3>
+              <a id="$qipe:outputs"></a>3.1&nbsp;$qipe:outputs</h3>
+            <dl>
+              <dt class="label">Summary</dt>
+              <dd></dd>
+              <dt class="label">Type</dt>
+              <dd>map(*)</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="functions"></a>4 Functions</h2>
+          <div class="div3">
+            <h3>
+              <a id="qipe:dir"></a>
+              <a id="{http://quodatum.com/ns/pipeline}dir#3"></a>4.1&nbsp;qipe:dir<div style="float:right">
+                <a href="#qipe:dir">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}dir#3">qipe:dir#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>append directory-list  to accumulator</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:dir</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:directory-list)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:directory-list)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:directory-list)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:dir($acc,$this  as element(qipe:directory-list),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:directory-list)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:dir($acc,$this  as element(qipe:directory-list),$opts as map(*))
 {
   let $inc:=$this/@include-filter/string()
   let $href:=$this/@href/string()
   let $result:=fw:directory-list($href,map{"include-filter": $inc})
   let $result:= document { $result } transform with { delete  node //c:directory[not(.//c:file)]}
   return ($acc,$result)
-}</code></pre></details><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span class="badge badge-warning" title="Externally defined">{quodatum:file.walker}directory-list#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:identity"></a><a id="{http://quodatum.com/ns/pipeline}identity#3"></a>4.2&nbsp;qipe:identity<div style="float:right"><a href="#qipe:identity">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:identity#3">qipe:identity#3</a></span></p><dt class="label">Summary</dt><dd>identity</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:identity</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 3 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{quodatum:file.walker}directory-list#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:identity"></a>
+              <a id="{http://quodatum.com/ns/pipeline}identity#3"></a>4.2&nbsp;qipe:identity<div style="float:right">
+                <a href="#qipe:identity">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}identity#3">qipe:identity#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>identity</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:identity</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:pipeline)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:pipeline)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:pipeline)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:identity($acc,$this as element(qipe:pipeline),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:pipeline)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:identity($acc,$this as element(qipe:pipeline),$opts as map(*))
 {
    $acc=&gt;trace("IDENT")
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:load"></a><a id="{http://quodatum.com/ns/pipeline}load#3"></a>4.3&nbsp;qipe:load<div style="float:right"><a href="#qipe:load">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:load#3">qipe:load#3</a></span></p><dt class="label">Summary</dt><dd>load from file system</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:load</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:load"></a>
+              <a id="{http://quodatum.com/ns/pipeline}load#3"></a>4.3&nbsp;qipe:load<div style="float:right">
+                <a href="#qipe:load">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}load#3">qipe:load#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>load from file system</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:load</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:load($acc,$this,$opts as map(*) )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:load($acc,$this,$opts as map(*) )
 { 
  let $href:=qipe:resolve($this/@href)=&gt;trace("load")
  let $new:=if(file:is-dir($href)) then  
@@ -39,54 +531,463 @@
             else 
                doc($href)
  return ($acc,$new)
-}</code></pre></details><details><summary>Invokes 6 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}is-dir#1</span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib\aync.xqm">qipe:resolve#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}doc#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:log"></a><a id="{http://quodatum.com/ns/pipeline}log#2"></a>4.4&nbsp;qipe:log<div style="float:right"><a href="#qipe:log">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:log#2">qipe:log#2</a></span></p><dt class="label">Summary</dt><dd>log msg</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:log</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 6 functions from 4 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}is-dir#1</span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib/aync.xqm">qipe:resolve#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}doc#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:log"></a>
+              <a id="{http://quodatum.com/ns/pipeline}log#2"></a>4.4&nbsp;qipe:log<div style="float:right">
+                <a href="#qipe:log">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}log#2">qipe:log#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>log msg</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:log</code>
 		  ( 
-			<code class="arg">$text</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$text</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">xs:string</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>text<code class="as">&nbsp;as&nbsp;</code><code class="return-type">xs:string</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:log($text as xs:string,$opts as map(*) )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>text<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">xs:string</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">empty-sequence()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:log($text as xs:string,$opts as map(*) )
 as empty-sequence()
 { 
  if($opts?log) then
       admin:write-log(``[[`{ $opts?id }`] `{$text}`]``,"QIPE")
  else    
    ()        
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/admin}write-log#2</span></li></ul></details><details><summary>Invoked by 3 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib\pipeline.xqm">qipe:run#2</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}xslt#3" title="lib\pipeline.xqm">qipe:xslt#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:pipeline"></a><a id="{http://quodatum.com/ns/pipeline}pipeline#3"></a>4.5&nbsp;qipe:pipeline<div style="float:right"><a href="#qipe:pipeline">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:pipeline#3">qipe:pipeline#3</a></span></p><dt class="label">Summary</dt><dd>subpipe</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:pipeline</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/admin}write-log#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 3 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run" title="lib/pipeline.xqm">qipe:run</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}xslt" title="lib/pipeline.xqm">qipe:xslt</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:pipeline"></a>
+              <a id="{http://quodatum.com/ns/pipeline}pipeline#3"></a>4.5&nbsp;qipe:pipeline<div style="float:right">
+                <a href="#qipe:pipeline">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}pipeline#3">qipe:pipeline#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>subpipe</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:pipeline</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:pipeline)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:pipeline)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:pipeline)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:pipeline($acc,$this as element(qipe:pipeline),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:pipeline)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:pipeline($acc,$this as element(qipe:pipeline),$opts as map(*))
 {
   let $a:=qipe:run($this,$acc)
   return $acc
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib\aync.xqm">qipe:run#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:relax-ng"></a><a id="{http://quodatum.com/ns/pipeline}relax-ng#2"></a>4.6&nbsp;qipe:relax-ng<div style="float:right"><a href="#qipe:relax-ng">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:relax-ng#2">qipe:relax-ng#2</a></span></p><dt class="label">Summary</dt><dd>validate with relax-ng</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:relax-ng</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib/aync.xqm">qipe:run#2</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:relax-ng"></a>
+              <a id="{http://quodatum.com/ns/pipeline}relax-ng#2"></a>4.6&nbsp;qipe:relax-ng<div style="float:right">
+                <a href="#qipe:relax-ng">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}relax-ng#2">qipe:relax-ng#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>validate with relax-ng</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:relax-ng</code>
 		  ( 
-			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$rng</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$doc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$rng</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>rng<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(report)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:relax-ng($doc,$rng )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>doc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>rng<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(report)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:relax-ng($doc,$rng )
 as element(report)
 {
   let $compact:=matches($rng,".*\.rnc")
  return validate:rng-report($doc,$rng,$compact) 
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}rng-report#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}matches#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:resolve"></a><a id="{http://quodatum.com/ns/pipeline}resolve#1"></a>4.7&nbsp;qipe:resolve<div style="float:right"><a href="#qipe:resolve">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:resolve#1">qipe:resolve#1</a></span></p><dt class="label">Summary</dt><dd>resolve locations relative to this document typically from @href</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:resolve</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}rng-report#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}matches#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:resolve"></a>
+              <a id="{http://quodatum.com/ns/pipeline}resolve#1"></a>4.7&nbsp;qipe:resolve<div style="float:right">
+                <a href="#qipe:resolve">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}resolve#1">qipe:resolve#1</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>resolve locations relative to this document typically from @href</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:resolve</code>
 		  ( 
-			<code class="arg">$href</code><code class="as">&nbsp;as&nbsp;</code><code class="type">node()?</code>
+			<code class="arg">$href</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">node()?</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">xs:anyURI</xqdoc:type>?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>href<code class="as">&nbsp;as&nbsp;</code><code class="return-type">node()?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:anyURI?</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:resolve($href as node()? )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">xs:anyURI</xqdoc:type>?</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>href<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">node()?</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">xs:anyURI?</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:resolve($href as node()? )
 { 
  resolve-uri( $href,base-uri($href))
-}</code></pre></details><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span></li></ul></details><details><summary>Invoked by 4 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}xslt#3" title="lib\pipeline.xqm">qipe:xslt#3</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}store#3" title="lib\pipeline.xqm">qipe:store#3</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}load#3" title="lib\pipeline.xqm">qipe:load#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:run"></a><a id="{http://quodatum.com/ns/pipeline}run#1"></a><a id="{http://quodatum.com/ns/pipeline}run#2"></a>4.8&nbsp;qipe:run<div style="float:right"><a href="#qipe:run">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:run#1">qipe:run#1</a></span><span style="margin-left:1em"><a href="#qipe:run#2">qipe:run#2</a></span></p><dt class="label">Summary</dt><dd>run a pipeline</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:run</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 4 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}xslt" title="lib/pipeline.xqm">qipe:xslt</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}store" title="lib/pipeline.xqm">qipe:store</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}load" title="lib/pipeline.xqm">qipe:load</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:run"></a>
+              <a id="{http://quodatum.com/ns/pipeline}run#1"></a>
+              <a id="{http://quodatum.com/ns/pipeline}run#2"></a>4.8&nbsp;qipe:run<div style="float:right">
+                <a href="#qipe:run">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}run#1">qipe:run#1</a>
+              </span>
+              <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}run#2">qipe:run#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>run a pipeline</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:run</code>
 		  ( 
-			<code class="arg">$pipe</code><code class="as">&nbsp;as&nbsp;</code><code class="type">node()</code>
+			<code class="arg">$pipe</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">node()</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div><div class="proto"><code class="function">qipe:run</code>
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+              <div class="proto">
+                <code class="function">qipe:run</code>
 		  ( 
-			<code class="arg">$pipe</code><code class="as">&nbsp;as&nbsp;</code><code class="type">node()</code>, <code class="arg">$initial</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$pipe</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">node()</code>, <code class="arg">$initial</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>pipe<code class="as">&nbsp;as&nbsp;</code><code class="return-type">node()</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><p>result : </p><details><summary>Source</summary><pre><code class="language-xquery">function qipe:run($pipe as node() )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>pipe<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">node()</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <p>result : </p>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:run($pipe as node() )
 as item()*
 {
   qipe:run($pipe,())
-}</code></pre><pre><code class="language-xquery">function qipe:run($pipe as node(),$initial as item()* )
+}</code>
+              </pre>
+              <pre>
+                <code class="language-xquery">function qipe:run($pipe as node(),$initial as item()* )
 as item()*
 {
   let $opts:=map{"id":"66", "log":true(),"trace":true()}
@@ -97,12 +998,113 @@ as item()*
           $result,
           qipe:log( "end: ",$opts)
         )
-}</code></pre></details><details><summary>Invokes 6 functions from 2 modules </summary><ul><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib\aync.xqm">qipe:log#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib\aync.xqm">qipe:run#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\aync.xqm">qipe:step#3</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}fold-left#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#1</span></li></ul></details><details><summary>Invoked by 3 functions from 2 modules</summary><ul><li><span><a href="../../modules/F23/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="features\pipeline\pipe.xq">local:xqDoc-main#0</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run#1" title="lib\pipeline.xqm">qipe:run#1</a></span></li><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}pipeline#3" title="lib\pipeline.xqm">qipe:pipeline#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:schematron"></a><a id="{http://quodatum.com/ns/pipeline}schematron#2"></a>4.9&nbsp;qipe:schematron<div style="float:right"><a href="#qipe:schematron">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:schematron#2">qipe:schematron#2</a></span></p><dt class="label">Summary</dt><dd>validate with schematron
-NOTE: relative paths in doc() references in schematron may cause issues</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:schematron</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 6 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib/aync.xqm">qipe:log#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib/aync.xqm">qipe:run#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib/aync.xqm">qipe:step#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}fold-left#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 3 functions from 2 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F23/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main" title="features/pipeline/pipe.xq">local:xqDoc-main</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run" title="lib/pipeline.xqm">qipe:run</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}pipeline" title="lib/pipeline.xqm">qipe:pipeline</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:schematron"></a>
+              <a id="{http://quodatum.com/ns/pipeline}schematron#2"></a>4.9&nbsp;qipe:schematron<div style="float:right">
+                <a href="#qipe:schematron">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}schematron#2">qipe:schematron#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>validate with schematron
+NOTE: relative paths in doc() references in schematron may cause issues</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:schematron</code>
 		  ( 
-			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$uri-sch</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$doc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$uri-sch</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>uri-sch<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(report)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:schematron($doc,$uri-sch )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>doc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>uri-sch<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(report)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:schematron($doc,$uri-sch )
 as element(report)
 {
   let $sch := schematron:compile(doc($uri-sch))
@@ -113,11 +1115,92 @@ as element(report)
             }&lt;/status&gt;
            {$svrl}
    &lt;/report&gt;          
-}</code></pre></details><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}compile#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}is-valid#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}validate#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}doc#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:step"></a><a id="{http://quodatum.com/ns/pipeline}step#3"></a>4.10&nbsp;qipe:step<div style="float:right"><a href="#qipe:step">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:step#3">qipe:step#3</a></span></p><dt class="label">Summary</dt><dd>run a step</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:step</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 4 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}compile#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}is-valid#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://github.com/Schematron/schematron-basex}validate#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}doc#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:step"></a>
+              <a id="{http://quodatum.com/ns/pipeline}step#3"></a>4.10&nbsp;qipe:step<div style="float:right">
+                <a href="#qipe:step">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}step#3">qipe:step#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>run a step</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:step</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element()</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element()</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code> current state</li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element()</code> current step as qipe:* element</li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:step($acc,$this as element(*),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code> current state</li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element()</code> current step as qipe:* element</li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:step($acc,$this as element(*),$opts as map(*))
 {
   typeswitch($this=&gt;trace("RUNNING:"))
   case element(qipe:validate)  return qipe:validate($acc,$this,$opts)
@@ -129,11 +1212,134 @@ as element(report)
   case element(qipe:pipeline) return qipe:pipeline($acc,$this,$opts)
   case element(qipe:identity) return qipe:identity($acc,$this,$opts)
   default return error(xs:QName('qipe'), 'unknown step:' || name($this))
-}</code></pre></details><details><summary>Invokes 12 functions from 3 modules </summary><ul><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}dir#3" title="lib\aync.xqm">qipe:dir#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}identity#3" title="lib\aync.xqm">qipe:identity#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}load#3" title="lib\aync.xqm">qipe:load#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}pipeline#3" title="lib\aync.xqm">qipe:pipeline#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}store#3" title="lib\aync.xqm">qipe:store#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\aync.xqm">qipe:validate#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}xquery#3" title="lib\aync.xqm">qipe:xquery#3</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}xslt#3" title="lib\aync.xqm">qipe:xslt#3</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}name#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run#2" title="lib\pipeline.xqm">qipe:run#2</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:store"></a><a id="{http://quodatum.com/ns/pipeline}store#3"></a>4.11&nbsp;qipe:store<div style="float:right"><a href="#qipe:store">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:store#3">qipe:store#3</a></span></p><dt class="label">Summary</dt><dd>store each item in accumulator at computed path</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:store</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 12 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}dir#3" title="lib/aync.xqm">qipe:dir#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}identity#3" title="lib/aync.xqm">qipe:identity#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}load#3" title="lib/aync.xqm">qipe:load#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}pipeline#3" title="lib/aync.xqm">qipe:pipeline#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}store#3" title="lib/aync.xqm">qipe:store#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib/aync.xqm">qipe:validate#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}xquery#3" title="lib/aync.xqm">qipe:xquery#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}xslt#3" title="lib/aync.xqm">qipe:xslt#3</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}name#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}run" title="lib/pipeline.xqm">qipe:run</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:store"></a>
+              <a id="{http://quodatum.com/ns/pipeline}store#3"></a>4.11&nbsp;qipe:store<div style="float:right">
+                <a href="#qipe:store">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}store#3">qipe:store#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>store each item in accumulator at computed path</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:store</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:store)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:store)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:store)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:store($acc,$this  as element(qipe:store),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:store)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:store($acc,$this  as element(qipe:store),$opts as map(*))
 {
   let $href:=qipe:resolve($this/@base)
   let $dated:=boolean($this/@dated)
@@ -156,11 +1362,114 @@ as element(report)
                  ,if(file:is-dir($dir)) then () else file:create-dir($dir)
                  ,file:write($dest,$item,$qipe:outputs?($output))
                  )
-}</code></pre></details><details><summary>Invokes 10 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}create-dir#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}is-dir#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}parent#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}write#3</span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib\aync.xqm">qipe:resolve#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}current-date#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}format-date#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:validate"></a><a id="{http://quodatum.com/ns/pipeline}validate#3"></a>4.12&nbsp;qipe:validate<div style="float:right"><a href="#qipe:validate">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:validate#3">qipe:validate#3</a></span></p><dt class="label">Summary</dt><dd>run validate step based on @type</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:validate</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 10 functions from 4 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}eval#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}create-dir#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}is-dir#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}parent#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}write#3</span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib/aync.xqm">qipe:resolve#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}current-date#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}format-date#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:validate"></a>
+              <a id="{http://quodatum.com/ns/pipeline}validate#3"></a>4.12&nbsp;qipe:validate<div style="float:right">
+                <a href="#qipe:validate">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}validate#3">qipe:validate#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>run validate step based on @type</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:validate</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:validate)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:validate)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:validate)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:validate($acc,$this as element(qipe:validate),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:validate)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:validate($acc,$this as element(qipe:validate),$opts as map(*))
 {
   let $href:=qipe:resolve($this/@href)
   let $failOnError:=boolean($this/@failOnError)
@@ -184,51 +1493,546 @@ as element(report)
                         ' validation fails: ' || $i || "=" || base-uri($doc))
                    else
                        $doc
-}</code></pre></details><details><summary>Invokes 12 functions from 3 modules </summary><ul><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib\aync.xqm">qipe:log#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}relax-ng#2" title="lib\aync.xqm">qipe:relax-ng#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib\aync.xqm">qipe:resolve#1</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}schematron#2" title="lib\aync.xqm">qipe:schematron#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate-dtd#2" title="lib\aync.xqm">qipe:validate-dtd#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate-xsd#2" title="lib\aync.xqm">qipe:validate-xsd#2</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:validate-dtd"></a><a id="{http://quodatum.com/ns/pipeline}validate-dtd#2"></a>4.13&nbsp;qipe:validate-dtd<div style="float:right"><a href="#qipe:validate-dtd">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:validate-dtd#2">qipe:validate-dtd#2</a></span></p><dt class="label">Summary</dt><dd>validate with dtd</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:validate-dtd</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 12 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib/aync.xqm">qipe:log#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}relax-ng#2" title="lib/aync.xqm">qipe:relax-ng#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib/aync.xqm">qipe:resolve#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}schematron#2" title="lib/aync.xqm">qipe:schematron#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate-dtd#2" title="lib/aync.xqm">qipe:validate-dtd#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}validate-xsd#2" title="lib/aync.xqm">qipe:validate-xsd#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}boolean#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:validate-dtd"></a>
+              <a id="{http://quodatum.com/ns/pipeline}validate-dtd#2"></a>4.13&nbsp;qipe:validate-dtd<div style="float:right">
+                <a href="#qipe:validate-dtd">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}validate-dtd#2">qipe:validate-dtd#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>validate with dtd</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:validate-dtd</code>
 		  ( 
-			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$dtd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$doc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$dtd</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>dtd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(report)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:validate-dtd($doc,$dtd )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>doc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>dtd<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(report)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:validate-dtd($doc,$dtd )
 as element(report)
 { 
   validate:dtd-report($doc,$dtd) 
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}dtd-report#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:validate-pipeline"></a><a id="{http://quodatum.com/ns/pipeline}validate-pipeline#1"></a>4.14&nbsp;qipe:validate-pipeline<div style="float:right"><a href="#qipe:validate-pipeline">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:validate-pipeline#1">qipe:validate-pipeline#1</a></span></p><dt class="label">Summary</dt><dd>check pipeline is valid against schema</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:validate-pipeline</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}dtd-report#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:validate-pipeline"></a>
+              <a id="{http://quodatum.com/ns/pipeline}validate-pipeline#1"></a>4.14&nbsp;qipe:validate-pipeline<div style="float:right">
+                <a href="#qipe:validate-pipeline">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}validate-pipeline#1">qipe:validate-pipeline#1</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>check pipeline is valid against schema</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:validate-pipeline</code>
 		  ( 
-			<code class="arg">$pipe</code><code class="as">&nbsp;as&nbsp;</code><code class="type">document-node()</code>
+			<code class="arg">$pipe</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">document-node()</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>pipe<code class="as">&nbsp;as&nbsp;</code><code class="return-type">document-node()</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:validate-pipeline($pipe as document-node() )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">document-node()</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>pipe<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">document-node()</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">document-node()</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:validate-pipeline($pipe as document-node() )
 as document-node()
 {
  validate:rng($pipe , "schemas/pipeline.rnc",true()),$pipe
-}</code></pre></details><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}rng#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details></div><div class="div3"><h3><a id="qipe:validate-xsd"></a><a id="{http://quodatum.com/ns/pipeline}validate-xsd#2"></a>4.15&nbsp;qipe:validate-xsd<div style="float:right"><a href="#qipe:validate-xsd">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:validate-xsd#2">qipe:validate-xsd#2</a></span></p><dt class="label">Summary</dt><dd>validate with xml-schema</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:validate-xsd</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 2 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}rng#3</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#1</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 0 functions from 0 modules</summary>
+              <ul></ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:validate-xsd"></a>
+              <a id="{http://quodatum.com/ns/pipeline}validate-xsd#2"></a>4.15&nbsp;qipe:validate-xsd<div style="float:right">
+                <a href="#qipe:validate-xsd">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}validate-xsd#2">qipe:validate-xsd#2</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>validate with xml-schema</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:validate-xsd</code>
 		  ( 
-			<code class="arg">$doc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$xsd</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
+			<code class="arg">$doc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$xsd</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>doc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>xsd<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(report)</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:validate-xsd($doc,$xsd )
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(report)</xqdoc:type>
+                </code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>doc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>xsd<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">element(report)</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:validate-xsd($doc,$xsd )
 as element(report)
 { 
   validate:xsd-report($doc,$xsd) 
-}</code></pre></details><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}xsd-report#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate#3" title="lib\pipeline.xqm">qipe:validate#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:xquery"></a><a id="{http://quodatum.com/ns/pipeline}xquery#3"></a>4.16&nbsp;qipe:xquery<div style="float:right"><a href="#qipe:xquery">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:xquery#3">qipe:xquery#3</a></span></p><dt class="label">Summary</dt><dd>run xquery referenced by @href and append result sequence to accumulator</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:xquery</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 1 functions from 1 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/validate}xsd-report#2</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}validate" title="lib/pipeline.xqm">qipe:validate</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:xquery"></a>
+              <a id="{http://quodatum.com/ns/pipeline}xquery#3"></a>4.16&nbsp;qipe:xquery<div style="float:right">
+                <a href="#qipe:xquery">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}xquery#3">qipe:xquery#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>run xquery referenced by @href and append result sequence to accumulator</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:xquery</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:xquery)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:xquery)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:xquery)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:xquery($acc,$this  as element(qipe:xquery),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:xquery)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:xquery($acc,$this  as element(qipe:xquery),$opts as map(*))
 {
   let $href:=resolve-uri($this/@href,base-uri($this))=&gt;trace("AT")
   let $result:=xquery:invoke($href,map{'': $acc})
   return ($acc,$result)
-}</code></pre></details><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div><div class="div3"><h3><a id="qipe:xslt"></a><a id="{http://quodatum.com/ns/pipeline}xslt#3"></a>4.17&nbsp;qipe:xslt<div style="float:right"><a href="#qipe:xslt">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#qipe:xslt#3">qipe:xslt#3</a></span></p><dt class="label">Summary</dt><dd>apply XSLT transform to each item in accumulator</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">qipe:xslt</code>
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 4 functions from 2 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xquery}invoke#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}base-uri#1</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+          <div class="div3">
+            <h3>
+              <a id="qipe:xslt"></a>
+              <a id="{http://quodatum.com/ns/pipeline}xslt#3"></a>4.17&nbsp;qipe:xslt<div style="float:right">
+                <a href="#qipe:xslt">#</a>
+              </div>
+            </h3>
+            <p>Arities: <span style="margin-left:1em">
+                <a href="#{http://quodatum.com/ns/pipeline}xslt#3">qipe:xslt#3</a>
+              </span>
+            </p>
+            <dt class="label">Summary</dt>
+            <dd>apply XSLT transform to each item in accumulator</dd>
+            <dt class="label">Signature</dt>
+            <dd>
+              <div class="proto">
+                <code class="function">qipe:xslt</code>
 		  ( 
-			<code class="arg">$acc</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>, <code class="arg">$this</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(qipe:xslt)</code>, <code class="arg">$opts</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
+			<code class="arg">$acc</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">item()*</code>, <code class="arg">$this</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">element(qipe:xslt)</code>, <code class="arg">$opts</code>
+                <code class="as">&nbsp;as&nbsp;</code>
+                <code class="type">map(*)</code>
 	 )
-			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>acc<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>this<code class="as">&nbsp;as&nbsp;</code><code class="return-type">element(qipe:xslt)</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function qipe:xslt($acc,$this  as element(qipe:xslt),$opts as map(*))
+			<code class="as">&nbsp;as&nbsp;</code>
+                <code class="return-type">
+                  <xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code>
+              </div>
+            </dd>
+            <dt class="label">Parameters</dt>
+            <dd>
+              <ul>
+                <li>acc<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">item()*</code>
+                </li>
+                <li>this<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">element(qipe:xslt)</code>
+                </li>
+                <li>opts<code class="as">&nbsp;as&nbsp;</code>
+                  <code class="return-type">map(*)</code>
+                </li>
+              </ul>
+            </dd>
+            <dt class="label">Return</dt>
+            <dd>
+              <ul>
+                <li>
+                  <code class="return-type">item()*</code>
+                </li>
+              </ul>
+            </dd>
+            <details>
+              <summary>Source</summary>
+              <pre>
+                <code class="language-xquery">function qipe:xslt($acc,$this  as element(qipe:xslt),$opts as map(*))
 {
   let $href:=qipe:resolve($this/@href)=&gt;trace("XSLT")
   for $d at $i in $acc
   let $_:=qipe:log("xslt: " || $i,$opts)
   let $_:=trace($d,"ddd")
   return xslt:transform($d, $href)  
-}</code></pre></details><details><summary>Invokes 5 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xslt}transform#2</span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib\aync.xqm">qipe:log#2</a></span></li><li><span><a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib\aync.xqm">qipe:resolve#1</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step#3" title="lib\pipeline.xqm">qipe:step#3</a></span></li></ul></details></div></div><div class="div2"><h2><a id="namespaces"></a>5 Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>c</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/ns/xproc-step</span></td></tr><tr><td>fw</td><td><span class="badge badge-warning" title="Externally defined">quodatum:file.walker</span></td></tr><tr><td>qipe</td><td><span><a href="../../modules/F55/index.html" title="lib\aync.xqm">http://quodatum.com/ns/pipeline</a>&nbsp;<a href="../../modules/F63/index.html" title="lib\pipeline.xqm"><span class="badge badge-info">2</span></a></span></td></tr><tr><td>schematron</td><td><span class="badge badge-warning" title="Externally defined">http://github.com/Schematron/schematron-basex</span></td></tr></tbody></table></div><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><div class="div2"><h2><a id="source"></a>7 Source Code</h2><pre><code class="language-xquery">(:~ 
+}</code>
+              </pre>
+            </details>
+            <details>
+              <summary>Invokes 5 functions from 3 modules </summary>
+              <ul>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/xslt}transform#2</span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}log#2" title="lib/aync.xqm">qipe:log#2</a>
+                  </span>
+                </li>
+                <li>
+                  <span>
+                    <a href="../../modules/F55/index.html#{http://quodatum.com/ns/pipeline}resolve#1" title="lib/aync.xqm">qipe:resolve#1</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span>
+                </li>
+                <li>
+                  <span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span>
+                </li>
+              </ul>
+            </details>
+            <details>
+              <summary>Invoked by 1 functions from 1 modules</summary>
+              <ul>
+                <li>
+                  <span>
+                    <a href="../../modules/F63/index.html#{http://quodatum.com/ns/pipeline}step" title="lib/pipeline.xqm">qipe:step</a>
+                  </span>
+                </li>
+              </ul>
+            </details>
+          </div>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="namespaces"></a>5 Namespaces</h2>
+          <p>The following namespaces are defined:</p>
+          <table class="data" style="float:none">
+            <thead>
+              <tr>
+                <th>Prefix</th>
+                <th>Uri</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>c</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://www.w3.org/ns/xproc-step</span>
+                </td>
+              </tr>
+              <tr>
+                <td>fw</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">quodatum:file.walker</span>
+                </td>
+              </tr>
+              <tr>
+                <td>qipe</td>
+                <td>
+                  <span>
+                    <a href="../../modules/F55/index.html" title="lib/aync.xqm">http://quodatum.com/ns/pipeline</a>&nbsp;<a href="../../modules/F63/index.html" title="lib/pipeline.xqm">
+                      <span class="badge badge-info">2</span>
+                    </a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>schematron</td>
+                <td>
+                  <span class="badge badge-warning" title="Externally defined">http://github.com/Schematron/schematron-basex</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="restxq"></a>6 RestXQ</h2>
+          <p>None</p>
+        </div>
+        <div class="div2">
+          <h2>
+            <a id="source"></a>7 Source Code</h2>
+          <pre>
+            <code class="language-xquery">(:~ 
  :  pipeline library 
  : @author Andy Bunce
  : @version 0.2
@@ -462,6 +2266,17 @@ as empty-sequence()
       admin:write-log(``[[`{ $opts?id }`] `{$text}`]``,"QIPE")
  else    
    ()        
-};</code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
+};</code>
+          </pre>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-05-29T22:37:23.991+01:00">10.37pm on Wednesday, May 29th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-01T11:02:48.049+01:00">11.02am on Saturday, June 1st 2019</span>
+      </p>
+    </div>
+    <script src="../../resources/prism.js" type="text/javascript"></script>
+  </body>
+</html>

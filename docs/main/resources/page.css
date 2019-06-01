@@ -48,17 +48,7 @@ h4 {
 	width: 90%;
 }
 
-.namespace {
-	color: #999;
-}
 
-.namespace:before {
-	content: "{";
-}
-
-.namespace:after {
-	content: "}";
-}
 
 td {
 	vertical-align: text-top;

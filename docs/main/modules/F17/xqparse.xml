@@ -40,8 +40,9 @@
 <AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>efolder</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:anyURI</QName></TypeDeclaration>  <TOKEN>external</TOKEN> <TOKEN>:=</TOKEN>
               (: xs:anyURI(db:option("webpath") ||"/vue-poc/") :)
               (: xs:anyURI(db:option("webpath") ||"/dba/") :)
-              <FunctionCall><QName>xs:anyURI</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>file:parent</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl>
-              (: xs:anyURI(db:option("webpath") ||"/chat/") :) 
+              (: xs:anyURI(file:parent(static-base-uri())) :)
+              (: xs:anyURI(db:option("webpath") ||"/chat/") :)
+              <FunctionCall><QName>xs:anyURI</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><FunctionCall><QName>db:option</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"webpath"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN><StringLiteral>"/graphxq/"</StringLiteral></StringConcatExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></VarDecl></AnnotatedDecl> 
 <TOKEN>;</TOKEN>
 
 
