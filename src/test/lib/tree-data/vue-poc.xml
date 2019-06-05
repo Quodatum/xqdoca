@@ -1,0 +1,82 @@
+<directory name="">
+    <directory name="vue-poc">
+        <directory name="api">
+            <file name="collection" target="/vue-poc/api/collection"/>
+            <directory name="components">
+                <file name="tree" target="/vue-poc/api/components/tree"/>
+            </directory>
+            <directory name="data">
+                <directory name="entity">
+                    <directory name="{$entity}">
+                        <file name="field" target="/vue-poc/api/data/entity/{$entity}/field"/>
+                    </directory>
+                </directory>
+                <file name="users" target="/vue-poc/api/data/users"/>
+                <file name="{$entity}" target="/vue-poc/api/data/{$entity}"/>
+            </directory>
+            <file name="edit" target="/vue-poc/api/edit"/>
+            <directory name="eval">
+                <file name="execute" target="/vue-poc/api/eval/execute"/>
+                <file name="imports" target="/vue-poc/api/eval/imports"/>
+                <file name="invoke" target="/vue-poc/api/eval/invoke"/>
+                <file name="plan" target="/vue-poc/api/eval/plan"/>
+                <directory name="result">
+                    <file name="{$id}" target="/vue-poc/api/eval/result/{$id}"/>
+                </directory>
+                <file name="submit" target="/vue-poc/api/eval/submit"/>
+            </directory>
+            <directory name="form">
+                <file name="schema" target="/vue-poc/api/form/schema"/>
+            </directory>
+            <file name="get" target="/vue-poc/api/get"/>
+            <file name="get2" target="/vue-poc/api/get2"/>
+            <file name="history" target="/vue-poc/api/history"/>
+            <directory name="images">
+                <file name="datetaken" target="/vue-poc/api/images/datetaken"/>
+                <file name="keywords2" target="/vue-poc/api/images/keywords2"/>
+                <directory name="list">
+                    <directory name="{ $id }">
+                        <file name="image" target="/vue-poc/api/images/list/{ $id }/image"/>
+                        <file name="meta" target="/vue-poc/api/images/list/{ $id }/meta"/>
+                        <file name="thumb" target="/vue-poc/api/images/list/{ $id }/thumb"/>
+                    </directory>
+                    <file name="{$id}" target="/vue-poc/api/images/list/{$id}"/>
+                </directory>
+                <file name="report" target="/vue-poc/api/images/report"/>
+            </directory>
+            <directory name="job">
+                <file name="{$job}" target="/vue-poc/api/job/{$job}"/>
+            </directory>
+            <directory name="log">
+                <file name="add" target="/vue-poc/api/log/add"/>
+            </directory>
+            <file name="login-check" target="/vue-poc/api/login-check"/>
+            <file name="logout" target="/vue-poc/api/logout"/>
+            <file name="ping" target="/vue-poc/api/ping"/>
+            <file name="repo" target="/vue-poc/api/repo"/>
+            <file name="search" target="/vue-poc/api/search"/>
+            <file name="start" target="/vue-poc/api/start"/>
+            <file name="status" target="/vue-poc/api/status"/>
+            <directory name="tasks">
+                <file name="model" target="/vue-poc/api/tasks/model"/>
+                <file name="task" target="/vue-poc/api/tasks/task"/>
+                <file name="vue-compile" target="/vue-poc/api/tasks/vue-compile"/>
+                <file name="xqdoc" target="/vue-poc/api/tasks/xqdoc"/>
+                <file name="{$task}" target="/vue-poc/api/tasks/{$task}"/>
+            </directory>
+            <file name="test-select" target="/vue-poc/api/test-select"/>
+            <directory name="thumbnail">
+                <file name="images" target="/vue-poc/api/thumbnail/images"/>
+                <file name="validate" target="/vue-poc/api/thumbnail/validate"/>
+            </directory>
+            <file name="upload" target="/vue-poc/api/upload"/>
+            <file name="user" target="/vue-poc/api/user"/>
+            <file name="validate" target="/vue-poc/api/validate"/>
+            <file name="xqdoc" target="/vue-poc/api/xqdoc"/>
+            <file name="xslt" target="/vue-poc/api/xslt"/>
+        </directory>
+        <directory name="ui">
+            <file name="{$file=.+}" target="/vue-poc/ui/{$file=.+}"/>
+        </directory>
+    </directory>
+</directory>

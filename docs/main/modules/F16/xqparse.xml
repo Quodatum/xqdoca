@@ -16,26 +16,116 @@
  :)
  
  (:~
- : &lt;h1&gt;check-environment.xq&lt;/h1&gt;
- : &lt;p&gt;Validate dependancies &lt;/p&gt;
+ : &lt;h1&gt;xqdoc-namespaces.xqm&lt;/h1&gt;
+ : &lt;p&gt;namespace and qname utils&lt;/p&gt;
  :
  : @author Andy Bunce
- : @version 0.2
+ : @version 0.1
  :)
- <MainModule><Prolog><NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>ex-pkg</NCName><TOKEN>=</TOKEN><StringLiteral>"http://expath.org/ns/pkg"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN></Prolog>
-(:~
- : raise error if environment incorrect 
+ 
+
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqn</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.namespaces'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+(:~  parse qname into parts
+ : @param $e is from QName or TOKEN in some cases e.g "count"
+ : @param $prefixes map of namespaces
+ : @param $default namespace for no prefix
+ : @return &lt;pre&gt;
+ map{
+    "uri": ..,
+     "name": ..} 
+ }
+ :&lt;/pre&gt;
  :)
-  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>ex-parse</QName><TOKEN>:=</TOKEN><StringLiteral>"0.6.12"</StringLiteral></LetBinding></LetClause>
-  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>basex</QName><TOKEN>:=</TOKEN><StringLiteral>"9.2.2"</StringLiteral></LetBinding></LetClause>
-  <ReturnClause><TOKEN>return</TOKEN> 
-  
-  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN> <ComparisonExpr><RelativePathExpr><FunctionCall><QName>db:system</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>generalinformation</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>version</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><PostfixExpr><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>.</TOKEN><TOKEN>,</TOKEN><StringLiteral>" "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></RelativePathExpr> <TOKEN>ne</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>basex</QName></VarRef></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN> 
-       <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xs:QName</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"xqd:version"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>"BaseX version"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-  <TOKEN>else</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><RelativePathExpr><PostfixExpr><FunctionCall><QName>repo:list</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><Predicate><TOKEN>[</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"http://expkg-zone58.github.io/ex-xparse"</StringLiteral></ComparisonExpr><TOKEN>]</TOKEN></Predicate></PostfixExpr><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>version</QName></AbbrevForwardStep> <PredicateList/></AxisStep></RelativePathExpr><TOKEN>ne</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>ex-parse</QName></VarRef></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
-       <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xs:QName</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"xqd:version"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>"http://expkg-zone58.github.io/ex-xparse version"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-  <TOKEN>else</TOKEN>
-      <StringLiteral>"xqdoca dependancies are all installed."</StringLiteral></IfExpr></IfExpr></ReturnClause></FLWORExpr></MainModule></Module>
-      
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:qmap</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>prefixes</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><TOKEN>default</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>n</QName><TOKEN>:=</TOKEN><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>":"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>prefix</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=</TOKEN><IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></IfExpr></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>name</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><FunctionCall><TOKEN>count</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=</TOKEN><IntegerLiteral>1</IntegerLiteral></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN>  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr> <TOKEN>else</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></IfExpr></LetBinding></LetClause>
+<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>uri</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+              <VarRef><TOKEN>$</TOKEN><TOKEN>default</TOKEN></VarRef>
+          <TOKEN>else</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN> <FunctionCall><QName>map:contains</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+              <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><Lookup><TOKEN>?</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ParenthesizedExpr></Lookup></PostfixExpr>
+          <TOKEN>else</TOKEN> 
+               <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"e: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                 <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>default</TOKEN></VarRef><TOKEN>,</TOKEN><StringLiteral>"default: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+                   <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN> <FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"ERROR qmap: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+               <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr></IfExpr></IfExpr></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN>
+           <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN>
+           <MapConstructorEntry><StringLiteral>"name"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr> 
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:eq</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>a</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>name</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN> 
+<TOKEN>as</TOKEN> <QName>xs:boolean</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <AndExpr><ComparisonExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>name</NCName></Lookup></PostfixExpr><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></ComparisonExpr> <TOKEN>and</TOKEN> <ComparisonExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></ComparisonExpr></AndExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+
+(:~ 
+ : return clark-notation '{uri}name'
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:clark-name</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> 
+                                <Param><TOKEN>$</TOKEN><QName>name</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>{</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>}</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars/></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ 
+ : @return prefix:name if available or clark-notation
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:prefixed-name</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>uri</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> 
+                                <Param><TOKEN>$</TOKEN><QName>name</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                                <Param><TOKEN>$</TOKEN><QName>prefixes</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>prefix</QName><TOKEN>:=</TOKEN> <ArrowExpr><FunctionCall><QName>map:for-each</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefixes</QName></VarRef><TOKEN>,</TOKEN><InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>k</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>v</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef><TOKEN>=</TOKEN><VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef></ComparisonExpr><TOKEN>)</TOKEN><TOKEN>then</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>k</QName></VarRef> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr> <TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=&gt;</TOKEN><QName>head</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause> 
+  <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+           <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>head</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>":"</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+         <TOKEN>else</TOKEN>
+           <FunctionCall><QName>xqn:clark-name</QName><ArgumentList><TOKEN>(</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>uri</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef> <TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ namespace for prefix
+ : @param $prefix prefix to lookup
+ : @param $default namespace to use if prefix empty
+ : @param $map keys are prefixes items are namespaces
+ : @return namespace for prefix
+  :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:map-prefix</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>prefix</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><TOKEN>default</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><TOKEN>map</TOKEN> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:string</QName><EnclosedExpr><TOKEN>{</TOKEN>
+  <Expr><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><TOKEN>empty</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
+    <VarRef><TOKEN>$</TOKEN><TOKEN>default</TOKEN></VarRef>
+  <TOKEN>else</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>map:contains</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN><TOKEN>then</TOKEN> 
+   <PostfixExpr><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><Lookup><TOKEN>?</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>)</TOKEN></ParenthesizedExpr></Lookup></PostfixExpr>
+   <TOKEN>else</TOKEN>
+   <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>_</QName><TOKEN>:=</TOKEN><FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><TOKEN>map</TOKEN></VarRef><TOKEN>,</TOKEN><StringLiteral>"prefixes"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+   <ReturnClause><TOKEN>return</TOKEN> <StringConcatExpr><StringLiteral>"*** "</StringLiteral> <TOKEN>||</TOKEN> <FunctionCall><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>prefix</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"**prefix not found:"</StringLiteral> <TOKEN>)</TOKEN></ArgumentList></FunctionCall></StringConcatExpr></ReturnClause></FLWORExpr></IfExpr></IfExpr><TOKEN>,</TOKEN>
+   <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  parse URIQualifiedName into parts
+ : @param $e is URIQualifiedName
+ : @todo use regx
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:uriqname</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>e</QName> <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>URIQualifiedName</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>n</QName><TOKEN>:=</TOKEN><FunctionCall><QName>tokenize</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"}"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>substring</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr><TOKEN>,</TOKEN><IntegerLiteral>3</IntegerLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN>
+           <MapConstructorEntry><StringLiteral>"name"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>n</QName></VarRef><Predicate><TOKEN>[</TOKEN><IntegerLiteral>2</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr></MapConstructorEntry><TOKEN>}</TOKEN></MapConstructor></ReturnClause></FLWORExpr> 
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  map of static namespaces :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqn:static-prefix-map</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>platform</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+ <ArrowExpr><FunctionCall><QName>fetch:text</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringConstructor><TOKEN>``[</TOKEN><StringConstructorContent><StringConstructorChars>../etc/static/</StringConstructorChars><StringConstructorInterpolation><TOKEN>`{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>platform</QName></VarRef> <TOKEN>}`</TOKEN></StringConstructorInterpolation><StringConstructorChars>.json</StringConstructorChars></StringConstructorContent><TOKEN>]``</TOKEN></StringConstructor><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+ <TOKEN>=&gt;</TOKEN><QName>parse-json</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></ArrowExpr> 
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
 
 <EOF/></XQuery>

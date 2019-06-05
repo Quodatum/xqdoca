@@ -17,24 +17,29 @@ xquery version "3.1";
  
  (:~
  : <h1>check-environment.xq</h1>
- : <p>Validate dependancies </p>
+ : <p>Validate dependancies from expath-pkg file </p>
  :
  : @author Andy Bunce
  : @version 0.2
  :)
- declare namespace ex-pkg="http://expath.org/ns/pkg";
+ declare namespace pkg="http://expath.org/ns/pkg";
+ declare variable $pkg:=doc("expath-pkg.xml")=>trace("DOC");
 (:~
  : raise error if environment incorrect 
  :)
-  let $ex-parse:="0.6.12"
-  let $basex:="9.2.2"
+ 
+  let $basex:=$pkg/pkg:package/pkg:dependency[@processor="http://basex.org/"]/@version/string()
+  let $pkgs:=$pkg/pkg:package/pkg:dependency[@name]
   return 
   
   if( db:system()/generalinformation/version/tokenize(.," ")[1] ne $basex)then 
-       error(xs:QName("xqd:version"),"BaseX version")
-  else if(repo:list()[@name="http://expkg-zone58.github.io/ex-xparse"]/@version ne $ex-parse) then
-       error(xs:QName("xqd:version"),"http://expkg-zone58.github.io/ex-xparse version")
-  else
-      "xqdoca dependancies are all installed."
+       error(xs:QName("xpg:version"),"BaseX version not supported")
+  else (
+         for $p in $pkgs
+         return if(repo:list()[@name=$p/@name]/@version ne $p/@version) then
+                      error(xs:QName("pkg:version"),$p/@name) else ()
+    
+          ,"xqDocA dependancies are all installed."
+        )
       
 

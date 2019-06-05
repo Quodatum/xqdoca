@@ -43,14 +43,14 @@ function _:annotations($model,$opts)
   let $ns-map:=xqa:annotations($model)
   let $body:=<div>
                  <h1>
-                  <span class="badge badge-success">
+                     Project <span class="badge badge-info">
                       { $opts?project }
                   </span>
                   &#160;Annotations 
               </h1>
                <nav id="toc">
                         <h2>
-                            <a href="index.html" class="badge badge-success">
+                            <a href="index.html" >
                                 { $model?project }
                             </a>
                             / Annotations
@@ -90,14 +90,14 @@ declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
     
      <table class="data">
        <thead><tr>
-         <th>Function</th>
+         <th>Attached to</th>
          <th>Values</th>
        </tr></thead>
        <tbody>{
           for $a2 in $a
           return <tr>
                     <td>{
-                       let $x:= xqa:container($a2?xqdoc,$a2?file)
+                       let $x:= xqa:name-detail($a2?xqdoc/../..,$a2?file)
                        return if($x instance of map(*)) then 
                                 page:link-function2($x?uri,$x?name,$a2?file,false()) 
                               else 
@@ -115,9 +115,8 @@ as element(div)
 {
   <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
-    <p>This page itemizes the use of annotations in this project.</p>
-    <p>Other perspectives:</p>
-   { page:view-list( $opts(".renderers")?global,"annotations")}
+    <p>This document itemizes the use of annotations in this project.</p>
+   { page:module-links("global", "annotations", $opts) }    
  </div>
 };
 

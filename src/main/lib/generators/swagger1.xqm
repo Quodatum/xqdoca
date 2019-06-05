@@ -7,13 +7,13 @@ xquery version "3.1";
  :)
  
 module namespace _ = 'quodatum:xqdoca.generator.swagger';
-
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 (:~ 
  :  This is just shell NO detail provided!!
  :)
 declare 
-%Q{https://github.com/Quodatum/xqdoca}global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%Q{https://github.com/Quodatum/xqdoca}output("swagger.json","json") 
+%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
+%xqdoca:output("swagger.json","json") 
 function _:swagger($model as map(*),
                             $opts as map(*)
                             )                           

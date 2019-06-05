@@ -89,6 +89,18 @@ as element(span)
            </span>
 };
 
+(:~  link to restxq view
+ : @todo only if generated
+ :)
+declare 
+function page:link-restxq($method as xs:string,
+                          $fromModule as xs:boolean
+                            )                       
+as element(span)
+{  
+ let $root:=if($fromModule) then "../../" else ""
+  return  <span><a href="{ $root }restxq.html?">{ page:badge-method($method)}</a></span>
+};
  
 (:~ link to fun or var in file
  : @param name of form 'fun#arity' or ''$name' 
@@ -108,6 +120,14 @@ as element(span)
    return  <span>
             <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
            </span>
+};
+
+
+
+declare function page:badge-method($method as xs:string)
+as element(span)
+{
+      <span class="badge op-{ lower-case($method) }">{ $method }</span>
 };
 
 (:~
@@ -145,6 +165,8 @@ as element(div)?
 declare function page:wrap($body,$opts as map(*)) 
 as element(html)
 {
+  let $resources:=page:resource-path($opts)
+  return
     <html>
       <head>
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -154,11 +176,11 @@ as element(html)
           { $opts?project } - xqDocA
         </title>
         
-        <link rel="shortcut icon" type="image/x-icon" href="{ $opts?resources }xqdoc.png" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }prism.css"/>
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }page.css" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }query.css" />
-        <link rel="stylesheet" type="text/css" href="{ $opts?resources }base.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }prism.css"/>
+        <link rel="stylesheet" type="text/css" href="{ $resources }page.css" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }query.css" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }base.css" />
      
       
       </head>
@@ -172,10 +194,16 @@ as element(html)
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
             at { page:date() }</p>
           </div>
-         <script  src="{ $opts?resources }prism.js" type="text/javascript"> </script>
+         <script  src="{ $resources }prism.js" type="text/javascript"> </script>
        
       </body>
     </html>
+};
+
+declare function page:resource-path($opts as map(*))
+as xs:string
+{
+  if(map:contains($opts,"resources")) then $opts?resources else  "resources/"
 };
 
 (:~ 
@@ -184,15 +212,13 @@ as element(html)
  : @param $tree xml 
  : @param $decorate function called on leafs
  :)
-declare function page:toc3($name as xs:string,$tree as element(directory),$decorate as function(*))
+declare function page:toc3($head as item(),$tree as element(directory),$decorate as function(*))
 as element(nav)
 {
     <nav id="toc">
             <h2>
-                <a id="contents"></a>
-                <span >
-                   { $name }
-                </span>
+                <a id="contents"></a>              
+                   { $head }
             </h2>
             <ol class="toc">{
              $tree/*! page:tree-list(.,position(),$decorate)
@@ -257,27 +283,61 @@ as element(span)
 };
 
 (:~ table of renderers
- : @todo only show in referenced in $opts
+ : @param type global or module
+ 
  :)
 declare 
-function page:view-list($renderers as map(*)*,$exclude as xs:string*)                       
-as element(table)
+function page:view-list($type as xs:string,
+                        $opts as map(*),
+                        $exclude as xs:string*)                       
+as element(table)?
 {
- <table class="data">
- <thead>
- <th>View</th>
- <th>Description</th>
- </thead>
- <tbody>
- {
-  for  $def in $renderers
-  where not($def?name = $exclude)
-  return <tr><td><a href="{ $def?uri }">{ $def?name }</a></td>
-             <td>{ $def?description }</td>
-         </tr>
-  }    
- </tbody>
-</table>
+ let $selected:=$opts?outputs?($type)
+ let $renderers:=$opts(".renderers")?($type)
+ let $list:=page:tokens($selected)[not(. = $exclude)]
+ return if(not(empty($list))) then
+           <table class="data">
+                 <thead>
+                 <th>View</th>
+                 <th>Description</th>
+                 <th>Format</th>
+                 </thead>
+                 <tbody>
+                 {
+                  for  $name in $list 
+                  let $rend :=  $renderers[?name=$name]
+                 
+                  return (for $def in  $rend
+                          order by $def?name
+                         return <tr>
+                                 <td><a href="{ $def?uri }">{ $def?name }</a></td>
+                                  <td>{ $def?description }</td>
+                                  <td>{ $def?output }</td>
+                                 </tr>,
+                         if(empty($rend)) then
+                               <tr>
+                                <td><span class="badge badge-danger">{ $name }</span></td>
+                                <td>No renderer found</td>
+                               </tr>
+                             )
+                  }    
+                 </tbody>
+        </table>
+       else
+         ()
+};
+
+declare function page:module-links($type as xs:string, $exclude as xs:string, $opts as map(*))
+as element(details)?
+{
+let $t:=page:view-list($type, $opts,$exclude)
+return if ($t) then
+         <details>
+            <summary>Other perspectives</summary>
+            {$t}
+          </details>
+        else
+           ()
 };
 
 (:~ 
@@ -297,4 +357,13 @@ declare function page:is-url($url as xs:string)
 as xs:boolean
 {
   matches($url,"^(https?|ftp|file)://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]","j")
+};
+
+(:~ 
+ : parse tokens
+ :)
+ declare function page:tokens($s as xs:string)
+ as xs:string*
+ {
+ $s=>normalize-space()=>tokenize("[\s,]+") 
 };

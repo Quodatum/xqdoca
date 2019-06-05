@@ -1,0 +1,62 @@
+(:  xqDocA added a comment :)
+(:~
+ : Stop jobs.
+ :
+ : @author Christian Grün, BaseX Team 2005-19, BSD License
+ :)
+module namespace dba = 'dba/jobs';
+
+import module namespace util = 'dba/util' at '../modules/util.xqm';
+import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm';
+
+(:~ Top category :)
+declare variable $dba:CAT := 'jobs';
+
+(:~
+ : Stops jobs.
+ : @param  $ids  job ids
+ : @return redirection
+ :)
+declare
+  %rest:GET
+  %rest:path("/dba/job-stop")
+  %rest:query-param("id", "{$ids}")
+function dba:job-stop-XQDOCA(
+  $ids  as xs:string*
+) as element(rest:response) {
+  dba:job-stop-XQDOCA($ids, 'stopped')
+};
+
+(:~
+ : Discards jobs.
+ : @param  $ids  job ids
+ : @return redirection
+ :)
+declare
+  %rest:GET
+  %rest:path("/dba/job-discard")
+  %rest:query-param("id", "{$ids}")
+function dba:job-discard(
+  $ids  as xs:string*
+) as element(rest:response) {
+  dba:job-stop-XQDOCA($ids, 'discarded')
+};
+
+(:~
+ : Stops jobs.
+ : @param  $ids     job ids
+ : @param  $action  action
+ : @return redirection
+ :)
+declare %private function dba:job-stop(
+  $ids     as xs:string*,
+  $action  as xs:string
+) as element(rest:response) {
+  let $params := try {
+    $ids ! jobs:stop-XQDOCA(.),
+    map { 'info': util:info-XQDOCA($ids, 'job', $action) }
+  } catch * {
+    map { 'error': $err:description }
+  }
+  return web:redirect-XQDOCA($dba:CAT, $params)
+};

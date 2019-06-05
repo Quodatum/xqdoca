@@ -33,18 +33,18 @@ module namespace xqd = 'quodatum:xqdoca.model';
 
 import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
 
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
-
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
  :)
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
+
 
 (:~  files to process from extensions :)
 declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
@@ -158,7 +158,11 @@ as map(*)*
  return map{"annotation":$name, "xqdoc": $a} 
 };
          
-(:~ return sequence of maps with maps uri and methods :)
+(:~ return sequence of maps 
+ : {uri:.., 
+ : methods : {METHODS: {id:.., uri:.. ,function:}}
+ : }
+ :)
 declare function xqd:rxq-paths($model)
 as map(*)* 
 {
@@ -182,22 +186,28 @@ return $data?($uris)
 
 (:~ 
  : map for each restxq:path annotation
-  :)
+ :  "file": $f,
+ :  "annot": $annot,
+ :  "description": $function/xqdoc:comment/xqdoc:description/node()
+ :  "given": $name/string(),
+ :  "uri": $qmap?uri, 
+ :  "name": $lname, 
+ :   "xqdoc": $e }
+ :)
 declare function xqd:annots-rxq($model as map(*))
 as map(*)*
 {
   for $f at $index in $model?files
   for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
   let $function:= $annot/../..
-  
-  return map{
-                "id": $index,
-                "uri": $f?href,
-                "path": $f?path,
+  let $a:=((xqa:name-detail($function,$f),
+            map{
+                "file": $f,
                 "annot": $annot,
-                "function": $function/concat(xqdoc:name,'#',@arity),
                 "description": $function/xqdoc:comment/xqdoc:description/node() 
                  }
+               ))
+   return map:merge($a)
 };
 
 

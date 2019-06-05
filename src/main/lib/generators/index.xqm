@@ -48,8 +48,6 @@ declare variable $xqhtml:toc:=
    </directory>
   <file target="#file" name="Files"/>
   <file target="#annotation" name="Annotations"/>
-  <file target="#perspectives" name="Other perspectives"/>
-   
 </directory>;
 
 
@@ -74,7 +72,8 @@ let $d:=<div>
               </h1>
               <h2>Built { page:date() }</h2>
              { 
-             page:toc3($opts?project, $xqhtml:toc, page:toc-render#2 ),      
+             page:toc3($opts?project, $xqhtml:toc, page:toc-render#2 ),
+            
              xqhtml:summary($model,$opts),
              xqhtml:modules($model,$opts)
  }
@@ -101,12 +100,10 @@ let $d:=<div>
               </div>
 
              {xqhtml:annot($model,$opts)
-              ,xqhtml:perspectives($model,$opts)
            }
      </div>
 return document{ page:wrap($d, $opts ) }
 };
-
 
 
 declare function xqhtml:summary($model,$opts)
@@ -114,6 +111,8 @@ as element(div)
 {
   <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
+    <p>This document lists the modules and annotations used in this project.</p>
+    { page:module-links("global", "index", $opts) }    
     <p>This project contains:</p>
     <ul>
     <li>{ count($model?files) } modules. </li>
@@ -123,15 +122,10 @@ as element(div)
  </div>
 };
 
-declare function xqhtml:perspectives($model,$opts)
-as element(div)
-{
- <div class="div2">
-  <h2><a id="perspectives"/>5 Other perspectives</h2>
-  { page:view-list( $opts(".renderers")?global,"index")}
-  </div>
-};
 
+(:~ 
+ : summary of all annotations  in project
+ :)
 declare function xqhtml:annot($model,$opts)
 as element(div)
 {
@@ -191,7 +185,7 @@ as element(div)
    
     <th></th>
     <th>Annotations</th>
-     <th>calls</th>
+     <th>Functions</th>
     </tr>
     </thead>
     <tbody>
@@ -214,59 +208,11 @@ as element(div)
                 
                  <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
-                 <td>{$file?xqdoc//xqdoc:invoked=>count() }</td>
+                 <td style="text-align: right">{$file?xqdoc//xqdoc:function=>count() }</td>
               </tr>
         }
     </tbody>
     </table>
   }</div>
-};
-
-(:~ import page :)
-declare 
-%xqdoca:global("imports","Summary of import usage")
-%xqdoca:output("imports.html","html5") 
-function xqhtml:imports($model,$opts)
-{
-  let $imports:=xqd:imports($model)
-  let $body:=<div>
-   <nav id="toc">
-            <h2>
-                <a href="index.html" class="badge badge-success">
-                    { $model?project }
-                </a>
-                / Imports
-            </h2>
-           
-            <h3>
-               Contents
-            </h3>
-            <ol class="toc">
-                <li>
-                    <a href="#main">
-                        <span class="secno">1 </span>
-                        <span class="content">Introduction</span>
-                    </a>
-                </li>
-                
-             </ol>
-           </nav>
-           <a href="index.html">index</a>
-           <p>Lists all modules imported.</p>
-           {for $import in $imports
-           order by $import?uri
-           return <div  id="{ $import?uri }">
-           <h4>{ $import?uri }
-           <div  style="float:right"><a href="#{ $import?uri }">#</a></div>
-           </h4>
-           <ul>
-           {for $f in  $import?where
-           return <li><a href="{$f?href}index.html">{ $f?namespace }</a></li>
-         }
-           </ul>
-           </div>
-           }
-  </div>
-  return  page:wrap($body,$opts)
 };
 

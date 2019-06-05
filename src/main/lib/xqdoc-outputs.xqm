@@ -40,9 +40,10 @@ declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","ou
 
 (:~ defined serialization options :)
 declare variable $xqo:outputs:=map{
-                                     "html5": map{"method": "html", "version":"5.0", "indent": "yes"},
+                                     "html5": map{"method": "html", "version":"5.0", "indent": "no"},
                                      "xml": map{"indent": "no"},
-                                     "json": map{"method": "json"}
+                                     "json": map{"method": "json"},
+                                     "text": map{"method": "text"}
                                    };
 
 
@@ -97,10 +98,15 @@ as map(*){
 :)
 declare function xqo:render( $model as map(*),$opts as map(*))
 as map(*)*
-{
+{ 
   let $funs:=xqo:load-generators("generators/")
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$opts?outputs?global] 
-  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$opts?outputs?module]
+  
+  let $globals:=xqo:tokens($opts?outputs?global)
+  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
+  
+  let $modules:=xqo:tokens($opts?outputs?module)
+  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]
+  
   (: add found renderers info to opts :)
   let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
   return (
@@ -117,8 +123,8 @@ as map(*)*
             map{
               "root": "../../",
               "resources": "../../resources/"
-            }, $opts))
-      let $doc:= apply($render?function,[$file,$opts,$model])       
+            }, $opts))=>trace("MOD OPTS: ")
+      let $doc:= apply($render?function,[$file,$model,$opts])       
       return map{"document": $doc, 
                  "uri": concat($file?href,"/",$render?uri),  
                  "output": $xqo:outputs?($render?output)
@@ -135,4 +141,13 @@ as function(*)*
   let $base:=resolve-uri($path,static-base-uri())
   return file:list($base,true(),"*.xqm")
        ! inspect:functions(resolve-uri(.,$base))
+};
+
+(:~ 
+ : parse tokens
+ :)
+ declare function xqo:tokens($s as xs:string)
+ as xs:string*
+ {
+ $s=>normalize-space()=>tokenize("[\s,]+") 
 };

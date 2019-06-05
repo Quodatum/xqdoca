@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Driver for xquery documentation generator </p>
  :
  : @author Andy Bunce
- : @version 0.2 
+ : @version 0.2  
  :)
 (:~ 
  : Generate documentation for for XQuery sources
@@ -51,7 +51,6 @@ declare variable $platform as xs:string  external := "basex";
 (:~ source file extensions to parse :)
 declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery";
 
-
 (:~ location to save outputs as a base-uri :)
 declare variable $target as xs:string external :="file:///{webpath}/static/xqdoc/{project}/" ;
 
@@ -59,24 +58,27 @@ let $files:=xqd:find-sources($efolder,$exts)
 let $model:= xqd:snap($efolder,$files,$platform) 
 let $options:=map{
                "project": $model?project, 
-               "resources": "resources/",
                "outputs":  map{
-                    "global": ("index","restxq","imports","annotations","meta"),
-                    "module": ("xqdoc","xqparse","module")  
-                },
-                "show-private": true()    
+                    "global": "index restxq imports annotations meta",
+                    "module": "module   xqdoc xqparse refactor "  
+                } 
                }
                
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)
 let $target:=xqd:target($target,$options)   
-(: arbitary result for reporting :)
-let $result:=   <json type="object">
-                    <extra>XQdoc generated</extra>
-                    <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>
-                </json> 
+ 
 return (
        store:store($pages,$target),
        xqo:export-resources($target),
-       update:output($result)
+       
+      (: arbitary result for reporting :) 
+       update:output(
+         <json type="object">
+            <project>{ $options?project }</project>
+             <title>XQdocA generated</title>
+             <status>completed</status>
+            <msg> {$target}, {count($model?files)} files processed. Stored {count($pages)}</msg>
+        </json> 
+       )
 )

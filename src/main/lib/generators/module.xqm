@@ -36,7 +36,7 @@ import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../xqdoc-namespac
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
+
  
 (:~ transform xqdoc to html 
  : <pre>map { "root": "../../", 
@@ -50,10 +50,10 @@ declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
 declare 
 %xqdoca:module("module","Html5 report on the XQuery source")
 %xqdoca:output("index.html","html5")
-function xqh:xqdoc-html2($file as map(*),
-                            $opts as map(*),
-                            $model as map(*)
-                            )
+function xqh:xqdoc-html2($file as map(*),         
+                         $model as map(*),
+                         $opts as map(*)
+                        )
 as document-node()                         
 {
 let $xqd:=$file?xqdoc
@@ -89,6 +89,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
  {
     <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
+     { page:module-links("module", "module", $opts) }
 		<dl>
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			<dt>Tags</dt>
@@ -97,11 +98,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
 			</dd>
 		</dl>,
 		<div> Imported by <a href="{ $opts?root }imports.html#{ $mod/xqdoc:uri/string() }">*</a></div>,
-    <ul>
-     <li style="display:inline">Raw XML files: </li>
-     <li style="display:inline"><a href="xqdoc.xml" target="xqdoc">xqdoc.xml</a>, </li>
-     <li style="display:inline"><a href="xqparse.xml" target="xqparse">xqparse.xml</a></li>
-     </ul>
+   
     </div>
   };
   
@@ -189,27 +186,8 @@ as element(nav){
 				<li>
 							<a href="#restxq">
 								<span class="secno">6 </span>
-								<span class="content">Restxq</span>
+								<span class="content">RestXQ</span>
 							</a>
-							<ol class="toc">
-              
-								<xsl:for-each-group select="qd:restxq($funs)"
-									group-by="doc:literal/string()">
-									<xsl:sort select="current-grouping-key()" />
-									<xsl:variable name="id" select="current-grouping-key()" />
-									<li>
-										<a href="# TODO">
-											<span class="secno">
-												<xsl:value-of select="concat('5.',position())" />
-											</span>
-											<span class="content">
-												<xsl:value-of select="current-grouping-key()" />
-											</span>
-										</a>
-									</li>
-								</xsl:for-each-group>
-							</ol>
-				
 				</li>
        	<li>
 					<a href="#source">
@@ -220,6 +198,8 @@ as element(nav){
 			</ol>
 		</nav>
 };   
+
+
 
 declare function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
 as element(div){
@@ -366,7 +346,7 @@ as element(div)
                     <summary>{$sum}</summary>
                     <ul>
                      { $hits!<li>{
-                       page:link-function2(?qname?uri, ?qname?name, ?file, true()) 
+                       page:link-function2(?qname?uri, ?name, ?file, true()) 
                      }</li> }
                  
                     </ul>              
@@ -588,7 +568,7 @@ declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {
    let $ns:= $file?prefixes
-   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest(?,$ns))
+   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest("path",?,$ns))
    return <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
       {if(empty($rest)) then
@@ -598,14 +578,19 @@ as element(div)
       <table class="data">
       <thead><tr>
         <th>Path</th>
-        <th>Details</th>
+         <th>Method</th>
+        <th>Function</th>
       </tr></thead>
       <tbody>{ for $r in $rest
                let $path:= $r/xqdoc:literal/string()
-               let $f:=$r/../../concat(xqdoc:name,'#',@arity)
+               let $obj:=xqa:name-detail($r/../..,$file)  (: map{ "given": $name/string(), "uri": $qmap?uri, "name": $lname, "xqdoc": $e} :)
+               let $methods:=xqa:methods($obj?xqdoc//xqdoc:annotation, $file?prefixes) 
                order by $path
-        return <tr>
-          <td><a href="#{$f}">{ $path }</a></td><td>{ $f }</td></tr>
+              return <tr>
+                <td>{  $r/xqdoc:literal/string() }</td>
+                <td>{$methods!page:link-restxq(. , true())}</td>
+                <td>{  page:link-function2($obj?uri, $obj?name, $file, true())  }</td>
+                </tr>
     }</tbody>
       </table>)
     }
@@ -618,24 +603,3 @@ declare function xqh:when($value,$fun as function(*))
  if($value) then $fun($value) else ()
 };
 
-declare
-%xqdoca:module("xqdoc","xqDoc file for the source module")
-%xqdoca:output("xqdoc.xml","xml") 
-function xqh:xqdoc($file as map(*),
-                  $opts as map(*),
-                  $model as map(*)
-                  )
-{
-  $file?xqdoc
-};
-
-declare
-%xqdoca:module("xqparse","xqparse file for the source module")
-%xqdoca:output("xqparse.xml","xml") 
-function xqh:xqparse($file as map(*),
-                  $opts as map(*),
-                  $model as map(*)
-                  )
-{
-  $file?xqparse
-};

@@ -211,3 +211,30 @@ a.badge-dark:focus, a.badge-dark.focus {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
 }
+.op-get {
+     color: #fff;
+    background-color: #61affe;
+}
+
+.op-post {
+    color: #fff;
+    background-color: #49cc90;
+}
+
+.op-put{
+     color: #fff;
+   background-color: #fca130; 
+}
+
+.op-delete {
+     color: #fff;
+    background-color: #f93e3e;
+}
+.op-patch{
+  color: #fff;
+  background-color: #17a2b8;
+}
+.op-all{
+    color: #fff;
+    background-color: #17a2b8;
+}

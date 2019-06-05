@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:02:48.049+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri><xqdoc:name>webutils.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>web utils</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>oct 2012</xqdoc:since><xqdoc:custom tag="__source">lib/webutils.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~ 
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.web.utils4</xqdoc:uri><xqdoc:name>webutils.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>web utils</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>oct 2012</xqdoc:since><xqdoc:custom tag="__source">lib/webutils.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~ 
 : web utils
 : @author andy bunce
 : @since oct 2012

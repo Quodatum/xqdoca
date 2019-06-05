@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-01T11:02:48.049+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.txq</xqdoc:uri><xqdoc:name>txq.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>A(nother) templating Engine for XQuery (BaseX specific)
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.txq</xqdoc:uri><xqdoc:name>txq.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>A(nother) templating Engine for XQuery (BaseX specific)
 specials:
 partial(file,name,sequence)</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>sept 2012</xqdoc:since><xqdoc:custom tag="licence">apache 2</xqdoc:custom><xqdoc:custom tag="__source">lib/txq.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:~

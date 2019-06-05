@@ -18,7 +18,7 @@ xquery version "3.1";
  (:~
  : <h1>xqdoc-proj.xqm</h1>
  : <p>annotation utils</p>
- :
+ : 
  : @author Andy Bunce
  : @version 0.1
  :)
@@ -33,6 +33,10 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';
+(:~ 
+ : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
+ :)
+declare variable $xqa:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 (:~  known annotation details :)
 declare variable $xqa:noteworthy:=(
@@ -77,35 +81,43 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*, $file as map(*
 };
 
 
-declare function xqa:is-rest($a  as element(xqdoc:annotation),$ns as map(*))
+declare function xqa:is-rest($name,$a  as element(xqdoc:annotation),$ns as map(*))
 as xs:boolean
 {
-  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,"path")
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)
 };
 
 
 declare function xqa:only-rest($annots  as element(xqdoc:annotation)*,$ns as map(*))
 as xs:boolean
 {
-  $annots=>filter(xqa:is-rest(?,$ns))
+  $annots=>filter(xqa:is-rest("path",?,$ns))
 };
 
-(:~ annotation attached to :)
-declare function xqa:container($a  as element(xqdoc:annotation),$file as map(*))
-as map(*)?
+declare function xqa:methods($annots  as element(xqdoc:annotation)*,$ns as map(*))
+as xs:string*
 {
- if($file?parsed) then
-       let $e:=$a/../..
-       let $name:=$e/xqdoc:name
+ filter($xqa:methods,function($m){
+   some $a in $annots 
+   satisfies  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$m)
+ })
+};    
+
+(:~  info about function or variable :)
+declare function xqa:name-detail($e as element(*),$file as map(*))
+as map(*)
+{
+  let $name:=$e/xqdoc:name
        let $qmap:=xqn:qmap($name, $file?prefixes, $file?default-fn-uri)
        let $lname:=if($e instance of element(xqdoc:function)) then
                      concat($qmap?name,"#",$e/@arity)
                    else
                     concat("$",$name)
-       return map{"given": $name/string(), "uri": $qmap?uri, "name": $lname}
-else
-  ()
-};    
+       return map{"given": $name/string(), 
+                  "uri": $qmap?uri, 
+                  "name": $lname, 
+                  "xqdoc": $e }
+};
 
 (:~ annotations grouped by uri with added file reference 
  : <pre>map{uri:map{
@@ -123,4 +135,6 @@ as map(*)
                    function($a,$f){map:merge(($a,map:entry("file", $f)))}
                  ))
          )
-};         
+};    
+
+ 

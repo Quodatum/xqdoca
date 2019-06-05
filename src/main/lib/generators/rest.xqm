@@ -45,7 +45,8 @@ function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model) 
 let $tree:=$annots?uri 
-let $tree:=tree:build($tree)
+let $tree:=tree:build($tree)=>trace("TREE: ")
+
 let $body:= <div>
               <h1>
                  Project <span class="badge badge-info">
@@ -54,47 +55,71 @@ let $body:= <div>
                   &#160;RestXQ documentation 
               </h1>
             {_:toc($model,$tree)}
-            {_:summary($model,$opts)}
+            {_:summary($model, $opts, $tree)}
            <div class="div2">
              <h2><a id="rest"/>2 Rest interface paths</h2>
-             {$annots!_:path-to-html(.)}
+             {$annots!_:path-report(.,(2,position()))}
            </div>
            </div>
 return  page:wrap($body,$opts)
 };
 
 
-declare function _:summary($model,$opts)
+declare function _:summary($model,$opts, $tree)
 as element(div)
 {
-  <div class="div2">
-    <h2><a id="summary"/>1 Summary</h2>
-    <p>This page summaries the RestXQ interface.</p>
-    <p>Other perspectives:</p>
-   { page:view-list( $opts(".renderers")?global,"restxq")}
- </div>
+    let $base:=tree:base($tree)
+    let $_:=trace($base,"$$")
+    return <div class="div2">
+        <h2><a id="summary"/>1 Summary</h2>      
+        <p>This document summaries the RestXQ interface.</p>
+      { page:module-links("global", "restxq", $opts) }    
+         <dl>
+            <dt>Base path</dt>
+            <dd>{ $base }</dd>
+        </dl>
+     </div>
 };
 
 (:~  html for a path
- : 
+ :   $rep={uri:.., methods:{METHOD:annotation}, function:..}
  :)          
-declare function _:path-to-html($rep as map(*))
+declare function _:path-report($rep as map(*),$pos)
 as element(div)
 {
-  <div class="div3">
-       <h3><a id="{ page:id($rep?uri) }"/>{ $rep?uri }
+ let $methods as map(*) :=$rep?methods 
+ return <div class="div3">
+       <h3><a id="{ page:id($rep?uri) }"/>{page:section($pos) } { $rep?uri }
        <div style="float:right;"><a href="#{ page:id($rep?uri) }">#</a></div></h3>
-       <ul>{
-       let $methods as map(*) :=$rep?methods
+       
+       {
        for $method in map:keys($methods)
-       let $d:=$methods?($method)
-       let $id:=head($d?function)
-       return <li>
-                    <a href="{$d?uri}index.html#{ $rep?function }">{ $method }</a>
-                    <div>{$d?description}</div>
-              </li>
-       }</ul>
+       let $amap:=$methods?($method)
+       return _:method($method,$amap)
+       }
    </div>
+};
+
+(:~  method entry :)
+declare function _:method($method as xs:string,$amap as map(*))
+as element(div)
+{
+  let $annots:=$amap?xqdoc//xqdoc:annotation
+  return <div>
+    <h4>
+        { page:badge-method($method)} &#160;
+      {  page:link-function2($amap?uri, $amap?name, $amap?file, false())  }
+      
+    </h4>
+    <dl>
+    <dt>Summary</dt>
+    <dd>{$amap?description}</dd>
+    <dt>Output</dt>
+    <dd>%rest:produces %output:method</dd>
+    { _:query-params($annots) }
+    </dl>
+    { _:annotations($annots) }
+  </div>
 };
 
 (:~  toc :)
@@ -103,7 +128,7 @@ as element(nav)
 {
      <nav id="toc">
             <h2>
-                 <a href="index.html" class="badge badge-success">
+                 <a href="index.html">
                     { $model?project }
                 </a>
                 / RestXQ
@@ -138,10 +163,42 @@ let $c:=(
 <span class="content">{$el/@name/string()}</span>
 )
 return if($el/@target) then
- <a href="#{ page:id(substring($el/@target,2)) }">
+ <a href="#{ page:id($el/@target) }">
  { $c }
  <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}">X</div>
   </a>
 else
  $c
+};
+
+(:~ annotation details :)
+declare function _:annotations($annots as element(xqdoc:annotation)*)
+as element(*)
+{
+		<details>
+			<summary>Annotations</summary>
+			<table class="data">
+				<tbody>{ 
+       for $a in $annots
+       return 	
+             <tr>
+                <td>
+                  <code class="function">%{ $a/@name/string() }</code>
+                </td>
+                <td>
+                  <code class="arg">{ string-join($a/xqdoc:literal,",") }</code>
+                </td>
+              </tr>
+    }</tbody>
+			</table>
+		</details>
+};
+
+declare function _:query-params($annots)
+as element(*)*
+{
+ <dt>QueryParameters</dt>,
+ <dd>
+ {count($annots)}
+ </dd>
 };

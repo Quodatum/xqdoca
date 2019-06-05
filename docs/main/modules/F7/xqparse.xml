@@ -1,30 +1,55 @@
 <XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
-(:~
- : validate xqdoc o/p against schema
-
- : @author Andy Bunce
- : @version 0.1
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
  :)
  
+ (:~
+ : &lt;h1&gt;xqdoc-htmlmod.xqm&lt;/h1&gt;
+ : &lt;p&gt;Library to support html5 rendering of single xqdoc source&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.1
+ : @see https://github.com/Quodatum/xqdoca
+ :)
+ 
+(:~
+ : Generate  html for xqdoc
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>_</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.generator.simple'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
 
-<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>_</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.generator.validate-xqdoc'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
 
 <Prolog><NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqdoca</NCName><TOKEN>=</TOKEN><StringLiteral>"https://github.com/Quodatum/xqdoca"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
-
-
-<AnnotatedDecl><TOKEN>declare</TOKEN> 
-<Annotation><TOKEN>%</TOKEN><QName>xqdoca:global</QName><TOKEN>(</TOKEN><StringLiteral>"xqdoc-validate"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"validate generated xqdoc files"</StringLiteral><TOKEN>)</TOKEN></Annotation>
-<Annotation><TOKEN>%</TOKEN><QName>xqdoca:output</QName><TOKEN>(</TOKEN><StringLiteral>"validation-report.xml"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xml"</StringLiteral><TOKEN>)</TOKEN></Annotation> 
-<FunctionDecl><TOKEN>function</TOKEN> <QName>_:validate</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
-                            <Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList>
-                            <TOKEN>)</TOKEN>                           
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:module</QName><TOKEN>(</TOKEN><StringLiteral>"xqdoc"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xqDoc xml file from the source module"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:output</QName><TOKEN>(</TOKEN><StringLiteral>"xqdoc.xml"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xml"</StringLiteral><TOKEN>)</TOKEN></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>_:xqdoc</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN> 
+                 <Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                 <Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList>
+                 <TOKEN>)</TOKEN>
 <EnclosedExpr><TOKEN>{</TOKEN>
-<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>schema</QName><TOKEN>:=</TOKEN><ArrowExpr><FunctionCall><QName>resolve-uri</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"../../etc/xqdoc-1.0.01132014.xsd"</StringLiteral><TOKEN>,</TOKEN><FunctionCall><QName>static-base-uri</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>=&gt;</TOKEN><QName>trace</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"xqdoc schema: "</StringLiteral><TOKEN>)</TOKEN></ArgumentList></ArrowExpr></LetBinding></LetClause>
-<LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>reports</QName><TOKEN>:=</TOKEN><FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>f</QName> <TOKEN>in</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>model</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>files</NCName></Lookup></PostfixExpr></ForBinding></ForClause>
-              <ReturnClause><TOKEN>return</TOKEN> <TransformWithExpr><RelativePathExpr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr><TOKEN>!</TOKEN><FunctionCall><QName>validate:xsd-report</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>schema</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr> 
-                      <TOKEN>transform</TOKEN> <TOKEN>with</TOKEN> <TOKEN>{</TOKEN><InsertExpr><TOKEN>insert</TOKEN> <TOKEN>node</TOKEN> <CompAttrConstructor><TOKEN>attribute</TOKEN> <QName>source</QName> <EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>path</NCName></Lookup></PostfixExpr> <TOKEN>}</TOKEN></EnclosedExpr></CompAttrConstructor> <TOKEN>into</TOKEN> <TOKEN>.</TOKEN></InsertExpr><TOKEN>}</TOKEN></TransformWithExpr></ReturnClause></FLWORExpr></LetBinding></LetClause>
+  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqdoc</NCName></Lookup></PostfixExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-<ReturnClause><TOKEN>return</TOKEN> <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>errors</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>reports</QName></VarRef> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>errors</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></ReturnClause></FLWORExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
-
-<EOF/></XQuery>
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:module</QName><TOKEN>(</TOKEN><StringLiteral>"xqparse"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xqparse xml file from the source module"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:output</QName><TOKEN>(</TOKEN><StringLiteral>"xqparse.xml"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xml"</StringLiteral><TOKEN>)</TOKEN></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>_:xqparse</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>file</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                   <Param><TOKEN>$</TOKEN><QName>model</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param><TOKEN>,</TOKEN>
+                   <Param><TOKEN>$</TOKEN><QName>opts</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList>
+                   <TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>xqparse</NCName></Lookup></PostfixExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module><EOF/></XQuery>
