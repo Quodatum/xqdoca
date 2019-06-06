@@ -17,178 +17,435 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>xqdoc-html.xqm</h1>
- : <p>Library to support html5 rendering of xqdoc</p>
+ : <h1>xqdoc-htmlmod.xqm</h1>
+ : <p>Library to support html5 rendering of single xqdoc source</p>
  :
  : @author Andy Bunce
  : @version 0.1
+ : @see https://github.com/Quodatum/xqdoca
  :)
  
 (:~
- : Generate RESTXQ XQuery  documentation in html
+ : Generate  html for xqdoc
  :)
-module namespace _ = 'quodatum:xqdoca.generator.rest';
+module namespace xqh = 'quodatum:xqdoca.mod-html';
 
-import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../xqdoc-namespace.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm';
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
-
-(:~
- : rest interface html for page. 
+ 
+(:~ transform xqdoc to html 
+ : <pre>map { "root": "../../", 
+ :        "cache": false(), 
+ :         "resources": "resources/", 
+ :        "filename": "src\main\lib\parsepaths.xq", 
+ :        "show-private": true(),  
+ :         "project": "xqdoca", 
+ :         "source": () }</pre> 
  :)
 declare 
-%xqdoca:global("restxq","Summary of REST interface")
-%xqdoca:output("restxq.html","html5") 
-function _:restxq-XQDOCA($model,$opts)
+%xqdoca:module("module","Html5 report on the XQuery source")
+%xqdoca:output("index.html","html5")
+function xqh:xqdoc-html2-XQDOCA($file as map(*),         
+                         $model as map(*),
+                         $opts as map(*)
+                        )
+as document-node()                         
 {
-let $annots:= xqd:rxq-paths-XQDOCA($model) 
-let $tree:=$annots?uri 
-let $tree:=tree:build-XQDOCA($tree)=>trace("TREE: ")
+let $xqd:=$file?xqdoc
+let $_:=trace(concat($file?path,"->",$file?href),"module: ")
 
-let $body:= <div>
-              <h1>
-                 Project <span class="badge badge-info">
-                      { $opts?project }
-                  </span>
-                  &#160;RestXQ documentation 
-              </h1>
-            {_:toc-XQDOCA($model,$tree)}
-            {_:summary-XQDOCA($model, $opts, $tree)}
-           <div class="div2">
-             <h2><a id="rest"/>2 Rest interface paths</h2>
-             {$annots!_:path-report-XQDOCA(.,(2,position()))}
-           </div>
-           </div>
-return  page:wrap-XQDOCA($body,$opts)
+let $d:=<div>
+       <h1>
+			<span class="badge badge-info">{ $file?namespace }</span>&#160;
+			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
+      <div style="float:right">{ xqa:badges-XQDOCA($xqd//xqdoc:annotation, $file)}</div>
+		</h1>
+{
+         xqh:toc-XQDOCA($xqd,$opts,$file),
+         xqh:summary-XQDOCA($xqd/xqdoc:module,$opts),
+         xqh:imports-XQDOCA($xqd,$model), 
+         xqh:variables-XQDOCA($xqd/xqdoc:variables,$file),
+         xqh:functions-XQDOCA($xqd/xqdoc:functions, $file, $model),
+         xqh:when-XQDOCA($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces-XQDOCA(?,$model)),
+         xqh:restxq-XQDOCA($xqd,$file),
+          <div class="div2">
+            <h2 ><a id="source"/>7 Source Code</h2>
+            <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
+          </div>
+       }</div>
+
+ return document{ page:wrap-XQDOCA($d, $opts )  }                 
 };
 
-
-declare function _:summary($model,$opts, $tree)
-as element(div)
-{
-    let $base:=tree:base-XQDOCA($tree)
-    let $_:=trace($base,"$$")
-    return <div class="div2">
-        <h2><a id="summary"/>1 Summary</h2>      
-        <p>This document summaries the RestXQ interface.</p>
-      { page:module-links-XQDOCA("global", "restxq", $opts) }    
-         <dl>
-            <dt>Base path</dt>
-            <dd>{ $base }</dd>
-        </dl>
-     </div>
-};
-
-(:~  html for a path
- :   $rep={uri:.., methods:{METHOD:annotation}, function:..}
- :)          
-declare function _:path-report($rep as map(*),$pos)
-as element(div)
-{
- let $methods as map(*) :=$rep?methods 
- return <div class="div3">
-       <h3><a id="{ page:id-XQDOCA($rep?uri) }"/>{page:section-XQDOCA($pos) } { $rep?uri }
-       <div style="float:right;"><a href="#{ page:id-XQDOCA($rep?uri) }">#</a></div></h3>
-       
-       {
-       for $method in map:keys-XQDOCA($methods)
-       let $amap:=$methods?($method)
-       return _:method-XQDOCA($method,$amap)
-       }
-   </div>
-};
-
-(:~  method entry :)
-declare function _:method($method as xs:string,$amap as map(*))
-as element(div)
-{
-  let $annots:=$amap?xqdoc//xqdoc:annotation
-  return <div>
-    <h4>
-        { page:badge-method-XQDOCA($method)} &#160;
-      {  page:link-function2-XQDOCA($amap?uri, $amap?name, $amap?file, false())  }
-      
-    </h4>
-    <dl>
-    <dt>Summary</dt>
-    <dd>{$amap?description}</dd>
-    <dt>Output</dt>
-    <dd>%rest:produces %output:method</dd>
-    { _:query-params-XQDOCA($annots) }
-    </dl>
-    { _:annotations-XQDOCA($annots) }
-  </div>
-};
-
-(:~  toc :)
-declare function _:toc($model as map(*),$tree)
-as element(nav)
-{
-     <nav id="toc">
-            <h2>
-                 <a href="index.html">
-                    { $model?project }
-                </a>
-                / RestXQ
-            </h2>
-           <h3>
-               Contents
-            </h3>
+declare function xqh:summary($mod as element(xqdoc:module),
+                            $opts as map(*)
+                            )
+ as element(div)
+ {
+    <div class="div2">
+    <h2><a id="summary"/>1 Summary</h2>
+     <p>This document describes the XQuery module based on its xqDoc.</p>
+     { page:module-links-XQDOCA("module", "module", $opts) }
+		<dl>
+		{xqh:when-XQDOCA($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
+			<dt>Tags</dt>
+			<dd>
+			{xqh:tags-XQDOCA($mod/xqdoc:comment/(* except xqdoc:description)) }
+			</dd>
+		</dl>
+    </div>
+  };
+  
+declare function xqh:toc($xqd,$opts,$file as map(*))
+as element(nav){
+  let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
+  let $funs:=$xqd//xqdoc:function   (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
+	return	<nav id="toc">
+			<h2>
+			    <a href="{ $opts?root || "index.html" }" >{ $opts?project }</a>
+                / Module
+       </h2>
+			<h3>
+				<a id="contents"></a>
+				<span class="">{ $xqd/xqdoc:module/xqdoc:uri/string() }</span>
+			</h3>
+			<ol class="toc">
+				<li>
+					<a href="#summary">
+						<span class="secno">1 </span>
+						<span class="content">Summary</span>
+					</a>
+				</li>
+				<li>
+          <a href="#imports">
+            <span class="secno">2 </span>
+            <span class="content">Imports</span>
+          </a>
+        </li>
+				
+          <li>
+            <a href="#variables">
+              <span class="secno">3 </span>
+              <span class="content">Variables</span>
+            </a>
             <ol class="toc">
+            {for $var  in $vars
+            order by $var/xqdoc:name
+            let $id:=concat('$',$var/xqdoc:name)
+            count $pos
+            return
                 <li>
-                    <a href="#summary">
-                        <span class="secno">1 </span>
-                        <span class="content">Summary</span>
-                    </a>
+                  <a href="#{$id}">
+                    <span class="secno">{ concat('3.',$pos) }</span>
+                    <span class="content">{ $id }</span>
+                    <div style="float:right">
+                     {xqa:badges-XQDOCA($var/xqdoc:annotations/xqdoc:annotation,$file)}
+                        </div>
+                  </a>
                 </li>
-                 <li  >
-                    <a href="#rest">
-                        <span class="secno">2 </span>
-                        <span class="content">Rest Paths</span>
-                    </a>
-                </li>
-                { $tree/*!page:tree-list-XQDOCA(.,2,_:toc-render#2) } 
-             </ol>
-           </nav>
-};
+            }
+            </ol>
+          </li>
+				
+				<li>
+
+							<a href="#functions">
+								<span class="secno">4 </span>
+								<span class="content">Functions</span>
+							</a>
+							<ol class="toc">
+                {for $fun  in $funs
+              group by $name:=$fun/xqdoc:name
+              order by $name
+              count $pos
+              return
+									<li>
+										<a href="#{$name}">
+											<span class="secno">{ concat('4.',$pos[1]) }</span>
+											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
+                      <div style="float:right">
+                     {xqa:badges-XQDOCA($fun/xqdoc:annotations/xqdoc:annotation,$file)}
+                        </div>
+                        </span>  
+										</a>
+									</li>
+							}
+							
+							</ol>
+		
+				</li>
+				<li>
+					<a href="#namespaces">
+						<span class="secno">5 </span>
+						<span class="content">Namespaces</span>
+					</a>
+				</li>
+				<li>
+							<a href="#restxq">
+								<span class="secno">6 </span>
+								<span class="content">RestXQ</span>
+							</a>
+				</li>
+       	<li>
+					<a href="#source">
+						<span class="secno">7 </span>
+						<span class="content">Source</span>
+					</a>
+				</li> 
+			</ol>
+		</nav>
+};   
 
 
-declare function _:toc-render($pos as xs:string,$el as element(*))
-as element(*)*
+
+declare function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
+as element(div){
+  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
+  let $importing:=xqd:imports-XQDOCA($model)?($uri)
+  let $imports:=$xqd/xqdoc:imports
+  return  
+    <div class="div2">
+    <h2><a id="imports"/>2 Imports</h2>
+
+    <p>
+    This module is imported by
+    <span class="badge badge-info">{ count($importing) }</span> modules, it imports
+    <span class="badge badge-info">{ count($imports/xqdoc:import) }</span> modules.
+    </p>
+   
+  
+    {
+     page:calls-XQDOCA(
+		     $importing?namespace!page:link-module-XQDOCA(.,$model),
+		     $uri,
+		     $imports/xqdoc:import/xqdoc:uri/string()!page:link-module-XQDOCA(.,$model)
+   )
+  }
+ 
+    </div>
+}; 
+
+declare function xqh:variables($vars as element(xqdoc:variables),$file as map(*))
+as element(div)
 {
-let $c:=(
-<span class="secno">{$pos}</span>,
-<span class="content">{$el/@name/string()}</span>
-)
-return if($el/@target) then
- <a href="#{ page:id-XQDOCA($el/@target) }">
- { $c }
- <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}">X</div>
-  </a>
-else
- $c
+  <div class="div2">
+			<h2>
+				<a id="variables"/>3 Variables
+			</h2>
+		{for $v in $vars/xqdoc:variable
+      order by  lower-case($v/xqdoc:name)
+      count $index
+	   return xqh:variable-XQDOCA($v,(3,$index),$file),
+     if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
+   }
+		</div>
 };
 
-(:~ annotation details :)
-declare function _:annotations($annots as element(xqdoc:annotation)*)
+declare function xqh:variable($v as element(xqdoc:variable),
+                              $section as xs:anyAtomicType*,
+                              $file as map(*))
+as element(div)
+{
+let $id:= concat('$',$v/xqdoc:name)
+let $qmap:=xqn:qmap-XQDOCA($v/xqdoc:name,$file?prefixes, $file?default-fn-uri)
+let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
+return
+		<div class="div3">
+			<h3>
+      <a id="{$id }"/> 
+      {$v!<a id="{ xqn:clark-name-XQDOCA($qmap?uri, "$" || $qmap?name) }"/>}
+       { page:section-XQDOCA($section) } {$id }
+      </h3>
+			<dl>
+        <dt class="label">Summary</dt>
+		   <dd>{ $summary }</dd>
+				<dt class="label">Type</dt>
+				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
+			</dl>
+      {xqh:tags-XQDOCA($v/xqdoc:comment/(* except xqdoc:description)) }
+      { xqh:when-XQDOCA($v/xqdoc:annotations,xqh:annotations#1) }
+		</div>
+};  
+
+declare function xqh:functions(
+                     $funs as element(xqdoc:functions),
+                     $file as map(*),
+                     $model as map(*)
+                   )
+as element(div)
+{
+  <div class="div2">
+			<h2><a id="functions"/>4 Functions</h2>
+		{ for $f in $funs/xqdoc:function
+      group by $name:=$f/xqdoc:name
+      order by  $name
+      count $pos
+	   return xqh:function-XQDOCA($f,(4,$pos),$file, $model ),
+      if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
+   }
+		</div>
+};
+
+(:~   o/p details for function $funs has all defined arities
+ : @param $section no.
+ :)
+declare
+function xqh:function($funs as element(xqdoc:function)*,
+                              $section as xs:anyAtomicType*,
+                              $file as map(*),
+                              $model as map(*))
+as element(div)
+{
+    let $funs:=sort($funs,(),function($f){$f/@arity})
+		let $name:=$funs[1]/xqdoc:name/string()
+    let $qmap:= xqn:qmap-XQDOCA($name, $file?prefixes, $file?default-fn-uri)
+	  return
+		<div class="div3">
+			<h3><a id="{$name}"/> { 
+                $funs!<a id="{ xqn:clark-name-XQDOCA($qmap?uri, $qmap?name) }#{ @arity }"/> 
+              , page:section-XQDOCA($section) } { $name }
+			  <div style="float:right">
+				<a href="#{ $name }" >#</a>
+				</div>
+			</h3>
+     
+     <p>Arities: {  $funs 
+                  ! <span style="margin-left:1em" >
+                      <a href="#{ xqn:clark-name-XQDOCA($qmap?uri, $qmap?name) }#{ @arity }">{ $name}#{ string(@arity) }</a>
+                      { xqa:badges-XQDOCA(xqdoc:annotations/xqdoc:annotation,$file) }
+                      
+                    </span>
+                          
+                 }</p>
+		{ xqh:when-XQDOCA ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
+			<dt class="label">Signature</dt>
+			<dd>
+			{$funs!xqh:function-signature-XQDOCA(.) }
+			</dd>
+			{ $funs[1]/xqdoc:parameters!xqh:parameters-XQDOCA(.) } 
+	    { $funs[1]/xqdoc:return!xqh:return-XQDOCA(.) }
+		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error-XQDOCA(.) }
+      {xqh:tags-XQDOCA($funs/xqdoc:comment/(* except xqdoc:description)) }
+      <details>
+        <summary>Source</summary>
+        { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
+      </details>
+     
+       
+      { xqh:when-XQDOCA ($funs/xqdoc:invoked,xqh:invoked-XQDOCA(?, $file, $model) )}
+     
+      
+       {
+          let $hits:=for $file in $model?files, $f in $file?xqdoc//xqdoc:function
+                     where $f[xqdoc:invoked[
+                                         xqdoc:name = $qmap?name
+                                     and @arity=$funs/@arity 
+                                     and xqdoc:uri= $qmap?uri 
+                                ]]
+                    let $qname:=xqn:qmap-XQDOCA($f/xqdoc:name,$file?prefixes,$file?default-fn-uri)                         
+                    return map{"file": $file, "name": concat($qname?name,"#",$f/@arity), "qname": $qname}
+                    
+          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          return  <details>
+                    <summary>{$sum}</summary>
+                    <ul>
+                     { $hits!<li>{
+                       page:link-function2-XQDOCA(?qname?uri, ?name, ?file, true()) 
+                     }</li> }
+                 
+                    </ul>              
+                    </details>
+     }
+     { $funs/xqdoc:annotations!xqh:annotations-XQDOCA(.) }
+		</div>
+};
+
+
+
+(:~
+ : list of functions called  
+ :)
+declare
+function xqh:invoked(
+       $invoked as element(xqdoc:invoked)*,
+       $file as map(*),
+       $model as map(*)
+     )
+as element(details)
+{
+ let $di:=for $i in $invoked
+       let $name:= concat($i/xqdoc:name,"#",$i/@arity)
+       group by $key:= $i/xqdoc:uri || $name
+       order by $key
+       return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
+ let $msg:= ``[Invokes `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
+
+ return <details>
+      <summary>{ $msg }</summary>
+      <ul> {
+         $di! <li>{ page:link-function-XQDOCA(?uri, ?name, $file, $model) }</li>
+     } </ul>
+      </details> 
+};
+
+declare function xqh:custom($v as element(xqdoc:custom))
+as element(p)
+{
+		<p>{ $v/@tag/string() }: { $v/* }</p>
+};
+
+(:~ 
+ :The @see tag provides the ability to hypertext link to an external web site, a library or main module contained in xqDoc, 
+ :a specific function (or variable) defined in a library or main module contained in xqDoc, or arbitrary text. To link to  
+ :an external site, use a complete URL such as http://www.xquery.com. To link to a library or main module contained in  
+ :   
+ :xqDoc, simply provide the URI for the library or main module. To link to a specific function (or variable) defined in an 
+ :xqDoc library or main module, simply provide the URI for the library or main module followed by a ';' and finally the     
+ :function or variable name. To provide a name for a link, simply include a second ';' followed by the name. To provide     
+ :text, simply include the 'text'. Multiple @see tags can be specified (one per link or string of text). 
+ : @see http://www.xquery.com
+ : @see xqdoc/xqdoc-display
+ : @see xqdoc/xqdoc-display;build-link
+ : @see xqdoc/xqdoc-display;$months
+ : @see xqdoc/xqdoc-display;$months;month variable
+ : @see http://www.xquery.com;;xquery
+ : @see some text
+ :)
+declare function xqh:see($v as element(xqdoc:see))
+as element(p)
+{
+  let $items:=tokenize($v,";")
+  let $first:=$items[1]
+  return  <p>See also:
+          {switch(true())
+          case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
+          case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
+          default return if(page:is-url-XQDOCA($first)) then <a href="{ $first }">{ $first }</a> else $first
+        }</p>
+};
+  
+declare function xqh:annotations($v as element(xqdoc:annotations))
 as element(*)
 {
 		<details>
 			<summary>Annotations</summary>
 			<table class="data">
 				<tbody>{ 
-       for $a in $annots
+       for $a in $v/xqdoc:annotation
        return 	
              <tr>
                 <td>
                   <code class="function">%{ $a/@name/string() }</code>
                 </td>
                 <td>
-                  <code class="arg">{ string-join($a/xqdoc:literal,",") }</code>
+                  <code class="arg">{ xqa:literals-XQDOCA($a/xqdoc:literal) }</code>
                 </td>
               </tr>
     }</tbody>
@@ -196,11 +453,160 @@ as element(*)
 		</details>
 };
 
-declare function _:query-params($annots)
+
+
+declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
+as element(div)
+{
+     <div class="div2">
+			<h2><a id="namespaces"/>5 Namespaces</h2>
+			<p>The following namespaces are defined:</p>
+			<table class="data" style="float:none">
+				<thead>
+					<tr>
+						<th>Prefix</th>
+						<th>Uri</th>
+					</tr>
+				</thead>
+				<tbody>{ 
+        for $ns in $namespaces/xqdoc:namespace
+					order by lower-case($ns/@prefix)
+          return
+						<tr>
+							<td>{string($ns/@prefix) }</td>
+							<td>{ page:link-module-XQDOCA(string($ns/@uri),$model) }</td>
+						</tr>
+			}</tbody>
+			</table>
+		</div>
+};
+
+declare function xqh:parameters($v as element(xqdoc:parameters))
 as element(*)*
 {
- <dt>QueryParameters</dt>,
- <dd>
- {count($annots)}
- </dd>
+	<dt class="label">Parameters</dt>,
+		<dd>
+			<ul>{
+         for $p in $v/xqdoc:parameter
+         return 	<li>
+                    { $p/xqdoc:name/string() }
+                    <code class="as">&#160;as&#160;</code>
+                    <code class="return-type">
+                      { $p/xqdoc:type/string() }
+                      { $p/xqdoc:type/@occurrence/string() }
+                    </code>
+                    {   page:comment-for-XQDOCA(string($p/xqdoc:name),$v) }
+                </li>
+    }</ul>
+		</dd>
 };
+
+
+
+declare function xqh:return($v as element(xqdoc:return))
+as element(*)*
+{
+		<dt class="label">Return</dt>,
+		<dd>
+			<ul>
+				<li>
+					<code class="return-type">
+					{ $v/xqdoc:type/string() }
+					{ $v/xqdoc:type/@occurrence/string() }
+					</code>
+					{for $comment in $v/xqdoc:comment/xqdoc:return
+					return $comment/(node()|text())
+        }
+				</li>
+			</ul>
+		</dd>
+};
+ 
+declare function xqh:error($v as element(xqdoc:error))
+{
+		<dt class="label">Error</dt>,
+		<dd>
+		{ $v/(node()|text()) }
+		</dd>
+};
+
+declare function xqh:function-signature($v as element(xqdoc:function))
+as element(div){
+		<div class="proto">
+			<code class="function">{ $v/xqdoc:name/string() }</code>
+		  ( 
+			{for $p in $v/xqdoc:parameters/xqdoc:parameter
+			return	(
+        <code class="arg">${ $p/xqdoc:name/string() }</code>,
+				<code class="as">&#160;as&#160;</code>,
+				<code class="type">{ $p/xqdoc:type/string() }	{ $p/xqdoc:type/@occurrence/string() }</code>,
+			  if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else () 
+		)}
+	 )
+			<code class="as">&#160;as&#160;</code>
+			<code class="return-type">
+			{ $v/xqdoc:return/xqdoc:type }
+			{ $v/xqdoc:return/xqdoc:type/@occurrence/string() }
+			</code>
+      
+		</div>
+};
+	
+declare function xqh:description($v as element(xqdoc:description))
+as element(*)*{
+  		<dt class="label">Summary</dt>,
+		<dd>
+			{ $v/(node()|text()) }
+		</dd>
+};
+
+declare function xqh:tags($tags as element(*)*)
+{
+ for $tag in $tags return
+typeswitch ($tag)
+  case element (xqdoc:see) return	xqh:see-XQDOCA($tag)
+  case element (xqdoc:author) return	<p>Author: {string($tag)}</p>
+  case element (xqdoc:version) return<p>Version: {string($tag)}</p>
+  case element (xqdoc:custom) return<p>{ $tag/@tag/string()} : {string($tag)}</p>  
+  default return()
+};
+ 
+declare function xqh:restxq($xqd,$file as map(*))
+as element(div)
+{
+   let $ns:= $file?prefixes
+   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest-XQDOCA("path",?,$ns))
+   return <div class="div2">
+			<h2><a id="restxq"/>6 RestXQ</h2>
+      {if(empty($rest)) then
+            <p>None</p>
+       else(
+      <p>Paths defined {count($rest)}.</p>,
+      <table class="data">
+      <thead><tr>
+        <th>Path</th>
+         <th>Method</th>
+        <th>Function</th>
+      </tr></thead>
+      <tbody>{ for $r in $rest
+               let $path:= $r/xqdoc:literal/string()
+               let $obj:=xqa:name-detail-XQDOCA($r/../..,$file)  (: map{ "given": $name/string(), "uri": $qmap?uri, "name": $lname, "xqdoc": $e} :)
+               let $methods:=xqa:methods-XQDOCA($obj?xqdoc//xqdoc:annotation, $file?prefixes) 
+               order by $path
+              return <tr>
+                <td>{  $r/xqdoc:literal/string() }</td>
+                <td>{$methods!page:link-restxq-XQDOCA($path,. , true())}</td>
+                <td>{  page:link-function2-XQDOCA($obj?uri, $obj?name, $file, true())  }</td>
+                </tr>
+    }</tbody>
+      </table>)
+    }
+    </div>
+};
+
+(:~ run function when value is non empty :)
+declare function xqh:when($value,$fun as function(*))
+{
+ if($value) then $fun($value) else ()
+};
+

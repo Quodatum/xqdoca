@@ -42,6 +42,8 @@
 
 (:~
  : Returns folder info.
+ : @param $url location 
+ : @param $protocol 'file' or 'xmldb'
  :)
 <AnnotatedDecl><TOKEN>declare</TOKEN>
 <Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>"/vue-poc/api/collection"</StringLiteral><TOKEN>)</TOKEN></Annotation>

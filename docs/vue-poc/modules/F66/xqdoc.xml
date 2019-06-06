@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.store</xqdoc:uri><xqdoc:name>store.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>store o/ps below $base</xqdoc:description><xqdoc:param>$docs sequence of maps</xqdoc:param><xqdoc:param>$base a uri "file:..", "xmldb:.."</xqdoc:param><xqdoc:custom tag="__source">lib/store.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.store</xqdoc:uri><xqdoc:name>store.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>store o/ps below $base</xqdoc:description><xqdoc:param>$docs sequence of maps</xqdoc:param><xqdoc:param>$base a uri "file:..", "xmldb:.."</xqdoc:param><xqdoc:custom tag="__source">lib/store.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 module namespace store = 'quodatum.store';
 
 

@@ -71,6 +71,10 @@ function _:annotations($model,$opts)
                  count $c
                  return <div class="div3">
                             <h3><a id="{ $ns }"/>{page:section((2,$c))} { $ns }</h3>
+                            {sort(distinct-values($ns-map?($ns)?annotation?name)) 
+                            !<span style="margin-left:1em" >
+                            <a href="#{{{ $ns}}}{.}">{.}</a>
+                             </span>}
                             {for $a in $ns-map?($ns)
                             group by $name:=$a?annotation?name
                             order by lower-case($name)
@@ -84,7 +88,7 @@ function _:annotations($model,$opts)
 declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
 {
  <div class="div4">
-     <h4><a id="{ $ns }#{ $name }"/>{ $ns }#{$name}
+     <h4><a id="{{{ $ns }}}{ $name }"/>{{{ $ns }}}{$name}
       <div style="float:right"><span class="badge badge-info">{count($a)}</span></div>
      </h4>
     
@@ -103,7 +107,7 @@ declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
                               else 
                                 ()
                      }</td>
-                    <td>{$a2?xqdoc/xqdoc:literal!<span style="margin-right:2em">{.}</span>}</td>
+                    <td>{ xqa:literals($a2?xqdoc/xqdoc:literal) }</td>
                 </tr>
        }</tbody>
      </table>
@@ -130,7 +134,7 @@ as element(ol)
       }</directory>
      </directory>
  return <ol class="toc">
-        {$t/*!page:tree-list(.,position(),page:toc-render#2)}
+        {$t/*!page:tree-list(.,position(),page:toc-render#2,99)}
         </ol>    
 };
 

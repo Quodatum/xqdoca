@@ -35,6 +35,8 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';
+declare variable $xqa:nsOUT:='http://www.w3.org/2010/xslt-xquery-serialization';
+
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
  :)
@@ -82,11 +84,17 @@ declare function xqa:badges-XQDOCA($annos as element(xqdoc:annotation)*, $file a
     )
 };
 
-
+(:~  true if rest:name :)
 declare function xqa:is-rest($name,$a  as element(xqdoc:annotation),$ns as map(*))
 as xs:boolean
 {
   xqn:eq-XQDOCA(xqn:qmap-XQDOCA($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)
+};
+
+declare function xqa:is-out($name,$a  as element(xqdoc:annotation),$ns as map(*))
+as xs:boolean
+{
+  xqn:eq-XQDOCA(xqn:qmap-XQDOCA($a/@name,$ns,$xqa:nsANN), $xqa:nsOUT,$name)
 };
 
 
@@ -114,7 +122,7 @@ as map(*)
        let $lname:=if($e instance of element(xqdoc:function)) then
                      concat($qmap?name,"#",$e/@arity)
                    else
-                    concat("$",$name)
+                    concat("$",$qmap?name)
        return map{"given": $name/string(), 
                   "uri": $qmap?uri, 
                   "name": $lname, 
@@ -139,4 +147,21 @@ as map(*)
          )
 };    
 
- 
+(:~  annotation literals display :)
+declare function xqa:literals($lits as element(xqdoc:literal)*)
+as xs:string?
+{ 
+let $t:=$lits!(if(@type="xs:string") then  
+               concat("'",string(),"'")
+              else
+                string()
+)
+return concat("(",string-join($t,","),")")          
+ };
+
+(:~  extract names from url may include = regex :) 
+declare function xqa:extract-restxq($url as xs:string)
+as xs:string*
+{
+  fn:analyze-string-XQDOCA($url,"\{\w*\$(\S*)\w*\}")/fn:match/fn:group/string()
+};    

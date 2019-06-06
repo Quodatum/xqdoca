@@ -124,7 +124,7 @@ as map(*)*
             map{
               "root": "../../",
               "resources": "../../resources/"
-            }, $opts))=>trace("MOD OPTS: ")
+            }, $opts))
       let $doc:= apply($render?function,[$file,$model,$opts])       
       return map{"document": $doc, 
                  "uri": concat($file?href,"/",$render?uri),  
@@ -141,6 +141,7 @@ as function(*)*
 {
   let $base:=resolve-uri($path,static-base-uri())
   return file:list-XQDOCA($base,true(),"*.xqm")
+       !translate(.,"\","/")
        ! inspect:functions-XQDOCA(resolve-uri(.,$base))
 };
 

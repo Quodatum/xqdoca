@@ -26,7 +26,7 @@ xquery version "3.1";
 
 module namespace page = 'quodatum:xqdoca.page';
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
 (:~ make html hrefable id :)
 declare function page:id($id as xs:string)
 as xs:string
@@ -60,9 +60,10 @@ as element(span)
 declare 
 function page:link-module($file as map(*))                       
 as element(span)
-{  
-   <span>
-    <a href="{ $file?href }index.html" title="{ $file?path }">{ $file?namespace }</a> 
+{
+   let $desc:=  $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description
+   return <span>
+    <a href="{ $file?href }index.html" title="{ $desc }">{ $file?namespace }</a> 
    </span>
 };
 
@@ -93,13 +94,14 @@ as element(span)
  : @todo only if generated
  :)
 declare 
-function page:link-restxq($method as xs:string,
+function page:link-restxq($path as xs:string,
+                          $method as xs:string,
                           $fromModule as xs:boolean
                             )                       
 as element(span)
 {  
  let $root:=if($fromModule) then "../../" else ""
-  return  <span><a href="{ $root }restxq.html?">{ page:badge-method($method)}</a></span>
+  return  <span><a href="{ $root }restxq.html#{ $path}#{ $method }">{ page:badge-method($method)}</a></span>
 };
  
 (:~ link to fun or var in file
@@ -221,7 +223,7 @@ as element(nav)
                    { $head }
             </h2>
             <ol class="toc">{
-             $tree/*! page:tree-list(.,position(),$decorate)
+             $tree/*! page:tree-list(.,position(),$decorate,99)
           }</ol>
         </nav> 
 };
@@ -236,14 +238,17 @@ as xs:string{
  : @param tree file (@name.@target) directory elements 
  : @param $seq  section number as sequence of levels
 :)
-declare function page:tree-list($tree as element(*),$seq as xs:integer*,$render as function(*))
+declare function page:tree-list($tree as element(*),
+                                $seq as xs:integer*,
+                                $render as function(*),
+                                $maxdepth as xs:integer)
 as element(li){
   let $pos:=page:section($seq)
   
   return <li>{
          $render($pos,$tree),
-         if($tree  instance of element(directory))then
-          <ol >{ $tree/*!page:tree-list(.,($seq,position()),$render) }</ol>
+         if($tree  instance of element(directory) and $maxdepth > 0)then
+          <ol >{ $tree/*!page:tree-list(.,($seq,position()),$render,$maxdepth -1 ) }</ol>
           else ()
         }</li>
  
@@ -333,7 +338,7 @@ as element(details)?
 let $t:=page:view-list($type, $opts,$exclude)
 return if ($t) then
          <details>
-            <summary>Other perspectives</summary>
+            <summary>Related documents</summary>
             {$t}
           </details>
         else
@@ -360,10 +365,20 @@ as xs:boolean
 };
 
 (:~ 
- : parse tokens
+ : parse tokens from comma space delimited string
  :)
  declare function page:tokens($s as xs:string)
  as xs:string*
  {
  $s=>normalize-space()=>tokenize("[\s,]+") 
+};
+(:~ extract comment for name :) 
+declare function page:comment-for($name as xs:string,$v as element(xqdoc:parameters))
+as xs:string*
+{
+ for $comment in $v/../xqdoc:comment/xqdoc:param[
+                                       starts-with(normalize-space(.), $name) or 
+                                       starts-with(normalize-space(.), concat('$',$name))
+                                     ]
+ return substring-after(normalize-space($comment), $name)  
 };

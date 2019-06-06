@@ -33,6 +33,8 @@
 
 <AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqa:nsRESTXQ</QName><TOKEN>:=</TOKEN> <StringLiteral>'http://exquery.org/ns/restxq'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 <AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqa:nsANN</QName><TOKEN>:=</TOKEN><StringLiteral>'http://www.w3.org/2012/xquery'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>xqa:nsOUT</QName><TOKEN>:=</TOKEN><StringLiteral>'http://www.w3.org/2010/xslt-xquery-serialization'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
  :)
@@ -80,11 +82,17 @@
     <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
-
+(:~  true if rest:name :)
 <AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqa:is-rest</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>name</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>a</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:annotation</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>ns</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
 <TOKEN>as</TOKEN> <QName>xs:boolean</QName>
 <EnclosedExpr><TOKEN>{</TOKEN>
   <FunctionCall><QName>xqn:eq</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xqn:qmap</QName><ArgumentList><TOKEN>(</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep></RelativePathExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ns</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqa:nsANN</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqa:nsRESTXQ</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqa:is-out</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>name</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>a</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:annotation</QName><TOKEN>)</TOKEN></ElementTest></TypeDeclaration></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>ns</QName> <TypeDeclaration><TOKEN>as</TOKEN> <MapType><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></MapType></TypeDeclaration></Param></ParamList><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <QName>xs:boolean</QName>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>xqn:eq</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xqn:qmap</QName><ArgumentList><TOKEN>(</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>name</QName></AbbrevForwardStep><PredicateList/></AxisStep></RelativePathExpr><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>ns</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xqa:nsANN</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xqa:nsOUT</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
 <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
 
 
@@ -112,7 +120,7 @@
        <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>lname</QName><TOKEN>:=</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><InstanceofExpr><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef> <TOKEN>instance</TOKEN> <TOKEN>of</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:function</QName><TOKEN>)</TOKEN></ElementTest></InstanceofExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>
                      <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>qmap</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>name</NCName></Lookup></PostfixExpr><TOKEN>,</TOKEN><StringLiteral>"#"</StringLiteral><TOKEN>,</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>e</QName></VarRef><TOKEN>/</TOKEN><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>arity</QName></AbbrevForwardStep><PredicateList/></AxisStep></RelativePathExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
                    <TOKEN>else</TOKEN>
-                    <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"$"</StringLiteral><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr></LetBinding></LetClause>
+                    <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"$"</StringLiteral><TOKEN>,</TOKEN><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>qmap</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>name</NCName></Lookup></PostfixExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr></LetBinding></LetClause>
        <ReturnClause><TOKEN>return</TOKEN> <MapConstructor><TOKEN>map</TOKEN><TOKEN>{</TOKEN><MapConstructorEntry><StringLiteral>"given"</StringLiteral><TOKEN>:</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr></MapConstructorEntry><TOKEN>,</TOKEN> 
                   <MapConstructorEntry><StringLiteral>"uri"</StringLiteral><TOKEN>:</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>qmap</QName></VarRef><Lookup><TOKEN>?</TOKEN><NCName>uri</NCName></Lookup></PostfixExpr></MapConstructorEntry><TOKEN>,</TOKEN> 
                   <MapConstructorEntry><StringLiteral>"name"</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>lname</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> 
@@ -135,6 +143,23 @@
                    <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>a</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>f</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><VarRef><TOKEN>$</TOKEN><QName>a</QName></VarRef><TOKEN>,</TOKEN><FunctionCall><QName>map:entry</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"file"</StringLiteral><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr>
                  <TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
          <TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>    
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>    
 
- <EOF/></XQuery>
+(:~  annotation literals display :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqa:literals</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>lits</QName> <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>xqdoc:literal</QName><TOKEN>)</TOKEN></ElementTest><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>?</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN> 
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>t</QName><TOKEN>:=</TOKEN><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>lits</QName></VarRef><TOKEN>!</TOKEN><ParenthesizedExpr><TOKEN>(</TOKEN><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><ComparisonExpr><AxisStep><AbbrevForwardStep><TOKEN>@</TOKEN><QName>type</QName></AbbrevForwardStep><PredicateList/></AxisStep><TOKEN>=</TOKEN><StringLiteral>"xs:string"</StringLiteral></ComparisonExpr><TOKEN>)</TOKEN> <TOKEN>then</TOKEN>  
+               <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"'"</StringLiteral><TOKEN>,</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>"'"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+              <TOKEN>else</TOKEN>
+                <FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr>
+<TOKEN>)</TOKEN></ParenthesizedExpr></RelativePathExpr></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>concat</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>"("</StringLiteral><TOKEN>,</TOKEN><FunctionCall><QName>string-join</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>t</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>","</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN><StringLiteral>")"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>          
+ <TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~  extract names from url may include = regex :) 
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>xqa:extract-restxq</QName><TOKEN>(</TOKEN><Param><TOKEN>$</TOKEN><QName>url</QName> <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>)</TOKEN>
+<TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType>
+<EnclosedExpr><TOKEN>{</TOKEN>
+  <RelativePathExpr><FunctionCall><QName>fn:analyze-string</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>url</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"\{\w*\$(\S*)\w*\}"</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>fn:match</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><AxisStep><QName>fn:group</QName><PredicateList/></AxisStep><TOKEN>/</TOKEN><FunctionCall><QName>string</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>    <EOF/></XQuery>

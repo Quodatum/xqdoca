@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.web.dice/v4</xqdoc:uri><xqdoc:name>dice.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>dice utils - sort, filter, and serialize as json.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.web.dice/v4</xqdoc:uri><xqdoc:name>dice.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>dice utils - sort, filter, and serialize as json.
 can read parameters from request: sort,start,limit.</xqdoc:description><xqdoc:custom tag="requires">basex 8.6 for map:merge</xqdoc:custom><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>mar 2013</xqdoc:since><xqdoc:custom tag="__source">lib/dice.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:~
 : dice utils - sort, filter, and serialize as json.

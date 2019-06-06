@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:42:46.34+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>parser.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-parser.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:43:24.976+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>parser.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-parser.xqm</h1>
 <p>generate and Analyse XQuery parse tree</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/parser.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd

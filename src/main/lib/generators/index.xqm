@@ -92,7 +92,7 @@ let $d:=<div>
                       else
                          $el/@name/string() 
                    }
-                   let $l:=$t/*!page:tree-list(.,(),$f)
+                   let $l:=$t/*!page:tree-list(.,(),$f,99)
                    return <ol>
                    { $l }
                    </ol>
@@ -147,7 +147,7 @@ as element(div)
                         group by $name:=$a?annotation?name
                         order by lower-case($name)
                         return <span style="margin-right:1em;">
-                                  <a href="annotations.html#{ $ns }#{ $name }" >{$name}</a>
+                                  <a href="annotations.html#{{{ $ns }}}{ $name }" >{$name}</a>
                                   <span class="badge badge-info">{count($a)}</span>
                                </span>
                       }</div>
@@ -204,7 +204,9 @@ as element(div)
        
         return  <tr>
                 <td title="{ $file?default-fn-uri }">{  $type }</td>
-                 <td>{page:link-module($file) }</td>
+                 <td>{page:link-module($file) }
+                 <div>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description }</div>
+                 </td>
                 
                  <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>

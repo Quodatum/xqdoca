@@ -88,7 +88,12 @@ as element(*)*
         for $x in fn:distinct-values-XQDOCA($n2/@name[fn:not-XQDOCA(.=$n1/@name)]) (:only $a2 :)
         return $a2/*[@name=$x]
       )
-      return tree:wrap-XQDOCA($a1/@name,for $x in $t order by $x/@name return $x)
+      let $name:=$a1/@name
+      let $target:=($a1/@target,$a2/@target)[1]
+      return <directory >{
+        $name,$target,
+        for $x in $t order by $x/@name return $x
+      }</directory>
  else 
      ($a1,$a2)                        
 };

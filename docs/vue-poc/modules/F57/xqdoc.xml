@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri><xqdoc:name>dbtools.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>tools for databases..</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>mar 2013</xqdoc:since><xqdoc:custom tag="__source">lib/dbtools.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.dbtools</xqdoc:uri><xqdoc:name>dbtools.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>tools for databases..</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>mar 2013</xqdoc:since><xqdoc:custom tag="__source">lib/dbtools.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:~
 : tools for databases..
 : @author andy bunce

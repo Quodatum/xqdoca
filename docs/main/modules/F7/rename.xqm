@@ -17,40 +17,272 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>xqdoc-htmlmod.xqm</h1>
- : <p>Library to support html5 rendering of single xqdoc source</p>
+ : <h1>xqdoc-html.xqm</h1>
+ : <p>Library to support html5 rendering of xqdoc</p>
  :
  : @author Andy Bunce
  : @version 0.1
- : @see https://github.com/Quodatum/xqdoca
  :)
  
 (:~
- : Generate  html for xqdoc
+ : Generate RESTXQ XQuery  documentation in html
  :)
-module namespace _ = 'quodatum:xqdoca.generator.simple';
+module namespace _ = 'quodatum:xqdoca.generator.rest';
 
-
-
+import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm';
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-declare
-%xqdoca:module("xqdoc","xqDoc xml file from the source module")
-%xqdoca:output("xqdoc.xml","xml") 
-function _:xqdoc-XQDOCA($file as map(*), 
-                 $model as map(*),
-                 $opts as map(*)
-                 )
+
+
+(:~
+ : rest interface html for page. 
+ :)
+declare 
+%xqdoca:global("restxq","Summary of REST interface")
+%xqdoca:output("restxq.html","html5") 
+function _:restxq-XQDOCA($model,$opts)
 {
-  $file?xqdoc
+let $annots:= xqd:rxq-paths-XQDOCA($model) 
+let $tree:=$annots?uri 
+let $tree:=tree:build-XQDOCA($tree)
+
+let $body:= <div>
+              <h1>
+                 Project <span class="badge badge-info">
+                      { $opts?project }
+                  </span>
+                  &#160;RestXQ documentation 
+              </h1>
+            {_:toc-XQDOCA($model,$tree)}
+            {_:summary-XQDOCA($model, $opts, $tree)}
+           <div class="div2">
+             <h2><a id="rest"/>2 Rest interface paths</h2>
+             {$annots!_:path-report-XQDOCA(.,(2,position()))}
+           </div>
+           </div>
+return  page:wrap-XQDOCA($body,$opts)
 };
 
-declare
-%xqdoca:module("xqparse","xqparse xml file from the source module")
-%xqdoca:output("xqparse.xml","xml") 
-function _:xqparse($file as map(*),
-                   $model as map(*),
-                   $opts as map(*)
-                   )
+
+declare function _:summary($model,$opts, $tree)
+as element(div)
 {
-  $file?xqparse
+    let $base:=tree:base-XQDOCA($tree)
+    let $_:=trace($base,"$$")
+    return <div class="div2">
+        <h2><a id="summary"/>1 Summary</h2>      
+        <p>This document summaries the RestXQ interface.</p>
+      { page:module-links-XQDOCA("global", "restxq", $opts) }    
+         <dl>
+            <dt>Base path</dt>
+            <dd>{ $base }</dd>
+        </dl>
+     </div>
 };
+
+(:~  html for a path
+ :   $rep={uri:.., methods:{METHOD:annotation}, function:..}
+ :)          
+declare function _:path-report($rep as map(*),$pos)
+as element(div)
+{
+ let $methods as map(*) :=$rep?methods 
+ return <div class="div3">
+       <h3><a id="{ page:id-XQDOCA($rep?uri) }"/>{page:section-XQDOCA($pos) } { $rep?uri }
+       <div style="float:right;"><a href="#{ page:id-XQDOCA($rep?uri) }">#</a></div></h3>
+       
+       {
+       for $method in map:keys-XQDOCA($methods)
+       let $amap:=$methods?($method)
+       return _:method-XQDOCA($method,$amap,$rep)
+       }
+   </div>
+};
+
+(:~  method entry :)
+declare function _:method($method as xs:string,$amap as map(*),$rep as map(*))
+as element(div)
+{
+  let $annots:=$amap?xqdoc//xqdoc:annotation
+  
+  return <div>
+    <h4>
+        <a id="{ $rep?uri}#{ $method}"/>
+        <a href="#{ $rep?uri}#{ $method}">{ page:badge-method-XQDOCA($method)}</a> &#160;
+         { $rep?uri }
+         <div style="float:right">
+         { xqa:badges-XQDOCA($annots,$amap?file) }
+       </div> 
+    </h4>
+    <dl>
+    <dt>Description</dt>
+    <dd><p>{$amap?description}</p>
+      {  page:link-function2-XQDOCA($amap?uri, $amap?name, $amap?file, false())  }
+    </dd>
+    {_:outputs-XQDOCA($annots,$amap)}
+    { _:url-params-XQDOCA($rep?uri,$amap) }
+    { _:params-XQDOCA($annots,"query-param","Query parameters",$amap) }
+    { _:params-XQDOCA($annots,"form-param","Form parameters",$amap) }
+    { _:params-XQDOCA($annots,"header-param","Header parameters",$amap) }
+    </dl>
+    { _:annotations-XQDOCA($annots) }
+  </div>
+};
+
+(:~  output form :)
+declare function _:url-params($url as xs:string, 
+                           $amap as map(*))
+as element(*)*
+{
+  let $names:=xqa:extract-restxq-XQDOCA($url)
+  let $function:=$amap?annot/../..
+  return if($names)then
+  (<dt>Url parameters</dt>,
+  <dd>
+  <table class="data">
+    <thead><tr><th>Name</th><th>Description</th></tr></thead>
+    <tbody>{ 
+    for $name  in $names
+    let $desc:=page:comment-for-XQDOCA(substring-before($name || "=","="),$function/xqdoc:parameters)
+    return <tr><td>{$name}</td><td>{$desc}</td></tr>
+  }
+    </tbody>
+  </table>
+  </dd>)
+  else
+   ()
+};
+(:~  output form :)
+declare function _:outputs($annots as element(xqdoc:annotation)*, 
+                           $amap as map(*))
+as element(*)*
+{
+  let $ns:=$amap?file?prefixes
+  let $p:=filter($annots,xqa:is-rest-XQDOCA("produces",?,$ns))
+  let $s:=filter($annots, xqa:is-out-XQDOCA("method",?,$ns))
+  return if ($p or $s)then
+       (<dt>Output</dt>,
+        <dd>{if($s)then
+           <div>Serialization: {$s/xqdoc:literal/string()}</div>
+          else
+            ()
+        }{if($p)then
+           <div>Produces: { $p/xqdoc:literal/string()}</div>
+          else
+            ()
+        }  
+        </dd>)
+    else
+        ()
+};
+
+(:~  toc :)
+declare function _:toc($model as map(*),$tree)
+as element(nav)
+{
+     <nav id="toc">
+            <h2>
+                 <a href="index.html">
+                    { $model?project }
+                </a>
+                / RestXQ
+            </h2>
+           <h3>
+               Contents
+            </h3>
+            <ol class="toc">
+                <li>
+                    <a href="#summary">
+                        <span class="secno">1 </span>
+                        <span class="content">Summary</span>
+                    </a>
+                </li>
+                 <li  >
+                    <a href="#rest">
+                        <span class="secno">2 </span>
+                        <span class="content">Rest Paths</span>
+                    </a>
+                </li>
+                { $tree/*/*!page:tree-list-XQDOCA(.,(2,position()),_:toc-render#2,1) } 
+             </ol>
+           </nav>
+};
+
+
+declare function _:toc-render($pos as xs:string,$el as element(*))
+as element(*)*
+{
+let $c:=(
+<span class="secno">{$pos}</span>,
+<span class="content">{$el/@name/string()}</span>
+)
+return if($el/@target) then
+ <a href="#{ page:id-XQDOCA($el/@target) }">
+ { $c }
+ <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}"></div>
+  </a>
+else
+ $c
+};
+
+(:~ annotation details :)
+declare function _:annotations($annots as element(xqdoc:annotation)*)
+as element(*)
+{
+		<details>
+			<summary>Annotations</summary>
+			<table class="data">
+				<tbody>{ 
+       for $a in $annots
+       return 	
+             <tr>
+                <td>
+                  <code class="function">%{ $a/@name/string() }</code>
+                </td>
+                <td>
+                  <code class="arg">{ xqa:literals-XQDOCA($a/xqdoc:literal) }</code>
+                </td>
+              </tr>
+    }</tbody>
+			</table>
+		</details>
+};
+
+declare function _:params($annots as element(xqdoc:annotation)*,
+                                $name as xs:string,
+                                $title as xs:string,
+                                $amap as map(*))
+as element(*)*
+{
+  let $aq:=filter($annots,xqa:is-rest-XQDOCA($name,?,$amap?file?prefixes))
+  return if($aq) then 
+  (<dt>{ $title }</dt>,
+         <dd>
+         <table class="data">
+         <thead><tr>
+            <th>Name</th><th>Type</th><th>Description</th><th>Default</th>
+          </tr></thead>
+         <tbody>
+         {for $a in $aq
+          let $p:=$a/xqdoc:literal/string()
+          let $name:=xqa:extract-restxq-XQDOCA($p[2])
+          let $fn:=$amap?annot/../..
+          let $desc:=page:comment-for-XQDOCA($name,$fn/xqdoc:parameters)
+          let $type:=$fn/xqdoc:parameters/xqdoc:parameter[xqdoc:name=$name]/xqdoc:type/concat(.,@occurrence)
+          return <tr>
+             <td>{$p[1]}</td>
+             <td>{ $type} </td>
+             <td>{ $desc }</td>
+             <td>{$p[3]}</td>
+             </tr>}
+         </tbody>
+         </table>
+         </dd>)
+      else 
+      ()
+};
+

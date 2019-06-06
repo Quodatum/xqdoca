@@ -1,40 +1,56 @@
 (:  xqDocA added a comment :)
 xquery version "3.1";
-(:~
- : simple swagger generation 
+(:
+ : Copyright (c) 2019 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : <h1>xqdoc-htmlmod.xqm</h1>
+ : <p>Library to support html5 rendering of single xqdoc source</p>
  :
  : @author Andy Bunce
  : @version 0.1
+ : @see https://github.com/Quodatum/xqdoca
  :)
  
-module namespace _ = 'quodatum:xqdoca.generator.swagger';
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-(:~ 
- :  This is just shell NO detail provided!!
+(:~
+ : Generate  html for xqdoc
  :)
-declare 
-%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%xqdoca:output("swagger.json","json") 
-function _:swagger-XQDOCA($model as map(*),
-                            $opts as map(*)
-                            )                           
+module namespace _ = 'quodatum:xqdoca.generator.simple';
+
+
+
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+declare
+%xqdoca:module("xqdoc","xqDoc xml file from the source module")
+%xqdoca:output("xqdoc.xml","xml") 
+function _:xqdoc-XQDOCA($file as map(*), 
+                 $model as map(*),
+                 $opts as map(*)
+                 )
 {
-<json type="object">
-   <swagger>2.0</swagger>
-   <info type="object">
-    <version>1.0.0</version>
-    <title>Generated from { $model?project } at { current-dateTime() }</title>
-    <description>Example generation from RESTXQ xquery sources</description>
-    <termsOfService>http://swagger.io/terms/</termsOfService>
-    <contact type="object">
-     <name>Andy Bunce</name>
-    </contact>
-    <license type="object">
-      <name>MIT</name>
-    </license>
-  </info>
-  <host>http://localhost:8984/</host>
-  <basePath>/api</basePath>
-</json>
+  $file?xqdoc
 };
 
+declare
+%xqdoca:module("xqparse","xqparse xml file from the source module")
+%xqdoca:output("xqparse.xml","xml") 
+function _:xqparse($file as map(*),
+                   $model as map(*),
+                   $opts as map(*)
+                   )
+{
+  $file?xqparse
+};

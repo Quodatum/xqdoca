@@ -69,7 +69,7 @@ let $d:=<div>
          xqh:toc($xqd,$opts,$file),
          xqh:summary($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
-         xqh:variables($xqd/xqdoc:variables),
+         xqh:variables($xqd/xqdoc:variables,$file),
          xqh:functions($xqd/xqdoc:functions, $file, $model),
          xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
          xqh:restxq($xqd,$file),
@@ -89,6 +89,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
  {
     <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
+     <p>This document describes the XQuery module based on its xqDoc.</p>
      { page:module-links("module", "module", $opts) }
 		<dl>
 		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
@@ -96,9 +97,7 @@ declare function xqh:summary($mod as element(xqdoc:module),
 			<dd>
 			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
 			</dd>
-		</dl>,
-		<div> Imported by <a href="{ $opts?root }imports.html#{ $mod/xqdoc:uri/string() }">*</a></div>,
-   
+		</dl>
     </div>
   };
   
@@ -144,6 +143,9 @@ as element(nav){
                   <a href="#{$id}">
                     <span class="secno">{ concat('3.',$pos) }</span>
                     <span class="content">{ $id }</span>
+                    <div style="float:right">
+                     {xqa:badges($var/xqdoc:annotations/xqdoc:annotation,$file)}
+                        </div>
                   </a>
                 </li>
             }
@@ -228,7 +230,7 @@ as element(div){
     </div>
 }; 
 
-declare function xqh:variables($vars as element(xqdoc:variables))
+declare function xqh:variables($vars as element(xqdoc:variables),$file as map(*))
 as element(div)
 {
   <div class="div2">
@@ -238,20 +240,27 @@ as element(div)
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
       count $index
-	   return xqh:variable($v,(3,$index)),
+	   return xqh:variable($v,(3,$index),$file),
      if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
 		</div>
 };
 
-declare function xqh:variable($v as element(xqdoc:variable),$section as xs:anyAtomicType*)
+declare function xqh:variable($v as element(xqdoc:variable),
+                              $section as xs:anyAtomicType*,
+                              $file as map(*))
 as element(div)
 {
 let $id:= concat('$',$v/xqdoc:name)
+let $qmap:=xqn:qmap($v/xqdoc:name,$file?prefixes, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
 		<div class="div3">
-			<h3><a id="{$id }"/>{ page:section($section) } {$id }</h3>
+			<h3>
+      <a id="{$id }"/> 
+      {$v!<a id="{ xqn:clark-name($qmap?uri, "$" || $qmap?name) }"/>}
+       { page:section($section) } {$id }
+      </h3>
 			<dl>
         <dt class="label">Summary</dt>
 		   <dd>{ $summary }</dd>
@@ -259,7 +268,7 @@ return
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
       {xqh:tags($v/xqdoc:comment/(* except xqdoc:description)) }
-      { xqh:when($v/xqdoc:annotation,xqh:annotations#1) }
+      { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
 		</div>
 };  
 
@@ -434,7 +443,7 @@ as element(*)
                   <code class="function">%{ $a/@name/string() }</code>
                 </td>
                 <td>
-                  <code class="arg">{ string-join($a/xqdoc:literal,",") }</code>
+                  <code class="arg">{ xqa:literals($a/xqdoc:literal) }</code>
                 </td>
               </tr>
     }</tbody>
@@ -484,17 +493,13 @@ as element(*)*
                       { $p/xqdoc:type/string() }
                       { $p/xqdoc:type/@occurrence/string() }
                     </code>
-                    { let $name:=string($p/xqdoc:name)
-                    for $comment in $v/../xqdoc:comment/xqdoc:param[
-                                                             starts-with(normalize-space(.), $name) or 
-                                                             starts-with(normalize-space(.), concat('$',$name))
-                                                           ]
-                    return substring-after(normalize-space($comment), $name) 
-                   }
+                    {   page:comment-for(string($p/xqdoc:name),$v) }
                 </li>
     }</ul>
 		</dd>
 };
+
+
 
 declare function xqh:return($v as element(xqdoc:return))
 as element(*)*
@@ -588,7 +593,7 @@ as element(div)
                order by $path
               return <tr>
                 <td>{  $r/xqdoc:literal/string() }</td>
-                <td>{$methods!page:link-restxq(. , true())}</td>
+                <td>{$methods!page:link-restxq($path,. , true())}</td>
                 <td>{  page:link-function2($obj?uri, $obj?name, $file, true())  }</td>
                 </tr>
     }</tbody>

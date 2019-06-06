@@ -114,7 +114,7 @@ as element(div)
   <div class="div2">
     <h2><a id="summary"/>1 Summary</h2>
     <p>Lists all modules imported.</p>
-    <p>Other perspectives:</p>
+    <p>Related documents:</p>
    { page:view-list("global", $opts,"imports")}
  </div>
 };

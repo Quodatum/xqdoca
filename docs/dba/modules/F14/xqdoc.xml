@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:42:25.62+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>db-create.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Create new database.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/db-create.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:43:09.974+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>db-create.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Create new database.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-19, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/db-create.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Create new database.
  :
  : @author Christian Grün, BaseX Team 2005-19, BSD License

@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-05T22:41:22.335+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-vuecompile.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>vue compile</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-vuecompile.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>vue compile</xqdoc:description><xqdoc:author>andy bunce</xqdoc:author><xqdoc:since>july 2018</xqdoc:since></xqdoc:comment><xqdoc:body>(:~ 
 : vue compile
 : @author andy bunce
 : @since july 2018
