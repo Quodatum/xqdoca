@@ -207,7 +207,7 @@ as element(div)
         return  <tr>
                 <td title="{ $file?default-fn-uri }">{  $type }</td>
                  <td>{page:link-module-XQDOCA($file) }
-                 <div>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description }</div>
+                 <div>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string() }</div>
                  </td>
                 
                  <td>{ xqa:badges-XQDOCA($file?xqdoc//xqdoc:annotation, $file) }</td>       

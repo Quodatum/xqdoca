@@ -72,7 +72,6 @@ declare function _:summary($model,$opts, $tree)
 as element(div)
 {
     let $base:=tree:base-XQDOCA($tree)
-    let $_:=trace($base,"$$")
     return <div class="div2">
         <h2><a id="summary"/>1 Summary</h2>      
         <p>This document summaries the RestXQ interface.</p>

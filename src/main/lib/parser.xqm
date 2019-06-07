@@ -118,7 +118,7 @@ as xs:string
   return if( empty($def-fn) ) then
                     "http://www.w3.org/2005/xpath-functions"
                   else
-                   $def-fn/StringLiteral!substring(.,2,string-length(.)-2)=>trace("Default namespace: ") 
+                   $def-fn/StringLiteral!substring(.,2,string-length(.)-2)
 };
 
 (:~ scan tree below $e for references

@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:43:24.976+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>rest.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T15:25:24.281+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.rest</xqdoc:uri><xqdoc:name>rest.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
 <p>Library to support html5 rendering of xqdoc</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/rest.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -71,7 +71,6 @@ declare function _:summary($model,$opts, $tree)
 as element(div)
 {
     let $base:=tree:base($tree)
-    let $_:=trace($base,"$$")
     return &lt;div class="div2"&gt;
         &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;      
         &lt;p&gt;This document summaries the RestXQ interface.&lt;/p&gt;
@@ -306,11 +305,10 @@ let $body:= &lt;div&gt;
            &lt;/div&gt;
            &lt;/div&gt;
 return  page:wrap($body,$opts)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>_:summary</xqdoc:name><xqdoc:signature>declare function _:summary($model as item()*, $opts as item()*, $tree as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>tree</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>module-links</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tree</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:summary($model,$opts, $tree)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>_:summary</xqdoc:name><xqdoc:signature>declare function _:summary($model as item()*, $opts as item()*, $tree as item()*) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>tree</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>module-links</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tree</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:summary($model,$opts, $tree)
 as element(div)
 {
     let $base:=tree:base($tree)
-    let $_:=trace($base,"$$")
     return &lt;div class="div2"&gt;
         &lt;h2&gt;&lt;a id="summary"/&gt;1 Summary&lt;/h2&gt;      
         &lt;p&gt;This document summaries the RestXQ interface.&lt;/p&gt;
