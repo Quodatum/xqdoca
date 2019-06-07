@@ -192,7 +192,7 @@ as element(div)
    
        { for $file  at $pos in $files
         let $type:=if($file?xqparse/name()="ERROR") then 
-                     "ERROR"
+                     "PARSE ERROR"
                     else
                         $file?xqdoc/xqdoc:module/@type/string()
          order by $type, $file?namespace

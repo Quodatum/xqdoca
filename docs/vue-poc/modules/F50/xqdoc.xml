@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>text.html5</xqdoc:uri><xqdoc:name>html5parse.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>wrapper for https://github.com/digitalfondue/jfiveparse A java html5 compliant parser</xqdoc:description><xqdoc:custom tag="__source">lib/vue-compile/html5parse.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>text.html5</xqdoc:uri><xqdoc:name>html5parse.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>wrapper for https://github.com/digitalfondue/jfiveparse A java html5 compliant parser</xqdoc:description><xqdoc:custom tag="__source">lib/vue-compile/html5parse.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : wrapper for https://github.com/digitalfondue/jfiveparse A java html5 compliant parser 
  :)
 

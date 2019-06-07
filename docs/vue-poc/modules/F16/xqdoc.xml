@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>save-thumb-format.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>save in multiple formats</xqdoc:description></xqdoc:comment><xqdoc:body>(:~  save in multiple formats  :)
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>save-thumb-format.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>save in multiple formats</xqdoc:description></xqdoc:comment><xqdoc:body>(:~  save in multiple formats  :)
 
 import module namespace t="expkg-zone58:image.thumbnailator";
 

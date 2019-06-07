@@ -47,7 +47,7 @@ declare
 function _:restxq-XQDOCA($model,$opts)
 {
 let $annots:= xqd:rxq-paths-XQDOCA($model) 
-let $tree:=$annots?uri 
+let $tree:=$annots?uri
 let $tree:=tree:build-XQDOCA($tree)
 
 let $body:= <div>
@@ -137,7 +137,7 @@ declare function _:url-params($url as xs:string,
                            $amap as map(*))
 as element(*)*
 {
-  let $names:=xqa:extract-restxq-XQDOCA($url)
+  let $names:=xqa:extract-restxq-XQDOCA($url)!substring-before(. || "=","=")
   let $function:=$amap?annot/../..
   return if($names)then
   (<dt>Url parameters</dt>,
@@ -146,7 +146,7 @@ as element(*)*
     <thead><tr><th>Name</th><th>Description</th></tr></thead>
     <tbody>{ 
     for $name  in $names
-    let $desc:=page:comment-for-XQDOCA(substring-before($name || "=","="),$function/xqdoc:parameters)
+    let $desc:=page:comment-for-XQDOCA($name,$function/xqdoc:parameters)
     return <tr><td>{$name}</td><td>{$desc}</td></tr>
   }
     </tbody>
@@ -251,7 +251,10 @@ as element(*)
 		</details>
 };
 
-declare function _:params($annots as element(xqdoc:annotation)*,
+(:~
+ :  
+ :)
+ declare function _:params($annots as element(xqdoc:annotation)*,
                                 $name as xs:string,
                                 $title as xs:string,
                                 $amap as map(*))
@@ -268,12 +271,12 @@ as element(*)*
          <tbody>
          {for $a in $aq
           let $p:=$a/xqdoc:literal/string()
-          let $name:=xqa:extract-restxq-XQDOCA($p[2])
+          let $name:=xqa:extract-restxq-XQDOCA($p[2])=>trace("NAME: ")
           let $fn:=$amap?annot/../..
           let $desc:=page:comment-for-XQDOCA($name,$fn/xqdoc:parameters)
           let $type:=$fn/xqdoc:parameters/xqdoc:parameter[xqdoc:name=$name]/xqdoc:type/concat(.,@occurrence)
           return <tr>
-             <td>{$p[1]}</td>
+             <td>{$name}</td>
              <td>{ $type} </td>
              <td>{ $desc }</td>
              <td>{$p[3]}</td>

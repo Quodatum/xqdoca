@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api</xqdoc:uri><xqdoc:name>rxq-xqdoc.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Generate html for for XQuery sources</xqdoc:description><xqdoc:custom tag="__source">features/tasks/xqdoc/rxq-xqdoc.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:vue.api</xqdoc:uri><xqdoc:name>rxq-xqdoc.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Generate html for for XQuery sources</xqdoc:description><xqdoc:custom tag="__source">features/tasks/xqdoc/rxq-xqdoc.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : Generate html for for XQuery sources
  :)
 module namespace vue-api = 'quodatum:vue.api';

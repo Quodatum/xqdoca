@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.models.generated</xqdoc:uri><xqdoc:name>models.gen.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>map of access functions for entity</xqdoc:description><xqdoc:custom tag="__source">models.gen.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(: entity access maps 
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum.models.generated</xqdoc:uri><xqdoc:name>models.gen.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>map of access functions for entity</xqdoc:description><xqdoc:custom tag="__source">models.gen.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(: entity access maps 
  : auto generated from xml files in entities folder at: 2019-02-23T22:59:34.827Z 
  :)
 

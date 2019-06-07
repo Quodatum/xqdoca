@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-xqdoc2.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Generate html for for XQuery sources</xqdoc:description><xqdoc:return>info about the run (json format)</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>tx-xqdoc2.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Generate html for for XQuery sources</xqdoc:description><xqdoc:return>info about the run (json format)</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
  : Generate html for for XQuery sources
  : @return info about the run (json format)
  :)

@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>file.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>file Utility functions.</xqdoc:description><xqdoc:author>Andy Bunce, 2017</xqdoc:author><xqdoc:custom tag="__source">lib/file.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>vue-poc/file</xqdoc:uri><xqdoc:name>file.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>file Utility functions.</xqdoc:description><xqdoc:author>Andy Bunce, 2017</xqdoc:author><xqdoc:custom tag="__source">lib/file.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
  : file Utility functions.
  :
  : @author Andy Bunce, 2017

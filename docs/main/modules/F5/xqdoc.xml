@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T15:25:24.281+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>index.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:57.668+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>index.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
 <p>Library to support html5 rendering of xqdoc</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/generators/index.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
 (:
  : Copyright (c) 2019 Quodatum Ltd
@@ -193,7 +193,7 @@ as element(div)
    
        { for $file  at $pos in $files
         let $type:=if($file?xqparse/name()="ERROR") then 
-                     "ERROR"
+                     "PARSE ERROR"
                     else
                         $file?xqdoc/xqdoc:module/@type/string()
          order by $type, $file?namespace
@@ -341,7 +341,7 @@ as element(div)
    
        { for $file  at $pos in $files
         let $type:=if($file?xqparse/name()="ERROR") then 
-                     "ERROR"
+                     "PARSE ERROR"
                     else
                         $file?xqdoc/xqdoc:module/@type/string()
          order by $type, $file?namespace

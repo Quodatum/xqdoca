@@ -145,10 +145,11 @@ methods : {METHODS: {id:.., uri:.. ,function:}}
 			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function xqd:rxq-paths($model)
 as map(*)* 
 {
-let $reports:= xqd:annots-rxq($model)  
-(: map keyed on uris :)
+let $reports:= xqd:annots-rxq($model)
+(: map keyed on uris -ensure starts with :)
+let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
 let $data:=map:merge(for $report in $reports
-          group by $uri:=$report?annot/xqdoc:literal/string()
+          group by $uri:=$fix($report?annot/xqdoc:literal/string())
           let $methods:= map:merge(
                          for $annot in $report
                          let $hits:=for $method in $xqd:methods
@@ -161,7 +162,7 @@ let $data:=map:merge(for $report in $reports
         ) 
 let $uris:=sort(map:keys($data))        
 return $data?($uris)        
-}</code></pre></details><details><summary>Invokes 8 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}keys#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}sort#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span><a href="../../modules/F11/index.html#{quodatum:xqdoca.model}annots-rxq#1" title="lib/model.xqm">xqd:annots-rxq#1</a></span></li><li><span><a href="../../modules/F11/index.html#{quodatum:xqdoca.model}methods#3" title="lib/model.xqm">xqd:methods#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}restxq#2" title="lib/generators/rest.xqm">_:restxq#2</a></span></li></ul></details></div><div class="div3"><h3><a id="xqd:snap"></a><a id="{quodatum:xqdoca.model}snap#2"></a><a id="{quodatum:xqdoca.model}snap#3"></a>4.10&nbsp;xqd:snap<div style="float:right"><a href="#xqd:snap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#2">xqd:snap#2</a></span><span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#3">xqd:snap#3</a></span></p><dt class="label">Summary</dt><dd>load and parse source xquery files</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:snap</code>
+}</code></pre></details><details><summary>Invokes 9 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}keys#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}sort#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}starts-with#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span><a href="../../modules/F11/index.html#{quodatum:xqdoca.model}annots-rxq#1" title="lib/model.xqm">xqd:annots-rxq#1</a></span></li><li><span><a href="../../modules/F11/index.html#{quodatum:xqdoca.model}methods#3" title="lib/model.xqm">xqd:methods#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}restxq#2" title="lib/generators/rest.xqm">_:restxq#2</a></span></li></ul></details></div><div class="div3"><h3><a id="xqd:snap"></a><a id="{quodatum:xqdoca.model}snap#2"></a><a id="{quodatum:xqdoca.model}snap#3"></a>4.10&nbsp;xqd:snap<div style="float:right"><a href="#xqd:snap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#2">xqd:snap#2</a></span><span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#3">xqd:snap#3</a></span></p><dt class="label">Summary</dt><dd>load and parse source xquery files</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:snap</code>
 		  ( 
 			<code class="arg">$efolder</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$platform</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>
 	 )
@@ -398,10 +399,11 @@ as map(*)*
 declare function xqd:rxq-paths($model)
 as map(*)* 
 {
-let $reports:= xqd:annots-rxq($model)  
-(: map keyed on uris :)
+let $reports:= xqd:annots-rxq($model)
+(: map keyed on uris -ensure starts with :)
+let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
 let $data:=map:merge(for $report in $reports
-          group by $uri:=$report?annot/xqdoc:literal/string()
+          group by $uri:=$fix($report?annot/xqdoc:literal/string())
           let $methods:= map:merge(
                          for $annot in $report
                          let $hits:=for $method in $xqd:methods
@@ -415,6 +417,7 @@ let $data:=map:merge(for $report in $reports
 let $uris:=sort(map:keys($data))        
 return $data?($uris)        
 };
+
 
 (:~ 
  : map for each restxq:path annotation
@@ -513,4 +516,4 @@ return $target
 =&gt;replace("\{webpath\}",if(exists($f)) then $f("webpath") else "webpath")
 }; </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-06-07T15:25:24.281+01:00">3.25pm on Friday, June 7th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-07T17:23:57.668+01:00">5.23pm on Friday, June 7th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>

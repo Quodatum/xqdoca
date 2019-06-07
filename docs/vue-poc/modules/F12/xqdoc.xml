@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-04-store-thumbs.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>generate thumbs</xqdoc:description><xqdoc:return>initial number of missing docs</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>pics-04-store-thumbs.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>generate thumbs</xqdoc:description><xqdoc:return>initial number of missing docs</xqdoc:return></xqdoc:comment><xqdoc:body>(:~
  : generate thumbs
  : @return initial number of missing docs  
 :)

@@ -166,10 +166,11 @@ as map(*)*
 declare function xqd:rxq-paths($model)
 as map(*)* 
 {
-let $reports:= xqd:annots-rxq($model)  
-(: map keyed on uris :)
+let $reports:= xqd:annots-rxq($model)
+(: map keyed on uris -ensure starts with :)
+let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
 let $data:=map:merge(for $report in $reports
-          group by $uri:=$report?annot/xqdoc:literal/string()
+          group by $uri:=$fix($report?annot/xqdoc:literal/string())
           let $methods:= map:merge(
                          for $annot in $report
                          let $hits:=for $method in $xqd:methods
@@ -183,6 +184,7 @@ let $data:=map:merge(for $report in $reports
 let $uris:=sort(map:keys($data))        
 return $data?($uris)        
 };
+
 
 (:~ 
  : map for each restxq:path annotation

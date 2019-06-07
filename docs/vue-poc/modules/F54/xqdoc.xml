@@ -1,4 +1,4 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-06T22:42:08.709+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:build.xqdoc</xqdoc:uri><xqdoc:name>xqdoc-proj.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Generate XQuery  documentation in html
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2019-06-07T17:23:03.708+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:build.xqdoc</xqdoc:uri><xqdoc:name>xqdoc-proj.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Generate XQuery  documentation in html
 using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
 $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
 $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"</xqdoc:description><xqdoc:custom tag="__source">lib/xqdoc/xqdoc-proj.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~

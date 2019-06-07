@@ -88,7 +88,7 @@ as element(*)*
         &lt;/dd&gt;)
     else
         ()
-}</code></pre></details><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}filter#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-out#3" title="lib/xqdoc-anno.xqm">xqa:is-out#3</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}method#3" title="lib/generators/rest.xqm">_:method#3</a></span></li></ul></details></div><div class="div3"><h3><a id="_:params"></a><a id="{quodatum:xqdoca.generator.rest}params#4"></a>4.4&nbsp;_:params<div style="float:right"><a href="#_:params">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.rest}params#4">_:params#4</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:params</code>
+}</code></pre></details><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}filter#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-out#3" title="lib/xqdoc-anno.xqm">xqa:is-out#3</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}method#3" title="lib/generators/rest.xqm">_:method#3</a></span></li></ul></details></div><div class="div3"><h3><a id="_:params"></a><a id="{quodatum:xqdoca.generator.rest}params#4"></a>4.4&nbsp;_:params<div style="float:right"><a href="#_:params">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.rest}params#4">_:params#4</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:params</code>
 		  ( 
 			<code class="arg">$annots</code><code class="as">&nbsp;as&nbsp;</code><code class="type">element(xqdoc:annotation)*</code>, <code class="arg">$name</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$title</code><code class="as">&nbsp;as&nbsp;</code><code class="type">xs:string</code>, <code class="arg">$amap</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>
 	 )
@@ -109,12 +109,12 @@ as element(*)*
          &lt;tbody&gt;
          {for $a in $aq
           let $p:=$a/xqdoc:literal/string()
-          let $name:=xqa:extract-restxq($p[2])
+          let $name:=xqa:extract-restxq($p[2])=&gt;trace("NAME: ")
           let $fn:=$amap?annot/../..
           let $desc:=page:comment-for($name,$fn/xqdoc:parameters)
           let $type:=$fn/xqdoc:parameters/xqdoc:parameter[xqdoc:name=$name]/xqdoc:type/concat(.,@occurrence)
           return &lt;tr&gt;
-             &lt;td&gt;{$p[1]}&lt;/td&gt;
+             &lt;td&gt;{$name}&lt;/td&gt;
              &lt;td&gt;{ $type} &lt;/td&gt;
              &lt;td&gt;{ $desc }&lt;/td&gt;
              &lt;td&gt;{$p[3]}&lt;/td&gt;
@@ -124,7 +124,7 @@ as element(*)*
          &lt;/dd&gt;)
       else 
       ()
-}</code></pre></details><details><summary>Invokes 6 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}filter#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}extract-restxq#1" title="lib/xqdoc-anno.xqm">xqa:extract-restxq#1</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li><li><span><a href="../../modules/F18/index.html#{quodatum:xqdoca.page}comment-for#2" title="lib/xqdoc-page.xqm">page:comment-for#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}method#3" title="lib/generators/rest.xqm">_:method#3</a></span></li></ul></details></div><div class="div3"><h3><a id="_:path-report"></a><a id="{quodatum:xqdoca.generator.rest}path-report#2"></a>4.5&nbsp;_:path-report<div style="float:right"><a href="#_:path-report">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.rest}path-report#2">_:path-report#2</a></span></p><dt class="label">Summary</dt><dd>html for a path
+}</code></pre></details><details><summary>Invokes 7 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}filter#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}extract-restxq#1" title="lib/xqdoc-anno.xqm">xqa:extract-restxq#1</a></span></li><li><span><a href="../../modules/F15/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li><li><span><a href="../../modules/F18/index.html#{quodatum:xqdoca.page}comment-for#2" title="lib/xqdoc-page.xqm">page:comment-for#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F7/index.html#{quodatum:xqdoca.generator.rest}method#3" title="lib/generators/rest.xqm">_:method#3</a></span></li></ul></details></div><div class="div3"><h3><a id="_:path-report"></a><a id="{quodatum:xqdoca.generator.rest}path-report#2"></a>4.5&nbsp;_:path-report<div style="float:right"><a href="#_:path-report">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.rest}path-report#2">_:path-report#2</a></span></p><dt class="label">Summary</dt><dd>html for a path
   $rep={uri:.., methods:{METHOD:annotation}, function:..}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:path-report</code>
 		  ( 
 			<code class="arg">$rep</code><code class="as">&nbsp;as&nbsp;</code><code class="type">map(*)</code>, <code class="arg">$pos</code><code class="as">&nbsp;as&nbsp;</code><code class="type">item()*</code>
@@ -150,7 +150,7 @@ as element(div)
 			<code class="as">&nbsp;as&nbsp;</code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li><li>opts<code class="as">&nbsp;as&nbsp;</code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item()*</code></li></ul></dd><details><summary>Source</summary><pre><code class="language-xquery">function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model) 
-let $tree:=$annots?uri 
+let $tree:=$annots?uri
 let $tree:=tree:build($tree)
 
 let $body:= &lt;div&gt;
@@ -244,7 +244,7 @@ else
                            $amap as map(*))
 as element(*)*
 {
-  let $names:=xqa:extract-restxq($url)
+  let $names:=xqa:extract-restxq($url)!substring-before(. || "=","=")
   let $function:=$amap?annot/../..
   return if($names)then
   (&lt;dt&gt;Url parameters&lt;/dt&gt;,
@@ -253,7 +253,7 @@ as element(*)*
     &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
     &lt;tbody&gt;{ 
     for $name  in $names
-    let $desc:=page:comment-for(substring-before($name || "=","="),$function/xqdoc:parameters)
+    let $desc:=page:comment-for($name,$function/xqdoc:parameters)
     return &lt;tr&gt;&lt;td&gt;{$name}&lt;/td&gt;&lt;td&gt;{$desc}&lt;/td&gt;&lt;/tr&gt;
   }
     &lt;/tbody&gt;
@@ -308,7 +308,7 @@ declare
 function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model) 
-let $tree:=$annots?uri 
+let $tree:=$annots?uri
 let $tree:=tree:build($tree)
 
 let $body:= &lt;div&gt;
@@ -398,7 +398,7 @@ declare function _:url-params($url as xs:string,
                            $amap as map(*))
 as element(*)*
 {
-  let $names:=xqa:extract-restxq($url)
+  let $names:=xqa:extract-restxq($url)!substring-before(. || "=","=")
   let $function:=$amap?annot/../..
   return if($names)then
   (&lt;dt&gt;Url parameters&lt;/dt&gt;,
@@ -407,7 +407,7 @@ as element(*)*
     &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
     &lt;tbody&gt;{ 
     for $name  in $names
-    let $desc:=page:comment-for(substring-before($name || "=","="),$function/xqdoc:parameters)
+    let $desc:=page:comment-for($name,$function/xqdoc:parameters)
     return &lt;tr&gt;&lt;td&gt;{$name}&lt;/td&gt;&lt;td&gt;{$desc}&lt;/td&gt;&lt;/tr&gt;
   }
     &lt;/tbody&gt;
@@ -512,7 +512,10 @@ as element(*)
 		&lt;/details&gt;
 };
 
-declare function _:params($annots as element(xqdoc:annotation)*,
+(:~
+ :  
+ :)
+ declare function _:params($annots as element(xqdoc:annotation)*,
                                 $name as xs:string,
                                 $title as xs:string,
                                 $amap as map(*))
@@ -529,12 +532,12 @@ as element(*)*
          &lt;tbody&gt;
          {for $a in $aq
           let $p:=$a/xqdoc:literal/string()
-          let $name:=xqa:extract-restxq($p[2])
+          let $name:=xqa:extract-restxq($p[2])=&gt;trace("NAME: ")
           let $fn:=$amap?annot/../..
           let $desc:=page:comment-for($name,$fn/xqdoc:parameters)
           let $type:=$fn/xqdoc:parameters/xqdoc:parameter[xqdoc:name=$name]/xqdoc:type/concat(.,@occurrence)
           return &lt;tr&gt;
-             &lt;td&gt;{$p[1]}&lt;/td&gt;
+             &lt;td&gt;{$name}&lt;/td&gt;
              &lt;td&gt;{ $type} &lt;/td&gt;
              &lt;td&gt;{ $desc }&lt;/td&gt;
              &lt;td&gt;{$p[3]}&lt;/td&gt;
@@ -548,4 +551,4 @@ as element(*)*
 
 </code></pre></div></div></div><div class="footer"><p style="text-align:right">Generated by 
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a> 
-            at <span title="2019-06-07T15:25:24.281+01:00">3.25pm on Friday, June 7th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
+            at <span title="2019-06-07T17:23:57.668+01:00">5.23pm on Friday, June 7th 2019</span></p></div><script src="../../resources/prism.js" type="text/javascript"></script></body></html>
