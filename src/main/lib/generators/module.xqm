@@ -71,7 +71,7 @@ let $d:=<div>
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables,$file),
          xqh:functions($xqd/xqdoc:functions, $file, $model),
-         xqh:when($xqd/xqdoc:namespaces[xqdoc:namespace],xqh:namespaces(?,$model)),
+         xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
          xqh:restxq($xqd,$file),
           <div class="div2">
             <h2 ><a id="source"/>7 Source Code</h2>
@@ -82,7 +82,7 @@ let $d:=<div>
  return document{ page:wrap($d, $opts )  }                 
 };
 
-declare function xqh:summary($mod as element(xqdoc:module),
+declare function xqh:summary($mod as element(xqdoc:module)?,
                             $opts as map(*)
                             )
  as element(div)
@@ -328,7 +328,7 @@ as element(div)
 			{$funs!xqh:function-signature(.) }
 			</dd>
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
-	    { $funs[1]/xqdoc:return!xqh:return(.) }
+	    { $funs[1]!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
       <details>
@@ -453,7 +453,7 @@ as element(*)
 
 
 
-declare function xqh:namespaces($namespaces as element(xqdoc:namespaces),$model as map(*))
+declare function xqh:namespaces($namespaces as element(xqdoc:namespace)*,$model as map(*))
 as element(div)
 {
      <div class="div2">
@@ -467,12 +467,13 @@ as element(div)
 					</tr>
 				</thead>
 				<tbody>{ 
-        for $ns in $namespaces/xqdoc:namespace
-					order by lower-case($ns/@prefix)
+        for $ns in $namespaces
+                   group by $url:=$ns/@uri
+					order by lower-case($ns[1]/@prefix)
           return
 						<tr>
-							<td>{string($ns/@prefix) }</td>
-							<td>{ page:link-module(string($ns/@uri),$model) }</td>
+							<td>{string($ns[1]/@prefix) }</td>
+							<td>{ page:link-module(string($url),$model) }</td>
 						</tr>
 			}</tbody>
 			</table>
@@ -501,7 +502,7 @@ as element(*)*
 
 
 
-declare function xqh:return($v as element(xqdoc:return))
+declare function xqh:return($f as element(xqdoc:function))
 as element(*)*
 {
 		<dt class="label">Return</dt>,
@@ -509,10 +510,9 @@ as element(*)*
 			<ul>
 				<li>
 					<code class="return-type">
-					{ $v/xqdoc:type/string() }
-					{ $v/xqdoc:type/@occurrence/string() }
+					{ $f/xqdoc:return/xqdoc:type/(string(),@occurrence/string()) }
 					</code>
-					{for $comment in $v/xqdoc:comment/xqdoc:return
+					{for $comment in $f/xqdoc:comment/xqdoc:return
 					return $comment/(node()|text())
         }
 				</li>

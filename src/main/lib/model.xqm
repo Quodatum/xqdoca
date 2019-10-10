@@ -68,7 +68,7 @@ let $_:=trace(count($files),"files :")
 return map{ 
              "base-uri": $folder,
              "platform": $platform,
-             "project": tokenize($folder,"/")[last()-1],
+             "project": trace(tokenize($folder,"/")[last()-1],"project"),
              "files": for $file at $pos in $files
                       let $full:=concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
                       let $spath:=translate($file,"\","/")
@@ -277,8 +277,9 @@ return map:entry( $ns,  $f)
 declare function xqd:target($target as xs:string,$opts as map(*))
 as xs:string
 {
- let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1) 
+ let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
+ let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
 return $target
 =>replace("\{project\}",$opts?project)
-=>replace("\{webpath\}",if(exists($f)) then $f("webpath") else "webpath")
+=>replace("\{webpath\}",translate($webpath,"\","/"))
 }; 

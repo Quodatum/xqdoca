@@ -33,8 +33,10 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 (:~ annotation for module derived output :)
 declare variable $xqo:module:=QName("https://github.com/Quodatum/xqdoca","module");
+
 (:~ annotation for global derived output :)
 declare variable $xqo:global:=QName("https://github.com/Quodatum/xqdoca","global");
+
 (:~ annotation used to indicate serialization options :)
 declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","output");
 
