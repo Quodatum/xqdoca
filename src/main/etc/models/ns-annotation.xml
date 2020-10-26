@@ -1,0 +1,26 @@
+<!-- known annotations -->
+<annotations>
+    <namespace ns="http://basex.org/modules/perm" prefix="perm">
+        <doc href="http://docs.basex.org/wiki/Permissions#Annotations"></doc>
+    </namespace>
+    
+    <namespace ns="http://basex.org" prefix="basex">
+        <doc href="http://docs.basex.org/wiki/XQuery_Extensions#Annotations"></doc>
+    </namespace>
+    
+    <namespace ns="http://basex.org/modules/unit" prefix="unit">
+        <doc href="http://docs.basex.org/wiki/Unit_Module#Annotations"></doc>
+    </namespace>
+    
+    <namespace ns="http://exquery.org/ns/restxq" prefix="rest">
+        <doc href="#"></doc>
+    </namespace>
+    
+    <namespace ns="http://www.w3.org/2010/xslt-xquery-serialization" prefix="output">
+        <doc href="#"></doc>
+    </namespace>
+    
+    <namespace ns="http://www.w3.org/2012/xquery" prefix="xquery">
+        <doc href="#"></doc>
+    </namespace>  
+</annotations>

@@ -3,6 +3,8 @@ body {
 	padding: 0.5em 1em;
 }
 
+
+
 pre {
 	font-family: Inconsolata, Consolas, monospace;
 }
@@ -67,11 +69,7 @@ td {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .badge {
-    transition: none;
-  }
-}
+
 
 a.badge:hover, a.badge:focus {
   text-decoration: none;
@@ -237,4 +235,61 @@ a.badge-dark:focus, a.badge-dark.focus {
 .op-all{
     color: #fff;
     background-color: #17a2b8;
+}
+
+
+/*  https://www.w3schools.com/howto/howto_js_treeview.asp */
+ /* Remove default bullets */
+ul.tree,
+ul.nested
+{
+  list-style-type: none;
+}
+
+
+
+/* Style the caret/arrow */
+.caret {
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.nested {
+  display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+  display: block;
+} 
+
+/* https://css-tricks.com/on-target/ */ 
+:target {
+  animation: highlight 1s ease;  
+  transform: translateX(20px);     
+}
+@keyframes highlight {
+  0% { border-left-color: red; }
+  100% { border-left-color: white; }
+}
+section > div {
+  border-left: 40px solid white;
+  padding: 10px;
+  transition: all 0.5s ease;     
+  padding-right: 50px;
+  margin-left: -20px;    
 }

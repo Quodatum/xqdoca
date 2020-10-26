@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Library to support html5 rendering of xqdoc</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 (:~
@@ -38,18 +38,6 @@ import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
-(:~  page sections :)
-declare variable $xqhtml:toc:=
-<directory name="foo">
-  <file name="Summary" target="#summary"/>
-  <directory target="#ns" name="Modules">
-     <file name="Main modules" target="#ns_main"/>
-     <file name="Library modules" target="#ns_library"/>
-   </directory>
-  <file target="#file" name="Files"/>
-  <file target="#annotation" name="Annotations"/>
-</directory>;
-
 
 (:~ transform files to html
  : @param $opts  keys: resources 
@@ -63,6 +51,13 @@ function xqhtml:index-html($model as map(*),
                             )
 as document-node()                            
 {
+let $sections:=(
+             xqhtml:summary($model,$opts),
+             xqhtml:related($model,$opts),
+             xqhtml:modules($model,$opts),
+             xqhtml:files($model,$opts),
+             xqhtml:annot($model,$opts)
+)
 let $d:=<div>
              <h1>
                  Project <span class="badge badge-info">
@@ -70,36 +65,10 @@ let $d:=<div>
                   </span>
                   &#160;XQuery source documentation 
               </h1>
-              <h2>Built { page:date() }</h2>
+              <div style="text-align:right"><small >{ page:date()}</small></div>
              { 
-             page:toc3($opts?project, $xqhtml:toc, page:toc-render#2 ),
-            
-             xqhtml:summary($model,$opts),
-             xqhtml:modules($model,$opts)
- }
-         
-               <div class="div2">
-                  <h2><a id="file"/>3 Files</h2>
-                  
-                  {
-                   let $t:=tree:build( $model?files?path)
-                   let $fmap:=map:merge($model?files!map:entry(?path,?href))
-                   let $f:=function($pos,$el){
-                      if($el/@target) then
-                        let $href:=substring($el/@target,2)
-                        let $a:=map:get($fmap,$href) 
-                        return <a href="{ $a }index.html">{ $el/@name/string() }</a>
-                      else
-                         $el/@name/string() 
-                   }
-                   let $l:=$t/*!page:tree-list(.,(),$f,99)
-                   return <ol>
-                   { $l }
-                   </ol>
-                  }
-              </div>
-
-             {xqhtml:annot($model,$opts)
+             page:toc($opts?project,$sections), 
+             $sections
            }
      </div>
 return document{ page:wrap($d, $opts ) }
@@ -107,41 +76,49 @@ return document{ page:wrap($d, $opts ) }
 
 
 declare function xqhtml:summary($model,$opts)
-as element(div)
+as element(section)
 {
-  <div class="div2">
-    <h2><a id="summary"/>1 Summary</h2>
-    <p>This document lists the modules and annotations used in this project.</p>
-    { page:module-links("global", "index", $opts) }    
-    <p>This project contains:</p>
-    <ul>
-    <li>{ count($model?files) } modules. </li>
-    <li>{ $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.</li>
-    </ul>
-     <p>Source folder : <code>{ $model?base-uri }</code>.</p> 
- </div>
+  <section id="summary">
+    <h2>Summary</h2>
+     
+    <p>The project 
+    <span class="badge badge-info">{ $opts?project }</span> contains
+  
+    { count($model?files) } modules and references
+ { $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.
+    </p>
+     <p>This document was built from source folder <kbd>{ $model?base-uri }</kbd>.</p> 
+ </section>
 };
 
+declare function xqhtml:related($model,$opts)
+as element(section)
+{
+  <section id="related">
+    <h2>Related documents</h2>
+   { page:view-list("global", $opts,"index")  }    
+ </section>
+};
 
 (:~ 
  : summary of all annotations  in project
  :)
 declare function xqhtml:annot($model,$opts)
-as element(div)
+as element(section)
 {
    let $ns-map:=map:merge(
                         for $a in $model?files?annotations
                         group by $uri:=$a?annotation?uri
                          return map:entry($uri,$a)
                        )
-   return <div class="div2">
-              <h2><a id="annotation"/>4 Annotations</h2>
-              <p>Total usage: {count( $model?files?annotations)} in {map:size(($ns-map))} namespaces.
+   return <section id="annotation">
+              <h2>Annotations</h2>
+              <p>Annotations are defined in {map:size(($ns-map))} namespaces. A total of {count( $model?files?annotations)} annotations are defined.
               </p>{
                for $ns in map:keys($ns-map)
                order by $ns
-               return <section>
-                        <h3><a id="{$ns}"/>{ $ns }</h3>
+               return <section id="{$ns}">
+                        <h3>{ $ns }</h3>
                         <div>
                         {for $a in $ns-map?($ns)
                         group by $name:=$a?annotation?name
@@ -152,23 +129,51 @@ as element(div)
                                </span>
                       }</div>
                      </section>
-      }</div>
+      }</section>
 }; 
                
 declare function xqhtml:modules($model,$opts)
-as element(div)
+as element(section)
 {
- <div class="div2">
-    <h2><a id="ns"/>2 Modules</h2>
-    <div class="div3">
-    <h3><a id="ns_main"/>2.1 Main modules</h3>
+ <section id="ns">
+    <h2>Modules</h2>
+    <section id="ns_main" >
+    <h3>Main modules</h3>
     {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="main"])}
-    </div>
-     <div class="div3">
-    <h3><a id="ns_library"/>2.2 Library modules</h3>
+    </section>
+     <section id="ns_library">
+    <h3>Library modules</h3>
     {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="library"])}
-    </div>
-</div>
+    </section>
+</section>
+};
+
+
+declare function xqhtml:files($model,$opts)
+as element(section)
+{
+       let $t:=tree:build( $model?files?path)
+       let $fmap:=map:merge($model?files!map:entry(?path,?href))
+       let $f:=function($pos,$el){
+          if($el/@target) then
+            let $href:=substring($el/@target,2)
+            let $a:=map:get($fmap,$href) 
+            return <a href="{ $a }index.html">{ $el/@name/string() }</a>
+          else
+             $el/@name/string() 
+       }
+       return
+      <section  id="file">
+	      <h2>Files</h2>
+	     <p>{count($model?files)} files.</p> 
+	      {
+	       
+	       let $l:=$t/*!page:tree-list2(.,(),$f,99)
+	       return <ul class="tree">
+	       { $l }
+	       </ul>
+	      }
+	  </section>
 };
 
 declare function xqhtml:modtable($files as map(*)*)

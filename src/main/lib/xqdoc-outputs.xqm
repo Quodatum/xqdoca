@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Load and run a set of generators</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 
@@ -56,8 +56,14 @@ declare variable $xqo:outputs:=map{
  :)
 declare %updating
 function xqo:export-resources($target as xs:string)                       
-as empty-sequence(){  
-archive:extract-to($target, file:read-binary(resolve-uri('resources.zip')))
+as empty-sequence(){
+  let $res:=$target || "resources"
+  let $_:=trace($target,"target:")
+  let $_:=trace(resolve-uri('resources'),"src:")   
+return  (
+  if(file:exists($res)) then file:delete($res,true()) else (),
+  file:copy(resolve-uri('resources'),$target)
+      )
 };
 
 (:~ 

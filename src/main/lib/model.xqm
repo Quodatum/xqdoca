@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Analyse XQuery source</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 (:~
@@ -63,6 +63,7 @@ as xs:string*
 declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
 as map(*)
 {
+let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
 let $folder:= translate($efolder,"\","/")
 let $_:=trace(count($files),"files :")
 return map{ 
@@ -126,7 +127,7 @@ as map(*)
           into xqdoc:module[@type="library"]/xqdoc:comment
      }
   (: insert full source into module :)
-  let $src:=fetch:text($url)   
+  let $src:=unparsed-text($url)   
   let $enh:=$enh transform with {
     if(xqdoc:module) then 
           insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module

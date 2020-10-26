@@ -1,0 +1,47 @@
+xquery version "3.1";
+(:~
+ : simple svg generation 
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+module namespace _ = 'quodatum:xqdoca.generator.calls';
+import module namespace svg = 'quodatum:xqdoca.generator.svg' at "dotsvg.xqm";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+declare variable $_:dotmltest:=
+<graph xmlns="http://www.martin-loetzsch.de/DOTML" rankdir = "LR">
+
+  <node id="node0" label = "&lt;f0> mod1| &lt;f1>" shape="record" />
+   <node id="node1" label = "&lt;f0> module| &lt;f1> fun1| &lt;f2> |fun2" shape="record" />
+   <node id="node2" label = "&lt;f0> mod2| | |&lt;ff>fun3"  URL="b.html"  shape="record"/>
+
+  <edge from="node0:f0"  to="node1:f0" />
+  <edge from="node1:f1" to= "node2:ff" />
+</graph>;
+
+declare variable $_:dot:=``[
+digraph g {
+graph [rankdir = "LR"];
+
+"node0" [label = "<f0> aaaaa| <f1>" shape = "record"];
+"node1" [ label = "<f0> module| <f1> fun1| <f2> |fun2" shape = "record"];
+"node2" [label = "<f0> mod2| | |fun3" shape = "record"];
+"node0":f0 -> "node1":f0 [id = 0];
+"node1":f1 -> "node2":f0 [id = 1];
+}
+]``;
+
+declare 
+%xqdoca:module("calls","call graph")
+%xqdoca:output("call.svg","xml") 
+function _:calls($file as map(*),         
+                 $model as map(*),
+                 $opts as map(*)
+                 )                         
+{
+let $s:=svg:dotml($_:dotmltest)
+return $s
+};
+

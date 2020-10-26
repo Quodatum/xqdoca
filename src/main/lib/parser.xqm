@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>generate and Analyse XQuery parse tree</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 

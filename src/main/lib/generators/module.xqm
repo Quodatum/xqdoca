@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Library to support html5 rendering of single xqdoc source</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  : @see https://github.com/Quodatum/xqdoca
  :)
  
@@ -58,49 +58,62 @@ as document-node()
 {
 let $xqd:=$file?xqdoc
 let $_:=trace(concat($file?path,"->",$file?href),"module: ")
-
-let $d:=<div>
-       <h1>
-			<span class="badge badge-info">{ $file?namespace }</span>&#160;
-			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
-      <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file)}</div>
-		</h1>
-{
-         xqh:toc($xqd,$opts,$file),
+let $sections:=(
          xqh:summary($xqd/xqdoc:module,$opts),
+          xqh:related($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables,$file),
          xqh:functions($xqd/xqdoc:functions, $file, $model),
          xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
          xqh:restxq($xqd,$file),
-          <div class="div2">
-            <h2 ><a id="source"/>7 Source Code</h2>
+          <section id="source">
+            <h2 >Source Code</h2>
             <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
-          </div>
-       }</div>
-
+          </section>
+)
+let $d:=<div>
+       <h1>
+			<span class="badge badge-info">{ $file?namespace }</span>&#160;
+			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
+            <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file)}</div>
+		</h1>
+{
+         xqh:toc($xqd,$opts,$file),
+         $sections
+}
+</div>
  return document{ page:wrap($d, $opts )  }                 
 };
 
 declare function xqh:summary($mod as element(xqdoc:module)?,
                             $opts as map(*)
                             )
- as element(div)
+ as element(section)
  {
-    <div class="div2">
-    <h2><a id="summary"/>1 Summary</h2>
-     <p>This document describes the XQuery module based on its xqDoc.</p>
-     { page:module-links("module", "module", $opts) }
+    <section id="summary">
+    <h2>Summary</h2>
+    <div>{ $mod/xqdoc:comment/xqdoc:description/(node()|text()) }</div> 
 		<dl>
-		{xqh:when($mod/xqdoc:comment/xqdoc:description,xqh:description#1) }
 			<dt>Tags</dt>
 			<dd>
 			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
 			</dd>
 		</dl>
-    </div>
+    </section>
   };
-  
+
+declare function xqh:related($mod as element(xqdoc:module)?,
+                            $opts as map(*)
+                            )
+ as element(section)
+ {
+    <section id="related">
+    <h2>Related documents</h2>{
+    
+    page:view-list("module", $opts,"module")
+      
+    }</section>
+  };  
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
@@ -122,11 +135,17 @@ as element(nav){
 					</a>
 				</li>
 				<li>
-          <a href="#imports">
-            <span class="secno">2 </span>
-            <span class="content">Imports</span>
-          </a>
-        </li>
+					<a href="#related">
+						<span class="secno">2 </span>
+						<span class="content">Related</span>
+					</a>
+				</li>
+				<li>
+		          <a href="#imports">
+		            <span class="secno">2 </span>
+		            <span class="content">Imports</span>
+		          </a>
+		        </li>
 				
           <li>
             <a href="#variables">
@@ -204,46 +223,40 @@ as element(nav){
 
 
 declare function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
-as element(div){
+as element(section){
   let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
   let $importing:=xqd:imports($model)?($uri)
   let $imports:=$xqd/xqdoc:imports
   return  
-    <div class="div2">
-    <h2><a id="imports"/>2 Imports</h2>
+    <section id="imports">
+    <h2>Imports</h2>
 
     <p>
     This module is imported by
     <span class="badge badge-info">{ count($importing) }</span> modules, it imports
     <span class="badge badge-info">{ count($imports/xqdoc:import) }</span> modules.
-    </p>
-   
-  
-    {
+    </p>{
      page:calls(
 		     $importing?namespace!page:link-module(.,$model),
 		     $uri,
 		     $imports/xqdoc:import/xqdoc:uri/string()!page:link-module(.,$model)
    )
   }
- 
-    </div>
+    </section>
 }; 
 
 declare function xqh:variables($vars as element(xqdoc:variables),$file as map(*))
-as element(div)
+as element(section)
 {
-  <div class="div2">
-			<h2>
-				<a id="variables"/>3 Variables
-			</h2>
+  <section id="variables">
+			<h2>Variables</h2>
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
       count $index
 	   return xqh:variable($v,(3,$index),$file),
      if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
-		</div>
+		</section>
 };
 
 declare function xqh:variable($v as element(xqdoc:variable),
@@ -277,10 +290,10 @@ declare function xqh:functions(
                      $file as map(*),
                      $model as map(*)
                    )
-as element(div)
+as element(section)
 {
-  <div class="div2">
-			<h2><a id="functions"/>4 Functions</h2>
+  <section id="functions">
+			<h2>Functions</h2>
 		{ for $f in $funs/xqdoc:function
       group by $name:=$f/xqdoc:name
       order by  $name
@@ -288,7 +301,7 @@ as element(div)
 	   return xqh:function($f,(4,$pos),$file, $model ),
       if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
-		</div>
+		</section>
 };
 
 (:~   o/p details for function $funs has all defined arities
@@ -331,10 +344,7 @@ as element(div)
 	    { $funs[1]!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
       {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
-      <details>
-        <summary>Source</summary>
-        { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
-      </details>
+      
      
        
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
@@ -362,6 +372,10 @@ as element(div)
                     </details>
      }
      { $funs/xqdoc:annotations!xqh:annotations(.) }
+     <details>
+        <summary>Source</summary>
+        { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
+      </details>
 		</div>
 };
 
@@ -454,10 +468,10 @@ as element(*)
 
 
 declare function xqh:namespaces($namespaces as element(xqdoc:namespace)*,$model as map(*))
-as element(div)
+as element(section)
 {
-     <div class="div2">
-			<h2><a id="namespaces"/>5 Namespaces</h2>
+     <section id="namespaces">
+			<h2>Namespaces</h2>
 			<p>The following namespaces are defined:</p>
 			<table class="data" style="float:none">
 				<thead>
@@ -477,7 +491,7 @@ as element(div)
 						</tr>
 			}</tbody>
 			</table>
-		</div>
+		</section>
 };
 
 declare function xqh:parameters($v as element(xqdoc:parameters))
@@ -551,7 +565,8 @@ as element(div){
 };
 	
 declare function xqh:description($v as element(xqdoc:description))
-as element(*)*{
+as element(*)*
+{
   		<dt class="label">Summary</dt>,
 		<dd>
 			{ $v/(node()|text()) }

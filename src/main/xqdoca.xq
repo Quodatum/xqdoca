@@ -46,8 +46,9 @@ let $options:=map{
                "project": $model?project, 
                "outputs":  map{
                     "global": "index  restxq imports annotations swagger1 meta"  ,
-                    "module": "module xqdoc xqparse refactor "  
-                } 
+                    "module": "module xqdoc xqparse "  
+                },
+                "version": "0.2" 
                }
                
 (: generate  outputs :)
@@ -58,14 +59,14 @@ return (
        store:store($pages,$target),
        xqo:export-resources($target),
        
-      (: arbitary result for reporting :) 
+      (: arbitrary result for reporting :) 
        update:output(
          <json type="object">
             <project>{ $options?project }</project>
              <title>XQdocA generated</title>
               <source>{ $efolder }</source>
              <target>{ $target }</target>
-             
+              <created>{ current-dateTime() }</created>
              <status>completed</status>
              <msg>  {count($model?files)} files processed. Stored {count($pages)}</msg>
         </json> 

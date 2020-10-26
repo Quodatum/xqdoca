@@ -1,6 +1,0 @@
-<ERROR b="1491" e="1492" s="265">lexical analysis failed
-while expecting '(:'
-after successfully scanning 1 characters beginning at line 53, column 30:
-...($backup, $dba:BACKUP-REGEX, '$1')
-    where not($names($name))
-...</ERROR>

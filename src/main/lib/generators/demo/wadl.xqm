@@ -3,7 +3,7 @@ xquery version "3.1";
  : simple wadl generation 
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 module namespace _ = 'quodatum:xqdoca.generator.wadl';

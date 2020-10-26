@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Library to support html5 rendering of xqdoc</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 (:~
@@ -46,50 +46,28 @@ declare
 function _:imports($model,$opts)
 {
   let $imports:=xqd:imports($model)
-  let $body:=<div>
-     <h1>
-                     Project <span class="badge badge-info">
-                      { $opts?project }
-                  </span>
-                  &#160;Imports 
-              </h1>
-   <nav id="toc">
-            <h2>
-                <a href="index.html" >
-                    { $model?project }
-                </a>
-                / Imports
-            </h2>
-           
-            <h3>
-               Contents
-            </h3>
-            <ol class="toc">
-                <li>
-                    <a href="#main">
-                        <span class="secno">1 </span>
-                        <span class="content">Summary</span>
-                    </a>
-                </li>
-                  <li>
-                    <a href="#namespaces">
-                        <span class="secno">2 </span>
-                        <span class="content">Namespaces</span>
-                    </a>
-                </li>
-                
-             </ol>
-           </nav>
-            {_:summary($model,$opts)}
-              <div class="div2">
-                 <h2><a id="annotations"/>2 Namespaces</h2>
+  let $sections:=(
+             _:summary($model,$opts),
+             _:related($model,$opts),
+              <section  id="annotations">
+                 <h2>Namespaces</h2>
                  <p>There are { map:size($imports) } imported namespaces.</p>
                        {
                for $ns in map:keys($imports)
                  order by $ns
                  return  _:by-ns($ns,$imports?($ns))
                  }
-              </div>
+              </section>
+  )
+  let $body:=<div>
+     <h1>Project <span class="badge badge-info">
+                      { $opts?project }
+                  </span>
+                  &#160;Imports 
+              </h1>
+
+            {page:toc($opts?project,$sections), 
+            $sections}    
        </div>
   return  page:wrap($body,$opts)
 };
@@ -109,12 +87,19 @@ declare function _:by-ns($ns,$files){
 };
 
 declare function _:summary($model,$opts)
-as element(div)
+as element(section)
 {
-  <div class="div2">
-    <h2><a id="summary"/>1 Summary</h2>
+  <section id="summary">
+    <h2>Summary</h2>
     <p>Lists all modules imported.</p>
-    <p>Related documents:</p>
+ </section>
+};
+
+declare function _:related($model,$opts)
+as element(section)
+{
+  <section id="related">
+    <h2>Related documents</h2>
    { page:view-list("global", $opts,"imports")}
- </div>
+ </section>
 };

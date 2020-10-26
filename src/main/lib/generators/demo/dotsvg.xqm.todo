@@ -1,0 +1,42 @@
+xquery version "3.1";
+(:~
+ : dot svg interface 
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+module namespace _ = 'quodatum:xqdoca.generator.svg';
+
+
+(:~ 
+ : data is dotml as XML
+  :)
+declare function _:dotml($data as element(*)) 
+as document-node()
+{
+ let $target:="http://localhost:8984/graphxq/api/dotml" 
+ let $req:= <http:request method="POST"  xmlns="http://expath.org/ns/http-client">
+  <multipart media-type="multipart/form-data"> 
+       <header name="Content-Disposition" value='form-data; name="data"'/>   
+       <body media-type="text/xml"/>
+</multipart>
+</http:request>
+let $res:= http:send-request($req,$target,($data))=>trace("response")
+return if($res[1]/@status="200") then $res[2] else error()
+};
+
+declare function _:dot($data as xs:string) 
+as document-node()
+{
+ let $target:="http://localhost:8984/graphxq/api/dotml" 
+ let $req:= <http:request method="POST"  xmlns="http://expath.org/ns/http-client">
+  <multipart media-type="multipart/form-data"> 
+       <header name="Content-Disposition" value='form-data; name="data"'/>   
+       <body media-type="text/plain"/>
+</multipart>
+</http:request>
+let $res:= http:send-request($req,$target,($data))=>trace("£££££")
+return if($res[1]/@status="200") then $res[2] else error()
+};
+

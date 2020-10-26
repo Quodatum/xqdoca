@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>Library to support html5 rendering of xqdoc</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 (:~
@@ -47,7 +47,14 @@ function _:restxq($model,$opts)
 let $annots:= xqd:rxq-paths($model) 
 let $tree:=$annots?uri
 let $tree:=tree:build($tree)
-
+let $sections:=(
+           _:summary($model, $opts, $tree),
+            _:related($model, $opts, $tree),
+           <section id="rest">
+             <h2>Rest interface paths</h2>
+             {$annots!_:path-report(.,(2,position()))}
+           </section>
+        )
 let $body:= <div>
               <h1>
                  Project <span class="badge badge-info">
@@ -56,29 +63,33 @@ let $body:= <div>
                   &#160;RestXQ documentation 
               </h1>
             {_:toc($model,$tree)}
-            {_:summary($model, $opts, $tree)}
-           <div class="div2">
-             <h2><a id="rest"/>2 Rest interface paths</h2>
-             {$annots!_:path-report(.,(2,position()))}
-           </div>
+            { $sections }
            </div>
 return  page:wrap($body,$opts)
 };
 
 
 declare function _:summary($model,$opts, $tree)
-as element(div)
+as element(section)
 {
     let $base:=tree:base($tree)
-    return <div class="div2">
-        <h2><a id="summary"/>1 Summary</h2>      
+    return <section id="summary">
+        <h2>Summary</h2>      
         <p>This document summaries the RestXQ interface.</p>
-      { page:module-links("global", "restxq", $opts) }    
          <dl>
             <dt>Base path</dt>
             <dd>{ $base }</dd>
         </dl>
-     </div>
+     </section>
+};
+
+declare function _:related($model,$opts, $tree)
+as element(section)
+{
+     <section id="related">
+        <h2>Related documents</h2>      
+      {  page:view-list("global", $opts,"restxq") }      
+     </section>
 };
 
 (:~  html for a path

@@ -3,7 +3,7 @@ xquery version "3.1";
  : validate xqdoc o/p against schema
 
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 

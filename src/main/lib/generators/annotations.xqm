@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ xquery version "3.1";
  : <p>annotation report</p>
  :
  : @author Andy Bunce
- : @version 0.1
+ : @version 0.2
  :)
  
 
@@ -41,6 +41,29 @@ declare
 function _:annotations($model,$opts)
 {
   let $ns-map:=xqa:annotations($model)
+  let $sections:=(
+             _:summary($model,$opts),
+             _:related($model,$opts),
+             <section id="annotations">
+                 <h2>Annotations</h2>
+                 <p>There are { map:size($ns-map) } annotation namespaces in use.</p>
+                 {
+                 for $ns in map:keys($ns-map)
+                 order by $ns
+                 count $c
+                 return <section id="{ $ns }">
+                            <h3>{page:section((2,$c))} { $ns }</h3>
+                            {sort(distinct-values($ns-map?($ns)?annotation?name)) 
+                            !<span style="margin-left:1em" >
+                            <a href="#{{{ $ns}}}{.}">{.}</a>
+                             </span>}
+                            {for $a in $ns-map?($ns)
+                            group by $name:=$a?annotation?name
+                            order by lower-case($name)
+                            return _:anno-calls($ns,$name,$a) 
+                      } </section>       
+           }</section>
+  )
   let $body:=<div>
                  <h1>
                      Project <span class="badge badge-info">
@@ -61,26 +84,8 @@ function _:annotations($model,$opts)
             </h3>
            {_:toc(map:keys($ns-map)=>sort())}
            </nav>
-             {_:summary($model,$opts)}
-             <div class="div2">
-                 <h2><a id="annotations"/>2 Annotations</h2>
-                 <p>There are { map:size($ns-map) } annotation namespaces in use.</p>
-                 {
-                 for $ns in map:keys($ns-map)
-                 order by $ns
-                 count $c
-                 return <div class="div3">
-                            <h3><a id="{ $ns }"/>{page:section((2,$c))} { $ns }</h3>
-                            {sort(distinct-values($ns-map?($ns)?annotation?name)) 
-                            !<span style="margin-left:1em" >
-                            <a href="#{{{ $ns}}}{.}">{.}</a>
-                             </span>}
-                            {for $a in $ns-map?($ns)
-                            group by $name:=$a?annotation?name
-                            order by lower-case($name)
-                            return _:anno-calls($ns,$name,$a) 
-                      } </div>       
-           }</div>
+             {$sections}
+             
       </div>
   return  page:wrap($body,$opts)
 };
@@ -115,13 +120,21 @@ declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
 };
 
 declare function _:summary($model,$opts)
-as element(div)
+as element(section)
 {
-  <div class="div2">
-    <h2><a id="summary"/>1 Summary</h2>
-    <p>This document itemizes the use of annotations in this project.</p>
-   { page:module-links("global", "annotations", $opts) }    
- </div>
+  <section id="summary">
+    <h2>Summary</h2>
+    <p>This document itemises the use of annotations in this project.</p>
+ </section>
+};
+
+declare function _:related($model,$opts)
+as element(section)
+{
+  <section id="related">
+    <h2>Related documents</h2>
+   { page:view-list("global", $opts,"annotations")  }    
+ </section>
 };
 
 declare function _:toc($ns as xs:string*)

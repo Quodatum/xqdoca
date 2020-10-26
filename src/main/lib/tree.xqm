@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019 Quodatum Ltd
+ : Copyright (c) 2019-2020 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -20,10 +20,7 @@ xquery version "3.1";
  : <p>convert sequence of paths to sequence of xml trees </p>
  :
  : @author Andy Bunce
- : @version 0.1
- :)
-(:~ 
- : Convert sequence of strings containing a delimiter like "paths" to sequence of xml trees 
+ : @version 0.2
  :)
 module namespace tree = 'quodatum:data.tree';
 
@@ -32,7 +29,7 @@ module namespace tree = 'quodatum:data.tree';
  : convert path(s) to tree
  :)
 declare function tree:build($a as xs:string*)
-as element(*)*
+as element(directory)?
 {
  tree:build($a,"/")
 };
