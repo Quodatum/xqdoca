@@ -71,13 +71,15 @@ return map{
              "platform": $platform,
              "project": trace(tokenize($folder,"/")[last()-1],"project"),
              "files": for $file at $pos in $files
+                      let $id:= "F" || format-integer($pos,"000000")
                       let $full:=concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
                       let $spath:=translate($file,"\","/")
                       let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
                       let $isParsed:=$a?xqparse instance of element(XQuery)
                       let $base:=map{
+                         "index": $pos,
                         "path": translate($file,"\","/"),
-                        "href": ``[modules/F`{ $pos }`/]``,
+                        "href": ``[modules/`{ $id }`/]``,
                         "parsed": $isParsed,
                         "prefixes": xqd:namespaces( $a?xqdoc),
                         "annotations": xqd:anno($a?xqdoc), (: sequence map{annotation:, xqdoc: } :)
@@ -261,7 +263,7 @@ declare function xqd:where-imported($uri as xs:string,$model as map(*))
   $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]?namespace
 };
 
-(: return sequence of maps  are imported ns values are where imported:)
+(: return sequence of maps    imported-ns:(files that import...)   :)
 declare function xqd:imports($model)
 as map(*)
 {
@@ -269,6 +271,17 @@ map:merge(
 for $f in $model?files
  for $in in $f?xqdoc//xqdoc:import[@type="library"]
 group by $ns:=$in/xqdoc:uri
+return map:entry( $ns,  $f)
+)
+};
+
+(: return sequence of maps  are imported ns values are where imported:)
+declare function xqd:defs($model)
+as map(*)
+{
+map:merge(  
+for $f in $model?files
+group by $ns:=$f?namespace
 return map:entry( $ns,  $f)
 )
 };

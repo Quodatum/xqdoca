@@ -80,7 +80,7 @@ declare function _:by-ns($ns,$files){
            </h3>
            <ul>
            {for $f in  $files
-           return <li><a href="{$f?href}index.html">{ $f?namespace }</a></li>
+           return <li><a href="{$f?href}index.html">{ $f?namespace || ' @ ' || $f?path }</a> </li>
          }
            </ul>
            </div>

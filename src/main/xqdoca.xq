@@ -9,15 +9,15 @@ xquery version "3.1";
 import module namespace xqd = 'quodatum:xqdoca.model' at "lib/model.xqm";
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
 import module namespace store = 'quodatum:store' at "lib/store.xqm";
-
+ 
 declare option db:chop 'true';
  
 (:~  URL of the root folder to document
  : @default C:/Users/andy/basex.home/webapp/dba/ 
  :)
 declare variable $efolder as xs:string  external :=
-              db:option("webpath") ||"/vue-poc/"
-              (: db:option("webpath") ||"/dba/" :)
+              (: db:option("webpath") ||"/vue-poc/" :)
+              db:option("webpath") ||"/dba/"
               (: file:parent(static-base-uri()) :)
               (: db:option("webpath") ||"/chat/" :)
               (: db:option("webpath") ||"/graphxq/" :) 
@@ -32,7 +32,7 @@ declare variable $target as xs:string external :="file:///{webpath}/static/xqdoc
  : @default  *.xqm,*.xq,*.xquery
  :)
 declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery";
-
+ 
 (:~  XQuery platform
  : @default basex 
  :)
@@ -45,10 +45,10 @@ let $model:= xqd:snap($efolder,$files,$platform)
 let $options:=map{
                "project": $model?project, 
                "outputs":  map{
-                    "global": "index  restxq imports annotations swagger1 meta"  ,
-                    "module": "module xqdoc xqparse "  
+                    "global": "index  restxq imports annotations imports.svg meta"  ,
+                    "module": "module xqdoc xqparse imports.svg"  
                 },
-                "version": "0.2" 
+                "version": "0.3" 
                }
                
 (: generate  outputs :)
