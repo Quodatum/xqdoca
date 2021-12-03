@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -36,14 +36,13 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 (:~ annotations page :)
 declare 
-%xqdoca:global("annotations","Summary of Annotation use")
+%xqdoca:global("annotations","Summary of XQuery annotation use")
 %xqdoca:output("annotations.html","html5") 
 function _:annotations($model,$opts)
 {
   let $ns-map:=xqa:annotations($model)
   let $sections:=(
              _:summary($model,$opts),
-             _:related($model,$opts),
              <section id="annotations">
                  <h2>Annotations</h2>
                  <p>There are { map:size($ns-map) } annotation namespaces in use.</p>
@@ -125,15 +124,7 @@ as element(section)
   <section id="summary">
     <h2>Summary</h2>
     <p>This document itemises the use of annotations in this project.</p>
- </section>
-};
-
-declare function _:related($model,$opts)
-as element(section)
-{
-  <section id="related">
-    <h2>Related documents</h2>
-   { page:view-list("global", $opts,"annotations")  }    
+     { page:module-links("global","annotations", $opts) }
  </section>
 };
 

@@ -10,7 +10,7 @@ Work in progress.
 
 ## Requirements
 
-* `Basex` 9.2+ http://basex.org/
+* `Basex` 9.6+ http://basex.org/
 * `ex-parse` 0.6.10+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
 
 ## Usage

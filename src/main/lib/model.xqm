@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -72,21 +72,21 @@ return map{
              "project": trace(tokenize($folder,"/")[last()-1],"project"),
              "files": for $file at $pos in $files
                       let $id:= "F" || format-integer($pos,"000000")
-                      let $full:=concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
-                      let $spath:=translate($file,"\","/")
-                      let $a:=xqd:analyse($full, $platform, map{"_source": $spath})
-                      let $isParsed:=$a?xqparse instance of element(XQuery)
+                      let $full:= concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
+                      let $spath:= translate($file,"\","/")
+                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
+                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
                       let $base:=map{
-                         "index": $pos,
-                        "path": translate($file,"\","/"),
-                        "href": ``[modules/`{ $id }`/]``,
-                        "parsed": $isParsed,
-                        "prefixes": xqd:namespaces( $a?xqdoc),
-                        "annotations": xqd:anno($a?xqdoc), (: sequence map{annotation:, xqdoc: } :)
-                        "namespace": $a?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                        "default-fn-uri": xqp:default-fn-uri($a?xqparse) 
+                              "index": $pos,
+                              "path": translate($file,"\","/"),
+                              "href": ``[modules/`{ $id }`/]``,
+                              "parsed": $isParsed,
+                              "prefixes": xqd:namespaces( $analysis?xqdoc),
+                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
                            }
-                      return map:merge(($base,$a))  
+                      return map:merge(($base,$analysis))  
            }
 
 };
@@ -124,9 +124,10 @@ as map(*)
   (: add custom tags :)
   let $enh:=$xqd transform with {
           for $tag in map:keys($opts)
-          where xqdoc:module[@type="library"]
+          where xqdoc:module[@type="library"]/xqdoc:comment
+          
           return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
-          into xqdoc:module[@type="library"]/xqdoc:comment
+          into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
      }
   (: insert full source into module :)
   let $src:=unparsed-text($url)   
@@ -160,7 +161,17 @@ as map(*)*
  let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
  return map{"annotation":$name, "xqdoc": $a} 
 };
-         
+
+(:~ return 'library','main','#ERROR' 
+:)
+declare function xqd:file-parsed-type($file as map(*))
+as xs:string{
+   if($file?xqparse/name()="ERROR") then 
+      "#ERROR"
+   else
+       $file?xqdoc/xqdoc:module/@type/string() 
+};
+        
 (:~ return sequence of maps 
  : {uri:.., 
  : methods : {METHODS: {id:.., uri:.. ,function:}}
@@ -214,9 +225,6 @@ as map(*)*
                ))
    return map:merge($a)
 };
-
-
-
 
 (:~ 
  : return all matching annotations in xqdoc
@@ -278,16 +286,18 @@ return map:entry( $ns,  $f)
 (: return sequence of maps  are imported ns values are where imported:)
 declare function xqd:defs($model)
 as map(*)
-{
-map:merge(  
-for $f in $model?files
-group by $ns:=$f?namespace
-return map:entry( $ns,  $f)
+{ 
+(
+  for $f in $model?files
+  group by $ns:=$f?namespace
+  return map:entry( $ns,  $f)
 )
+=>map:merge(map { 'duplicates': 'combine' })
 };
 
 
-(:~ expand specials in target url :)
+(:~ expand specials in target url, i.e. {project\} and {webpath\}
+ :)
 declare function xqd:target($target as xs:string,$opts as map(*))
 as xs:string
 {

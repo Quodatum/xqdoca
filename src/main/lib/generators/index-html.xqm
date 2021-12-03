@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -44,20 +44,20 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
  : "project": "vue-poc"
  :)
 declare 
-%xqdoca:global("index","Index of sources")
+%xqdoca:global("index.html","Index of sources")
 %xqdoca:output("index.html","html5") 
 function xqhtml:index-html($model as map(*),
                             $opts as map(*)
                             )
 as document-node()                            
 {
-let $sections:=(
-             xqhtml:summary($model,$opts),
-             xqhtml:related($model,$opts),
-             xqhtml:modules($model,$opts),
-             xqhtml:files($model,$opts),
-             xqhtml:annot($model,$opts)
-)
+ let $sections:=(
+                 xqhtml:summary($model,$opts),
+                 xqhtml:modules("main_mods" ,"Main modules",$model?files[?xqdoc/xqdoc:module/@type="main"]),
+                 xqhtml:modules("library_mods" ,"Library modules",$model?files[?xqdoc/xqdoc:module/@type="library"]),
+                 xqhtml:files($model,$opts),
+                 xqhtml:annot($model,$opts)
+             )     
 let $d:=<div>
              <h1>
                  Project <span class="badge badge-info">
@@ -66,12 +66,9 @@ let $d:=<div>
                   &#160;XQuery source documentation 
               </h1>
               <div style="text-align:right"><small >{ page:date()}</small></div>
-             { 
-             page:toc($opts?project,$sections), 
-             $sections
-           }
-     </div>
-return document{ page:wrap($d, $opts ) }
+             { page:toc($opts?project,$sections) }
+        </div>
+return document{ page:wrap(($d,$sections), $opts ) }
 };
 
 
@@ -87,18 +84,11 @@ as element(section)
     { count($model?files) } modules and references
  { $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.
     </p>
-     <p>This document was built from source folder <kbd>{ $model?base-uri }</kbd>.</p> 
+     <p>This document was built from source folder <kbd>{ $model?base-uri }</kbd>.</p>
+   { page:module-links("global","index.html", $opts) }
  </section>
 };
 
-declare function xqhtml:related($model,$opts)
-as element(section)
-{
-  <section id="related">
-    <h2>Related documents</h2>
-   { page:view-list("global", $opts,"index")  }    
- </section>
-};
 
 (:~ 
  : summary of all annotations  in project
@@ -132,19 +122,14 @@ as element(section)
       }</section>
 }; 
                
-declare function xqhtml:modules($model,$opts)
+declare function xqhtml:modules($id,$title,$mods)
 as element(section)
 {
- <section id="ns">
-    <h2>Modules</h2>
-    <section id="ns_main" >
-    <h3>Main modules</h3>
-    {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="main"])}
-    </section>
-     <section id="ns_library">
-    <h3>Library modules</h3>
-    {xqhtml:modtable($model?files[?xqdoc/xqdoc:module/@type="library"])}
-    </section>
+ <section id="{ $id }">
+  
+    <h2>{ ``[ `{ $title }` (`{ count($mods) }`)]`` }</h2>
+    { xqhtml:modtable($mods) }
+
 </section>
 };
 
@@ -164,16 +149,14 @@ as element(section)
        }
        return
       <section  id="file">
-	      <h2>Files</h2>
-	     <p>{count($model?files)} files.</p> 
+	      <h2>{ ``[File view (`{ count($model?files) }`)]`` }</h2>
+	   
 	      {
-	       
-	       let $l:=$t/*!page:tree-list2(.,(),$f,99)
-	       return <ul class="tree">
-	       { $l }
+	        <ul class="tree">
+	          { $t/*!page:tree-list2(.,(),$f,99) }
 	       </ul>
 	      }
-	  </section>
+	    </section>
 };
 
 declare function xqhtml:modtable($files as map(*)*)
@@ -187,19 +170,17 @@ as element(div)
     <tr>
     <th>Type</th>
     <th>Uri</th>
-   
+    <th>Description</th>
     <th></th>
     <th>Annotations</th>
      <th>Functions</th>
+
     </tr>
     </thead>
     <tbody>
    
        { for $file  at $pos in $files
-        let $type:=if($file?xqparse/name()="ERROR") then 
-                     ""
-                    else
-                        $file?xqdoc/xqdoc:module/@type/string()
+        let $type:=xqd:file-parsed-type($file)
          order by $type, $file?namespace
          let $ns:=$file?prefixes
          let $annots:= for $a in $file?annotations
@@ -208,11 +189,10 @@ as element(div)
                        return $ns
        
         return  <tr>
-                <td title="{ $file?default-fn-uri }">{  $type }</td>
-                 <td>{page:link-module($file) }
-                 <div>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string() }</div>
-                 </td>
-                
+                <td title="{ $file?default-fn-uri }">{   xqhtml:file-usage($file) }</td>
+                 <td>{page:link-module($file) }</td>
+                 <td>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string() }</td>
+               
                  <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
                  <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
                  <td style="text-align: right">{$file?xqdoc//xqdoc:function=>count() }</td>
@@ -223,3 +203,20 @@ as element(div)
   }</div>
 };
 
+(:~ usage (import) info :)
+declare 
+function xqhtml:file-usage($file as map(*))                       
+as element(span)
+{ 
+   switch( xqd:file-parsed-type($file))
+   case "main"    return
+                    let $imported:=0 
+   					return <span><span title="Main">M</span>{ "&#10152;" || $imported}</span>
+   					
+   case "library" return
+                    let $imported:=0
+                    let $importedBy:=3 
+                     return <span>{ $importedBy }<span>&#10152;</span><span title="Library">L</span>{ "&#10152;" || $imported}</span>
+   
+   default        return <span>#ERROR</span>
+};

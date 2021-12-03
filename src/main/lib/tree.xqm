@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ xquery version "3.1";
  
  (:~
  : <h1>tree.xqm</h1>
- : <p>convert sequence of paths to sequence of xml trees </p>
+ : <p>Convert sequence of paths to an sequence of xml trees representing the paths.</p>
  :
  : @author Andy Bunce
- : @version 0.2
+ : @version 0.3
  :)
 module namespace tree = 'quodatum:data.tree';
 
@@ -28,23 +28,24 @@ module namespace tree = 'quodatum:data.tree';
 (:~
  : convert path(s) to tree
  :)
-declare function tree:build($a as xs:string*)
+declare function tree:build($paths as xs:string*)
 as element(directory)?
 {
- tree:build($a,"/")
+ tree:build($paths,"/")
 };
 
 (:~
  : @return sequence of nested <directory name=".."> and <file name=".." elements representing source
  :)
-declare function tree:build($a as xs:string*,$delimiter as xs:string)
+declare function tree:build($paths as xs:string*,$delimiter as xs:string)
 as element(*)*
 {
-fn:fold-right($a,
+fn:fold-right($paths,
              (),
              function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
             )
-}; 
+};
+ 
 (:~  convert a path to xml :)
 declare %private 
 function tree:nest($path as xs:string,$delimiter as xs:string)

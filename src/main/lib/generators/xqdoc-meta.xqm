@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
  : metadata. 
  :)
 declare 
-%xqdoca:global("meta","xqDocA run configuration report (XML)")
+%xqdoca:global("xqdoca.xml","xqDocA run configuration report (XML)")
 %xqdoca:output("xqdoca.xml","xml") 
 function _:restxq($model,$opts)
 {

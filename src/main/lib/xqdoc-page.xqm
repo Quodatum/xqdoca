@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>xqdoc-links.xqm</h1>
- : <p>html utilities</p>
+ : <p>html utilities for page generation</p>
  :
  : @author Andy Bunce
  : @version 0.2
@@ -27,6 +26,9 @@ xquery version "3.1";
 module namespace page = 'quodatum:xqdoca.page';
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
+
+(:~ prism version path from resources/ :)
+declare variable $page:prism  as xs:string :="prism/1.24.1/";
 
 (:~ make html href-able id :)
 declare function page:id($id as xs:string)
@@ -56,6 +58,7 @@ as element(span)
                 )
          }</span> 
 };
+
 
 (:~ link to module :)
 declare 
@@ -101,7 +104,9 @@ function page:link-restxq($path as xs:string,
                             )                       
 as element(span)
 {  
- let $root:=if($fromModule) then "../../" else ""
+ let $root:=if($fromModule) 
+            then "../../" 
+            else ""
   return  <span><a href="{ $root }restxq.html#{ $path}#{ $method }">{ page:badge-method($method)}</a></span>
 };
  
@@ -180,7 +185,7 @@ as element(html)
         </title>
         
         <link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" />
-        <link rel="stylesheet" type="text/css" href="{ $resources }prism/prism.css"/>
+        <link rel="stylesheet" type="text/css" href="{ $resources || $page:prism }prism.css"/>
         <link rel="stylesheet" type="text/css" href="{ $resources }page.css" />
         <link rel="stylesheet" type="text/css" href="{ $resources }query.css" />
         <link rel="stylesheet" type="text/css" href="{ $resources }base.css" />
@@ -197,7 +202,7 @@ as element(html)
             <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
             &#160; {$opts?version} on { page:date() }</p>
           </div>
-         <script  src="{ $resources }prism/prism.js" type="text/javascript"> </script>
+         <script  src="{  $resources || $page:prism }prism.js" type="text/javascript"> </script>
         <script  src="{ $resources }xqdoca.js" type="text/javascript"> </script>
       </body>
     </html>
@@ -288,25 +293,30 @@ as element(li){
         }</li>
  
 };
+
 declare function page:tree-list2($tree as element(*),
                                 $seq as xs:integer*,
                                 $render as function(*),
                                 $maxdepth as xs:integer)
 as element(li){
   let $pos:=page:section($seq)
-  let $isNested:=$tree  instance of element(directory) and $maxdepth > 0
+  let $isNested:=$tree instance of element(directory) and $maxdepth > 0
   return <li>{
-         (if($isNested) then 
+         (if($isNested)
+          
+          then 
             <span class="caret">
             {$render($pos,$tree)}/
             </span>
-          else  
-            $render($pos,$tree),
+            
+          else $render($pos,$tree),
      
-         if($isNested) then 
+         if($isNested) 
+         then 
              <ul class="nested">{ 
              $tree/*!page:tree-list2(.,($seq,position()),$render,$maxdepth -1 ) 
-             }</ul> 
+             }</ul>
+              
           else ()
         )}</li>
 };
@@ -376,11 +386,12 @@ as element(table)?
                                   <td>{ $def?description }</td>
                                   <td>{ $def?output }</td>
                                  </tr>,
-                         if(empty($rend)) then
-                               <tr>
+                         if(empty($rend)) 
+                         then <tr>
                                 <td><span class="badge badge-danger">{ $name }</span></td>
                                 <td>No renderer found</td>
                                </tr>
+                         else ()  
                              )
                   }    
                  </tbody>

@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -48,12 +48,10 @@ function _:imports($model,$opts)
   let $imports:=xqd:imports($model)
   let $sections:=(
              _:summary($model,$opts),
-             _:related($model,$opts),
-              <section  id="annotations">
-                 <h2>Namespaces</h2>
-                 <p>There are { map:size($imports) } imported namespaces.</p>
-                       {
-               for $ns in map:keys($imports)
+              <section  id="imports">
+                 <h2>{ ``[Imports (`{ map:size($imports) }`)]`` }</h2>
+                 {
+                 for $ns in map:keys($imports)
                  order by $ns
                  return  _:by-ns($ns,$imports?($ns))
                  }
@@ -92,14 +90,6 @@ as element(section)
   <section id="summary">
     <h2>Summary</h2>
     <p>Lists all modules imported.</p>
- </section>
-};
-
-declare function _:related($model,$opts)
-as element(section)
-{
-  <section id="related">
-    <h2>Related documents</h2>
-   { page:view-list("global", $opts,"imports")}
+    { page:module-links("global","imports", $opts) }
  </section>
 };

@@ -1,6 +1,6 @@
 xquery version "3.1";
 
-(:~ 
+(:~  
  : Generate documentation for for XQuery sources
  : @return info about the run (json format)  
  :)
@@ -16,8 +16,10 @@ declare option db:chop 'true';
  : @default C:/Users/andy/basex.home/webapp/dba/ 
  :)
 declare variable $efolder as xs:string  external :=
+(: "C:/Users/andy/Desktop/basex.sow8/legacy-migrate/" :)
+"C:\Users\andy\Desktop\sow9\code\processor\psrv\"
               (: db:option("webpath") ||"/vue-poc/" :)
-              db:option("webpath") ||"/dba/"
+              (: db:option("webpath") ||"/dba/" :)
               (: file:parent(static-base-uri()) :)
               (: db:option("webpath") ||"/chat/" :)
               (: db:option("webpath") ||"/graphxq/" :) 
@@ -45,8 +47,8 @@ let $model:= xqd:snap($efolder,$files,$platform)
 let $options:=map{
                "project": $model?project, 
                "outputs":  map{
-                    "global": "index  restxq imports annotations imports.svg meta"  ,
-                    "module": "module xqdoc xqparse imports.svg"  
+                    "global": "index.html imports imports.svg annotations xqdoca.xml"  , 
+                    "module":  "module xqdoc xqparse imports.svg"
                 },
                 "version": "0.3" 
                }

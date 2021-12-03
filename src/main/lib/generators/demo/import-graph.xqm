@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:~
- : simple svg generation 
+ : import diagrams using svg, requires   access to a graphxq server
  :
  : @author Andy Bunce
  : @version 0.2
@@ -9,15 +9,13 @@ xquery version "3.1";
 module namespace _ = 'quodatum:xqdoca.generator.calls';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../../model.xqm";
-import module namespace http="http://expath.org/ns/http-client";
+import module namespace gxq = 'quodatum:serice.graphxq' at "../../graphxq.xqm";
+
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare  namespace svg = 'quodatum:xqdoca.generator.svg';
 declare  namespace dotml = 'http://www.martin-loetzsch.de/DOTML';
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
-
-declare variable $_:graphxq-server:= "http://localhost:8984/graphxq/";
-
 
 
 declare 
@@ -45,7 +43,22 @@ function _:module($file as map(*),
  (:~ import svg for set of files :)
  declare function _:build($files as map(*)*,         
                          $model as map(*),
-                        $opts as map(*) )
+                         $opts as map(*) )
+ {                   
+   let $nodes:=$files!_:node(.,$opts) 
+                
+	let $edges := for $f at $pos in  $files 
+                return _:edge($f,$f)
+	let $dot:=_:graph(($nodes,$edges),$opts)
+           
+	let $svg:=gxq:dotml2($dot)
+	return $svg
+};
+
+(:~ import svg for set of files :)
+ declare function _:build-old($files as map(*)*,         
+                         $model as map(*),
+                         $opts as map(*) )
  {
     let $imports:= xqd:imports($model)
   let $defs:=xqd:defs($model)                        
@@ -60,47 +73,32 @@ function _:module($file as map(*),
 	let $dot:=<dotml:graph rankdir = "LR">	
              <dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/>{ $op }
             </dotml:graph>
-	let $svg:=_:dotml2($dot)
-	return $svg
+	(: let $svg:=_:dotml2($dot) :)
+	return $dot
 };
 	                 
-(:~ 
- : data is dotml as XML
-  :)
-declare function _:dotml2($data as element(*)) 
-as document-node()
-{
-let $form:= <multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"> 
-                   <header name="Content-Disposition" value='form-data; name="data"'/>   
-                   <body media-type="text/xml"/>
-            </multipart>
-return _:post('/api/dotml', $form, $data)
-};
 
-declare function _:dot($data as xs:string) 
-as document-node()
-{
- let $form:= <multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"> 
-                     <header name="Content-Disposition" value='form-data; name="data"'/>   
-                     <body media-type="text/plain"/>
-              </multipart>
-return _:post('/api/dotml', $form, $data)
-};
 
-declare function _:post($url as xs:string, $form as element(http:multipart),$data ){
-  let $req:= <http:request method="POST"  xmlns="http://expath.org/ns/http-client">
-              { $form}
-            </http:request>
-  let $res:= http:send-request($req,$_:graphxq-server || $url ,($data))=>trace("£££££")
-return if($res[1]/@status="200") then $res[2] else error()
-};
-declare function _:node($f as map(*), $opts as map(*)){
+(:~ create node
+ :)
+ declare function _:node($f as map(*), $opts as map(*))
+as element(dotml:record)
+{
   <dotml:record  URL="{ $opts?base }{ $f?href }imports.svg">
-    <dotml:node id="{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"/>
+    <dotml:node id="N{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"  fillcolor="#FFFFFF"/>
     <dotml:node id="X{ $f?index}" label="{ $f?path }" URL="http://nowhere.com" />
   </dotml:record>
 };
 
-declare function _:edge($from as map(*),$to as map(*)){
-  <dotml:edge from="{ $from?index}"  to="{ $to?index}"/>
+(:~ create edge :)
+declare function _:edge($to as map(*),$from as map(*)){
+  <dotml:edge from="N{ $from?index}"  to="N{ $to?index}"/>
+};
+
+(:~ create dotml graph :)
+declare function _:graph($nodes,$opts){
+ <dotml:graph  rankdir="LR" bgcolor="silver">	
+             <dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/>{  
+             $nodes
+}</dotml:graph>  
 };

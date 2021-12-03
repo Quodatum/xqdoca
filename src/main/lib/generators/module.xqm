@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:
- : Copyright (c) 2019-2020 Quodatum Ltd
+ : Copyright (c) 2019-2021 Quodatum Ltd
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ let $xqd:=$file?xqdoc
 let $_:=trace(concat($file?path,"->",$file?href),"module: ")
 let $sections:=(
          xqh:summary($xqd/xqdoc:module,$opts),
-          xqh:related($xqd/xqdoc:module,$opts),
          xqh:imports($xqd,$model), 
          xqh:variables($xqd/xqdoc:variables,$file),
          xqh:functions($xqd/xqdoc:functions, $file, $model),
@@ -68,7 +67,7 @@ let $sections:=(
          xqh:restxq($xqd,$file),
           <section id="source">
             <h2 >Source Code</h2>
-            <pre><code class="language-xquery">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
+            <pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
           </section>
 )
 let $d:=<div>
@@ -99,21 +98,11 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
 			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
 			</dd>
 		</dl>
+     { page:module-links("module","module", $opts) }
     </section>
   };
 
-declare function xqh:related($mod as element(xqdoc:module)?,
-                            $opts as map(*)
-                            )
- as element(section)
- {
-    <section id="related">
-    <h2>Related documents</h2>{
-    
-    page:view-list("module", $opts,"module")
-      
-    }</section>
-  };  
+
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
@@ -132,12 +121,6 @@ as element(nav){
 					<a href="#summary">
 						<span class="secno">1 </span>
 						<span class="content">Summary</span>
-					</a>
-				</li>
-				<li>
-					<a href="#related">
-						<span class="secno">2 </span>
-						<span class="content">Related</span>
 					</a>
 				</li>
 				<li>
@@ -245,7 +228,7 @@ as element(section){
     </section>
 }; 
 
-declare function xqh:variables($vars as element(xqdoc:variables),$file as map(*))
+declare function xqh:variables($vars as element(xqdoc:variables)?,$file as map(*))
 as element(section)
 {
   <section id="variables">
@@ -286,7 +269,7 @@ return
 };  
 
 declare function xqh:functions(
-                     $funs as element(xqdoc:functions),
+                     $funs as element(xqdoc:functions)?,
                      $file as map(*),
                      $model as map(*)
                    )
@@ -374,7 +357,7 @@ as element(div)
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
         <summary>Source</summary>
-        { $funs! <pre><code class="language-xquery">{ xqdoc:body/string() }</code></pre> }
+        { $funs! <pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>
 		</div>
 };
