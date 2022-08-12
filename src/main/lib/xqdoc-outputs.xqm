@@ -160,3 +160,18 @@ as function(*)*
  {
  $s=>normalize-space()=>tokenize("[\s,]+") 
 };
+
+(:~ 
+ : zip all
+ :)
+ declare %updating
+ function xqo:zip($target as xs:string)
+ as empty-sequence()
+ {
+  let $files := file:list($target, true())!(if(ends-with(.,"/")) then () else .)
+let $zip   := archive:create(
+                   $files,
+                   $files!file:read-binary($target || .)
+               )
+return file:write-binary($target || "xqdoca.zip", $zip)
+ };

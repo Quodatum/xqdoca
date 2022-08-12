@@ -24,7 +24,7 @@ xquery version "3.1";
  :)
  
 (:~
- : Generate meta
+ : Generate metadata about the current xqdoca execution
  :)
 module namespace _ = 'quodatum:xqdoca.generator.meta';
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";

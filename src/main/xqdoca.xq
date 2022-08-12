@@ -47,7 +47,7 @@ let $model:= xqd:snap($efolder,$files,$platform)
 let $options:=map{
                "project": $model?project, 
                "outputs":  map{
-                    "global": "index.html imports  annotations xqdoca.xml"  , 
+                    "global": "index.html imports  annotations restxq xqdoca.xml"  , 
                     "module":  "module xqdoc xqparse "
                 },
                 "version": "0.3" 
@@ -60,7 +60,7 @@ let $target:=xqd:target($target,$options)
 return (
        store:store($pages,$target),
        xqo:export-resources($target),
-       
+       xqo:zip($target),
       (: arbitrary result for reporting :) 
        update:output(
          <json type="object">
