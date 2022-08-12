@@ -1,7 +1,7 @@
 # XQdocA
 
 Generates documentation from XQuery sources with a focus on use of annotations.
-The xqDoc schema. The outputs can be changed or extended with custom generators that are dynamically 
+The outputs can be changed or extended with custom generators that are dynamically 
 located and loaded at run time. 
 
 ## Status
@@ -10,7 +10,7 @@ Work in progress.
 
 ## Requirements
 
-* `Basex` 9.6+ http://basex.org/
+* `Basex` 9.7+ http://basex.org/
 * `ex-parse` 0.6.10+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
 
 ## Usage

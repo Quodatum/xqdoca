@@ -20,20 +20,21 @@ xquery version "3.1";
  : <p>Validate dependancies from expath-pkg file </p>
  :
  : @author Andy Bunce
- : @version 0.2
+ : @version 0.3
  :)
  declare namespace pkg="http://expath.org/ns/pkg";
- declare variable $pkg:=doc("expath-pkg.xml")=>trace("DOC");
+ declare variable $pkg:=doc("expath-pkg.xml");
 (:~
  : raise error if environment incorrect 
  :)
  
   let $basex:=$pkg/pkg:package/pkg:dependency[@processor="http://basex.org/"]/@version/string()
   let $pkgs:=$pkg/pkg:package/pkg:dependency[@name]
+  let $basex-active:= db:system()/generalinformation/version/tokenize(.," ")[1]
   return 
   
-  if( db:system()/generalinformation/version/tokenize(.," ")[1] ne $basex)then 
-       error(xs:QName("xpg:version"),"BaseX version not supported")
+  if( $basex-active ne $basex)then 
+       error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }` may not be supported]``)
   else (
          for $p in $pkgs
          return if(repo:list()[@name=$p/@name]/@version ne $p/@version) then
