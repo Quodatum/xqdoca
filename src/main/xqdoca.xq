@@ -60,7 +60,7 @@ let $target:=xqd:target($target,$options)
 return (
        store:store($pages,$target),
        xqo:export-resources($target),
-       xqo:zip($target),
+       xqo:zip($target, $options?project),
       (: arbitrary result for reporting :) 
        update:output(
          <json type="object">

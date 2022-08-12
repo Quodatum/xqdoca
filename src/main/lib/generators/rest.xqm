@@ -279,10 +279,10 @@ as element(*)*
           </tr></thead>
          <tbody>
          {for $a in $aq
-          let $a:=trace($a,"A:")
+        (:  let $a:=trace($a,"A:") :)
           let $p:=$a/xqdoc:literal/string()
           
-          let $name:=fn:replace($p[2],"\{\s*\$(\w*)\s*\}","$1")=>trace("NAME: ")
+          let $name:=fn:replace($p[2],"\{\s*\$(\w*)\s*\}","$1") (: =>trace("NAME: ") :)
           let $fn:=$amap?annot/../..
           let $desc:=page:comment-for($name,$fn/xqdoc:parameters)
           let $type:=$fn/xqdoc:parameters/xqdoc:parameter[xqdoc:name=$name]/xqdoc:type/concat(.,@occurrence)

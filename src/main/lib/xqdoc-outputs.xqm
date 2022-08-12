@@ -165,13 +165,13 @@ as function(*)*
  : zip all
  :)
  declare %updating
- function xqo:zip($target as xs:string)
+ function xqo:zip($target as xs:string,$name as xs:string)
  as empty-sequence()
  {
-  let $files := file:list($target, true())!(if(ends-with(.,"/")) then () else .)
+  let $files := file:list($target, true())!util:if(not(ends-with(.,"/")),.)
 let $zip   := archive:create(
                    $files,
                    $files!file:read-binary($target || .)
                )
-return file:write-binary($target || "xqdoca.zip", $zip)
+return file:write-binary($target || $name ||".zip", $zip)
  };
