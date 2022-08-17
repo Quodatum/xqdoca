@@ -98,7 +98,7 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
 			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
 			</dd>
 		</dl>
-     { page:module-links("module","module", $opts) }
+     { page:related-links("module","module", $opts) }
     </section>
   };
 
@@ -205,24 +205,25 @@ as element(nav){
 
 
 
+(:~
+ create section
+:)
 declare function xqh:imports($xqd as element(xqdoc:xqdoc),$model as map(*))
 as element(section){
-  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
-  let $importing:=xqd:imports($model)?($uri)
-  let $imports:=$xqd/xqdoc:imports
+  let $x:= xqd:import-count($xqd,$model)
   return  
     <section id="imports">
     <h2>Imports</h2>
 
     <p>
     This module is imported by
-    <span class="badge badge-info">{ count($importing) }</span> modules, it imports
-    <span class="badge badge-info">{ count($imports/xqdoc:import) }</span> modules.
+    <span class="badge badge-info">{ count($x?importedby) }</span> modules. It imports
+    <span class="badge badge-info">{ count($x?imports) }</span> modules.
     </p>{
      page:calls(
-		     $importing?namespace!page:link-module(.,$model),
-		     $uri,
-		     $imports/xqdoc:import/xqdoc:uri/string()!page:link-module(.,$model)
+		     $x?importedby?namespace!page:link-module(.,$model),
+		     $x?url,
+		     $x?imports/xqdoc:uri/string()!page:link-module(.,$model)
    )
   }
     </section>
@@ -332,32 +333,12 @@ as element(div)
        
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
      
-      
-       {
-          let $hits:=for $file in $model?files, $f in $file?xqdoc//xqdoc:function
-                     where $f[xqdoc:invoked[
-                                         xqdoc:name = $qmap?name
-                                     and @arity=$funs/@arity 
-                                     and xqdoc:uri= $qmap?uri 
-                                ]]
-                    let $qname:=xqn:qmap($f/xqdoc:name,$file?prefixes,$file?default-fn-uri)                         
-                    return map{"file": $file, "name": concat($qname?name,"#",$f/@arity), "qname": $qname}
-                    
-          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
-          return  <details>
-                    <summary>{$sum}</summary>
-                    <ul>
-                     { $hits!<li>{
-                       page:link-function2(?qname?uri, ?name, ?file, true()) 
-                     }</li> }
-                 
-                    </ul>              
-                    </details>
-     }
+       {xqh:invoked-by($funs, $qmap , $model)}
+         
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
         <summary>Source</summary>
-        { $funs! <pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
+        { $funs! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>
 		</div>
 };
@@ -388,6 +369,35 @@ as element(details)
          $di! <li>{ page:link-function(?uri, ?name, $file, $model) }</li>
      } </ul>
       </details> 
+};
+
+
+(:~
+ : list of functions invoking  
+ :)
+declare
+function xqh:invoked-by($funs as element(xqdoc:function)*,$qmap as map(*), $model)
+as element(details){
+
+let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
+                     where $function[xqdoc:invoked[
+                                         xqdoc:name = $qmap?name
+                                     and @arity=$funs/@arity 
+                                     and xqdoc:uri= $qmap?uri 
+                                ]]
+                    let $qname:=xqn:qmap($function/xqdoc:name,$file?prefixes,$file?default-fn-uri)                         
+                    return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
+                    
+          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          return  <details>
+                    <summary>{$sum}</summary>
+                    <ul>
+                     { $hits!<li>{
+                       page:link-function2(?qname?uri, ?name, ?file, true()) 
+                     }</li> }
+                 
+                    </ul>              
+                    </details>
 };
 
 declare function xqh:custom($v as element(xqdoc:custom))

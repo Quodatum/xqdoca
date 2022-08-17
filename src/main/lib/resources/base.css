@@ -830,6 +830,7 @@
 		border-collapse: collapse;
 		border: hidden;
 		width: 100%;
+		table-layout: fixed;
 	}
 	table.data caption,
 	table.index caption {

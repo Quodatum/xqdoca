@@ -162,16 +162,17 @@ as function(*)*
 };
 
 (:~ 
- : zip all
+ : zip all 
+ : @param $target destination folder using file protocoleg file:///
  :)
  declare %updating
  function xqo:zip($target as xs:string,$name as xs:string)
  as empty-sequence()
  {
-  let $files := file:list($target, true())!util:if(not(ends-with(.,"/")),.)
+  let $files := file:list($target=>trace("Creating zip: "), true())!util:if(not(ends-with(.,file:dir-separator() )),.)
 let $zip   := archive:create(
                    $files,
-                   $files!file:read-binary($target || .)
+                   $files!file:read-binary($target || translate(.,"\","/"))
                )
 return file:write-binary($target || $name ||".zip", $zip)
  };

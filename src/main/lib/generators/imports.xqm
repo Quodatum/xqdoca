@@ -90,6 +90,6 @@ as element(section)
   <section id="summary">
     <h2>Summary</h2>
     <p>Lists all modules imported.</p>
-    { page:module-links("global","imports", $opts) }
+    { page:related-links("global","imports", $opts) }
  </section>
 };

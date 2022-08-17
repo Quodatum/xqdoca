@@ -44,12 +44,13 @@ declare
 %xqdoca:output("restxq.html","html5") 
 function _:restxq($model,$opts)
 {
-let $annots:= xqd:rxq-paths($model) 
+let $annots:= xqd:rxq-paths($model)
+
 let $tree:=$annots?uri
-let $tree:=tree:build($tree)
+let $tree:=tree:build($tree)=>trace("BXX ")
 let $sections:=(
            _:summary($model, $opts, $tree),
-            _:related($model, $opts, $tree),
+
            <section id="rest">
              <h2>Rest interface paths</h2>
              {$annots!_:path-report(.,(2,position()))}
@@ -69,28 +70,21 @@ return  page:wrap($body,$opts)
 };
 
 
-declare function _:summary($model,$opts, $tree)
+declare function _:summary($model,$opts, $tree as element(directory)?)
 as element(section)
 {
-    let $base:=tree:base($tree)
+    let $base:=tree:base($tree=>trace("TREE:"))
     return <section id="summary">
         <h2>Summary</h2>      
-        <p>This document summaries the RestXQ interface.</p>
+        <p>This document provides details of the RestXQ annotations. These provide mappings from Web endpoints to XQuery code.</p>
          <dl>
             <dt>Base path</dt>
             <dd>{ $base }</dd>
         </dl>
+        { page:related-links("global","restxq",$opts) }
      </section>
 };
 
-declare function _:related($model,$opts, $tree)
-as element(section)
-{
-     <section id="related">
-        <h2>Related documents</h2>      
-      {  page:view-list("global", $opts,"restxq") }      
-     </section>
-};
 
 (:~  html for a path
  :   $rep={uri:.., methods:{METHOD:annotation}, function:..}

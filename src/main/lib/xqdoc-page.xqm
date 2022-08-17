@@ -38,9 +38,9 @@ as xs:string
 };
 
 (:~
- : generate link to module with namespace 
+ : generate link to module with namespace, may be multiple 
  :)
- declare function page:link-module($uri as xs:string,$model as map(*))                       
+ declare function page:link-module($uri as xs:string,  $model as map(*))                       
 as element(span)
 {
  let $files:=$model?files[?namespace=$uri]
@@ -354,19 +354,29 @@ as element(span)
  page:date(current-dateTime())
 };
 
+(:~ active renderer names :)
+declare 
+function page:active-renderers($type as xs:string,
+                        $opts as map(*),
+                        $exclude as xs:string*)
+as xs:string*{
+let $selected:=$opts?outputs?($type)
+ let $renderers:=$opts(".renderers")?($type)
+ return page:tokens($selected)[not(. = $exclude)]
+};
+
 (:~ table of renderers
  : @param type global or module
- 
+ : @param exclude list of renderers to omit
  :)
 declare 
-function page:view-list($type as xs:string,
+function page:related-docs($type as xs:string,
                         $opts as map(*),
                         $exclude as xs:string*)                       
 as element(table)?
 {
- let $selected:=$opts?outputs?($type)
+ let $list:=page:active-renderers($type,$opts,$exclude)
  let $renderers:=$opts(".renderers")?($type)
- let $list:=page:tokens($selected)[not(. = $exclude)]
  return if(not(empty($list))) then
            <table class="data">
                  <thead>
@@ -400,10 +410,10 @@ as element(table)?
          ()
 };
 
-declare function page:module-links($type as xs:string, $exclude as xs:string, $opts as map(*))
+declare function page:related-links($type as xs:string, $exclude as xs:string, $opts as map(*))
 as element(details)?
 {
-let $t:=page:view-list($type, $opts,$exclude)
+let $t:=page:related-docs($type, $opts,$exclude)
 return if ($t) then
          <details>
             <summary>Related documents</summary>

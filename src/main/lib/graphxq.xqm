@@ -26,7 +26,7 @@ module namespace gxq = 'quodatum:serice.graphxq';
 import module namespace http="http://expath.org/ns/http-client";
 
 declare variable $gxq:server:= "http://localhost:8984/graphxq/";
-
+declare variable $gxq:server-ok:= 200=http:send-request(<http:request method='get' status-only='true'/>, $gxq:server)/@status;
 (:~
  : convert dotml to svg 
  : @parm $data is dotml as XML

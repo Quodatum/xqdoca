@@ -124,7 +124,7 @@ as element(section)
   <section id="summary">
     <h2>Summary</h2>
     <p>This document itemises the use of annotations in this project.</p>
-     { page:module-links("global","annotations", $opts) }
+     { page:related-links("global","annotations", $opts) }
  </section>
 };
 

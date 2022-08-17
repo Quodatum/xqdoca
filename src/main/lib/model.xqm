@@ -37,9 +37,12 @@ import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
-
+(:~ restxq namespace :)
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
+(:~ regex for unnecessary RESTXQ path segment annotation :)
+declare %private variable $xqd:path-seq-default:=xqd:escape-for-regex("=[^/]+");
+
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
  :)
@@ -172,7 +175,7 @@ as xs:string{
        $file?xqdoc/xqdoc:module/@type/string() 
 };
         
-(:~ return sequence of maps 
+(:~ return sequence of maps describing restxq
  : {uri:.., 
  : methods : {METHODS: {id:.., uri:.. ,function:}}
  : }
@@ -181,10 +184,10 @@ declare function xqd:rxq-paths($model)
 as map(*)* 
 {
 let $reports:= xqd:annots-rxq($model)
-(: map keyed on uris -ensure starts with :)
+(: map keyed on uris -ensure starts with / :)
 let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
 let $data:=map:merge(for $report in $reports
-          group by $uri:=$fix($report?annot/xqdoc:literal/string())
+          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
           let $methods:= map:merge(
                          for $annot in $report
                          let $hits:=for $method in $xqd:methods
@@ -199,6 +202,14 @@ let $uris:=sort(map:keys($data))
 return $data?($uris)        
 };
 
+(:~ tidy up restxq path annotations
+ ensure leading slash, remove unnecesary {$xxxx=[^/]+}
+ :)
+declare %private function xqd:rxq-path-normalize($path as xs:string)
+as xs:string{
+let $path:=replace($path,$xqd:path-seq-default,"")
+return if(starts-with($path,"/")) then $path else "/" || $path
+};
 
 (:~ 
  : map for each restxq:path annotation
@@ -213,7 +224,7 @@ return $data?($uris)
 declare function xqd:annots-rxq($model as map(*))
 as map(*)*
 {
-  for $f at $index in $model?files
+  for $f  in $model?files
   for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
   let $function:= $annot/../..
   let $a:=((xqa:name-detail($function,$f),
@@ -307,3 +318,27 @@ return $target
 =>replace("\{project\}",$opts?project)
 =>replace("\{webpath\}",translate($webpath,"\","/"))
 }; 
+
+(:~
+ @return map listing imports and usage
+:)
+declare function xqd:import-count($xqd as element(xqdoc:xqdoc),$model as map(*))
+as map(*)
+{
+  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
+  let $importing:=xqd:imports($model)?($uri)
+  let $imports:=$xqd/xqdoc:imports
+  return map{
+     "uri": $uri,    
+     "imports": $imports/xqdoc:import,
+     "importedby":  $importing
+  }
+};
+
+(:~ from functx = "http://www.functx.com"; :)
+declare %private 
+function xqd:escape-for-regex( $arg as xs:string? ) 
+as xs:string {
+   replace($arg,
+           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
+ } ;

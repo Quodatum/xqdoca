@@ -144,7 +144,7 @@ declare function xqp:invoke-fn(
 as element(xqdoc:invoked)*
 {
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
-let $hasarg:=boolean($e/ArgumentList/*[not(TOKEN)])
+let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 

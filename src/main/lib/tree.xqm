@@ -95,11 +95,13 @@ as element(*)*
      ($a1,$a2)                        
 };
 
-(:~ extract any shared common path :)
-declare function tree:base($tree)
+(:~ extract any shared leading common path :)
+declare function tree:base($tree as element(directory))
 as xs:string{
   let $c:= $tree/directory
   let $ok:= count($c)=1 and count($tree/*)=1
-  let $tail:= if ($ok) then  tree:base($c) else ()
-  return ($tree/@name/string() ,$tail)=>string-join("/")
+  let $tail:= if ($ok) 
+              then  tree:base($c) 
+              else ()
+  return ("",$tree/@name/string() ,$tail)=>string-join("/")
 };

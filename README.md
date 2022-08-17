@@ -147,6 +147,15 @@ map{
  "json": map{"method": "json"}
 }
 ```
+### Development notes
+`xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
+combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
+
+The results are used to create an in-memory map
+![xqdoca data map](docs/model.png "xqdoca data map")
+
+The renderers use this map to build their outputs.
+
 ## License
 
 XQdocA is released under the Apache License, Version 2.0

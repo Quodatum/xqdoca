@@ -161,5 +161,5 @@ return concat("(",string-join($t,","),")")
 declare function xqa:extract-restxq($url as xs:string)
 as xs:string*
 {
-  fn:analyze-string($url,"\{\s*\$(\S*)\s*\}")/fn:match/fn:group/string()
+  fn:analyze-string($url,"\{\s*\$(\S*)\s*\}")/fn:match/fn:group/string()=>trace("xqa:extract-restxq " || $url || " :")
 };    
