@@ -96,7 +96,7 @@ as element(*)*
 };
 
 (:~ extract any shared leading common path :)
-declare function tree:base($tree as element(directory))
+declare function tree:base($tree as element(directory)?)
 as xs:string{
   let $c:= $tree/directory
   let $ok:= count($c)=1 and count($tree/*)=1
