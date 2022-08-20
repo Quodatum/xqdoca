@@ -146,9 +146,9 @@ as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-      <div style="display: flex;width:100%; justify-content: space-between;">
-        <div style="width:40%;">{ if (count($calls-this)) then
-                                     $calls-this!<div style="text-align: right;" >{.}</div>
+      <div style="display: flex; justify-content: space-between; align-items:center;">
+        <div style="">{ if (count($calls-this)) 
+                                  then $calls-this!<div style="text-align: right;" >{.}</div>
                                   else "(None)"   
       }</div>
                       
@@ -158,11 +158,12 @@ as element(div)?
         <div><div>imports</div>&#x2192;</div>
      </div>
      
-    <div style="width:40%;">{ if(count($called-by-this)) then
-                                $called-by-this!<div>{.}</div>
-                              else
-                               ("(None)")
+    <div style="display: flex;justify-content: space-between;align-items:center;">
+    <div style="">{ if(count($called-by-this)) 
+                              then $called-by-this!<div style="text-align: left;">{.}</div>
+                              else "(None)"
      }</div>
+     </div>
 </div> 
 };
 

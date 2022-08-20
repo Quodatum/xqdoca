@@ -47,7 +47,7 @@ declare variable $xqhtml:larr:="&#8598;";
  :)
 declare 
 %xqdoca:global("index.html","Index of sources")
-%xqdoca:output("index.html","html5") 
+%xqdoca:output("index.html","xhtml") 
 function xqhtml:index-html($model as map(*),
                             $opts as map(*)
                             )
@@ -105,7 +105,7 @@ as element(section)
                        )
    return <section id="annotation">
               <h2>Annotations</h2>
-              <p>Annotations are defined in {map:size(($ns-map))} namespaces. A total of {count( $model?files?annotations)} annotations are defined.
+              <p> A total of {count( $model?files?annotations)} annotations are defined. The Annotations use {map:size(($ns-map))} namespaces.
               </p>{
                for $ns in map:keys($ns-map)
                order by $ns
@@ -136,8 +136,8 @@ as element(section)
 </section>
 };
 
-
-declare function xqhtml:files($model,$opts)
+(:~ file summary section :)
+declare function xqhtml:files($model as map(*),$opts as map(*))
 as element(section)
 {
        let $t:=tree:build( $model?files?path)
@@ -170,23 +170,22 @@ as element(div)
         else
      <table class="data">
            <colgroup>
-               <col  style="width: 15%;"/>
-		       <col  style="width: 10%;"/>
-		       <col  style="width: 25%;"/>
-		       <col  style="width: 10%;"/>
-		      
-		        <col  style="width: 5%;"/>
+               <col  style="width: 30%;"/>
+                <col  style="width: 15%;"/>
+                <col  style="width: 25%;"/>
+                <col  style="width: 10%;"/>
+  
+		            <col  style="width: 5%;"/>
 		    </colgroup>
 		    <thead>
 		    <tr>
-		    <th>Uri</th>
-		    <th>Type</th>
-		    <th>Description</th>
-		    <th>Prefix</th>
-		   
-		    <th>B</th>
-		    <th>Annotations</th>
-		     <th>Functions</th>
+          <th>Uri</th>
+          <th>Prefix</th>
+          
+          <th>Description</th>
+          <th>Use</th>
+          <th title="Annotations">A</th>
+          <th>Metrics</th>
 		    </tr>
 		    </thead>
     <tbody>
@@ -199,17 +198,16 @@ as element(div)
                        group by $ns:=$a?annotation?uri
                        order by $ns
                        return $ns
-       
+         let $desc:= $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string()
         return  <tr>
                 <td>{page:link-module($file) }</td>
-                <td >{   xqhtml:file-usage($file,$model) }</td>
-                 <td>{ $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string() }</td>
-                 <td title="prefix">{ map:for-each($file?prefixes,function($k,$v){if($v=$file?namespace) then $k})}</td>
-               
+                <td title="prefix">{ map:for-each($file?prefixes,function($k,$v){if($v=$file?namespace) then $k})}</td>
+                 <td>{ xqhtml:truncate-text($desc,50) }</td>
+                 <td >{   xqhtml:file-usage($file,$model) }</td>
 
-                 <td>{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
-                 <td>{ $annots!<span class="badge badge-info" title="{.}">{.}</span> }</td>
-                 <td style="text-align: right">{$file?xqdoc//xqdoc:function=>count() }</td>
+                 <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
+              
+                 <td style="text-align: right">fn={$file?xqdoc//xqdoc:function=>count() }</td>
               </tr>
         }
     </tbody>
@@ -227,16 +225,24 @@ as element(div)
    return switch( xqd:file-parsed-type($file))
    case "main"    
    					return <div>
-   					          <div title="Main" class="badge badge-info">Main</div>
+   					          <div title="Main module" class="badge badge-info">Main</div>
    					          <div title="imports" style="float:right">{ $xqhtml:larr }{ count($x?imports)}</div>
    					       </div>
    					
    case "library" 
              return <div>
                         <div title="imported by">{ count($x?importedby) }<span>{ $xqhtml:larr }</span></div>
-                        <div title="Library" class="badge badge-info">Library</div>
+                        <div title="Library module" class="badge badge-info">Library</div>
                         <div title="imports" style="float:right">{ $xqhtml:larr }{ count($x?imports)}</div>
                     </div>
    
    default        return <div>#ERROR</div>
 };
+
+declare 
+function xqhtml:truncate-text($text as xs:string,$max as xs:integer) 
+as xs:string{
+if(string-length($text) lt $max)
+then $text
+else substring($text,1, $max -3) || "..."
+};  

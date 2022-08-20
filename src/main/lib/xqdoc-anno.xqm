@@ -62,6 +62,13 @@ declare variable $xqa:noteworthy:=(
     "title":'RESTXQ',
     "icon": 'R',
     "class": 'success'
+  },
+   map{
+    "uri":'http://basex.org/modules/unit',
+    "name":'test',
+    "title":'UNIT',
+    "icon": 'T',
+    "class": 'primary'
   }
 );
 

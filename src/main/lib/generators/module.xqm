@@ -48,8 +48,8 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
  :         "source": () }</pre> 
  :)
 declare 
-%xqdoca:module("module","Html5 report on the XQuery source")
-%xqdoca:output("index.html","html5")
+%xqdoca:module("module","Report on the XQuery source")
+%xqdoca:output("index.html","xhtml")
 function xqh:xqdoc-html2($file as map(*),         
                          $model as map(*),
                          $opts as map(*)

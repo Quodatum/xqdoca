@@ -42,7 +42,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 (:~ import page :)
 declare 
 %xqdoca:global("imports","Summary of import usage")
-%xqdoca:output("imports.html","html5") 
+%xqdoca:output("imports.html","xhtml") 
 function _:imports($model,$opts)
 {
   let $imports:=xqd:imports($model)

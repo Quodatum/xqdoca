@@ -41,7 +41,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
  :)
 declare 
 %xqdoca:global("restxq","Summary of REST interface")
-%xqdoca:output("restxq.html","html5") 
+%xqdoca:output("restxq.html","xhtml") 
 function _:restxq($model,$opts)
 {
 let $annots:= xqd:rxq-paths($model)

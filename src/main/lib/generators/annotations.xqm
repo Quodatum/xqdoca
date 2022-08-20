@@ -37,7 +37,7 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 (:~ annotations page :)
 declare 
 %xqdoca:global("annotations","Summary of XQuery annotation use")
-%xqdoca:output("annotations.html","html5") 
+%xqdoca:output("annotations.html","xhtml") 
 function _:annotations($model,$opts)
 {
   let $ns-map:=xqa:annotations($model)

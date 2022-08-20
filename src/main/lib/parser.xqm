@@ -76,10 +76,10 @@ as element(xqdoc:xqdoc)
               }
               
   (: swap imports and namespaces basex err :) 
-   let $xqdoc:= $xqdoc transform with {
+ (:~   let $xqdoc:= $xqdoc transform with {
                 replace node xqdoc:namespaces with xqdoc:imports,
                 replace node xqdoc:imports with xqdoc:namespaces
-              }          
+              }       ~:)    
  
     (: default function namespace? :)
     let $def-fn:= xqp:default-fn-uri($xqparse)
