@@ -13,14 +13,14 @@
     </namespace>
     
     <namespace ns="http://exquery.org/ns/restxq" prefix="rest">
-        <doc href="#"></doc>
+        <doc href="https://docs.basex.org/wiki/RESTXQ"></doc>
     </namespace>
     
     <namespace ns="http://www.w3.org/2010/xslt-xquery-serialization" prefix="output">
-        <doc href="#"></doc>
+        <doc href="https://www.w3.org/2010/xslt-xquery-serialization/"></doc>
     </namespace>
     
     <namespace ns="http://www.w3.org/2012/xquery" prefix="xquery">
-        <doc href="#"></doc>
+        <doc href="http://www.w3.org/2012/xquery"></doc>
     </namespace>  
 </annotations>

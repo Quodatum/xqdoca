@@ -411,6 +411,9 @@ as element(table)?
          ()
 };
 
+(:~ related docs details 
+ : @param $type "global" or "module"
+:)
 declare function page:related-links($type as xs:string, $exclude as xs:string, $opts as map(*))
 as element(details)?
 {

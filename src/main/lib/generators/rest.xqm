@@ -142,21 +142,22 @@ as element(*)*
 {
   let $names:=xqa:extract-restxq($url)!substring-before(. || "=","=")
   let $function:=$amap?annot/../..
-  return if($names)then
-  (<dt>Url parameters</dt>,
-  <dd>
-  <table class="data">
-    <thead><tr><th>Name</th><th>Description</th></tr></thead>
-    <tbody>{ 
-    for $name  in $names
-    let $desc:=page:comment-for($name,$function/xqdoc:parameters)
-    return <tr><td>{$name}</td><td>{$desc}</td></tr>
-  }
-    </tbody>
-  </table>
-  </dd>)
-  else
-   ()
+  return if(exists($names))
+         then
+            (<dt>Url parameters</dt>,
+            <dd>
+            <table class="data">
+              <thead><tr><th>Name</th><th>Description</th></tr></thead>
+              <tbody>{ 
+              for $name  in $names
+              let $desc:=page:comment-for($name,$function/xqdoc:parameters)
+              return <tr><td>{$name}</td><td>{$desc}</td></tr>
+            }
+              </tbody>
+            </table>
+            </dd>)
+          else
+          ()
 };
 (:~  output form :)
 declare function _:outputs($annots as element(xqdoc:annotation)*, 
@@ -236,7 +237,7 @@ declare function _:annotations($annots as element(xqdoc:annotation)*)
 as element(*)
 {
 		<details>
-			<summary>Annotations</summary>
+			<summary>Annotations ({ count($annots) })</summary>
 			<table class="data">
 				<tbody>{ 
        for $a in $annots
