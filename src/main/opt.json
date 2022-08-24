@@ -1,5 +1,5 @@
 {
-    efolder: "C:/Users/andy/Desktop/basex.sow8/legacy-migrate/",
-    patterns: "*.xqm,*.xq,*.xquery",
-    
+    "efolder": "C:\Users\andy\git\bloomsbury\XML-CMS\data_server\",
+    "target": "file:///C:/tmp/",
+    "patterns": "*.xqm,*.xq,*.xquery"
 }

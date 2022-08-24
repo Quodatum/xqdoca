@@ -239,6 +239,7 @@ as element(div)
    default        return <div>#ERROR</div>
 };
 
+(:~ chop long text :)
 declare 
 function xqhtml:truncate-text($text as xs:string,$max as xs:integer) 
 as xs:string{

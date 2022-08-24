@@ -105,3 +105,20 @@ as xs:string{
               else ()
   return ("",$tree/@name/string() ,$tail)=>string-join("/")
 };
+
+(: merger folder with just 1 folder child:)
+declare function tree:flatten($tree as element(directory)?)
+as element(directory)?{
+if(exists($tree)) 
+then 
+      $tree transform with {
+      for $d in  descendant::directory[ count(../*) gt 1]
+      let $name:= $d/descendant-or-self::directory/@name=>string-join("/")
+      return replace   node $d 
+            with let $files:=$d//file
+                  return if(count($files) gt 1)  
+                        then  <directory name="{ $name}">{ $files} </directory>
+                        else $files
+      }
+  else ()
+};

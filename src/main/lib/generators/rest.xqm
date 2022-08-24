@@ -47,7 +47,7 @@ function _:restxq($model,$opts)
 let $annots:= xqd:rxq-paths($model)
 
 let $tree:=$annots?uri
-let $tree:=tree:build($tree)=>trace("BXX ")
+let $tree:=tree:build($tree)=>tree:flatten()=>trace("flat:  ")
 let $sections:=(
            _:summary($model, $opts, $tree),
 

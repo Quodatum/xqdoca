@@ -152,7 +152,7 @@ as element(div)?
                                   else "(None)"   
       }</div>
                       
-     <div style="display: flex; flex-direction: column; justify-content: center;">
+     <div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;">
          <div><div>imports</div>&#x2192;</div>
         <div class="badge badge-info">this</div>
         <div><div>imports</div>&#x2192;</div>
@@ -226,6 +226,7 @@ as element(nav)
 {
     <nav id="toc">
             <h2>
+             <a href="../">^</a>      
                 <a id="contents"></a>              
                    { $head }
             </h2>
@@ -250,6 +251,7 @@ as element(nav)
 {
  <nav id="toc">
             <h2>
+                <a href="../index.html" class="mr-5 bg-info">↖</a>
                 <a id="contents"></a>              
                    { $head }
             </h2>

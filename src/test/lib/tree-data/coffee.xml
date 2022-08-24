@@ -1,0 +1,99 @@
+<directory name="">
+    <directory name="audit">
+      <directory name="{$ctype=.+}">
+        <directory name="{$cid=.+}">
+          <file name="{$coid=.+}" target="/audit/{$ctype=.+}/{$cid=.+}/{$coid=.+}"/>
+        </directory>
+      </directory>
+    </directory>
+    <file name="browsechunk" target="/browsechunk"/>
+    <file name="browsecomponent" target="/browsecomponent"/>
+    <file name="browsecontent" target="/browsecontent"/>
+    <file name="browsemetadataonly" target="/browsemetadataonly"/>
+    <directory name="content" target="/content">
+      <directory name="{$ct=.+}">
+        <directory name="{$cid=.+}">
+          <directory name="{$coid=.+}">
+            <file name="taxonomies" target="/content/{$ct=.+}/{$cid=.+}/{$coid=.+}/taxonomies"/>
+            <file name="versions" target="/content/{$ct=.+}/{$cid=.+}/{$coid=.+}/versions"/>
+          </directory>
+        </directory>
+      </directory>
+    </directory>
+    <directory name="content-chunk-metadata">
+      <directory name="{$ctype}">
+        <directory name="{$type}">
+          <directory name="{$cid}">
+            <directory name="{$coid}">
+              <file name="{$chunkid}" target="/content-chunk-metadata/{$ctype}/{$type}/{$cid}/{$coid}/{$chunkid}"/>
+            </directory>
+          </directory>
+        </directory>
+      </directory>
+    </directory>
+    <directory name="content-metadata" target="/content-metadata">
+      <directory name="{$ctype}">
+        <directory name="{$cid}">
+          <file name="{$coid}" target="/content-metadata/{$ctype}/{$cid}/{$coid}"/>
+        </directory>
+      </directory>
+    </directory>
+    <file name="content-metadata-version" target="/content-metadata-version"/>
+    <file name="content-metadata-versions" target="/content-metadata-versions"/>
+    <file name="content-statuses" target="/content-statuses"/>
+    <file name="content-types" target="/content-types"/>
+    <directory name="contenttypefacet">
+      <file name="{$taxonomyid=.+}" target="/contenttypefacet/{$taxonomyid=.+}"/>
+    </directory>
+    <directory name="data" target="/data">
+      <directory name="job">
+        <file name="update" target="/data/job/update"/>
+      </directory>
+      <file name="jobs" target="/data/jobs"/>
+    </directory>
+    <file name="delete-lock" target="/delete-lock"/>
+    <file name="download" target="/download"/>
+    <file name="downloadinfo" target="/downloadinfo"/>
+    <directory name="downloadpipeline">
+      <file name="{$pipelineID=.+}" target="/downloadpipeline/{$pipelineID=.+}"/>
+    </directory>
+    <file name="headerinfo" target="/headerinfo"/>
+    <directory name="locks" target="/locks">
+      <directory name="{$cid=.+}">
+        <file name="{$coid=.+}" target="/locks/{$cid=.+}/{$coid=.+}"/>
+      </directory>
+      <directory name="{$ctype=.+}">
+        <directory name="{$cid=.+}">
+          <file name="{$coid=.+}" target="/locks/{$ctype=.+}/{$cid=.+}/{$coid=.+}"/>
+        </directory>
+      </directory>
+    </directory>
+    <file name="locks-compononent" target="/locks-compononent"/>
+    <file name="locks-content" target="/locks-content"/>
+    <file name="login" target="/login"/>
+    <file name="logout" target="/logout"/>
+    <file name="organisation-chart" target="/organisation-chart"/>
+    <directory name="pipelines" target="/pipelines">
+      <file name="{$pipelineID=.+}" target="/pipelines/{$pipelineID=.+}"/>
+    </directory>
+    <directory name="products" target="/products">
+      <file name="{$productID=.+}" target="/products/{$productID=.+}"/>
+    </directory>
+    <directory name="reports">
+      <file name="{$id=.+}" target="/reports/{$id=.+}"/>
+    </directory>
+    <directory name="reset-password" target="/reset-password">
+      <file name="{$token=.+}" target="/reset-password/{$token=.+}"/>
+    </directory>
+    <file name="roles" target="/roles"/>
+    <directory name="taxonomies" target="/taxonomies">
+      <file name="{$taxonomyID=.+}" target="/taxonomies/{$taxonomyID=.+}"/>
+    </directory>
+    <directory name="taxonomyreport">
+      <file name="{$taxonomyID=.+}" target="/taxonomyreport/{$taxonomyID=.+}"/>
+    </directory>
+    <file name="title" target="/title"/>
+    <directory name="users" target="/users">
+      <file name="{$userID=.+}" target="/users/{$userID=.+}"/>
+    </directory>
+  </directory>
