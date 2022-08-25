@@ -456,6 +456,7 @@ as xs:boolean
  {
  $s=>normalize-space()=>tokenize("[\s,]+") 
 };
+
 (:~ extract comment for name :) 
 declare function page:comment-for($name as xs:string,$v as element(xqdoc:parameters))
 as xs:string*
@@ -465,4 +466,10 @@ as xs:string*
                                        starts-with(normalize-space(.), concat('$',$name))
                                      ]
  return substring-after(normalize-space($comment), $name)  
+};
+
+(:~ extract comment for name :) 
+declare function page:line-count($txt as xs:string?)
+as xs:integer{
+  tokenize($txt, '(\r\n?|\n\r?)')=>count()
 };

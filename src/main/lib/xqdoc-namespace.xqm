@@ -38,21 +38,19 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
  :</pre>
  :)
 declare 
-function xqn:qmap($e as xs:string, $prefixes as map(*), $default as xs:string)
+function xqn:qmap($token as xs:string, $prefixes as map(*), $default as xs:string)
 as map(*)
 {
- let $n:=tokenize($e,":")
-let $prefix:=if(count($n)=1)then () else $n[1]
+ let $n:=tokenize($token,":")
+let $prefix:=if(count($n)=1)then () else ()
 let $name:=if(count($n)=1)then  $n[1] else $n[2]
-let $uri:=if(empty($prefix)) then
-              $default
-          else if( map:contains($prefixes,$prefix)) then
-              $prefixes?($prefix)
-          else 
-               let $_:= trace($e,"e: ")
-                 let $_:= trace($default,"default: ")
-                   let $_:= trace($prefixes,"ERROR qmap: ")
-               return error()
+let $uri:=if(empty($prefix)) 
+          then  $default
+          else if( map:contains($prefixes,$prefix)) 
+               then $prefixes?($prefix)
+               else 
+                    let $_:= trace($default,"default: ")
+                    return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
 return map{
            "uri": $uri,
            "name": $name} 

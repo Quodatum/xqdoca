@@ -46,8 +46,12 @@ as element(xqdoc:xqdoc)
 {
 try{
       xqp:enrich($xqdoc,$xqparse,$prefixes) 
-    }   catch * { 
-      let $_:= trace($err:description ,"Enrich error: ")
+    }   catch * {
+      let $err:=map{
+        "description": $err:description,
+        "additional": $err:additional
+      } 
+      let $_:= trace($err ,"Enrich error: ")
       return $xqdoc
 } 
 };

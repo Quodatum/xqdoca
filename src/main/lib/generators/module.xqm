@@ -337,7 +337,7 @@ as element(div)
          
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
-        <summary>Source</summary>
+        <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $funs! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>
 		</div>
