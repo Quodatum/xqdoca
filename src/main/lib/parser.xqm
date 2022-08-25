@@ -79,14 +79,10 @@ as element(xqdoc:xqdoc)
                        ()
               }
               
-  (: swap imports and namespaces basex err :) 
- (:~   let $xqdoc:= $xqdoc transform with {
-                replace node xqdoc:namespaces with xqdoc:imports,
-                replace node xqdoc:imports with xqdoc:namespaces
-              }       ~:)    
+   
  
     (: default function namespace? :)
-    let $def-fn:= xqp:default-fn-uri($xqparse)
+    let $def-fn as xs:string:= xqp:default-fn-uri($xqparse)
                    
      let $fmap:=map:merge((
                 xqp:funmap($xqparse, $prefixes, $def-fn),
@@ -95,7 +91,7 @@ as element(xqdoc:xqdoc)
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
-  
+
     let $name:=xqn:qmap($f/xqdoc:name,$prefixes, $def-fn)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
@@ -147,11 +143,13 @@ declare function xqp:invoke-fn(
                  $def-fn)
 as element(xqdoc:invoked)*
 {
+
 let $commas:=count($e/ArgumentList/TOKEN[.=","])
 let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
-let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
+let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            
+let $_:= if(empty($fname)) then trace($e,"??????")
 let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
