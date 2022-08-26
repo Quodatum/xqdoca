@@ -16,8 +16,8 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>xqdoc-htmlmod.xqm</h1>
- : <p>Library to support html5 rendering of single xqdoc source</p>
+ : <h1>XML outputs</h1>
+ : <p>Render to o/p xqdoc and xqparse XML files</p>
  :
  : @author Andy Bunce
  : @version 0.2
@@ -25,7 +25,7 @@ xquery version "3.1";
  :)
  
 (:~
- : Generate  html for xqdoc
+ : Generate  XML for xqdoc
  :)
 module namespace _ = 'quodatum:xqdoca.generator.simple';
 

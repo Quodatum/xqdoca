@@ -43,8 +43,8 @@ as map(*)
 {
  let $_:=util:if(empty($token),error("NO TOK"))
  let $n:=tokenize($token,":")
-let $prefix:=if(count($n)=1)then () else ()
-let $name:=if(count($n)=1)then  $n[1] else $n[2]
+let $prefix:=if(count($n)=2)then $n[1] else ()
+let $name:=if(count($n)=2)then  $n[2] else $n[1]
 let $uri:=if(empty($prefix)) 
           then  $defaultns
           else if( map:contains($prefixes,$prefix)) 
@@ -52,6 +52,7 @@ let $uri:=if(empty($prefix))
                else 
                     let $_:= trace($defaultns,"default: ")
                     return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
+             
 return map{
            "uri": $uri,
            "name": $name} 

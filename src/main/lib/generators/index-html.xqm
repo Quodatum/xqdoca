@@ -74,7 +74,7 @@ return document{ page:wrap(($d,$sections), $opts ) }
 };
 
 
-declare function xqhtml:summary($model,$opts)
+declare function xqhtml:summary($model as map(*),$opts as map(*))
 as element(section)
 {
   <section id="summary">
@@ -95,7 +95,7 @@ as element(section)
 (:~ 
  : summary of all annotations  in project
  :)
-declare function xqhtml:annot($model,$opts)
+declare function xqhtml:annot($model as map(*), $opts as map(*))
 as element(section)
 {
    let $ns-map:=map:merge(

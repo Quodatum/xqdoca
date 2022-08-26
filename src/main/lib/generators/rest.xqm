@@ -16,8 +16,8 @@ xquery version "3.1";
  :)
  
  (:~
- : <h1>xqdoc-html.xqm</h1>
- : <p>Library to support html5 rendering of xqdoc</p>
+ : <h1>restxq renderer</h1>
+ : <p>HTML describing the rest interface</p>
  :
  : @author Andy Bunce
  : @version 0.2
@@ -210,7 +210,7 @@ as element(nav)
                         <span class="content">Rest Paths</span>
                     </a>
                 </li>
-                { $tree/*/*!page:tree-list(.,(2,position()),_:toc-render#2,1) } 
+                { $tree/*!page:tree-list(.,(2,position()),_:toc-render#2,1) } 
              </ol>
            </nav>
 };
@@ -219,9 +219,10 @@ as element(nav)
 declare function _:toc-render($pos as xs:string,$el as element(*))
 as element(*)*
 {
+let $label:=$el/head((@target,@name))/string()
 let $c:=(
 <span class="secno">{$pos}</span>,
-<span class="content">{$el/@name/string()}</span>
+<span class="content">{ $label }</span>
 )
 return if($el/@target) then
  <a href="#{ page:id($el/@target) }">
