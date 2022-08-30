@@ -152,8 +152,35 @@ map{
 combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
 
 The results are used to create an in-memory map
-![xqdoca data map](docs/model.png "xqdoca data map")
 
+```mermaid
+classDiagram
+   direction LR
+   class model{
+   <<map(*)>>
+   +base-uri
+   +project
+   +files
+   }
+   class file{
+    <<map(*)>>
+    +path
+    +href
+    +namespace
+    +xqdoc
+    +xparse
+    +prefixes
+   }
+   class xqdoc{
+    <<element(xqdoc)>>
+    }
+   class xqparse {
+   <<element(XQUERY)>>
+   }
+   model "0..n" --|> file : files
+   file "1" --|> xqdoc : xqdoc
+   file "1" --|> xqparse : xqparse
+```
 The renderers use this map to build their outputs.
 
 ## License
