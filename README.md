@@ -181,6 +181,16 @@ classDiagram
    file "1" --|> xqdoc : xqdoc
    file "1" --|> xqparse : xqparse
 ```
+### File
+*  "index": $pos,
+*  "path": translate($file,"\","/"),
+*  "href": ``[modules/`{ $id }`/]``,
+*  "parsed": $isParsed,
+*  "prefixes": xqd:namespaces( $analysis?xqdoc),
+*  "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+*  "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+*  "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
+
 The renderers use this map to build their outputs.
 
 ## License
