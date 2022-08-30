@@ -47,7 +47,7 @@ let $model:= xqd:snap($efolder,$files,$platform)
 let $options:=map{
                "project": $model?project, 
                "outputs":  map{
-                    "global": "index.html imports  annotations restxq xqdoca.xml"  , 
+                    "global": "index.html imports  annotations restxq xqdoca.xml mermaid"  , 
                     "module":  "module xqdoc xqparse "
                 },
                 "version": "0.3" 

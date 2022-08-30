@@ -3,9 +3,10 @@
     <source>C:\Users\andy\git\quodatum\xqdoca\</source>
     <target>file:///{webpath}/static/xqdoc/{project}/</target>
     <patterns>*.xqm,*.xq,*.xquery</patterns>
+    <platform>basex</platform>
     <outputs>
         <global>index.html imports  annotations restxq xqdoca.xml</global>
         <module>module xqdoc xqparse</module>
     </outputs>
-    <version>0.3</version>
+    <version>0.4</version>
 </xqdoca>
