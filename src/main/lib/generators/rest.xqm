@@ -44,10 +44,10 @@ declare
 %xqdoca:output("restxq.html","xhtml") 
 function _:restxq($model,$opts)
 {
-let $annots:= xqd:rxq-paths($model)
-
+let $annots as map(*)*:= xqd:rxq-paths($model)
 let $tree:=$annots?uri
-let $tree:=tree:build($tree)=>tree:flatten()=>trace("flat:  ")
+let $tree:=tree:build($tree)=>trace("before")=>tree:flatten()=>trace("flat:  ")
+
 let $sections:=(
            _:summary($model, $opts, $tree),
 
@@ -63,7 +63,7 @@ let $body:= <div>
                   </span>
                   &#160;RestXQ documentation 
               </h1>
-            {_:toc($model,$tree)}
+            {_:toc($model,$tree,$annots)}
             { $sections }
            </div>
 return  page:wrap($body,$opts)
@@ -87,20 +87,20 @@ as element(section)
 
 
 (:~  html for a path
- :   $rep={uri:.., methods:{METHOD:annotation}, function:..}
+ :   $anot={uri:.., methods:{METHOD:annotation}, function:..}
  :)          
-declare function _:path-report($rep as map(*),$pos)
+declare function _:path-report($anot as map(*),$pos)
 as element(div)
 {
- let $methods as map(*) :=$rep?methods 
+ let $methods as map(*) :=$anot?methods 
  return <div class="div3">
-       <h3><a id="{ page:id($rep?uri) }"/>{page:section($pos) } { $rep?uri }
-       <div style="float:right;"><a href="#{ page:id($rep?uri) }">#</a></div></h3>
+       <h3><a id="{ page:id($anot?uri) }"/>{page:section($pos) } { $anot?uri }
+       <div style="float:right;"><a href="#{ page:id($anot?uri) }">#</a></div></h3>
        
        {
        for $method in map:keys($methods)
        let $amap:=$methods?($method)
-       return _:method($method,$amap,$rep)
+       return _:method($method,$amap,$anot)
        }
    </div>
 };
@@ -183,8 +183,10 @@ as element(*)*
         ()
 };
 
-(:~  toc :)
-declare function _:toc($model as map(*),$tree)
+(:~  toc 
+@param $annots {url:{methods:}..}
+:)
+declare function _:toc($model as map(*),$tree as element(directory),$annots as map(*)*)
 as element(nav)
 {
      <nav id="toc">
@@ -210,24 +212,33 @@ as element(nav)
                         <span class="content">Rest Paths</span>
                     </a>
                 </li>
-                { $tree/*!page:tree-list(.,(2,position()),_:toc-render#2,1) } 
+                { $tree/*!page:tree-list(.,(2,position()),_:toc-render(?,?,$annots),1) } 
              </ol>
            </nav>
 };
 
 
-declare function _:toc-render($pos as xs:string,$el as element(*))
+(:~ generate TOC
+@param $pos eg "2.7"
+@param $el <file> or <directory>
+@param $annots 
+:)
+declare function _:toc-render($pos as xs:string,$el as element(*),$annots as map(*)*)
 as element(*)*
 {
-let $label:=$el/head((@target,@name))/string()
+let $target:= $el/@target  
+let $label:=$el/head((@target,@name))=>_:rxpath("drop-pattern")
 let $c:=(
 <span class="secno">{$pos}</span>,
 <span class="content">{ $label }</span>
 )
-return if($el/@target) then
+return if($target) then
  <a href="#{ page:id($el/@target) }">
  { $c }
- <div class="badge badge-info"  style="float:right" title="RESTXQ: {$el/@target}"></div>
+ <div  style="float:right;font-size:75%" title="RESTXQ methods">
+ {let $methods:=$annots[?uri=$target]?methods
+  return if($methods instance of map(*)) then map:keys($methods)!page:badge-method(.)}
+ </div>
   </a>
 else
  $c
@@ -295,3 +306,19 @@ as element(*)*
       ()
 };
 
+(:~ restxq path manipulations
+ :)
+declare function _:rxpath($path as xs:string,$action as xs:string)
+as xs:string{
+switch ($action)
+(: "/locks/{$ctype}/{$cid=.+}/{$coid=.+}" -> '/locks/ctype/{$cid=.+}/{$coid=.+}' :)
+case "name" 
+     return fn:replace($path,"\{\s*\$(\w*)\s*\}","$1")
+
+(: "/locks/{$ctype}/{$cid=.+}/{$coid=.+}" -> '/locks/{$ctype}/{$cid}/{$coid}' :)
+case "drop-pattern"  
+     return fn:replace($path,"\{\s*(\$\w*)=[^}]*\}","{$1}") 
+
+default
+   return error("unknown action: " || $action)
+};

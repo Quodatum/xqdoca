@@ -131,7 +131,7 @@ as element(span)
 };
 
 
-
+(: badge for http method :)
 declare function page:badge-method($method as xs:string)
 as element(span)
 {
@@ -468,7 +468,7 @@ as xs:string*
  return substring-after(normalize-space($comment), $name)  
 };
 
-(:~ extract comment for name :) 
+(:~ line count :) 
 declare function page:line-count($txt as xs:string?)
 as xs:integer{
   tokenize($txt, '(\r\n?|\n\r?)')=>count()

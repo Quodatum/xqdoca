@@ -112,7 +112,7 @@ as element(directory)?{
 if(exists($tree)) 
 then 
       $tree transform with {
-      for $d in  descendant::directory[ count(../*) gt 1]
+      for $d in  descendant::directory[ count(../*) gt 1 and not(@target)] (: no @target and more than 1 parent :)
       let $name:= $d/descendant-or-self::directory/@name=>string-join("/")
       return replace   node $d 
             with let $files:=$d//file

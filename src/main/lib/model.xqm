@@ -175,7 +175,7 @@ as xs:string{
        $file?xqdoc/xqdoc:module/@type/string() 
 };
         
-(:~ return sequence of maps describing restxq
+(:~ return sequence of maps describing restxq ordered by rest:path
  : {uri:.., 
  : methods : {METHODS: {id:.., uri:.. ,function:}}
  : }
