@@ -201,7 +201,7 @@ as element(div)
          let $desc:= $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string()
         return  <tr>
                 <td>{page:link-module($file) }</td>
-                <td title="prefix">{ map:for-each($file?prefixes,function($k,$v){if($v=$file?namespace) then $k})}</td>
+                <td title="prefix">{ $file?prefix}</td>
                  <td>{ xqhtml:truncate-text($desc,50) }</td>
                  <td >{   xqhtml:file-usage($file,$model) }</td>
 

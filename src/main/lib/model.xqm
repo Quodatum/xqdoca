@@ -79,12 +79,14 @@ return map{
                       let $spath:= translate($file,"\","/")
                       let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
                       let $isParsed:=$analysis?xqparse instance of element(XQuery)
+                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
                       let $base:=map{
                               "index": $pos,
                               "path": translate($file,"\","/"),
                               "href": ``[modules/`{ $id }`/]``,
                               "parsed": $isParsed,
-                              "prefixes": xqd:namespaces( $analysis?xqdoc),
+                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
+                              "prefixes": $prefixes,
                               "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
                               "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
                               "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
@@ -277,12 +279,13 @@ as map(*)
   =>map:merge()
 };
 
+(:~ files that import given namespace :)
 declare function xqd:where-imported($uri as xs:string,$model as map(*))
 {
-  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]?namespace
+  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
 
-(: return sequence of maps    imported-ns:(files that import...)   :)
+(: return  map{   imported-ns:(files that import...) }  :)
 declare function xqd:imports($model)
 as map(*)
 {
@@ -294,8 +297,8 @@ return map:entry( $ns,  $f)
 )
 };
 
-(: return sequence of maps  are imported ns values are where imported:)
-declare function xqd:defs($model)
+(: return  map, keys are imported ns, values are sequence of files where imported:)
+declare function xqd:defs($model as map(*))
 as map(*)
 { 
 (
@@ -333,6 +336,12 @@ as map(*)
      "imports": $imports/xqdoc:import,
      "importedby":  $importing
   }
+};
+
+(:~ the prefix for this module :)
+declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
+as xs:string*{
+map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
 };
 
 (:~ from functx = "http://www.functx.com"; :)
