@@ -127,15 +127,16 @@ as map(*)
 {  
   let $xqd:=xqd:xqdoc($url)
   (: add custom tags :)
-  let $enh:=$xqd transform with {
-          for $tag in map:keys($opts)
-          where xqdoc:module[@type="library"]/xqdoc:comment
-          
-          return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
-          into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
-     }
+  let $enh:=$xqd 
+            transform with {
+                  for $tag in map:keys($opts)
+                  where xqdoc:module[@type="library"]/xqdoc:comment
+                  
+                  return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
+                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
+            }
   (: insert full source into module :)
-  let $src:=unparsed-text($url)   
+  let $src:=unparsed-text($url)  
   let $enh:=$enh transform with {
     if(xqdoc:module) then 
           insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module
@@ -144,6 +145,7 @@ as map(*)
   }
   (: add enrichments from parse tree :)
   let $parse:=xqp:parse($src,$platform)
+  
   let $prefixes:=map:merge((
                  xqd:namespaces($enh),
                  xqn:static-prefix-map($platform)
@@ -318,7 +320,7 @@ as xs:string
  let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
  let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
 return $target
-=>replace("\{project\}",$opts?project)
+=>replace("\{project\}",string($opts?project))
 =>replace("\{webpath\}",translate($webpath,"\","/"))
 }; 
 

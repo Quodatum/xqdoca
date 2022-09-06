@@ -1,0 +1,8 @@
+<xqdoca>
+    <source>C:\Users\andy\git\quodatum\xqdoca\src\main</source>
+    <target>file:///tmp/xqdoca/</target>
+    <outputs>
+        <global>index.html imports  annotations mermaid xqdoca.xml</global>
+        <module>module xqdoc xqparse</module>
+    </outputs>
+</xqdoca>

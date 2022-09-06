@@ -149,7 +149,7 @@ let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
 let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            
-let $_:= if(empty($fname)) then trace($e,"??????")
+let $_:= if(empty($fname)) then trace($e,"??????") 
 let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>

@@ -73,14 +73,19 @@ return  page:wrap($body,$opts)
 declare function _:summary($model,$opts, $tree as element(directory)?)
 as element(section)
 {
-    let $base:=tree:base($tree=>trace("TREE:"))
-    return <section id="summary">
-        <h2>Summary</h2>      
+     <section id="summary">
+        <h2>Summary</h2> 
+        {if(exists($tree))
+        then 
+        <div>    
         <p>This document provides details of the RestXQ annotations. These provide mappings from Web endpoints to XQuery code.</p>
          <dl>
             <dt>Base path</dt>
-            <dd>{ $base }</dd>
+            <dd>{ tree:base($tree=>trace("TREE:")) }</dd>
         </dl>
+        </div> 
+        else 
+        <p>No RESTXQ usage</p>}
         { page:related-links("global","restxq",$opts) }
      </section>
 };
@@ -186,7 +191,7 @@ as element(*)*
 (:~  toc 
 @param $annots {url:{methods:}..}
 :)
-declare function _:toc($model as map(*),$tree as element(directory),$annots as map(*)*)
+declare function _:toc($model as map(*),$tree as element(directory)?,$annots as map(*)*)
 as element(nav)
 {
      <nav id="toc">

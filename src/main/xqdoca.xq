@@ -14,11 +14,17 @@ declare option db:chop 'true';
  
 (:~  path to XML options file :)
 declare variable $src as xs:string  external;
+let $src:=$src
+          =>file:resolve-path(file:current-dir())
 
-declare variable $options:=opts:merge(opts:as-map(doc($src)/*),
-                                   opts:as-map(doc("config.xqdoca")/*));
+let $options:=opts:as-map(doc($src)/*)
+               =>opts:merge(opts:as-map(doc("config.xqdoca")/*))
+               =>map:merge(map:entry("project","DEF PROJ"))
 
-let $efolder:=xs:anyURI($options?source)
+let $efolder:=$options?source
+              =>file:resolve-path(file:current-dir())
+              =>xs:anyURI()
+
 let $target:= $options?target
 
 let $files:=xqd:find-sources($efolder, $options?extensions)
