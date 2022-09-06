@@ -1,0 +1,6 @@
+XQdocA
+Usage xqdoca [options] [files]
+   [files]  names of xqdoca files to run, if not supplied and .xqdoca file exists it will be run.
+   -v version
+   -h 
+   -i

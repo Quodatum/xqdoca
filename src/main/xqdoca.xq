@@ -8,51 +8,22 @@ xquery version "3.1";
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "lib/model.xqm";
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
-import module namespace store = 'quodatum:store' at "lib/store.xqm";
- 
+import module namespace store = 'quodatum:xqdoca:store' at "lib/store.xqm";
+import module namespace opts = 'quodatum:xqdoca:options' at "lib/options.xqm"; 
 declare option db:chop 'true';
  
-(:~  URL of the root folder to document
- : @default C:/Users/andy/basex.home/webapp/dba/ 
- :)
-declare variable $efolder as xs:string  external :=
-(: "C:/Users/andy/Desktop/basex.sow8/legacy-migrate/" :)
-"C:\Users\andy\Desktop\sow9\code\processor\psrv\"
-              (: db:option("webpath") ||"/vue-poc/" :)
-              (: db:option("webpath") ||"/dba/" :)
-              (: file:parent(static-base-uri()) :)
-              (: db:option("webpath") ||"/chat/" :)
-              (: db:option("webpath") ||"/graphxq/" :) 
-;
+(:~  path to XML options file :)
+declare variable $src as xs:string  external;
 
-(:~ Location to save outputs as a base-uri 
- : @default  file:///{webpath}/static/xqdoc/{project}/
- :)
-declare variable $target as xs:string external :="file:///{webpath}/static/xqdoc/{project}/" ;
+declare variable $options:=opts:merge(opts:as-map(doc($src)/*),
+                                   opts:as-map(doc("config.xqdoca")/*));
 
-(:~ Source file extensions to parse
- : @default  *.xqm,*.xq,*.xquery
- :)
-declare variable $exts as xs:string external := "*.xqm,*.xq,*.xquery";
- 
-(:~  XQuery platform
- : @default basex 
- :)
-declare variable $platform as xs:string  external := "basex";
+let $efolder:=xs:anyURI($options?source)
+let $target:= $options?target
 
-prof:dump(($efolder,$target),"Vars: "),
-let $efolder:=xs:anyURI($efolder) 
-let $files:=xqd:find-sources($efolder,$exts)
-let $model:= xqd:snap($efolder,$files,$platform) 
-let $options:=map{
-               "project": $model?project, 
-               "outputs":  map{
-                    "global": "index.html imports  annotations restxq xqdoca.xml mermaid"  , 
-                    "module":  "module xqdoc xqparse "
-                },
-                "version": "0.3" 
-               }
-               
+let $files:=xqd:find-sources($efolder, $options?extensions)
+let $model:= xqd:snap($efolder, $files, $options?platform) 
+
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)
 let $target:=xqd:target($target,$options)   

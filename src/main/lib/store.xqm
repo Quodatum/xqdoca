@@ -23,7 +23,7 @@ xquery version "3.1";
  : @author Andy Bunce
  : @version 0.2
  :)
-module namespace store = 'quodatum:store';
+module namespace store = 'quodatum:xqdoca:store';
 
 
 (:~
