@@ -1,4 +1,4 @@
-<xqdoca>
+<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
     <source>C:\Users\andy\git\bloomsbury\XML-CMS\data_server\test</source>
     <target>file:///tmp/test/</target>
 </xqdoca>

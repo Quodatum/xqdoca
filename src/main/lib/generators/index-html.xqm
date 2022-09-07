@@ -63,12 +63,11 @@ as document-node()
 let $d:=<div>
              <h1>
                  Project <span class="badge badge-info">
-                      { $opts?project }
+                      { $model?project }
                   </span>
                   &#160;XQuery source documentation 
               </h1>
-              <div style="text-align:right"><small ></small></div>
-             { page:toc($opts?project,$sections) }
+             { page:toc($model?project,$sections) }
         </div>
 return document{ page:wrap(($d,$sections), $opts ) }
 };
@@ -81,7 +80,7 @@ as element(section)
     <h2>Summary</h2>
      
     <p>The project 
-    <span class="badge badge-info">{ $opts?project }</span> contains
+    <span class="badge badge-info">{ $model?project }</span> contains
     { count($model?files) } XQuery source files, and uses
  { $model?files?annotations?annotation?uri=>distinct-values()=>count() } annotation namespaces.
     </p>

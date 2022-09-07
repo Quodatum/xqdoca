@@ -23,7 +23,7 @@ xquery version "3.1";
  : @version 0.3
  :)
 module namespace cmd = 'quodatum:command:tools';
- declare namespace pkg="http://expath.org/ns/pkg";
+declare namespace pkg="http://expath.org/ns/pkg";
 
 (:~  simple command line parse splits on space unless in quotes :)
 declare function cmd:parse-args($str as xs:string)
@@ -50,21 +50,42 @@ as map(*){
   default return  map:entry("current", $state?current || $char)
   return map:merge(($new,$state))       
 };
+
 (:~ raise error if deps missing 
 @return version :)
-declare function cmd:check-dependancies($pkg as element(*))
+declare function cmd:check-dependancies($pkg as element(pkg:package))
 as empty-sequence(){
-  let $basex:=$pkg/pkg:package/pkg:dependency[@processor="http://basex.org/"]/@version/string()
-  let $pkgs:=$pkg/pkg:package/pkg:dependency[@name]
+  let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]/@version/string()
   let $basex-active:= db:system()/generalinformation/version/tokenize(.," ")[1]
   return 
   
-  if( $basex-active ne $basex)then 
-       error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }` may not be supported]``)
+  if( $basex-active ne $basex)
+  then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }` may not be supported]``)
   else (
-         for $p in $pkgs
-         return if(repo:list()[@name=$p/@name]/@version ne $p/@version) then
-                      error(xs:QName("pkg:version"),$p/@name) else ()
-    
+         for $p in $pkg/pkg:dependency[@name]
+         return if(cmd:is-missing($p/@name,$p/@version)) 
+                then error(xs:QName("pkg:missing"),"Not installed: " || $p/@name) 
+                else ()
         )
+};
+
+declare function cmd:is-missing($name as xs:string,$version as xs:string)
+as xs:boolean{
+    repo:list()[@name=$name and @version eq $version]=>empty() 
+};
+
+declare function cmd:package-source($name as xs:string,$version as xs:string)
+as xs:string{
+    switch ($name || "@" || $version)
+    case "http://expkg-zone58.github.io/ex-xparse@0.7.8"
+         return  "https://github.com/expkg-zone58/ex-xparse/releases/download/v0.7.8/ex-xparse-0.7.8.xar"
+    default return error(xs:QName("pkg:version"),"no source for :" || $name) 
+};
+
+declare function cmd:install($pkg as element(pkg:package))
+as empty-sequence(){
+    for  $p in $pkg/pkg:dependency[@name]
+    where cmd:is-missing($p/@name,$p/@version)
+    let $src:=cmd:package-source($p/@name,$p/@version)
+    return repo:install($src=>trace("Installing: "))
 };

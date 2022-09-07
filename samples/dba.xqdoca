@@ -1,0 +1,4 @@
+<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+    <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
+    <target>file:///tmp/dba/</target>
+</xqdoca>

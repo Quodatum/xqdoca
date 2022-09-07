@@ -1,11 +1,11 @@
 <!-- default options for xqdoca -->
-<xqdoca>
+<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
     <source>C:\Users\andy\git\quodatum\xqdoca\</source>
     <target>file:///{webpath}/static/xqdoc/{project}/</target>
     <extensions>*.xqm,*.xq,*.xquery</extensions>
     <platform>basex</platform>
     <outputs>
-        <global>index.html imports  annotations restxq xqdoca.xml</global>
+        <global>index.html imports  annotations restxq mermaid xqdoca.xml</global>
         <module>module xqdoc xqparse</module>
     </outputs>
 </xqdoca>

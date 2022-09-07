@@ -1,6 +1,9 @@
 XQdocA
 Usage xqdoca [options] [files]
-   [files]  names of xqdoca files to run, if not supplied and .xqdoca file exists it will be run.
-   -v version
-   -h 
-   -i
+   [files]  names of xqdoca files to run, 
+            if none supplied and a .xqdoca file exists in the current directory it will be run.
+   -v       display version
+   -h       display this help
+   -init    create .xqdoca file in create directory if not existing
+   -install attempt to install missing dependancies
+
