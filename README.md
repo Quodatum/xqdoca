@@ -4,6 +4,10 @@ Generates documentation from XQuery sources with a focus on use of annotations.
 The outputs can be changed or extended with custom generators that are dynamically 
 located and loaded at run time. 
 
+A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019.
+
+*Generating documents from XQuery annotations* [HTML](https://markupuk.org/2019/webhelp/index.html#ar04.html) 
+
 ## Status
 
 Work in progress.
