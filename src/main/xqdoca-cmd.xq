@@ -14,7 +14,6 @@ declare function local:resolve($path) as xs:string{
   file:resolve-path($path,file:current-dir())
 };
 
-   
 let $args:=cmd:parse-args($args)
 let $args:=if(exists($args)) 
            then $args 
@@ -25,7 +24,7 @@ return
     switch($action)
     case "-h" return update:output(unparsed-text("xqdoca.txt"))
     case "-v" return update:output($expkg/@version/string())
-    case "-install" return (cmd:install($expkg),update:output("install"))
+    case "-install" return (cmd:install($expkg),update:output("All dependancies installed."))
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 
                 return if(not(file:exists($file)))

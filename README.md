@@ -20,7 +20,9 @@ Work in progress.
 ## Install
 1. unzip dist bundle to a folder
 1. Add the `/bin` folder to your `PATH`
-1. Execute `xqdoca -install`
+1. Execute `xqdoca -install`. 
+
+The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Usage
 
 XQDocA uses XML files to define a documentation tasks. These typically use the extension `.xqdoc`

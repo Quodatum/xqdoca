@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
+# run xqdoca
 
-# basex  -befolder=/config/workspace/XML-CMS/data_server/eBloomsbury -btarget=file:/config/workspace/doc ~/workspace/quodatum/xqdoca/src/main/xqdoca.xq
 # Path to this script
 FILE="${BASH_SOURCE[0]}"
 while [ -h "$FILE" ] ; do
@@ -10,6 +10,4 @@ while [ -h "$FILE" ] ; do
 done
 MAIN="$( cd -P "$(dirname "$FILE")/.." && pwd )"
 
-EFOLDER=/config/workspace/XML-CMS/data_server/eBloomsbury
-TARGET=file:///config/workspace/doc/
-basex -befolder=$EFOLDER -btarget=$TARGET $MAIN/src/main/xqdoca.xq
+basex -bargs="%*"  $MAIN/src/main/xqdoca-cmd.xq

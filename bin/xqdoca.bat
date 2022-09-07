@@ -1,7 +1,12 @@
 @echo off
 setLocal EnableDelayedExpansion
-
 set MAIN=%~dp0\..
-REM basex version to use, set as required, empty for 1st on path
-set BASEX_BIN=C:\Users\andy\basex.home\basex.951\bin\
-%BASEX_BIN%basex -bargs="%*"  %MAIN%/src/main/xqdoca-cmd.xq
+
+REM basex version to use, if BASEX_HOME define use that, else PATH search
+IF DEFINED BASEX_HOME (
+    set BASEX=%BASEX_HOME%\bin\basex.bat
+) ELSE (
+    set BASEX=basex.bat
+)
+echo using %BASEX%
+%BASEX% -bargs="%*"  %MAIN%/src/main/xqdoca-cmd.xq
