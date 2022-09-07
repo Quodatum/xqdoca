@@ -13,23 +13,15 @@ Work in progress.
 * `Basex` 9.5.1+ http://basex.org/
 * `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
 
+## Install
+1. unzip dist bundle to a folder
+1. Add the `/bin` folder to your `PATH`
+1. Execute `xqdoca -install`
 ## Usage
 
-The driving script is `xqdoca.xq`. This defines `$options` to use for the run.
-In particular the `outputs` option lists the global and module generators to run.
+`xqdoca -h` displays a usage summary.
 
-```
-   "outputs":  map{
-                    "global": ("index","restxq","imports","annotations","swagger1"),
-                    "module": ("xqdoc","xqparse","module")  
-                }    
-```
 
-### Command line
-
-```
-basex  -befolder=/Users/andy/git/xqdoca  -btarget=file:///c:/tmp/test/ xqdoca.xq
-```
 ## builtin generators
 
 ```
