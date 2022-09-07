@@ -1,0 +1,421 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>index-html.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-html.xqm</h1>
+<p>Library to support html5 rendering of xqdoc</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/index-html.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:
+ : Copyright (c) 2019-2022 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-html.xqm&lt;/h1&gt;
+ : &lt;p&gt;Library to support html5 rendering of xqdoc&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+ :)
+module namespace xqhtml = 'quodatum:xqdoca.generator.index';
+
+import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
+(:~ left arrow :)
+declare variable $xqhtml:larr:="&amp;#8598;";
+
+(:~ transform files to html
+ : @param $opts  keys: resources 
+ : "project": "vue-poc"
+ :)
+declare 
+%xqdoca:global("index.html","Index of sources")
+%xqdoca:output("index.html","xhtml") 
+function xqhtml:index-html($model as map(*),
+                            $opts as map(*)
+                            )
+as document-node()                            
+{
+ let $sections:=(
+                 xqhtml:summary($model,$opts),
+                 xqhtml:modules("main_mods" ,"Main modules",$model?files[?xqdoc/xqdoc:module/@type="main"],$model),
+                 xqhtml:modules("library_mods" ,"Library modules",$model?files[?xqdoc/xqdoc:module/@type="library"],$model),
+                 xqhtml:files($model,$opts),
+                 xqhtml:annot($model,$opts)
+             )     
+let $d:=&lt;div&gt;
+             &lt;h1&gt;
+                 Project &lt;span class="badge badge-info"&gt;
+                      { $model?project }
+                  &lt;/span&gt;
+                  &amp;#160;XQuery source documentation 
+              &lt;/h1&gt;
+             { page:toc($model?project,$sections) }
+        &lt;/div&gt;
+return document{ page:wrap(($d,$sections), $opts ) }
+};
+
+
+declare function xqhtml:summary($model as map(*),$opts as map(*))
+as element(section)
+{
+  &lt;section id="summary"&gt;
+    &lt;h2&gt;Summary&lt;/h2&gt;
+     
+    &lt;p&gt;The project 
+    &lt;span class="badge badge-info"&gt;{ $model?project }&lt;/span&gt; contains
+    { count($model?files) } XQuery source files, and uses
+ { $model?files?annotations?annotation?uri=&gt;distinct-values()=&gt;count() } annotation namespaces.
+    &lt;/p&gt;
+     &lt;p&gt;This document was built from source folder &lt;kbd&gt;{ $model?base-uri }&lt;/kbd&gt; on
+     { page:date()}.&lt;/p&gt;
+   { page:related-links("global","index.html", $opts) }
+ &lt;/section&gt;
+};
+
+
+(:~ 
+ : summary of all annotations  in project
+ :)
+declare function xqhtml:annot($model as map(*), $opts as map(*))
+as element(section)
+{
+   let $ns-map:=map:merge(
+                        for $a in $model?files?annotations
+                        group by $uri:=$a?annotation?uri
+                         return map:entry($uri,$a)
+                       )
+   return &lt;section id="annotation"&gt;
+              &lt;h2&gt;Annotations&lt;/h2&gt;
+              &lt;p&gt; A total of {count( $model?files?annotations)} annotations are defined. The Annotations use {map:size(($ns-map))} namespaces.
+              &lt;/p&gt;{
+               for $ns in map:keys($ns-map)
+               order by $ns
+               return &lt;section id="{$ns}"&gt;
+                        &lt;h3&gt;{ $ns }&lt;/h3&gt;
+                        &lt;div&gt;
+                        {for $a in $ns-map?($ns)
+                        group by $name:=$a?annotation?name
+                        order by lower-case($name)
+                        return &lt;span style="margin-right:1em;"&gt;
+                                  &lt;a href="annotations.html#{{{ $ns }}}{ $name }" &gt;{$name}&lt;/a&gt;
+                                  &lt;span class="badge badge-info"&gt;{count($a)}&lt;/span&gt;
+                               &lt;/span&gt;
+                      }&lt;/div&gt;
+                     &lt;/section&gt;
+      }&lt;/section&gt;
+}; 
+               
+(:~ create module table section :)
+declare function xqhtml:modules($id,$title,$mods, $model)
+as element(section)
+{
+ &lt;section id="{ $id }"&gt;
+  
+    &lt;h2&gt;{ ``[ `{ $title }` (`{ count($mods) }`)]`` }&lt;/h2&gt;
+    { xqhtml:modtable($mods,$model) }
+
+&lt;/section&gt;
+};
+
+(:~ file summary section :)
+declare function xqhtml:files($model as map(*),$opts as map(*))
+as element(section)
+{
+       let $t:=tree:build( $model?files?path)
+       let $fmap:=map:merge($model?files!map:entry(?path,?href))
+       let $f:=function($pos,$el){
+          if($el/@target) then
+            let $href:=substring($el/@target,2)
+            let $a:=map:get($fmap,$href) 
+            return &lt;a href="{ $a }index.html"&gt;{ $el/@name/string() }&lt;/a&gt;
+          else
+             $el/@name/string() 
+       }
+       return
+      &lt;section  id="file"&gt;
+	      &lt;h2&gt;{ ``[File view (`{ count($model?files) }`)]`` }&lt;/h2&gt;
+	   
+	      {
+	        &lt;ul class="tree"&gt;
+	          { $t/*!page:tree-list2(.,(),$f,99) }
+	       &lt;/ul&gt;
+	      }
+	    &lt;/section&gt;
+};
+
+declare function xqhtml:modtable($files as map(*)*,$model as map(*))
+as element(div)
+{
+  &lt;div&gt;{if (count($files)=0) then
+          &lt;p&gt;None&lt;/p&gt;
+        else
+     &lt;table class="data"&gt;
+           &lt;colgroup&gt;
+               &lt;col  style="width: 30%;"/&gt;
+                &lt;col  style="width: 15%;"/&gt;
+                &lt;col  style="width: 25%;"/&gt;
+                &lt;col  style="width: 10%;"/&gt;
+  
+		            &lt;col  style="width: 5%;"/&gt;
+		    &lt;/colgroup&gt;
+		    &lt;thead&gt;
+		    &lt;tr&gt;
+          &lt;th&gt;Uri&lt;/th&gt;
+          &lt;th&gt;Prefix&lt;/th&gt;
+          
+          &lt;th&gt;Description&lt;/th&gt;
+          &lt;th&gt;Use&lt;/th&gt;
+          &lt;th title="Annotations"&gt;A&lt;/th&gt;
+          &lt;th&gt;Metrics&lt;/th&gt;
+		    &lt;/tr&gt;
+		    &lt;/thead&gt;
+    &lt;tbody&gt;
+   
+       { for $file  at $pos in $files
+        let $type:=xqd:file-parsed-type($file)
+         order by $type, $file?namespace
+         let $ns:=$file?prefixes
+         let $annots:= for $a in $file?annotations
+                       group by $ns:=$a?annotation?uri
+                       order by $ns
+                       return $ns
+         let $desc:= $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=&gt;string()
+        return  &lt;tr&gt;
+                &lt;td&gt;{page:link-module($file) }&lt;/td&gt;
+                &lt;td title="prefix"&gt;{ $file?prefix}&lt;/td&gt;
+                 &lt;td&gt;{ xqhtml:truncate-text($desc,50) }&lt;/td&gt;
+                 &lt;td &gt;{   xqhtml:file-usage($file,$model) }&lt;/td&gt;
+
+                 &lt;td title="{ $annots }"&gt;{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }&lt;/td&gt;       
+              
+                 &lt;td style="text-align: right"&gt;fn={$file?xqdoc//xqdoc:function=&gt;count() }&lt;/td&gt;
+              &lt;/tr&gt;
+        }
+    &lt;/tbody&gt;
+    &lt;/table&gt;
+  }&lt;/div&gt;
+};
+
+(:~ usage (import) info
+ :)
+declare 
+function xqhtml:file-usage($file as map(*),$model as map(*))                       
+as element(div)
+{ 
+   let $x:=xqd:import-count($file?xqdoc,$model)
+   return switch( xqd:file-parsed-type($file))
+   case "main"    
+   					return &lt;div&gt;
+   					          &lt;div title="Main module" class="badge badge-info"&gt;Main&lt;/div&gt;
+   					          &lt;div title="imports" style="float:right"&gt;{ $xqhtml:larr }{ count($x?imports)}&lt;/div&gt;
+   					       &lt;/div&gt;
+   					
+   case "library" 
+             return &lt;div&gt;
+                        &lt;div title="imported by"&gt;{ count($x?importedby) }&lt;span&gt;{ $xqhtml:larr }&lt;/span&gt;&lt;/div&gt;
+                        &lt;div title="Library module" class="badge badge-info"&gt;Library&lt;/div&gt;
+                        &lt;div title="imports" style="float:right"&gt;{ $xqhtml:larr }{ count($x?imports)}&lt;/div&gt;
+                    &lt;/div&gt;
+   
+   default        return &lt;div&gt;#ERROR&lt;/div&gt;
+};
+
+(:~ chop long text :)
+declare 
+function xqhtml:truncate-text($text as xs:string,$max as xs:integer) 
+as xs:string{
+if(string-length($text) lt $max)
+then $text
+else substring($text,1, $max -3) || "..."
+};  </xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:data.tree</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqhtml" uri="quodatum:xqdoca.generator.index"/><xqdoc:namespace prefix="tree" uri="quodatum:data.tree"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>xqhtml:larr</xqdoc:name><xqdoc:comment><xqdoc:description>left arrow</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>transform files to html</xqdoc:description><xqdoc:param>$opts  keys: resources 
+"project": "vue-poc"</xqdoc:param></xqdoc:comment><xqdoc:name>xqhtml:index-html</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">index.html</xqdoc:literal><xqdoc:literal type="xs:string">Index of sources</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">index.html</xqdoc:literal><xqdoc:literal type="xs:string">xhtml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("index.html", "Index of sources") %Q{https://github.com/Quodatum/xqdoca}output("index.html", "xhtml") function xqhtml:index-html($model as map(*) , $opts as map(*)) as document-node()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>summary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>modules</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>modules</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>toc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sections</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>d</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sections</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:index-html($model as map(*),
+                            $opts as map(*)
+                            )
+as document-node()                            
+{
+ let $sections:=(
+                 xqhtml:summary($model,$opts),
+                 xqhtml:modules("main_mods" ,"Main modules",$model?files[?xqdoc/xqdoc:module/@type="main"],$model),
+                 xqhtml:modules("library_mods" ,"Library modules",$model?files[?xqdoc/xqdoc:module/@type="library"],$model),
+                 xqhtml:files($model,$opts),
+                 xqhtml:annot($model,$opts)
+             )     
+let $d:=&lt;div&gt;
+             &lt;h1&gt;
+                 Project &lt;span class="badge badge-info"&gt;
+                      { $model?project }
+                  &lt;/span&gt;
+                  &amp;#160;XQuery source documentation 
+              &lt;/h1&gt;
+             { page:toc($model?project,$sections) }
+        &lt;/div&gt;
+return document{ page:wrap(($d,$sections), $opts ) }
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqhtml:summary</xqdoc:name><xqdoc:signature>declare function xqhtml:summary($model as map(*) , $opts as map(*)) as element(section)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(section)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>date</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>related-links</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>distinct-values</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:summary($model as map(*),$opts as map(*))
+as element(section)
+{
+  &lt;section id="summary"&gt;
+    &lt;h2&gt;Summary&lt;/h2&gt;
+     
+    &lt;p&gt;The project 
+    &lt;span class="badge badge-info"&gt;{ $model?project }&lt;/span&gt; contains
+    { count($model?files) } XQuery source files, and uses
+ { $model?files?annotations?annotation?uri=&gt;distinct-values()=&gt;count() } annotation namespaces.
+    &lt;/p&gt;
+     &lt;p&gt;This document was built from source folder &lt;kbd&gt;{ $model?base-uri }&lt;/kbd&gt; on
+     { page:date()}.&lt;/p&gt;
+   { page:related-links("global","index.html", $opts) }
+ &lt;/section&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>summary of all annotations  in project</xqdoc:description></xqdoc:comment><xqdoc:name>xqhtml:annot</xqdoc:name><xqdoc:signature>declare function xqhtml:annot($model as map(*) , $opts as map(*)) as element(section)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(section)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>lower-case</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns-map</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:annot($model as map(*), $opts as map(*))
+as element(section)
+{
+   let $ns-map:=map:merge(
+                        for $a in $model?files?annotations
+                        group by $uri:=$a?annotation?uri
+                         return map:entry($uri,$a)
+                       )
+   return &lt;section id="annotation"&gt;
+              &lt;h2&gt;Annotations&lt;/h2&gt;
+              &lt;p&gt; A total of {count( $model?files?annotations)} annotations are defined. The Annotations use {map:size(($ns-map))} namespaces.
+              &lt;/p&gt;{
+               for $ns in map:keys($ns-map)
+               order by $ns
+               return &lt;section id="{$ns}"&gt;
+                        &lt;h3&gt;{ $ns }&lt;/h3&gt;
+                        &lt;div&gt;
+                        {for $a in $ns-map?($ns)
+                        group by $name:=$a?annotation?name
+                        order by lower-case($name)
+                        return &lt;span style="margin-right:1em;"&gt;
+                                  &lt;a href="annotations.html#{{{ $ns }}}{ $name }" &gt;{$name}&lt;/a&gt;
+                                  &lt;span class="badge badge-info"&gt;{count($a)}&lt;/span&gt;
+                               &lt;/span&gt;
+                      }&lt;/div&gt;
+                     &lt;/section&gt;
+      }&lt;/section&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>create module table section</xqdoc:description></xqdoc:comment><xqdoc:name>xqhtml:modules</xqdoc:name><xqdoc:signature>declare function xqhtml:modules($id as item()* , $title as item()* , $mods as item()* , $model as item()*) as element(section)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>title</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>mods</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(section)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>modtable</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>title</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:modules($id,$title,$mods, $model)
+as element(section)
+{
+ &lt;section id="{ $id }"&gt;
+  
+    &lt;h2&gt;{ ``[ `{ $title }` (`{ count($mods) }`)]`` }&lt;/h2&gt;
+    { xqhtml:modtable($mods,$model) }
+
+&lt;/section&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>file summary section</xqdoc:description></xqdoc:comment><xqdoc:name>xqhtml:files</xqdoc:name><xqdoc:signature>declare function xqhtml:files($model as map(*) , $opts as map(*)) as element(section)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(section)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:data.tree</xqdoc:uri><xqdoc:name>build</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>tree-list2</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>fmap</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>href</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>el</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>t</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:files($model as map(*),$opts as map(*))
+as element(section)
+{
+       let $t:=tree:build( $model?files?path)
+       let $fmap:=map:merge($model?files!map:entry(?path,?href))
+       let $f:=function($pos,$el){
+          if($el/@target) then
+            let $href:=substring($el/@target,2)
+            let $a:=map:get($fmap,$href) 
+            return &lt;a href="{ $a }index.html"&gt;{ $el/@name/string() }&lt;/a&gt;
+          else
+             $el/@name/string() 
+       }
+       return
+      &lt;section  id="file"&gt;
+	      &lt;h2&gt;{ ``[File view (`{ count($model?files) }`)]`` }&lt;/h2&gt;
+	   
+	      {
+	        &lt;ul class="tree"&gt;
+	          { $t/*!page:tree-list2(.,(),$f,99) }
+	       &lt;/ul&gt;
+	      }
+	    &lt;/section&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqhtml:modtable</xqdoc:name><xqdoc:signature>declare function xqhtml:modtable($files as (map(*))* , $model as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>file-parsed-type</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri><xqdoc:name>link-module</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>truncate-text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>file-usage</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>badges</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>type</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>desc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annots</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:modtable($files as map(*)*,$model as map(*))
+as element(div)
+{
+  &lt;div&gt;{if (count($files)=0) then
+          &lt;p&gt;None&lt;/p&gt;
+        else
+     &lt;table class="data"&gt;
+           &lt;colgroup&gt;
+               &lt;col  style="width: 30%;"/&gt;
+                &lt;col  style="width: 15%;"/&gt;
+                &lt;col  style="width: 25%;"/&gt;
+                &lt;col  style="width: 10%;"/&gt;
+  
+		            &lt;col  style="width: 5%;"/&gt;
+		    &lt;/colgroup&gt;
+		    &lt;thead&gt;
+		    &lt;tr&gt;
+          &lt;th&gt;Uri&lt;/th&gt;
+          &lt;th&gt;Prefix&lt;/th&gt;
+          
+          &lt;th&gt;Description&lt;/th&gt;
+          &lt;th&gt;Use&lt;/th&gt;
+          &lt;th title="Annotations"&gt;A&lt;/th&gt;
+          &lt;th&gt;Metrics&lt;/th&gt;
+		    &lt;/tr&gt;
+		    &lt;/thead&gt;
+    &lt;tbody&gt;
+   
+       { for $file  at $pos in $files
+        let $type:=xqd:file-parsed-type($file)
+         order by $type, $file?namespace
+         let $ns:=$file?prefixes
+         let $annots:= for $a in $file?annotations
+                       group by $ns:=$a?annotation?uri
+                       order by $ns
+                       return $ns
+         let $desc:= $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=&gt;string()
+        return  &lt;tr&gt;
+                &lt;td&gt;{page:link-module($file) }&lt;/td&gt;
+                &lt;td title="prefix"&gt;{ $file?prefix}&lt;/td&gt;
+                 &lt;td&gt;{ xqhtml:truncate-text($desc,50) }&lt;/td&gt;
+                 &lt;td &gt;{   xqhtml:file-usage($file,$model) }&lt;/td&gt;
+
+                 &lt;td title="{ $annots }"&gt;{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }&lt;/td&gt;       
+              
+                 &lt;td style="text-align: right"&gt;fn={$file?xqdoc//xqdoc:function=&gt;count() }&lt;/td&gt;
+              &lt;/tr&gt;
+        }
+    &lt;/tbody&gt;
+    &lt;/table&gt;
+  }&lt;/div&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>usage (import) info</xqdoc:description></xqdoc:comment><xqdoc:name>xqhtml:file-usage</xqdoc:name><xqdoc:signature>declare function xqhtml:file-usage($file as map(*) , $model as map(*)) as element(div)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(div)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>import-count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>file-parsed-type</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>larr</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>larr</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.generator.index</xqdoc:uri><xqdoc:name>larr</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>x</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:file-usage($file as map(*),$model as map(*))                       
+as element(div)
+{ 
+   let $x:=xqd:import-count($file?xqdoc,$model)
+   return switch( xqd:file-parsed-type($file))
+   case "main"    
+   					return &lt;div&gt;
+   					          &lt;div title="Main module" class="badge badge-info"&gt;Main&lt;/div&gt;
+   					          &lt;div title="imports" style="float:right"&gt;{ $xqhtml:larr }{ count($x?imports)}&lt;/div&gt;
+   					       &lt;/div&gt;
+   					
+   case "library" 
+             return &lt;div&gt;
+                        &lt;div title="imported by"&gt;{ count($x?importedby) }&lt;span&gt;{ $xqhtml:larr }&lt;/span&gt;&lt;/div&gt;
+                        &lt;div title="Library module" class="badge badge-info"&gt;Library&lt;/div&gt;
+                        &lt;div title="imports" style="float:right"&gt;{ $xqhtml:larr }{ count($x?imports)}&lt;/div&gt;
+                    &lt;/div&gt;
+   
+   default        return &lt;div&gt;#ERROR&lt;/div&gt;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>chop long text</xqdoc:description></xqdoc:comment><xqdoc:name>xqhtml:truncate-text</xqdoc:name><xqdoc:signature>declare function xqhtml:truncate-text($text as xs:string , $max as xs:integer) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>text</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>max</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string-length</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>max</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqhtml:truncate-text($text as xs:string,$max as xs:integer) 
+as xs:string{
+if(string-length($text) lt $max)
+then $text
+else substring($text,1, $max -3) || "..."
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

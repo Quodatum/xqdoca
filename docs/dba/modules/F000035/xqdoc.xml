@@ -1,0 +1,167 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/queries</xqdoc:uri><xqdoc:name>queries.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Queries page.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">queries/queries.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Queries page.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+module namespace dba = 'dba/queries';
+
+import module namespace config = 'dba/config' at '../lib/config.xqm';
+import module namespace html = 'dba/html' at '../lib/html.xqm';
+
+(:~ Top category. :)
+declare variable $dba:CAT := 'queries';
+
+(:~
+ : Queries page.
+ : @param  $error  error string
+ : @param  $info   info string
+ : @param  $file   file to be opened
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/queries')
+  %rest:query-param('error', '{$error}')
+  %rest:query-param('info',  '{$info}')
+  %rest:query-param('file',  '{$file}')
+  %output:method('html')
+function dba:queries(
+  $error  as xs:string?,
+  $info   as xs:string?,
+  $file   as xs:string?
+) as element(html) {
+  html:wrap(
+    map {
+      'header': $dba:CAT, 'info': $info, 'error': $error,
+      'css': 'codemirror/lib/codemirror.css',
+      'scripts': ('editor.js', 'codemirror/lib/codemirror.js',
+                  'codemirror/mode/xquery/xquery.js','codemirror/mode/xml/xml.js')
+    },
+    &lt;tr&gt;
+      &lt;td width='50%'&gt;
+        &lt;table width='100%'&gt;
+          &lt;tr&gt;
+            &lt;td width='80%'&gt;
+              &lt;select id='mode'&gt;{
+                for $mode in ('Read-Only', 'Updating')
+                return element option { $mode }
+              }&lt;/select&gt;{ ' ' }
+              &lt;button id='run' onclick='runQuery()' title='Ctrl-Enter'&gt;Run&lt;/button&gt;{ ' ' }
+              &lt;button id='stop' onclick='stopQuery()' disabled=''&gt;Stop&lt;/button&gt;
+            &lt;/td&gt;
+            &lt;td width='20%' align='right'&gt;
+              &lt;h2&gt;Editor&lt;/h2&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;textarea id='editor' name='editor'/&gt;
+        &lt;table width='100%'&gt;
+          &lt;form autocomplete='off' action='javascript:void(0);'&gt;
+            &lt;tr&gt;
+              &lt;td class='slick'&gt;
+                &lt;div align='right'&gt;
+                  &lt;input id='file' name='file' placeholder='Name of query' size='35'
+                         list='files' oninput='checkButtons()' onpropertychange='checkButtons()'/&gt;
+                  &lt;datalist id='files'&gt;{
+                    for $file in config:query-files()
+                    return element option { $file }
+                  }&lt;/datalist&gt;{ ' ' }
+                  &lt;button type='submit' name='open' id='open' disabled=''
+                          onclick='openQuery()'&gt;Open&lt;/button&gt;{ ' ' }
+                  &lt;button name='save' id='save' disabled=''
+                          onclick='saveQuery()'&gt;Save&lt;/button&gt;{ ' ' }
+                  &lt;button name='close' id='close' disabled=''
+                          onclick='closeQuery()'&gt;Close&lt;/button&gt;
+                &lt;/div&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/form&gt;
+        &lt;/table&gt;
+        { html:focus('editor') }
+      &lt;/td&gt;
+      &lt;td width='50%'&gt;{
+        &lt;table width='100%'&gt;
+          &lt;tr&gt;
+            &lt;td align='right'&gt;
+              &lt;h2&gt;Result&lt;/h2&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;,
+        &lt;textarea name='output' id='output' readonly=''/&gt;,
+        html:js('loadCodeMirror("xquery", true);'),
+        for $name in head(($file, config:query())[.])
+        return html:js('openQuery("' || $name || '");')
+      }&lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/html</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/queries"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="html" uri="dba/html"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Queries page.</xqdoc:description><xqdoc:param>$error  error string</xqdoc:param><xqdoc:param>$info   info string</xqdoc:param><xqdoc:param>$file   file to be opened</xqdoc:param><xqdoc:return>page</xqdoc:return></xqdoc:comment><xqdoc:name>dba:queries</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/queries</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">error</xqdoc:literal><xqdoc:literal type="xs:string">{$error}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">info</xqdoc:literal><xqdoc:literal type="xs:string">{$info}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">file</xqdoc:literal><xqdoc:literal type="xs:string">{$file}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/queries") %rest:query-param("error", "{$error}") %rest:query-param("info", "{$info}") %rest:query-param("file", "{$file}") %output:method("html") function dba:queries($error as xs:string? , $info as xs:string? , $file as xs:string?) as element(html)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>error</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>info</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>query-files</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>focus</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>js</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>head</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>js</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/queries</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>mode</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:queries(
+  $error  as xs:string?,
+  $info   as xs:string?,
+  $file   as xs:string?
+) as element(html) {
+  html:wrap(
+    map {
+      'header': $dba:CAT, 'info': $info, 'error': $error,
+      'css': 'codemirror/lib/codemirror.css',
+      'scripts': ('editor.js', 'codemirror/lib/codemirror.js',
+                  'codemirror/mode/xquery/xquery.js','codemirror/mode/xml/xml.js')
+    },
+    &lt;tr&gt;
+      &lt;td width='50%'&gt;
+        &lt;table width='100%'&gt;
+          &lt;tr&gt;
+            &lt;td width='80%'&gt;
+              &lt;select id='mode'&gt;{
+                for $mode in ('Read-Only', 'Updating')
+                return element option { $mode }
+              }&lt;/select&gt;{ ' ' }
+              &lt;button id='run' onclick='runQuery()' title='Ctrl-Enter'&gt;Run&lt;/button&gt;{ ' ' }
+              &lt;button id='stop' onclick='stopQuery()' disabled=''&gt;Stop&lt;/button&gt;
+            &lt;/td&gt;
+            &lt;td width='20%' align='right'&gt;
+              &lt;h2&gt;Editor&lt;/h2&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;textarea id='editor' name='editor'/&gt;
+        &lt;table width='100%'&gt;
+          &lt;form autocomplete='off' action='javascript:void(0);'&gt;
+            &lt;tr&gt;
+              &lt;td class='slick'&gt;
+                &lt;div align='right'&gt;
+                  &lt;input id='file' name='file' placeholder='Name of query' size='35'
+                         list='files' oninput='checkButtons()' onpropertychange='checkButtons()'/&gt;
+                  &lt;datalist id='files'&gt;{
+                    for $file in config:query-files()
+                    return element option { $file }
+                  }&lt;/datalist&gt;{ ' ' }
+                  &lt;button type='submit' name='open' id='open' disabled=''
+                          onclick='openQuery()'&gt;Open&lt;/button&gt;{ ' ' }
+                  &lt;button name='save' id='save' disabled=''
+                          onclick='saveQuery()'&gt;Save&lt;/button&gt;{ ' ' }
+                  &lt;button name='close' id='close' disabled=''
+                          onclick='closeQuery()'&gt;Close&lt;/button&gt;
+                &lt;/div&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/form&gt;
+        &lt;/table&gt;
+        { html:focus('editor') }
+      &lt;/td&gt;
+      &lt;td width='50%'&gt;{
+        &lt;table width='100%'&gt;
+          &lt;tr&gt;
+            &lt;td align='right'&gt;
+              &lt;h2&gt;Result&lt;/h2&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;,
+        &lt;textarea name='output' id='output' readonly=''/&gt;,
+        html:js('loadCodeMirror("xquery", true);'),
+        for $name in head(($file, config:query())[.])
+        return html:js('openQuery("' || $name || '");')
+      }&lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

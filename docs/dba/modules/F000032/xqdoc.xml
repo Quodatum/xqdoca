@@ -1,0 +1,41 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>log-delete.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Delete log files.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">logs/log-delete.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Delete log files.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+module namespace dba = 'dba/logs';
+
+import module namespace util = 'dba/util' at '../lib/util.xqm';
+
+(:~ Top category :)
+declare variable $dba:CAT := 'logs';
+
+(:~
+ : Deletes database logs.
+ : @param  $names  names of log files
+ : @return redirection
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/log-delete')
+  %rest:query-param('name', '{$names}')
+function dba:log-delete(
+  $names  as xs:string*
+) as element(rest:response) {
+  try {
+    $names ! admin:delete-logs(.),
+    web:redirect($dba:CAT, map { 'info': util:info($names, 'log', 'deleted') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/logs"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Deletes database logs.</xqdoc:description><xqdoc:param>$names  names of log files</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:log-delete</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/log-delete</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$names}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/log-delete") %rest:query-param("name", "{$names}") function dba:log-delete($names as xs:string*) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>names</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://basex.org/modules/admin</xqdoc:uri><xqdoc:name>delete-logs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>names</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>names</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:log-delete(
+  $names  as xs:string*
+) as element(rest:response) {
+  try {
+    $names ! admin:delete-logs(.),
+    web:redirect($dba:CAT, map { 'info': util:info($names, 'log', 'deleted') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

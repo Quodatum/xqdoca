@@ -1,0 +1,48 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>pattern-drop.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Drop patterns.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">users/pattern-drop.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Drop patterns.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+module namespace dba = 'dba/users';
+
+import module namespace util = 'dba/util' at '../lib/util.xqm';
+
+(:~ Top category :)
+declare variable $dba:SUB := 'user';
+
+(:~
+ : Drops a pattern.
+ : @param  $name      user name
+ : @param  $patterns  database patterns
+ : @return redirection
+ :)
+declare
+  %updating
+  %rest:GET
+  %rest:path('/dba/pattern-drop')
+  %rest:query-param('name',    '{$name}')
+  %rest:query-param('pattern', '{$patterns}')
+function dba:pattern-drop(
+  $name      as xs:string,
+  $patterns  as xs:string*
+) as empty-sequence() {
+  try {
+    $patterns ! user:drop($name, .),
+    util:redirect($dba:SUB, map {
+      'name': $name, 'info': util:info($patterns, 'pattern', 'dropped') })
+  } catch * {
+    util:redirect($dba:SUB, map { 'error': $err:description })
+  }
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/users"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:SUB</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Drops a pattern.</xqdoc:description><xqdoc:param>$name      user name</xqdoc:param><xqdoc:param>$patterns  database patterns</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:pattern-drop</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/pattern-drop</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">pattern</xqdoc:literal><xqdoc:literal type="xs:string">{$patterns}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:GET %rest:path("/dba/pattern-drop") %rest:query-param("name", "{$name}") %rest:query-param("pattern", "{$patterns}") function dba:pattern-drop($name as xs:string , $patterns as xs:string*) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>patterns</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>drop</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>patterns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>SUB</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>patterns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>SUB</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:pattern-drop(
+  $name      as xs:string,
+  $patterns  as xs:string*
+) as empty-sequence() {
+  try {
+    $patterns ! user:drop($name, .),
+    util:redirect($dba:SUB, map {
+      'name': $name, 'info': util:info($patterns, 'pattern', 'dropped') })
+  } catch * {
+    util:redirect($dba:SUB, map { 'error': $err:description })
+  }
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

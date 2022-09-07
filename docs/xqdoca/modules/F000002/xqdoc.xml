@@ -1,0 +1,74 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.rename</xqdoc:uri><xqdoc:name>refactor.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>rewrite code</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/demo/refactor.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+ : rewrite code  
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+module namespace _ = 'quodatum:xqdoca.generator.rename';
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+(:~ 
+ : code rewritting
+ :)
+declare 
+%xqdoca:module("refactor","simple code change examples.")
+%xqdoca:output("rename.xqm","text") 
+function _:rename($file as map(*), 
+                  $model as map(*),
+                  $opts as map(*)
+                  )                    
+{
+
+
+  let $parse:=$file?xqparse 
+  
+  (: change function names that are called :)
+  let $parse := $parse transform with {
+    .//FunctionCall/QName
+    !.[contains(.,":")]
+    !( replace value of node . with . || "-XQDOCA")
+  }
+  (: add an import :)
+    let $i:=``[;
+import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm']``
+   let $parse := $parse transform with {
+    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)
+  }
+  (: change name of function :)
+   let $parse := $parse transform with {
+    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))
+  }
+  let $result:=``[(:  xqDocA added a comment :)
+]`` || $parse
+  return $result
+  };
+</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.rename"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>code rewritting</xqdoc:description></xqdoc:comment><xqdoc:name>_:rename</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">refactor</xqdoc:literal><xqdoc:literal type="xs:string">simple code change examples.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">rename.xqm</xqdoc:literal><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("refactor", "simple code change examples.") %Q{https://github.com/Quodatum/xqdoca}output("rename.xqm", "text") function _:rename($file as map(*) , $model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>i</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:rename($file as map(*), 
+                  $model as map(*),
+                  $opts as map(*)
+                  )                    
+{
+
+
+  let $parse:=$file?xqparse 
+  
+  (: change function names that are called :)
+  let $parse := $parse transform with {
+    .//FunctionCall/QName
+    !.[contains(.,":")]
+    !( replace value of node . with . || "-XQDOCA")
+  }
+  (: add an import :)
+    let $i:=``[;
+import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm']``
+   let $parse := $parse transform with {
+    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)
+  }
+  (: change name of function :)
+   let $parse := $parse transform with {
+    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))
+  }
+  let $result:=``[(:  xqDocA added a comment :)
+]`` || $parse
+  return $result
+  }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

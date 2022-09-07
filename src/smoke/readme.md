@@ -1,1 +1,0 @@
-scripts for ad-hoc testing of libraries.

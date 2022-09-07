@@ -1,0 +1,100 @@
+<XQuery>(:~
+ : Global options.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>options</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/options'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+(:~ DBA directory. :)
+<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:DBA-DIRECTORY</QName> <TOKEN>:=</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+  <FLWORExpr><ForClause><TOKEN>for</TOKEN> <ForBinding><TOKEN>$</TOKEN><QName>dir</QName> <TOKEN>in</TOKEN> <StringConcatExpr><FunctionCall><QName>db:option</QName><ArgumentList><TOKEN>(</TOKEN><StringLiteral>'dbpath'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <StringLiteral>'/.dba'</StringLiteral></StringConcatExpr></ForBinding></ForClause>
+  <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <Expr><IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>file:exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <FunctionCall><QName>file:create-dir</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></IfExpr><TOKEN>,</TOKEN>
+    <FunctionCall><QName>file:path-to-native</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dir</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>)</TOKEN></ParenthesizedExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Permissions. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:PERMISSIONS</QName> <TOKEN>:=</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><Expr><StringLiteral>'none'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'read'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'write'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'create'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'admin'</StringLiteral></Expr><TOKEN>)</TOKEN></ParenthesizedExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Maximum length of XML characters. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:MAXCHARS</QName> <TOKEN>:=</TOKEN> <StringLiteral>'maxchars'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Maximum number of table entries. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:MAXROWS</QName> <TOKEN>:=</TOKEN> <StringLiteral>'maxrows'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Query timeout. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:TIMEOUT</QName> <TOKEN>:=</TOKEN> <StringLiteral>'timeout'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Maximal memory consumption. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:MEMORY</QName> <TOKEN>:=</TOKEN> <StringLiteral>'memory'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Permission when running queries. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:PERMISSION</QName> <TOKEN>:=</TOKEN> <StringLiteral>'permission'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+(:~ Show DBA log entries. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:IGNORE-LOGS</QName> <TOKEN>:=</TOKEN> <StringLiteral>'ignore-logs'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Options file. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>private</QName></Annotation> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:FILE</QName> <TOKEN>:=</TOKEN> <StringConcatExpr><VarRef><TOKEN>$</TOKEN><QName>options:DBA-DIRECTORY</QName></VarRef> <TOKEN>||</TOKEN> <StringLiteral>'.dba.xml'</StringLiteral></StringConcatExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Default options. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>basex:lazy</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>private</QName></Annotation> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:DEFAULTS</QName> <TOKEN>:=</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:MAXCHARS</QName></VarRef>  <TOKEN>:</TOKEN> <IntegerLiteral>200000</IntegerLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:MAXROWS</QName></VarRef>   <TOKEN>:</TOKEN> <IntegerLiteral>200</IntegerLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:TIMEOUT</QName></VarRef>   <TOKEN>:</TOKEN> <IntegerLiteral>30</IntegerLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:MEMORY</QName></VarRef>    <TOKEN>:</TOKEN> <IntegerLiteral>500</IntegerLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:PERMISSION</QName></VarRef><TOKEN>:</TOKEN> <StringLiteral>'admin'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN>
+  <MapConstructorEntry><VarRef><TOKEN>$</TOKEN><QName>options:IGNORE-LOGS</QName></VarRef><TOKEN>:</TOKEN> <StringLiteral>''</StringLiteral></MapConstructorEntry>
+<TOKEN>}</TOKEN></MapConstructor></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~ Currently assigned options. :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <Annotation><TOKEN>%</TOKEN><QName>basex:lazy</QName></Annotation> <Annotation><TOKEN>%</TOKEN><QName>private</QName></Annotation> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>options:OPTIONS</QName> <TOKEN>:=</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+  <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>file:exists</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:FILE</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+      (: merge defaults with saved options :)
+      <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>options</QName> <TOKEN>:=</TOKEN> <RelativePathExpr><FunctionCall><QName>fetch:xml</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:FILE</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><QName>options</QName>
+      <PredicateList/></AxisStep></RelativePathExpr></LetBinding></LetClause><ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>map:merge</QName><ArgumentList><TOKEN>(</TOKEN>
+        <FunctionCall><QName>map:for-each</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:DEFAULTS</QName></VarRef><TOKEN>,</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>key</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>value</QName></Param></ParamList><TOKEN>)</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+          <FunctionCall><QName>map:entry</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>key</QName></VarRef><TOKEN>,</TOKEN>
+            <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>option</QName> <TOKEN>:=</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>options</QName></VarRef><TOKEN>/</TOKEN><AxisStep><Wildcard>*</Wildcard><Predicate><TOKEN>[</TOKEN><ComparisonExpr><FunctionCall><QName>name</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>=</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>key</QName></VarRef></ComparisonExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr></LetBinding></LetClause>
+            <ReturnClause><TOKEN>return</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>option</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+              <TypeswitchExpr><TOKEN>typeswitch</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>value</QName></VarRef><TOKEN>)</TOKEN>
+                <CaseClause><TOKEN>case</TOKEN> <QName>xs:numeric</QName>  <TOKEN>return</TOKEN> <FunctionCall><QName>xs:integer</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>option</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></CaseClause>
+                <CaseClause><TOKEN>case</TOKEN> <QName>xs:boolean</QName>  <TOKEN>return</TOKEN> <FunctionCall><QName>xs:boolean</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>option</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></CaseClause>
+                <TOKEN>default</TOKEN>          <TOKEN>return</TOKEN> <FunctionCall><QName>xs:string</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>option</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></TypeswitchExpr>
+            <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+              <VarRef><TOKEN>$</TOKEN><QName>value</QName></VarRef>
+            <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></ReturnClause></FLWORExpr>
+          <TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+        <TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+      <TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+    <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+      (: use defaults if an error occurs while parsing the options :)
+      <VarRef><TOKEN>$</TOKEN><QName>options:DEFAULTS</QName></VarRef>
+    <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <VarRef><TOKEN>$</TOKEN><QName>options:DEFAULTS</QName></VarRef>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr>
+<TOKEN>)</TOKEN></ParenthesizedExpr></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Returns the value of an option.
+ : @param  $name  name of option
+ : @return value
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>options:get</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>name</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:anyAtomicType</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>options:OPTIONS</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Saves options.
+ : @param  $options  keys/values that have been changed
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <FunctionDecl><TOKEN>function</TOKEN> <QName>options:save</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>options</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <AnyMapTest><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></AnyMapTest></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FunctionCall><QName>file:write</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:FILE</QName></VarRef><TOKEN>,</TOKEN> <CompElemConstructor><TOKEN>element</TOKEN> <QName>options</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+    <FunctionCall><QName>map:for-each</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>options:DEFAULTS</QName></VarRef><TOKEN>,</TOKEN> <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>key</QName></Param><TOKEN>,</TOKEN> <Param><TOKEN>$</TOKEN><QName>value</QName></Param></ParamList><TOKEN>)</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+      <CompElemConstructor><TOKEN>element</TOKEN> <TOKEN>{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>key</QName></VarRef> <TOKEN>}</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><ParenthesizedExpr><TOKEN>(</TOKEN><Expr><PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>options</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>key</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>value</QName></VarRef></Expr><TOKEN>)</TOKEN></ParenthesizedExpr><Predicate><TOKEN>[</TOKEN><IntegerLiteral>1</IntegerLiteral><TOKEN>]</TOKEN></Predicate></PostfixExpr> <TOKEN>}</TOKEN></EnclosedExpr></CompElemConstructor>
+    <TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>}</TOKEN></EnclosedExpr></CompElemConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

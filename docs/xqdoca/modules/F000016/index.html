@@ -1,0 +1,660 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.model</span> 
+			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.model</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqd:methods"><span class="secno">3.1</span><span class="content">$xqd:methods</span><div style="float:right"></div></a></li><li><a href="#$xqd:nsANN"><span class="secno">3.2</span><span class="content">$xqd:nsANN</span><div style="float:right"></div></a></li><li><a href="#$xqd:nsRESTXQ"><span class="secno">3.3</span><span class="content">$xqd:nsRESTXQ</span><div style="float:right"></div></a></li><li><a href="#$xqd:path-seq-default"><span class="secno">3.4</span><span class="content">$xqd:path-seq-default</span><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqd:analyse"><span class="secno">4.1</span><span class="content" title="">xqd:analyse<div style="float:right"></div></span></a></li><li><a href="#xqd:anno"><span class="secno">4.2</span><span class="content" title="">xqd:anno<div style="float:right"></div></span></a></li><li><a href="#xqd:annotations"><span class="secno">4.3</span><span class="content" title="">xqd:annotations<div style="float:right"></div></span></a></li><li><a href="#xqd:annots-rxq"><span class="secno">4.4</span><span class="content" title="">xqd:annots-rxq<div style="float:right"></div></span></a></li><li><a href="#xqd:defs"><span class="secno">4.5</span><span class="content" title="">xqd:defs<div style="float:right"></div></span></a></li><li><a href="#xqd:escape-for-regex"><span class="secno">4.6</span><span class="content" title="">xqd:escape-for-regex<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqd:file-parsed-type"><span class="secno">4.7</span><span class="content" title="">xqd:file-parsed-type<div style="float:right"></div></span></a></li><li><a href="#xqd:find-sources"><span class="secno">4.8</span><span class="content" title="">xqd:find-sources<div style="float:right"></div></span></a></li><li><a href="#xqd:import-count"><span class="secno">4.9</span><span class="content" title="">xqd:import-count<div style="float:right"></div></span></a></li><li><a href="#xqd:imports"><span class="secno">4.10</span><span class="content" title="">xqd:imports<div style="float:right"></div></span></a></li><li><a href="#xqd:methods"><span class="secno">4.11</span><span class="content" title="">xqd:methods<div style="float:right"></div></span></a></li><li><a href="#xqd:namespaces"><span class="secno">4.12</span><span class="content" title="">xqd:namespaces<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqd:prefix-for-ns"><span class="secno">4.13</span><span class="content" title="">xqd:prefix-for-ns<div style="float:right"></div></span></a></li><li><a href="#xqd:rxq-path-normalize"><span class="secno">4.14</span><span class="content" title="">xqd:rxq-path-normalize<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqd:rxq-paths"><span class="secno">4.15</span><span class="content" title="">xqd:rxq-paths<div style="float:right"></div></span></a></li><li><a href="#xqd:snap"><span class="secno">4.16</span><span class="content" title="">xqd:snap<div style="float:right"></div></span></a></li><li><a href="#xqd:target"><span class="secno">4.17</span><span class="content" title="">xqd:target<div style="float:right"></div></span></a></li><li><a href="#xqd:where-imported"><span class="secno">4.18</span><span class="content" title="">xqd:where-imported<div style="float:right"></div></span></a></li><li><a href="#xqd:xqdoc"><span class="secno">4.19</span><span class="content" title="">xqd:xqdoc<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-proj.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Analyse XQuery source</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>__source : lib/model.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+    This module is imported by
+    <span class="badge badge-info">8</span> modules. It imports
+    <span class="badge badge-info">3</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000001/index.html" title="lib/generators/demo/import-graph.xqm">quodatum:xqdoca.generator.calls</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000005/index.html" title="lib/generators/annotations.xqm">quodatum:xqdoca.generator.annotations</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000006/index.html" title="lib/generators/imports.xqm">quodatum:xqdoca.generator.imports</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000007/index.html" title="lib/generators/index-html.xqm">quodatum:xqdoca.generator.index</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000008/index.html" title="lib/generators/mermaid.xqm">quodatum:xqdoca.generator.mermaid</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000009/index.html" title="lib/generators/module.xqm">quodatum:xqdoca.mod-html</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000010/index.html" title="lib/generators/rest.xqm">quodatum:xqdoca.generator.rest</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000026/index.html" title="xqdoca.xq">xqdoca.xq</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000018/index.html" title="lib/parser.xqm">quodatum:xqdoca.parser</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000022/index.html" title="lib/xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000021/index.html" title="lib/xqdoc-anno.xqm">quodatum:xqdoca.model.annotations</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$xqd:methods"></a><a id="{quodatum:xqdoca.model}$methods"></a>3.1 $xqd:methods</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>item()*</dd></dl><p>See also:
+          <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods</a></p></div><div class="div3"><h3><a id="$xqd:nsANN"></a><a id="{quodatum:xqdoca.model}$nsANN"></a>3.2 $xqd:nsANN</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$xqd:nsRESTXQ"></a><a id="{quodatum:xqdoca.model}$nsRESTXQ"></a>3.3 $xqd:nsRESTXQ</h3><dl><dt class="label">Summary</dt><dd>restxq namespace</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$xqd:path-seq-default"></a><a id="{quodatum:xqdoca.model}$path-seq-default"></a>3.4 $xqd:path-seq-default</h3><dl><dt class="label">Summary</dt><dd>regex for unnecessary RESTXQ path segment annotation</dd><dt class="label">Type</dt><dd>item()*</dd></dl><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="xqd:analyse"></a><a id="{quodatum:xqdoca.model}analyse#3"></a>4.1 xqd:analyse<div style="float:right"><a href="#xqd:analyse">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}analyse#3">xqd:analyse#3</a></span></p><dt class="label">Summary</dt><dd>Generate xqdoc adding custom opts</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:analyse</code>
+		  ( 
+			<code class="arg">$url</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$platform</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as"> as </code><code class="return-type">xs:string</code> xquery source</li><li>platform<code class="as"> as </code><code class="return-type">xs:string</code> xquery platform id</li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code> custom tags to add</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><p>result : map keys of {xqdoc: &lt;xqdoc:xqdoc/&gt;, xqparse: &lt;XQuery/&gt; ,annotations:{}*}</p><details><summary>Invokes 8 functions from 5 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}keys#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}unparsed-text#1</span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}namespaces#1" title="lib/model.xqm">xqd:namespaces#1</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}xqdoc#1" title="lib/model.xqm">xqd:xqdoc#1</a></span></li><li><span><a href="../../modules/F000022/index.html#{quodatum:xqdoca.namespaces}static-prefix-map#1" title="lib/xqdoc-namespace.xqm">xqn:static-prefix-map#1</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}enrich-catch#3" title="lib/parser.xqm">xqp:enrich-catch#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}parse#2" title="lib/parser.xqm">xqp:parse#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#3" title="lib/model.xqm">xqd:snap#3</a></span></li></ul></details><details><summary>Source ( 34 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
+as map(*)
+{  
+  let $xqd:=xqd:xqdoc($url)
+  (: add custom tags :)
+  let $enh:=$xqd 
+            transform with {
+                  for $tag in map:keys($opts)
+                  where xqdoc:module[@type="library"]/xqdoc:comment
+                  
+                  return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
+                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
+            }
+  (: insert full source into module :)
+  let $src:=unparsed-text($url)  
+  let $enh:=$enh transform with {
+    if(xqdoc:module) then 
+          insert node &lt;xqdoc:body&gt;{$src}&lt;/xqdoc:body&gt; into xqdoc:module
+    else
+        ()
+  }
+  (: add enrichments from parse tree :)
+  let $parse:=xqp:parse($src,$platform)
+  
+  let $prefixes:=map:merge((
+                 xqd:namespaces($enh),
+                 xqn:static-prefix-map($platform)
+               ))
+  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
+                   
+  return map{"xqdoc": $enh, 
+             "xqparse": $parse
+              }
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:anno"></a><a id="{quodatum:xqdoca.model}anno#1"></a>4.2 xqd:anno<div style="float:right"><a href="#xqd:anno">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}anno#1">xqd:anno#1</a></span></p><dt class="label">Summary</dt><dd>all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:anno</code>
+		  ( 
+			<code class="arg">$xqdoc</code><code class="as"> as </code><code class="type">element(xqdoc:xqdoc)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqdoc<code class="as"> as </code><code class="return-type">element(xqdoc:xqdoc)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code></li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}namespaces#1" title="lib/model.xqm">xqd:namespaces#1</a></span></li><li><span><a href="../../modules/F000022/index.html#{quodatum:xqdoca.namespaces}qmap#3" title="lib/xqdoc-namespace.xqm">xqn:qmap#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#3" title="lib/model.xqm">xqd:snap#3</a></span></li></ul></details><details><summary>Source ( 8 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:anno($xqdoc as element(xqdoc:xqdoc))
+as map(*)*
+{
+  let $ns:= xqd:namespaces($xqdoc)
+ for $a in $xqdoc//xqdoc:annotation
+ let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
+ return map{"annotation":$name, "xqdoc": $a} 
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:annotations"></a><a id="{quodatum:xqdoca.model}annotations#3"></a>4.3 xqd:annotations<div style="float:right"><a href="#xqd:annotations">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}annotations#3">xqd:annotations#3</a></span></p><dt class="label">Summary</dt><dd>return all matching annotations in xqdoc</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annotations</code>
+		  ( 
+			<code class="arg">$xqdoc</code><code class="as"> as </code><code class="type">element(xqdoc:xqdoc)</code>, <code class="arg">$annotns</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$aname</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element(xqdoc:annotation)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqdoc<code class="as"> as </code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>annotns<code class="as"> as </code><code class="return-type">xs:string</code></li><li>aname<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:annotation) *</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}annots-rxq#1" title="lib/model.xqm">xqd:annots-rxq#1</a></span></li></ul></details><details><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
+ return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:annots-rxq"></a><a id="{quodatum:xqdoca.model}annots-rxq#1"></a>4.4 xqd:annots-rxq<div style="float:right"><a href="#xqd:annots-rxq">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}annots-rxq#1">xqd:annots-rxq#1</a></span></p><dt class="label">Summary</dt><dd>map for each restxq:path annotation
+"file": $f,
+"annot": $annot,
+"description": $function/xqdoc:comment/xqdoc:description/node()
+"given": $name/string(),
+"uri": $qmap?uri, 
+"name": $lname, 
+"xqdoc": $e }</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:annots-rxq</code>
+		  ( 
+			<code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code></li></ul></dd><details><summary>Invokes 3 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}name-detail#2" title="lib/xqdoc-anno.xqm">xqa:name-detail#2</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}annotations#3" title="lib/model.xqm">xqd:annotations#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}rxq-paths#1" title="lib/model.xqm">xqd:rxq-paths#1</a></span></li></ul></details><details><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:annots-rxq($model as map(*))
+as map(*)*
+{
+  for $f  in $model?files
+  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
+  let $function:= $annot/../..
+  let $a:=((xqa:name-detail($function,$f),
+            map{
+                "file": $f,
+                "annot": $annot,
+                "description": $function/xqdoc:comment/xqdoc:description/node() 
+                 }
+               ))
+   return map:merge($a)
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:defs"></a><a id="{quodatum:xqdoca.model}defs#1"></a>4.5 xqd:defs<div style="float:right"><a href="#xqd:defs">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}defs#1">xqd:defs#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:defs</code>
+		  ( 
+			<code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#3</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000001/index.html#{quodatum:xqdoca.generator.calls}build-old#3" title="lib/generators/demo/import-graph.xqm">_:build-old#3</a></span></li></ul></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:defs($model as map(*))
+as map(*)
+{ 
+(
+  for $f in $model?files
+  group by $ns:=$f?namespace
+  return map:entry( $ns,  $f)
+)
+=&gt;map:merge(map { 'duplicates': 'combine' })
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:escape-for-regex"></a><a id="{quodatum:xqdoca.model}escape-for-regex#1"></a>4.6 xqd:escape-for-regex<div style="float:right"><a href="#xqd:escape-for-regex">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}escape-for-regex#1">xqd:escape-for-regex#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>from functx = "http://www.functx.com";</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:escape-for-regex</code>
+		  ( 
+			<code class="arg">$arg</code><code class="as"> as </code><code class="type">xs:string?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>arg<code class="as"> as </code><code class="return-type">xs:string?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}replace#3</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:escape-for-regex( $arg as xs:string? ) 
+as xs:string {
+   replace($arg,
+           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
+ }</code></pre></details></div><div class="div3"><h3><a id="xqd:file-parsed-type"></a><a id="{quodatum:xqdoca.model}file-parsed-type#1"></a>4.7 xqd:file-parsed-type<div style="float:right"><a href="#xqd:file-parsed-type">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}file-parsed-type#1">xqd:file-parsed-type#1</a></span></p><dt class="label">Summary</dt><dd>return 'library','main','#ERROR'</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:file-parsed-type</code>
+		  ( 
+			<code class="arg">$file</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}name#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li></ul></details><details><summary>Invoked by 2 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000007/index.html#{quodatum:xqdoca.generator.index}modtable#2" title="lib/generators/index-html.xqm">xqhtml:modtable#2</a></span></li><li><span><a href="../../modules/F000007/index.html#{quodatum:xqdoca.generator.index}file-usage#2" title="lib/generators/index-html.xqm">xqhtml:file-usage#2</a></span></li></ul></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:file-parsed-type($file as map(*))
+as xs:string{
+   if($file?xqparse/name()="ERROR") then 
+      "#ERROR"
+   else
+       $file?xqdoc/xqdoc:module/@type/string() 
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:find-sources"></a><a id="{quodatum:xqdoca.model}find-sources#2"></a>4.8 xqd:find-sources<div style="float:right"><a href="#xqd:find-sources">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}find-sources#2">xqd:find-sources#2</a></span></p><dt class="label">Summary</dt><dd>files to process from extensions</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:find-sources</code>
+		  ( 
+			<code class="arg">$efolder</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$extensions</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>efolder<code class="as"> as </code><code class="return-type">xs:string</code></li><li>extensions<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string *</code></li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}list#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
+as xs:string*
+{
+  file:list($efolder,true(),$extensions)
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:import-count"></a><a id="{quodatum:xqdoca.model}import-count#2"></a>4.9 xqd:import-count<div style="float:right"><a href="#xqd:import-count">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}import-count#2">xqd:import-count#2</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:import-count</code>
+		  ( 
+			<code class="arg">$xqd</code><code class="as"> as </code><code class="type">element(xqdoc:xqdoc)</code>, <code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqd<code class="as"> as </code><code class="return-type">element(xqdoc:xqdoc)</code></li><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code>map listing imports and usage</li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}imports#1" title="lib/model.xqm">xqd:imports#1</a></span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F000007/index.html#{quodatum:xqdoca.generator.index}file-usage#2" title="lib/generators/index-html.xqm">xqhtml:file-usage#2</a></span></li><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}imports#2" title="lib/generators/module.xqm">xqh:imports#2</a></span></li></ul></details><details><summary>Source ( 12 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:import-count($xqd as element(xqdoc:xqdoc),$model as map(*))
+as map(*)
+{
+  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
+  let $importing:=xqd:imports($model)?($uri)
+  let $imports:=$xqd/xqdoc:imports
+  return map{
+     "uri": $uri,    
+     "imports": $imports/xqdoc:import,
+     "importedby":  $importing
+  }
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:imports"></a><a id="{quodatum:xqdoca.model}imports#1"></a>4.10 xqd:imports<div style="float:right"><a href="#xqd:imports">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}imports#1">xqd:imports#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:imports</code>
+		  ( 
+			<code class="arg">$model</code><code class="as"> as </code><code class="type">item()*</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li></ul></details><details><summary>Invoked by 3 functions from 3 modules</summary><ul><li><span><a href="../../modules/F000001/index.html#{quodatum:xqdoca.generator.calls}build-old#3" title="lib/generators/demo/import-graph.xqm">_:build-old#3</a></span></li><li><span><a href="../../modules/F000006/index.html#{quodatum:xqdoca.generator.imports}imports#2" title="lib/generators/imports.xqm">_:imports#2</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}import-count#2" title="lib/model.xqm">xqd:import-count#2</a></span></li></ul></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:imports($model)
+as map(*)
+{
+map:merge(  
+for $f in $model?files
+ for $in in $f?xqdoc//xqdoc:import[@type="library"]
+group by $ns:=$in/xqdoc:uri
+return map:entry( $ns,  $f)
+)
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:methods"></a><a id="{quodatum:xqdoca.model}methods#3"></a>4.11 xqd:methods<div style="float:right"><a href="#xqd:methods">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}methods#3">xqd:methods#3</a></span></p><dt class="label">Summary</dt><dd>return annotations with namespace and name</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:methods</code>
+		  ( 
+			<code class="arg">$annots</code><code class="as"> as </code><code class="type">element(xqdoc:annotations)?</code>, <code class="arg">$annotns</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$aname</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element(xqdoc:annotation)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>annots<code class="as"> as </code><code class="return-type">element(xqdoc:annotations)?</code></li><li>annotns<code class="as"> as </code><code class="return-type">xs:string</code></li><li>aname<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:annotation) *</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}rxq-paths#1" title="lib/model.xqm">xqd:rxq-paths#1</a></span></li></ul></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:methods($annots  as element(xqdoc:annotations)?,
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
+   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
+  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:namespaces"></a><a id="{quodatum:xqdoca.model}namespaces#1"></a>4.12 xqd:namespaces<div style="float:right"><a href="#xqd:namespaces">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}namespaces#1">xqd:namespaces#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>all namespaces in xqdoc as map{prefix.. uri}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:namespaces</code>
+		  ( 
+			<code class="arg">$xqdoc</code><code class="as"> as </code><code class="type">element(xqdoc:xqdoc)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqdoc<code class="as"> as </code><code class="return-type">element(xqdoc:xqdoc)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li></ul></details><details><summary>Invoked by 3 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#3" title="lib/model.xqm">xqd:snap#3</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}analyse#3" title="lib/model.xqm">xqd:analyse#3</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}anno#1" title="lib/model.xqm">xqd:anno#1</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
+as map(*)
+{
+  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
+  !map:entry(string(@prefix),string(@uri))
+  =&gt;map:merge()
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:prefix-for-ns"></a><a id="{quodatum:xqdoca.model}prefix-for-ns#2"></a>4.13 xqd:prefix-for-ns<div style="float:right"><a href="#xqd:prefix-for-ns">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}prefix-for-ns#2">xqd:prefix-for-ns#2</a></span></p><dt class="label">Summary</dt><dd>the prefix for this module</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:prefix-for-ns</code>
+		  ( 
+			<code class="arg">$namespace</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>namespace<code class="as"> as </code><code class="return-type">xs:string</code></li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string *</code></li></ul></dd><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}for-each#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#3" title="lib/model.xqm">xqd:snap#3</a></span></li></ul></details><details><summary>Source ( 4 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
+as xs:string*{
+map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:rxq-path-normalize"></a><a id="{quodatum:xqdoca.model}rxq-path-normalize#1"></a>4.14 xqd:rxq-path-normalize<div style="float:right"><a href="#xqd:rxq-path-normalize">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}rxq-path-normalize#1">xqd:rxq-path-normalize#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>tidy up restxq path annotations
+ensure leading slash, remove unnecesary {$xxxx=[^/]+}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:rxq-path-normalize</code>
+		  ( 
+			<code class="arg">$path</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>path<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}replace#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}starts-with#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}rxq-paths#1" title="lib/model.xqm">xqd:rxq-paths#1</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:rxq-path-normalize($path as xs:string)
+as xs:string{
+let $path:=replace($path,$xqd:path-seq-default,"")
+return if(starts-with($path,"/")) then $path else "/" || $path
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:rxq-paths"></a><a id="{quodatum:xqdoca.model}rxq-paths#1"></a>4.15 xqd:rxq-paths<div style="float:right"><a href="#xqd:rxq-paths">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}rxq-paths#1">xqd:rxq-paths#1</a></span></p><dt class="label">Summary</dt><dd>return sequence of maps describing restxq ordered by rest:path
+{uri:.., 
+methods : {METHODS: {id:.., uri:.. ,function:}}
+}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:rxq-paths</code>
+		  ( 
+			<code class="arg">$model</code><code class="as"> as </code><code class="type">item()*</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code></li></ul></dd><details><summary>Invokes 9 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}keys#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}sort#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}starts-with#2</span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}annots-rxq#1" title="lib/model.xqm">xqd:annots-rxq#1</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}methods#3" title="lib/model.xqm">xqd:methods#3</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}rxq-path-normalize#1" title="lib/model.xqm">xqd:rxq-path-normalize#1</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000010/index.html#{quodatum:xqdoca.generator.rest}restxq#2" title="lib/generators/rest.xqm">_:restxq#2</a></span></li></ul></details><details><summary>Source ( 21 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:rxq-paths($model)
+as map(*)* 
+{
+let $reports:= xqd:annots-rxq($model)
+(: map keyed on uris -ensure starts with / :)
+let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
+let $data:=map:merge(for $report in $reports
+          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
+          let $methods:= map:merge(
+                         for $annot in $report
+                         let $hits:=for $method in $xqd:methods
+                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
+                                     where $hit
+                                     return map{$method: $annot}
+                         return if(exists($hits))then $hits else map{"ALL":$annot}
+                       )
+          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
+        ) 
+let $uris:=sort(map:keys($data))        
+return $data?($uris)        
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:snap"></a><a id="{quodatum:xqdoca.model}snap#2"></a><a id="{quodatum:xqdoca.model}snap#3"></a>4.16 xqd:snap<div style="float:right"><a href="#xqd:snap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#2">xqd:snap#2</a></span><span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}snap#3">xqd:snap#3</a></span></p><dt class="label">Summary</dt><dd>load and parse source xquery files</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:snap</code>
+		  ( 
+			<code class="arg">$efolder</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$platform</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div><div class="proto"><code class="function">xqd:snap</code>
+		  ( 
+			<code class="arg">$efolder</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$files</code><code class="as"> as </code><code class="type">xs:string*</code>, <code class="arg">$platform</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>efolder<code class="as"> as </code><code class="return-type">xs:string</code></li><li>platform<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 19 functions from 5 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}format-integer#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}last#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}translate#3</span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}analyse#3" title="lib/model.xqm">xqd:analyse#3</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}anno#1" title="lib/model.xqm">xqd:anno#1</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}namespaces#1" title="lib/model.xqm">xqd:namespaces#1</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}prefix-for-ns#2" title="lib/model.xqm">xqd:prefix-for-ns#2</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#3" title="lib/model.xqm">xqd:snap#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}default-fn-uri#1" title="lib/parser.xqm">xqp:default-fn-uri#1</a></span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}snap#2" title="lib/model.xqm">xqd:snap#2</a></span></li><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 37 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:snap($efolder as xs:string, $platform as xs:string)
+as map(*)
+{
+ xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
+}</code></pre><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
+as map(*)
+{
+let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
+let $folder:= translate($efolder,"\","/")
+let $_:=trace(count($files),"files :")
+return map{ 
+             "base-uri": $folder,
+             "platform": $platform,
+             "project": trace(tokenize($folder,"/")[last()-1],"project"),
+             "files": for $file at $pos in $files
+                      let $id:= "F" || format-integer($pos,"000000")
+                      let $full:= concat($efolder || "/", $file=&gt;trace(``[FILE `{ $pos }` :]``))
+                      let $spath:= translate($file,"\","/")
+                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
+                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
+                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
+                      let $base:=map{
+                              "index": $pos,
+                              "path": translate($file,"\","/"),
+                              "href": ``[modules/`{ $id }`/]``,
+                              "parsed": $isParsed,
+                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
+                              "prefixes": $prefixes,
+                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
+                           }
+                      return map:merge(($base,$analysis))  
+           }
+
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:target"></a><a id="{quodatum:xqdoca.model}target#2"></a>4.17 xqd:target<div style="float:right"><a href="#xqd:target">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}target#2">xqd:target#2</a></span></p><dt class="label">Summary</dt><dd>expand specials in target url, i.e. {project\} and {webpath\}</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:target</code>
+		  ( 
+			<code class="arg">$target</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as"> as </code><code class="return-type">xs:string</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 6 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}QName#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}function-lookup#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}replace#6</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}translate#3</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:target($target as xs:string,$opts as map(*))
+as xs:string
+{
+ let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
+ let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
+return $target
+=&gt;replace("\{project\}",string($opts?project))
+=&gt;replace("\{webpath\}",translate($webpath,"\","/"))
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:where-imported"></a><a id="{quodatum:xqdoca.model}where-imported#2"></a>4.18 xqd:where-imported<div style="float:right"><a href="#xqd:where-imported">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}where-imported#2">xqd:where-imported#2</a></span></p><dt class="label">Summary</dt><dd>files that import given namespace</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:where-imported</code>
+		  ( 
+			<code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000008/index.html#{quodatum:xqdoca.generator.mermaid}build#3" title="lib/generators/mermaid.xqm">_:build#3</a></span></li></ul></details><details><summary>Source ( 4 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:where-imported($uri as xs:string,$model as map(*))
+{
+  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
+}</code></pre></details></div><div class="div3"><h3><a id="xqd:xqdoc"></a><a id="{quodatum:xqdoca.model}xqdoc#1"></a>4.19 xqd:xqdoc<div style="float:right"><a href="#xqd:xqdoc">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model}xqdoc#1">xqd:xqdoc#1</a></span></p><dt class="label">Summary</dt><dd>generate xqdoc
+result is &lt;XQuery&gt; or &lt;ERROR&gt;</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqd:xqdoc</code>
+		  ( 
+			<code class="arg">$url</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(xqdoc:xqdoc)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>url<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:xqdoc)</code></li></ul></dd><details><summary>Invokes 1 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}xqdoc#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}analyse#3" title="lib/model.xqm">xqd:analyse#3</a></span></li></ul></details><details><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqd:xqdoc($url as xs:string)
+as element(xqdoc:xqdoc)
+{  
+ try{
+   inspect:xqdoc($url)
+ } catch * { 
+   &lt;xqdoc:xqdoc&gt;{$err:code } - { $err:description }&lt;/xqdoc:xqdoc&gt;
+}
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>xqa</td><td><span><a href="../../modules/F000021/index.html" title="lib/xqdoc-anno.xqm">quodatum:xqdoca.model.annotations</a></span></td></tr><tr><td>xqd</td><td><span><a href="../../modules/F000016/index.html" title="lib/model.xqm">quodatum:xqdoca.model</a></span></td></tr><tr><td>xqdoc</td><td><span class="badge badge-warning" title="Externally defined">http://www.xqdoc.org/1.0</span></td></tr><tr><td>xqn</td><td><span><a href="../../modules/F000022/index.html" title="lib/xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></td></tr><tr><td>xqp</td><td><span><a href="../../modules/F000018/index.html" title="lib/parser.xqm">quodatum:xqdoca.parser</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
+(:
+ : Copyright (c) 2019-2022 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;xqdoc-proj.xqm&lt;/h1&gt;
+ : &lt;p&gt;Analyse XQuery source&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+(:~
+ : Generate XQuery  documentation in html
+ : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
+ : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
+ : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+ :)
+module namespace xqd = 'quodatum:xqdoca.model';
+
+import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno.xqm";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+
+
+(:~ restxq namespace :)
+declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
+declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
+(:~ regex for unnecessary RESTXQ path segment annotation :)
+declare %private variable $xqd:path-seq-default:=xqd:escape-for-regex("=[^/]+");
+
+(:~ 
+ : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
+ :)
+declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
+
+
+(:~  files to process from extensions :)
+declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
+as xs:string*
+{
+  file:list($efolder,true(),$extensions)
+};
+
+(:~
+ : load and parse source xquery files
+ : @param $efolder root path for source files
+ : @param $files files to process as relative paths
+ : @param $platform target XQuery engine e.g "basex"
+ : @return state map
+ :)
+declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
+as map(*)
+{
+let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
+let $folder:= translate($efolder,"\","/")
+let $_:=trace(count($files),"files :")
+return map{ 
+             "base-uri": $folder,
+             "platform": $platform,
+             "project": trace(tokenize($folder,"/")[last()-1],"project"),
+             "files": for $file at $pos in $files
+                      let $id:= "F" || format-integer($pos,"000000")
+                      let $full:= concat($efolder || "/", $file=&gt;trace(``[FILE `{ $pos }` :]``))
+                      let $spath:= translate($file,"\","/")
+                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
+                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
+                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
+                      let $base:=map{
+                              "index": $pos,
+                              "path": translate($file,"\","/"),
+                              "href": ``[modules/`{ $id }`/]``,
+                              "parsed": $isParsed,
+                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
+                              "prefixes": $prefixes,
+                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
+                           }
+                      return map:merge(($base,$analysis))  
+           }
+
+};
+
+declare function xqd:snap($efolder as xs:string, $platform as xs:string)
+as map(*)
+{
+ xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
+};
+
+(:~ generate xqdoc
+ : result is &lt;XQuery&gt; or &lt;ERROR&gt;
+ :)
+declare function xqd:xqdoc($url as xs:string)
+as element(xqdoc:xqdoc)
+{  
+ try{
+   inspect:xqdoc($url)
+ } catch * { 
+   &lt;xqdoc:xqdoc&gt;{$err:code } - { $err:description }&lt;/xqdoc:xqdoc&gt;
+}
+};
+
+(:~ 
+ : Generate xqdoc adding custom opts 
+ : @param $url xquery source
+ : @param platform xquery platform id
+ : @param $opts custom tags to add
+ : @result map keys of {xqdoc: &lt;xqdoc:xqdoc/&gt;, xqparse: &lt;XQuery/&gt; ,annotations:{}*}
+ :)
+declare function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
+as map(*)
+{  
+  let $xqd:=xqd:xqdoc($url)
+  (: add custom tags :)
+  let $enh:=$xqd 
+            transform with {
+                  for $tag in map:keys($opts)
+                  where xqdoc:module[@type="library"]/xqdoc:comment
+                  
+                  return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
+                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
+            }
+  (: insert full source into module :)
+  let $src:=unparsed-text($url)  
+  let $enh:=$enh transform with {
+    if(xqdoc:module) then 
+          insert node &lt;xqdoc:body&gt;{$src}&lt;/xqdoc:body&gt; into xqdoc:module
+    else
+        ()
+  }
+  (: add enrichments from parse tree :)
+  let $parse:=xqp:parse($src,$platform)
+  
+  let $prefixes:=map:merge((
+                 xqd:namespaces($enh),
+                 xqn:static-prefix-map($platform)
+               ))
+  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
+                   
+  return map{"xqdoc": $enh, 
+             "xqparse": $parse
+              }
+};
+
+(:~ 
+ : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
+ :)
+declare function xqd:anno($xqdoc as element(xqdoc:xqdoc))
+as map(*)*
+{
+  let $ns:= xqd:namespaces($xqdoc)
+ for $a in $xqdoc//xqdoc:annotation
+ let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
+ return map{"annotation":$name, "xqdoc": $a} 
+};
+
+(:~ return 'library','main','#ERROR' 
+:)
+declare function xqd:file-parsed-type($file as map(*))
+as xs:string{
+   if($file?xqparse/name()="ERROR") then 
+      "#ERROR"
+   else
+       $file?xqdoc/xqdoc:module/@type/string() 
+};
+        
+(:~ return sequence of maps describing restxq ordered by rest:path
+ : {uri:.., 
+ : methods : {METHODS: {id:.., uri:.. ,function:}}
+ : }
+ :)
+declare function xqd:rxq-paths($model)
+as map(*)* 
+{
+let $reports:= xqd:annots-rxq($model)
+(: map keyed on uris -ensure starts with / :)
+let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
+let $data:=map:merge(for $report in $reports
+          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
+          let $methods:= map:merge(
+                         for $annot in $report
+                         let $hits:=for $method in $xqd:methods
+                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
+                                     where $hit
+                                     return map{$method: $annot}
+                         return if(exists($hits))then $hits else map{"ALL":$annot}
+                       )
+          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
+        ) 
+let $uris:=sort(map:keys($data))        
+return $data?($uris)        
+};
+
+(:~ tidy up restxq path annotations
+ ensure leading slash, remove unnecesary {$xxxx=[^/]+}
+ :)
+declare %private function xqd:rxq-path-normalize($path as xs:string)
+as xs:string{
+let $path:=replace($path,$xqd:path-seq-default,"")
+return if(starts-with($path,"/")) then $path else "/" || $path
+};
+
+(:~ 
+ : map for each restxq:path annotation
+ :  "file": $f,
+ :  "annot": $annot,
+ :  "description": $function/xqdoc:comment/xqdoc:description/node()
+ :  "given": $name/string(),
+ :  "uri": $qmap?uri, 
+ :  "name": $lname, 
+ :   "xqdoc": $e }
+ :)
+declare function xqd:annots-rxq($model as map(*))
+as map(*)*
+{
+  for $f  in $model?files
+  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
+  let $function:= $annot/../..
+  let $a:=((xqa:name-detail($function,$f),
+            map{
+                "file": $f,
+                "annot": $annot,
+                "description": $function/xqdoc:comment/xqdoc:description/node() 
+                 }
+               ))
+   return map:merge($a)
+};
+
+(:~ 
+ : return all matching annotations in xqdoc
+ :)
+declare function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
+ return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+};
+
+(:~ 
+ : return annotations with namespace and name
+  :)
+declare function xqd:methods($annots  as element(xqdoc:annotations)?,
+                                 $annotns as xs:string,
+                                 $aname as xs:string) 
+as element(xqdoc:annotation)*
+{
+   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
+   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
+  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
+
+};
+
+(:~ 
+ : all namespaces in xqdoc as map{prefix.. uri}
+  :)
+declare 
+%private 
+function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
+as map(*)
+{
+  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
+  !map:entry(string(@prefix),string(@uri))
+  =&gt;map:merge()
+};
+
+(:~ files that import given namespace :)
+declare function xqd:where-imported($uri as xs:string,$model as map(*))
+{
+  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
+};
+
+(: return  map{   imported-ns:(files that import...) }  :)
+declare function xqd:imports($model)
+as map(*)
+{
+map:merge(  
+for $f in $model?files
+ for $in in $f?xqdoc//xqdoc:import[@type="library"]
+group by $ns:=$in/xqdoc:uri
+return map:entry( $ns,  $f)
+)
+};
+
+(: return  map, keys are imported ns, values are sequence of files where imported:)
+declare function xqd:defs($model as map(*))
+as map(*)
+{ 
+(
+  for $f in $model?files
+  group by $ns:=$f?namespace
+  return map:entry( $ns,  $f)
+)
+=&gt;map:merge(map { 'duplicates': 'combine' })
+};
+
+
+(:~ expand specials in target url, i.e. {project\} and {webpath\}
+ :)
+declare function xqd:target($target as xs:string,$opts as map(*))
+as xs:string
+{
+ let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
+ let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
+return $target
+=&gt;replace("\{project\}",string($opts?project))
+=&gt;replace("\{webpath\}",translate($webpath,"\","/"))
+}; 
+
+(:~
+ @return map listing imports and usage
+:)
+declare function xqd:import-count($xqd as element(xqdoc:xqdoc),$model as map(*))
+as map(*)
+{
+  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
+  let $importing:=xqd:imports($model)?($uri)
+  let $imports:=$xqd/xqdoc:imports
+  return map{
+     "uri": $uri,    
+     "imports": $imports/xqdoc:import,
+     "importedby":  $importing
+  }
+};
+
+(:~ the prefix for this module :)
+declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
+as xs:string*{
+map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
+};
+
+(:~ from functx = "http://www.functx.com"; :)
+declare %private 
+function xqd:escape-for-regex( $arg as xs:string? ) 
+as xs:string {
+   replace($arg,
+           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
+ } ;</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
+               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

@@ -1,0 +1,39 @@
+<XQuery>(:~
+ : Save query.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/queries'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>config</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/config'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../lib/config.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~
+ : Saves a query file and returns the list of stored queries.
+ : @param  $name   name of query file
+ : @param  $query  query string
+ : @return names of stored queries
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName><TOKEN>(</TOKEN><StringLiteral>'{$query}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>'/dba/query-save'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'name'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'{$name}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>output:method</QName><TOKEN>(</TOKEN><StringLiteral>'text'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:query-save</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>name</QName>   <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>query</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <QName>xs:string</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>path</QName> <TOKEN>:=</TOKEN> <StringConcatExpr><FunctionCall><QName>config:directory</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></StringConcatExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+    <Expr><TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+      <FunctionCall><QName>prof:void</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xquery:parse</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>query</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN>
+        <MapConstructorEntry><StringLiteral>'plan'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>false</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'pass'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>true</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'base-uri'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef></MapConstructorEntry>
+      <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+    <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+      <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>err:code</QName></VarRef><TOKEN>,</TOKEN> <StringConcatExpr><StringLiteral>'Query was not stored: '</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef></StringConcatExpr><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:value</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+    <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr><TOKEN>,</TOKEN>
+    <FunctionCall><QName>config:query</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>file:write-text</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>path</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>query</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>string-join</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>config:query-files</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <StringLiteral>'/'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+  <TOKEN>)</TOKEN></ParenthesizedExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

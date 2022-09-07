@@ -1,0 +1,5 @@
+<ERROR b="1940" e="1940" s="196">lexical analysis failed
+while expecting [S, EOF, '!', '!=', '#', '(', '(:', ')', '*', '+', ',', '-', '/', '//', ':', ';', '&lt;', '&lt;&lt;', '&lt;=', '=', '=&gt;', '&gt;', '&gt;=', '&gt;&gt;', '[', ']', 'after', 'and', 'as', 'ascending', 'before', 'case', 'cast', 'castable', 'collation', 'contains', 'count', 'default', 'descending', 'div', 'else', 'empty', 'end', 'eq', 'except', 'for', 'ge', 'group', 'gt', 'idiv', 'instance', 'intersect', 'into', 'is', 'le', 'let', 'lt', 'mod', 'modify', 'ne', 'only', 'or', 'order', 'paragraphs', 'return', 'satisfies', 'sentences', 'stable', 'start', 'times', 'to', 'transform', 'treat', 'union', 'update', 'where', 'with', 'words', '|', '||', '}', '}`']
+at line 86, column 14:
+...$action(),
+    util:redirect($dba:SUB, map { 'name': $name, 'inf...</ERROR>

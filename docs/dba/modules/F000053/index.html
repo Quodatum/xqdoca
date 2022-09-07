@@ -1,0 +1,215 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/login</span> 
+			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">dba/login</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:accept"><span class="secno">4.1</span><span class="content" title="">dba:accept<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#dba:check"><span class="secno">4.2</span><span class="content" title="">dba:check<div style="float:right"><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li><li><a href="#dba:login"><span class="secno">4.3</span><span class="content" title="">dba:login<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li><li><a href="#dba:login-check"><span class="secno">4.4</span><span class="content" title="">dba:login-check<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li><li><a href="#dba:logout"><span class="secno">4.5</span><span class="content" title="">dba:logout<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li><li><a href="#dba:reject"><span class="secno">4.6</span><span class="content" title="">dba:reject<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>Code for logging in and out.</div><dl><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-21, BSD License</p><p>__source : login.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+    This module is imported by
+    <span class="badge badge-info">0</span> modules. It imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style="">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000028/index.html" title="lib/config.xqm">dba/config</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:accept"></a><a id="{dba/login}accept#2"></a>4.1 dba:accept<div style="float:right"><a href="#dba:accept">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}accept#2">dba:accept#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Registers a user and redirects to the main page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:accept</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as"> as </code><code class="type">xs:string?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> entered user name</li><li>page<code class="as"> as </code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code>redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div><div class="div3"><h3><a id="dba:check"></a><a id="{dba/login}check#1"></a>4.2 dba:check<div style="float:right"><a href="#dba:check">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}check#1">dba:check#1</a><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Permissions: checks the user credentials.
+Redirects to the login page if a user is not logged in, or if the page is not public.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:check</code>
+		  ( 
+			<code class="arg">$perm</code><code class="as"> as </code><code class="type">map(*)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">element(rest:response)</xqdoc:type>?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>perm<code class="as"> as </code><code class="return-type">map(*)</code> permission data</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response) ?</code>redirection to login page or empty sequence</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%perm:check</code></td><td><code class="arg">('/dba','{$perm}')</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div><div class="div3"><h3><a id="dba:login"></a><a id="{dba/login}login#3"></a>4.3 dba:login<div style="float:right"><a href="#dba:login">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}login#3">dba:login#3</a><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:login</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$error</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$page</code><code class="as"> as </code><code class="type">xs:string?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string?</code> user name (optional)</li><li>error<code class="as"> as </code><code class="return-type">xs:string?</code> error string (optional)</li><li>page<code class="as"> as </code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code>login page or redirection to main page</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/login')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_error','{$error}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_page','{$page}')</code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg">('html')</code></td></tr><tr><td><code class="function">%perm:allow</code></td><td><code class="arg">('public')</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div><div class="div3"><h3><a id="dba:login-check"></a><a id="{dba/login}login-check#3"></a>4.4 dba:login-check<div style="float:right"><a href="#dba:login-check">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}login-check#3">dba:login-check#3</a><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Checks the user input and redirects to the main page, or back to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:login-check</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$pass</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as"> as </code><code class="type">xs:string?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> user name</li><li>pass<code class="as"> as </code><code class="return-type">xs:string</code> password</li><li>page<code class="as"> as </code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code>redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/login-check')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_pass','{$pass}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('_page','{$page}')</code></td></tr><tr><td><code class="function">%perm:allow</code></td><td><code class="arg">('public')</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div><div class="div3"><h3><a id="dba:logout"></a><a id="{dba/login}logout#0"></a>4.5 dba:logout<div style="float:right"><a href="#dba:logout">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}logout#0">dba:logout#0</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>Ends a session and redirects to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:logout</code>
+		  ( 
+			
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code>redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/logout')</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div><div class="div3"><h3><a id="dba:reject"></a><a id="{dba/login}reject#3"></a>4.6 dba:reject<div style="float:right"><a href="#dba:reject">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/login}reject#3">dba:reject#3</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Rejects a user and redirects to the login page.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:reject</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$error</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$page</code><code class="as"> as </code><code class="type">xs:string?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> entered user name</li><li>error<code class="as"> as </code><code class="return-type">xs:string</code> error message</li><li>page<code class="as"> as </code><code class="return-type">xs:string?</code> page to redirect to (optional)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code>redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 0 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard"></code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>config</td><td><span><a href="../../modules/F000028/index.html" title="lib/config.xqm">dba/config</a></span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000053/index.html" title="login.xqm">dba/login</a></span></td></tr><tr><td>html</td><td><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></td></tr><tr><td>output</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2010/xslt-xquery-serialization</span></td></tr><tr><td>perm</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/perm</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 3.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/login</td><td></td><td><span><a href="../../modules/F000053/index.html#{dba/login}login#3" title="login.xqm">dba:login#3</a></span></td></tr><tr><td>/dba/login-check</td><td><span><a href="../../restxq.html#/dba/login-check#POST"><span class="badge op-post">POST</span></a></span></td><td><span><a href="../../modules/F000053/index.html#{dba/login}login-check#3" title="login.xqm">dba:login-check#3</a></span></td></tr><tr><td>/dba/logout</td><td></td><td><span><a href="../../modules/F000053/index.html#{dba/login}logout#0" title="login.xqm">dba:logout#0</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
+ : Code for logging in and out.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+module namespace dba = 'dba/login';
+
+import module namespace config = 'dba/config' at 'lib/config.xqm';
+import module namespace html = 'dba/html' at 'lib/html.xqm';
+
+(:~
+ : Permissions: checks the user credentials.
+ : Redirects to the login page if a user is not logged in, or if the page is not public.
+ : @param  $perm  permission data
+ : @return redirection to login page or empty sequence
+ :)
+declare
+  %perm:check('/dba', '{$perm}')
+function dba:check(
+  $perm  as map(*)
+) as element(rest:response)? {
+  let $path := $perm?path
+  let $allow := $perm?allow
+  return if ($allow = 'public') then (
+    (: public function, register id for better log entries :)
+    request:set-attribute('id', $allow)
+  ) else if (session:get($config:SESSION-KEY)) then (
+    (: everything fine, user is logged in :)
+  ) else (
+    (: normalize login path :)
+    let $target := if(ends-with($path, '/dba')) then 'dba/login' else 'login'
+    (: last visited page to redirect to (if there was one) :)
+    let $page := replace($path, '^.*dba/?', '')[.]
+    return web:redirect($target, html:parameters(map { 'page': $page }))
+  )
+};
+
+(:~
+ : Login page.
+ : @param  $name   user name (optional)
+ : @param  $error  error string (optional)
+ : @param  $page   page to redirect to (optional)
+ : @return login page or redirection to main page
+ :)
+declare
+  %rest:path('/dba/login')
+  %rest:query-param('_name',  '{$name}')
+  %rest:query-param('_error', '{$error}')
+  %rest:query-param('_page',  '{$page}')
+  %output:method('html')
+  %perm:allow('public')
+function dba:login(
+  $name   as xs:string?,
+  $error  as xs:string?,
+  $page   as xs:string?
+) as element() {
+  (: user is already logged in: redirect to main page :)
+  if(session:get($config:SESSION-KEY)) then web:redirect('/dba') else
+
+  html:wrap(map { 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='login-check' method='post'&gt;
+          &lt;input name='_page' value='{ $page }' type='hidden'/&gt;
+          {
+            map:for-each(html:parameters(), function($key, $value) {
+              &lt;input name='{ $key }' value='{ $value }' type='hidden'/&gt;
+            })
+          }
+          &lt;div class='small'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;b&gt;Name:&lt;/b&gt;&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input name='_name' value='{ $name }' id='user' size='30'/&gt;
+                { html:focus('user') }
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;b&gt;Password:&lt;/b&gt;&lt;/td&gt;
+              &lt;td&gt;{
+                &lt;input name='_pass' type='password' size='30'/&gt;,
+                ' ',
+                &lt;input type='submit' value='Login'/&gt;
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Checks the user input and redirects to the main page, or back to the login page.
+ : @param  $name  user name
+ : @param  $pass  password
+ : @param  $page  page to redirect to (optional)
+ : @return redirection
+ :)
+declare
+  %rest:POST
+  %rest:path('/dba/login-check')
+  %rest:query-param('_name', '{$name}')
+  %rest:query-param('_pass', '{$pass}')
+  %rest:query-param('_page', '{$page}')
+  %perm:allow('public')
+function dba:login-check(
+  $name  as xs:string,
+  $pass  as xs:string,
+  $page  as xs:string?
+) as element(rest:response) {
+  try {
+    user:check($name, $pass),
+    if(user:list-details($name)/@permission != 'admin') then (
+      dba:reject($name, 'Admin credentials required', $page)
+    ) else (
+      dba:accept($name, $page)
+    )
+  } catch user:* {
+    dba:reject($name, 'Please check your login data', $page)
+  }
+};
+
+(:~
+ : Ends a session and redirects to the login page.
+ : @return redirection
+ :)
+declare
+  %rest:path('/dba/logout')
+function dba:logout(
+) as element(rest:response) {
+  let $user := session:get($config:SESSION-KEY)
+  return (
+    (: write log entry, redirect to login page :)
+    admin:write-log('Logout: ' || $user, 'DBA'),
+    web:redirect('/dba/login', map { '_name': $user })
+  ),
+  (: deletes the session key :)
+  session:delete($config:SESSION-KEY)
+};
+
+(:~
+ : Registers a user and redirects to the main page.
+ : @param  $name  entered user name
+ : @param  $page  page to redirect to (optional)
+ : @return redirection
+ :)
+declare %private function dba:accept(
+  $name  as xs:string,
+  $page  as xs:string?
+) as element(rest:response) {
+  (: register user, write log entry :)
+  session:set($config:SESSION-KEY, $name),
+  admin:write-log('Login: ' || $name, 'DBA'),
+
+  (: redirect to supplied page or main page :)
+  web:redirect(if($page) then $page else 'logs', html:parameters())
+};
+
+(:~
+ : Rejects a user and redirects to the login page.
+ : @param  $name   entered user name
+ : @param  $error  error message
+ : @param  $page   page to redirect to (optional)
+ : @return redirection
+ :)
+declare %private function dba:reject(
+  $name   as xs:string,
+  $error  as xs:string,
+  $page   as xs:string?
+) as element(rest:response) {
+  (: write log entry, redirect to login page :)
+  admin:write-log('Login denied: ' || $name, 'DBA'),
+  web:redirect(
+    'login',
+    html:parameters(map { 'name': $name, 'error': $error, 'page': $page })
+  )
+};
+</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
+               on <span title="2022-09-07T10:44:32.101+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

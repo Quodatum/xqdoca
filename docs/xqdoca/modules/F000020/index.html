@@ -1,0 +1,235 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:data.tree</span> 
+			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:data.tree</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#tree:base"><span class="secno">4.1</span><span class="content" title="">tree:base<div style="float:right"></div></span></a></li><li><a href="#tree:build"><span class="secno">4.2</span><span class="content" title="">tree:build<div style="float:right"></div></span></a></li><li><a href="#tree:flatten"><span class="secno">4.3</span><span class="content" title="">tree:flatten<div style="float:right"></div></span></a></li><li><a href="#tree:merge"><span class="secno">4.4</span><span class="content" title="">tree:merge<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#tree:nest"><span class="secno">4.5</span><span class="content" title="">tree:nest<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#tree:wrap"><span class="secno">4.6</span><span class="content" title="">tree:wrap<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">tree.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Convert sequence of paths to an sequence of xml trees representing the paths.</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.3</p><p>__source : lib/tree.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+    This module is imported by
+    <span class="badge badge-info">3</span> modules. It imports
+    <span class="badge badge-info">0</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000006/index.html" title="lib/generators/imports.xqm">quodatum:xqdoca.generator.imports</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000007/index.html" title="lib/generators/index-html.xqm">quodatum:xqdoca.generator.index</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000010/index.html" title="lib/generators/rest.xqm">quodatum:xqdoca.generator.rest</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="tree:base"></a><a id="{quodatum:data.tree}base#1"></a>4.1 tree:base<div style="float:right"><a href="#tree:base">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}base#1">tree:base#1</a></span></p><dt class="label">Summary</dt><dd>extract any shared leading common path</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:base</code>
+		  ( 
+			<code class="arg">$tree</code><code class="as"> as </code><code class="type">element(directory)?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>tree<code class="as"> as </code><code class="return-type">element(directory)?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-join#4</span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}base#1" title="lib/tree.xqm">tree:base#1</a></span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F000010/index.html#{quodatum:xqdoca.generator.rest}summary#3" title="lib/generators/rest.xqm">_:summary#3</a></span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}base#1" title="lib/tree.xqm">tree:base#1</a></span></li></ul></details><details><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:base($tree as element(directory)?)
+as xs:string{
+  let $c:= $tree/directory
+  let $ok:= count($c)=1 and count($tree/*)=1
+  let $tail:= if ($ok) 
+              then  tree:base($c) 
+              else ()
+  return ("",$tree/@name/string() ,$tail)=&gt;string-join("/")
+}</code></pre></details></div><div class="div3"><h3><a id="tree:build"></a><a id="{quodatum:data.tree}build#1"></a><a id="{quodatum:data.tree}build#2"></a>4.2 tree:build<div style="float:right"><a href="#tree:build">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}build#1">tree:build#1</a></span><span style="margin-left:1em"><a href="#{quodatum:data.tree}build#2">tree:build#2</a></span></p><dt class="label">Summary</dt><dd>convert path(s) to tree</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:build</code>
+		  ( 
+			<code class="arg">$paths</code><code class="as"> as </code><code class="type">xs:string*</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">element(directory)</xqdoc:type>?</code></div><div class="proto"><code class="function">tree:build</code>
+		  ( 
+			<code class="arg">$paths</code><code class="as"> as </code><code class="type">xs:string*</code>, <code class="arg">$delimiter</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>paths<code class="as"> as </code><code class="return-type">xs:string*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(directory) ?</code></li></ul></dd><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}fold-right#3</span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}build#2" title="lib/tree.xqm">tree:build#2</a></span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}merge#2" title="lib/tree.xqm">tree:merge#2</a></span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}nest#2" title="lib/tree.xqm">tree:nest#2</a></span></li></ul></details><details><summary>Invoked by 3 functions from 3 modules</summary><ul><li><span><a href="../../modules/F000007/index.html#{quodatum:xqdoca.generator.index}files#2" title="lib/generators/index-html.xqm">xqhtml:files#2</a></span></li><li><span><a href="../../modules/F000010/index.html#{quodatum:xqdoca.generator.rest}restxq#2" title="lib/generators/rest.xqm">_:restxq#2</a></span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}build#1" title="lib/tree.xqm">tree:build#1</a></span></li></ul></details><details><summary>Source ( 13 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:build($paths as xs:string*)
+as element(directory)?
+{
+ tree:build($paths,"/")
+}</code></pre><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:build($paths as xs:string*,$delimiter as xs:string)
+as element(*)*
+{
+fn:fold-right($paths,
+             (),
+             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
+            )
+}</code></pre></details></div><div class="div3"><h3><a id="tree:flatten"></a><a id="{quodatum:data.tree}flatten#1"></a>4.3 tree:flatten<div style="float:right"><a href="#tree:flatten">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}flatten#1">tree:flatten#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:flatten</code>
+		  ( 
+			<code class="arg">$tree</code><code class="as"> as </code><code class="type">element(directory)?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="?">element(directory)</xqdoc:type>?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>tree<code class="as"> as </code><code class="return-type">element(directory)?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(directory) ?</code></li></ul></dd><details><summary>Invokes 4 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-join#4</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:flatten($tree as element(directory)?)
+as element(directory)?{
+if(exists($tree)) 
+then 
+      $tree transform with {
+      for $d in  descendant::directory[ count(../*) gt 1 and not(@target)] (: no @target and more than 1 parent :)
+      let $name:= $d/descendant-or-self::directory/@name=&gt;string-join("/")
+      return replace   node $d 
+            with let $files:=$d//file
+                  return if(count($files) gt 1)  
+                        then  &lt;directory name="{ $name}"&gt;{ $files} &lt;/directory&gt;
+                        else $files
+      }
+  else ()
+}</code></pre></details></div><div class="div3"><h3><a id="tree:merge"></a><a id="{quodatum:data.tree}merge#2"></a>4.4 tree:merge<div style="float:right"><a href="#tree:merge">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}merge#2">tree:merge#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:merge</code>
+		  ( 
+			<code class="arg">$a1</code><code class="as"> as </code><code class="type">element()?</code>, <code class="arg">$a2</code><code class="as"> as </code><code class="type">element()?</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">element()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>a1<code class="as"> as </code><code class="return-type">element()?</code></li><li>a2<code class="as"> as </code><code class="return-type">element()?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element() *</code></li></ul></dd><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}distinct-values#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}merge#2" title="lib/tree.xqm">tree:merge#2</a></span></li></ul></details><details><summary>Invoked by 2 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}build#2" title="lib/tree.xqm">tree:build#2</a></span></li><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}merge#2" title="lib/tree.xqm">tree:merge#2</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 26 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:merge($a1 as element(*)?,$a2 as element(*)?)
+as element(*)*
+{
+ if($a1/@name=$a2/@name) then
+      let $n1:=$a1/*
+      let $n2:=$a2/*
+         
+      let $t:=(
+        for $x in fn:distinct-values($n1/@name[.=$n2/@name]) (:both:)
+        return tree:merge($a1/*[@name=$x],$a2/*[@name=$x]),
+        
+        for $x in fn:distinct-values($n1/@name[fn:not(.=$n2/@name)]) (:only $a1 :)
+        return $a1/*[@name=$x],
+        
+        for $x in fn:distinct-values($n2/@name[fn:not(.=$n1/@name)]) (:only $a2 :)
+        return $a2/*[@name=$x]
+      )
+      let $name:=$a1/@name
+      let $target:=($a1/@target,$a2/@target)[1]
+      return &lt;directory &gt;{
+        $name,$target,
+        for $x in $t order by $x/@name return $x
+      }&lt;/directory&gt;
+ else 
+     ($a1,$a2)                        
+}</code></pre></details></div><div class="div3"><h3><a id="tree:nest"></a><a id="{quodatum:data.tree}nest#2"></a>4.5 tree:nest<div style="float:right"><a href="#tree:nest">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}nest#2">tree:nest#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>convert a path to xml</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:nest</code>
+		  ( 
+			<code class="arg">$path</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$delimiter</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>path<code class="as"> as </code><code class="return-type">xs:string</code></li><li>delimiter<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Invokes 6 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}fold-right#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}last#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}starts-with#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}subsequence#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000020/index.html#{quodatum:data.tree}build#2" title="lib/tree.xqm">tree:build#2</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:nest($path as xs:string,$delimiter as xs:string)
+as element(*)
+{
+  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
+  let $parts:=fn:tokenize(($path),$delimiter)
+  return fn:fold-right(subsequence($parts,1,count($parts)-1),
+    &lt;file name="{$parts[last()]}" target="{$path}"/&gt;,
+    tree:wrap#2 
+   )
+}</code></pre></details></div><div class="div3"><h3><a id="tree:wrap"></a><a id="{quodatum:data.tree}wrap#2"></a>4.6 tree:wrap<div style="float:right"><a href="#tree:wrap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:data.tree}wrap#2">tree:wrap#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">tree:wrap</code>
+		  ( 
+			<code class="arg">$this</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$acc</code><code class="as"> as </code><code class="type">item()*</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>this<code class="as"> as </code><code class="return-type">xs:string</code></li><li>acc<code class="as"> as </code><code class="return-type">item()*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element()</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function tree:wrap($this as xs:string,$acc)
+as element(*)
+{
+  &lt;directory name="{$this}"&gt;{$acc}&lt;/directory&gt;
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>tree</td><td><span><a href="../../modules/F000020/index.html" title="lib/tree.xqm">quodatum:data.tree</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
+(:
+ : Copyright (c) 2019-2022 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;tree.xqm&lt;/h1&gt;
+ : &lt;p&gt;Convert sequence of paths to an sequence of xml trees representing the paths.&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.3
+ :)
+module namespace tree = 'quodatum:data.tree';
+
+
+(:~
+ : convert path(s) to tree
+ :)
+declare function tree:build($paths as xs:string*)
+as element(directory)?
+{
+ tree:build($paths,"/")
+};
+
+(:~
+ : @return sequence of nested &lt;directory name=".."&gt; and &lt;file name=".." elements representing source
+ :)
+declare function tree:build($paths as xs:string*,$delimiter as xs:string)
+as element(*)*
+{
+fn:fold-right($paths,
+             (),
+             function($this,$acc){ tree:merge($acc,tree:nest($this,$delimiter)) }
+            )
+};
+ 
+(:~  convert a path to xml :)
+declare %private 
+function tree:nest($path as xs:string,$delimiter as xs:string)
+as element(*)
+{
+  let $path:=if(starts-with($path,$delimiter)) then $path else $delimiter || $path
+  let $parts:=fn:tokenize(($path),$delimiter)
+  return fn:fold-right(subsequence($parts,1,count($parts)-1),
+    &lt;file name="{$parts[last()]}" target="{$path}"/&gt;,
+    tree:wrap#2 
+   )
+};
+
+declare %private 
+function tree:wrap($this as xs:string,$acc)
+as element(*)
+{
+  &lt;directory name="{$this}"&gt;{$acc}&lt;/directory&gt;
+};
+
+
+declare %private
+function tree:merge($a1 as element(*)?,$a2 as element(*)?)
+as element(*)*
+{
+ if($a1/@name=$a2/@name) then
+      let $n1:=$a1/*
+      let $n2:=$a2/*
+         
+      let $t:=(
+        for $x in fn:distinct-values($n1/@name[.=$n2/@name]) (:both:)
+        return tree:merge($a1/*[@name=$x],$a2/*[@name=$x]),
+        
+        for $x in fn:distinct-values($n1/@name[fn:not(.=$n2/@name)]) (:only $a1 :)
+        return $a1/*[@name=$x],
+        
+        for $x in fn:distinct-values($n2/@name[fn:not(.=$n1/@name)]) (:only $a2 :)
+        return $a2/*[@name=$x]
+      )
+      let $name:=$a1/@name
+      let $target:=($a1/@target,$a2/@target)[1]
+      return &lt;directory &gt;{
+        $name,$target,
+        for $x in $t order by $x/@name return $x
+      }&lt;/directory&gt;
+ else 
+     ($a1,$a2)                        
+};
+
+(:~ extract any shared leading common path :)
+declare function tree:base($tree as element(directory)?)
+as xs:string{
+  let $c:= $tree/directory
+  let $ok:= count($c)=1 and count($tree/*)=1
+  let $tail:= if ($ok) 
+              then  tree:base($c) 
+              else ()
+  return ("",$tree/@name/string() ,$tail)=&gt;string-join("/")
+};
+
+(: merger folder with just 1 folder child:)
+declare function tree:flatten($tree as element(directory)?)
+as element(directory)?{
+if(exists($tree)) 
+then 
+      $tree transform with {
+      for $d in  descendant::directory[ count(../*) gt 1 and not(@target)] (: no @target and more than 1 parent :)
+      let $name:= $d/descendant-or-self::directory/@name=&gt;string-join("/")
+      return replace   node $d 
+            with let $files:=$d//file
+                  return if(count($files) gt 1)  
+                        then  &lt;directory name="{ $name}"&gt;{ $files} &lt;/directory&gt;
+                        else $files
+      }
+  else ()
+};
+</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
+               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

@@ -1,0 +1,43 @@
+<XQuery>(:~
+ : Save users information.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/databases'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>util</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/util'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../lib/util.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~ Top category :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>dba:CAT</QName> <TOKEN>:=</TOKEN> <StringLiteral>'users'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Saves users information.
+ : @param  $info  users information
+ : @return redirection
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:POST</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>'/dba/users-info'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:form-param</QName><TOKEN>(</TOKEN><StringLiteral>'info'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'{$info}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:users-info</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>info</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+    (: change user info :)
+    <Expr><FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>xml</QName> <TOKEN>:=</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>info</QName></VarRef><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+      <RelativePathExpr><FunctionCall><QName>parse-xml</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>info</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>/</TOKEN><AxisStep><Wildcard>*</Wildcard><Predicate><TOKEN>[</TOKEN><OrExpr><AxisStep><ForwardStep><ForwardAxis><TOKEN>self</TOKEN><TOKEN>::</TOKEN></ForwardAxis><QName>info</QName></ForwardStep> <PredicateList/></AxisStep><TOKEN>or</TOKEN> <FunctionCall><QName>error</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>xs:QName</QName><ArgumentList><TOKEN>(</TOKEN><AxisStep><QName>err:FORC0006</QName><PredicateList/></AxisStep><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></OrExpr><TOKEN>]</TOKEN></Predicate></AxisStep></RelativePathExpr>
+    <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
+      <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>info</QName><DirAttributeList/><TOKEN>/&gt;</TOKEN></DirElemConstructor>
+    <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></LetBinding></LetClause>
+    <WhereClause><TOKEN>where</TOKEN> <FunctionCall><QName>not</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>deep-equal</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>user:info</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>xml</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall></WhereClause>
+    <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>user:update-info</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>xml</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr><TOKEN>,</TOKEN>
+
+    <FunctionCall><QName>util:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:CAT</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'info'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'User was saved.'</StringLiteral></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+  <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <QName>err:FODC0006</QName> <EnclosedExpr><TOKEN>{</TOKEN>
+    <FunctionCall><QName>util:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:CAT</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'error'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'Information must be XML with an info root element.'</StringLiteral></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>}</TOKEN></EnclosedExpr></CatchClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+    <FunctionCall><QName>util:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:CAT</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'error'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

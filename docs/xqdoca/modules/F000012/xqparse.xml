@@ -1,0 +1,55 @@
+<XQuery><Module><VersionDecl><TOKEN>xquery</TOKEN> <TOKEN>version</TOKEN> <StringLiteral>"3.1"</StringLiteral><TOKEN>;</TOKEN></VersionDecl>
+(:
+ : Copyright (c) 2019-2022 Quodatum Ltd
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :     http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+ (:~
+ : &lt;h1&gt;meta.xqm&lt;/h1&gt;
+ : &lt;p&gt;Generate meta data about the &lt;code&gt;xqDocA&lt;/code&gt; run&lt;/p&gt;
+ :
+ : @author Andy Bunce
+ : @version 0.2
+ :)
+ 
+(:~
+ : Generate metadata about the current xqdoca execution
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>_</NCName> <TOKEN>=</TOKEN> <StringLiteral>'quodatum:xqdoca.generator.meta'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+<Prolog><NamespaceDecl><TOKEN>declare</TOKEN> <TOKEN>namespace</TOKEN> <NCName>xqdoca</NCName><TOKEN>=</TOKEN><StringLiteral>"https://github.com/Quodatum/xqdoca"</StringLiteral></NamespaceDecl><TOKEN>;</TOKEN>
+
+
+(:~
+ : metadata. 
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> 
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:global</QName><TOKEN>(</TOKEN><StringLiteral>"xqdoca.xml"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xqDocA run configuration report (XML)"</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<Annotation><TOKEN>%</TOKEN><QName>xqdoca:output</QName><TOKEN>(</TOKEN><StringLiteral>"xqdoca.xml"</StringLiteral><TOKEN>,</TOKEN><StringLiteral>"xml"</StringLiteral><TOKEN>)</TOKEN></Annotation> 
+<FunctionDecl><TOKEN>function</TOKEN> <QName>_:restxq</QName><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>model</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>opts</QName></Param></ParamList><TOKEN>)</TOKEN>
+<EnclosedExpr><TOKEN>{</TOKEN>
+<DirElemConstructor><TOKEN>&lt;</TOKEN><QName>xqdoca</QName><DirAttributeList><S> </S><QName>created</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>"</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><FunctionCall><QName>current-dateTime</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>}</TOKEN></EnclosedExpr><TOKEN>"</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>&gt;</TOKEN><ElementContentChar>
+</ElementContentChar><EnclosedExpr><TOKEN>{</TOKEN>
+<FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>f</QName><TOKEN>:=</TOKEN><InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>v</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>this</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN>
+  <TypeswitchExpr><TOKEN>typeswitch</TOKEN><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef><TOKEN>)</TOKEN>
+  <CaseClause><TOKEN>case</TOKEN> <QName>xs:anyAtomicType</QName> <TOKEN>return</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef></CaseClause>
+  <CaseClause><TOKEN>case</TOKEN>   <AnyMapTest><TOKEN>map</TOKEN><TOKEN>(</TOKEN><TOKEN>*</TOKEN><TOKEN>)</TOKEN></AnyMapTest> <TOKEN>return</TOKEN> <FunctionCall><QName>map:for-each</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef><TOKEN>,</TOKEN>
+                     <InlineFunctionExpr><TOKEN>function</TOKEN><TOKEN>(</TOKEN><ParamList><Param><TOKEN>$</TOKEN><QName>k</QName></Param><TOKEN>,</TOKEN><Param><TOKEN>$</TOKEN><QName>v</QName></Param></ParamList><TOKEN>)</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>starts-with</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>k</QName></VarRef><TOKEN>,</TOKEN><StringLiteral>"."</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <CompElemConstructor><TOKEN>element</TOKEN> <TOKEN>{</TOKEN><VarRef><TOKEN>$</TOKEN><QName>k</QName></VarRef><TOKEN>}</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>this</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>this</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr><TOKEN>}</TOKEN></EnclosedExpr></CompElemConstructor></IfExpr>
+                <TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr><TOKEN>)</TOKEN></ArgumentList></FunctionCall></CaseClause>
+  <TOKEN>default</TOKEN> <TOKEN>return</TOKEN> <RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>v</QName></VarRef><TOKEN>!</TOKEN><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>_</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><EnclosedExpr><TOKEN>{</TOKEN><TOKEN>.</TOKEN><TOKEN>}</TOKEN></EnclosedExpr><TOKEN>&lt;/</TOKEN><QName>_</QName><TOKEN>&gt;</TOKEN></DirElemConstructor></RelativePathExpr></TypeswitchExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></InlineFunctionExpr></LetBinding></LetClause>
+<ReturnClause><TOKEN>return</TOKEN> <PostfixExpr><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>opts</QName></VarRef><TOKEN>,</TOKEN><VarRef><TOKEN>$</TOKEN><QName>f</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></PostfixExpr></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr><ElementContentChar>
+</ElementContentChar><TOKEN>&lt;/</TOKEN><QName>xqdoca</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule></Module>
+<EOF/></XQuery>

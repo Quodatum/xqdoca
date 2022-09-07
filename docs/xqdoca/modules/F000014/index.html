@@ -1,0 +1,177 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
+        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:command:tools</span> 
+			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">quodatum:command:tools</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#cmd:check-dependancies"><span class="secno">4.1</span><span class="content" title="">cmd:check-dependancies<div style="float:right"></div></span></a></li><li><a href="#cmd:install"><span class="secno">4.2</span><span class="content" title="">cmd:install<div style="float:right"></div></span></a></li><li><a href="#cmd:is-missing"><span class="secno">4.3</span><span class="content" title="">cmd:is-missing<div style="float:right"></div></span></a></li><li><a href="#cmd:package-source"><span class="secno">4.4</span><span class="content" title="">cmd:package-source<div style="float:right"></div></span></a></li><li><a href="#cmd:parse-args"><span class="secno">4.5</span><span class="content" title="">cmd:parse-args<div style="float:right"></div></span></a></li><li><a href="#cmd:parse2"><span class="secno">4.6</span><span class="content" title="">cmd:parse2<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">command.xqm</h1>
+<p xmlns:xqdoc="http://www.xqdoc.org/1.0">command line tool support.</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.3</p><p>__source : lib/command.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+    This module is imported by
+    <span class="badge badge-info">1</span> modules. It imports
+    <span class="badge badge-info">0</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000025/index.html" title="xqdoca-cmd.xq">xqdoca-cmd.xq</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="cmd:check-dependancies"></a><a id="{quodatum:command:tools}check-dependancies#1"></a>4.1 cmd:check-dependancies<div style="float:right"><a href="#cmd:check-dependancies">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}check-dependancies#1">cmd:check-dependancies#1</a></span></p><dt class="label">Summary</dt><dd>raise error if deps missing</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:check-dependancies</code>
+		  ( 
+			<code class="arg">$pkg</code><code class="as"> as </code><code class="type">element(pkg:package)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>pkg<code class="as"> as </code><code class="return-type">element(pkg:package)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code>version</li></ul></dd><details><summary>Invokes 6 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}system#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#2</span></li><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}is-missing#2" title="lib/command.xqm">cmd:is-missing#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000025/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca-cmd.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:check-dependancies($pkg as element(pkg:package))&#xD;
+as empty-sequence(){&#xD;
+  let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]/@version/string()&#xD;
+  let $basex-active:= db:system()/generalinformation/version/tokenize(.," ")[1]&#xD;
+  return &#xD;
+  &#xD;
+  if( $basex-active ne $basex)&#xD;
+  then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }` may not be supported]``)&#xD;
+  else (&#xD;
+         for $p in $pkg/pkg:dependency[@name]&#xD;
+         return if(cmd:is-missing($p/@name,$p/@version)) &#xD;
+                then error(xs:QName("pkg:missing"),"Not installed: " || $p/@name) &#xD;
+                else ()&#xD;
+        )&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="cmd:install"></a><a id="{quodatum:command:tools}install#1"></a>4.2 cmd:install<div style="float:right"><a href="#cmd:install">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}install#1">cmd:install#1</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:install</code>
+		  ( 
+			<code class="arg">$pkg</code><code class="as"> as </code><code class="type">element(pkg:package)</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>pkg<code class="as"> as </code><code class="return-type">element(pkg:package)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Invokes 4 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/repo}install#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}is-missing#2" title="lib/command.xqm">cmd:is-missing#2</a></span></li><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}package-source#2" title="lib/command.xqm">cmd:package-source#2</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000025/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca-cmd.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:install($pkg as element(pkg:package))&#xD;
+as empty-sequence(){&#xD;
+    for  $p in $pkg/pkg:dependency[@name]&#xD;
+    where cmd:is-missing($p/@name,$p/@version)&#xD;
+    let $src:=cmd:package-source($p/@name,$p/@version)&#xD;
+    return repo:install($src=&gt;trace("Installing: "))&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="cmd:is-missing"></a><a id="{quodatum:command:tools}is-missing#2"></a>4.3 cmd:is-missing<div style="float:right"><a href="#cmd:is-missing">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}is-missing#2">cmd:is-missing#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:is-missing</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:boolean</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li><li>version<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code></li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/repo}list#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#3</span></li></ul></details><details><summary>Invoked by 2 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}check-dependancies#1" title="lib/command.xqm">cmd:check-dependancies#1</a></span></li><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}install#1" title="lib/command.xqm">cmd:install#1</a></span></li></ul></details><details><summary>Source ( 4 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:is-missing($name as xs:string,$version as xs:string)&#xD;
+as xs:boolean{&#xD;
+    repo:list()[@name=$name and @version eq $version]=&gt;empty() &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="cmd:package-source"></a><a id="{quodatum:command:tools}package-source#2"></a>4.4 cmd:package-source<div style="float:right"><a href="#cmd:package-source">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}package-source#2">cmd:package-source#2</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:package-source</code>
+		  ( 
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li><li>version<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000014/index.html#{quodatum:command:tools}install#1" title="lib/command.xqm">cmd:install#1</a></span></li></ul></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:package-source($name as xs:string,$version as xs:string)&#xD;
+as xs:string{&#xD;
+    switch ($name || "@" || $version)&#xD;
+    case "http://expkg-zone58.github.io/ex-xparse@0.7.8"&#xD;
+         return  "https://github.com/expkg-zone58/ex-xparse/releases/download/v0.7.8/ex-xparse-0.7.8.xar"&#xD;
+    default return error(xs:QName("pkg:version"),"no source for :" || $name) &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="cmd:parse-args"></a><a id="{quodatum:command:tools}parse-args#1"></a>4.5 cmd:parse-args<div style="float:right"><a href="#cmd:parse-args">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}parse-args#1">cmd:parse-args#1</a></span></p><dt class="label">Summary</dt><dd>simple command line parse splits on space unless in quotes</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:parse-args</code>
+		  ( 
+			<code class="arg">$str</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>str<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string *</code></li></ul></dd><details><summary>Invokes 4 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}codepoints-to-string#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}fold-left#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-length#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-to-codepoints#1</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000025/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca-cmd.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 8 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:parse-args($str as xs:string)&#xD;
+as xs:string*{&#xD;
+let $r:= fold-left(&#xD;
+   string-to-codepoints($str)! codepoints-to-string(.),&#xD;
+   map{"state": "","tokens":(),"current":""},&#xD;
+   cmd:parse2#2) &#xD;
+return ($r?tokens, if(string-length($r?current) ne 0) then $r?current else ())&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="cmd:parse2"></a><a id="{quodatum:command:tools}parse2#2"></a>4.6 cmd:parse2<div style="float:right"><a href="#cmd:parse2">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:command:tools}parse2#2">cmd:parse2#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">cmd:parse2</code>
+		  ( 
+			<code class="arg">$state</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$char</code><code class="as"> as </code><code class="type">xs:string</code>
+	 )
+			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>state<code class="as"> as </code><code class="return-type">map(*)</code></li><li>char<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}string-length#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function cmd:parse2($state as map(*),$char as xs:string)&#xD;
+as map(*){&#xD;
+ let $new:=switch ($char)&#xD;
+ case '"'&#xD;
+ case "'" return map:entry("state",if($state?state eq $char) then "" else $char)               &#xD;
+                   &#xD;
+ case ' ' return if($state?state eq "")&#xD;
+                  then if(string-length($state?current) ne 0)&#xD;
+                       then  map {  "tokens": ($state?tokens,$state?current), "current": ""}&#xD;
+                       else ()&#xD;
+                 else map:entry("current", $state?current || $char)&#xD;
+                 &#xD;
+  default return  map:entry("current", $state?current || $char)&#xD;
+  return map:merge(($new,$state))       &#xD;
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>cmd</td><td><span><a href="../../modules/F000014/index.html" title="lib/command.xqm">quodatum:command:tools</a></span></td></tr><tr><td>pkg</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/pkg</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";&#xD;
+(:&#xD;
+ : Copyright (c) 2019-2022 Quodatum Ltd&#xD;
+ :&#xD;
+ : Licensed under the Apache License, Version 2.0 (the "License");&#xD;
+ : you may not use this file except in compliance with the License.&#xD;
+ : You may obtain a copy of the License at&#xD;
+ :&#xD;
+ :     http://www.apache.org/licenses/LICENSE-2.0&#xD;
+ :&#xD;
+ : Unless required by applicable law or agreed to in writing, software&#xD;
+ : distributed under the License is distributed on an "AS IS" BASIS,&#xD;
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;
+ : See the License for the specific language governing permissions and&#xD;
+ : limitations under the License.&#xD;
+ :)&#xD;
+ &#xD;
+ (:~&#xD;
+ : &lt;h1&gt;command.xqm&lt;/h1&gt;&#xD;
+ : &lt;p&gt;command line tool support.&lt;/p&gt;&#xD;
+ :&#xD;
+ : @author Andy Bunce&#xD;
+ : @version 0.3&#xD;
+ :)&#xD;
+module namespace cmd = 'quodatum:command:tools';&#xD;
+declare namespace pkg="http://expath.org/ns/pkg";&#xD;
+&#xD;
+(:~  simple command line parse splits on space unless in quotes :)&#xD;
+declare function cmd:parse-args($str as xs:string)&#xD;
+as xs:string*{&#xD;
+let $r:= fold-left(&#xD;
+   string-to-codepoints($str)! codepoints-to-string(.),&#xD;
+   map{"state": "","tokens":(),"current":""},&#xD;
+   cmd:parse2#2) &#xD;
+return ($r?tokens, if(string-length($r?current) ne 0) then $r?current else ())&#xD;
+};&#xD;
+&#xD;
+declare %private function cmd:parse2($state as map(*),$char as xs:string)&#xD;
+as map(*){&#xD;
+ let $new:=switch ($char)&#xD;
+ case '"'&#xD;
+ case "'" return map:entry("state",if($state?state eq $char) then "" else $char)               &#xD;
+                   &#xD;
+ case ' ' return if($state?state eq "")&#xD;
+                  then if(string-length($state?current) ne 0)&#xD;
+                       then  map {  "tokens": ($state?tokens,$state?current), "current": ""}&#xD;
+                       else ()&#xD;
+                 else map:entry("current", $state?current || $char)&#xD;
+                 &#xD;
+  default return  map:entry("current", $state?current || $char)&#xD;
+  return map:merge(($new,$state))       &#xD;
+};&#xD;
+&#xD;
+(:~ raise error if deps missing &#xD;
+@return version :)&#xD;
+declare function cmd:check-dependancies($pkg as element(pkg:package))&#xD;
+as empty-sequence(){&#xD;
+  let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]/@version/string()&#xD;
+  let $basex-active:= db:system()/generalinformation/version/tokenize(.," ")[1]&#xD;
+  return &#xD;
+  &#xD;
+  if( $basex-active ne $basex)&#xD;
+  then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }` may not be supported]``)&#xD;
+  else (&#xD;
+         for $p in $pkg/pkg:dependency[@name]&#xD;
+         return if(cmd:is-missing($p/@name,$p/@version)) &#xD;
+                then error(xs:QName("pkg:missing"),"Not installed: " || $p/@name) &#xD;
+                else ()&#xD;
+        )&#xD;
+};&#xD;
+&#xD;
+declare function cmd:is-missing($name as xs:string,$version as xs:string)&#xD;
+as xs:boolean{&#xD;
+    repo:list()[@name=$name and @version eq $version]=&gt;empty() &#xD;
+};&#xD;
+&#xD;
+declare function cmd:package-source($name as xs:string,$version as xs:string)&#xD;
+as xs:string{&#xD;
+    switch ($name || "@" || $version)&#xD;
+    case "http://expkg-zone58.github.io/ex-xparse@0.7.8"&#xD;
+         return  "https://github.com/expkg-zone58/ex-xparse/releases/download/v0.7.8/ex-xparse-0.7.8.xar"&#xD;
+    default return error(xs:QName("pkg:version"),"no source for :" || $name) &#xD;
+};&#xD;
+&#xD;
+declare function cmd:install($pkg as element(pkg:package))&#xD;
+as empty-sequence(){&#xD;
+    for  $p in $pkg/pkg:dependency[@name]&#xD;
+    where cmd:is-missing($p/@name,$p/@version)&#xD;
+    let $src:=cmd:package-source($p/@name,$p/@version)&#xD;
+    return repo:install($src=&gt;trace("Installing: "))&#xD;
+};&#xD;
+</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
+               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

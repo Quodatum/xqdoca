@@ -1,0 +1,36 @@
+<XQuery>(:~
+ : Start job.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/files'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>config</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/config'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../lib/config.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~ Top category :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>dba:CAT</QName> <TOKEN>:=</TOKEN> <StringLiteral>'files'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Starts a job.
+ : @param  $file  file name
+ : @return redirection
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>'/dba/file-start'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'file'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'{$file}'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>''</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:file-start</QName><TOKEN>(</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>file</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <ElementTest><TOKEN>element</TOKEN><TOKEN>(</TOKEN><QName>rest:response</QName><TOKEN>)</TOKEN></ElementTest> <EnclosedExpr><TOKEN>{</TOKEN>
+  <FLWORExpr><LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>id</QName> <TOKEN>:=</TOKEN> <FunctionCall><TOKEN>replace</TOKEN><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef><TOKEN>,</TOKEN> <StringLiteral>'\.\.+|/|\\'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>''</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></LetBinding></LetClause>
+  <LetClause><TOKEN>let</TOKEN> <LetBinding><TOKEN>$</TOKEN><QName>params</QName> <TOKEN>:=</TOKEN> <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+    (: stop running job before starting new job :)
+    <Expr><FunctionCall><QName>jobs:stop</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <FunctionCall><QName>prof:void</QName><ArgumentList><TOKEN>(</TOKEN><FunctionCall><QName>jobs:invoke</QName><ArgumentList><TOKEN>(</TOKEN><StringConcatExpr><FunctionCall><QName>config:directory</QName><ArgumentList><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef></StringConcatExpr><TOKEN>,</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ParenthesizedExpr><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'cache'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'true'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'id'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>file</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
+    <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'info'</StringLiteral><TOKEN>:</TOKEN> <StringLiteral>'Job was started.'</StringLiteral></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'job'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>id</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor></Expr>
+  <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+    <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'error'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor>
+  <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr></LetBinding></LetClause>
+  <ReturnClause><TOKEN>return</TOKEN> <FunctionCall><QName>web:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:CAT</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>params</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></ReturnClause></FLWORExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

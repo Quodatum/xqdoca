@@ -1,0 +1,194 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/settings</xqdoc:uri><xqdoc:name>settings.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Settings page.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">settings/settings.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
+ : Settings page.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+module namespace dba = 'dba/settings';
+
+import module namespace options = 'dba/options' at '../lib/options.xqm';
+import module namespace html = 'dba/html' at '../lib/html.xqm';
+
+(:~ Top category :)
+declare variable $dba:CAT := 'settings';
+
+(:~
+ : Settings page.
+ : @param  $error  error string
+ : @param  $info   info string
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/settings')
+  %rest:query-param('error', '{$error}')
+  %rest:query-param('info',  '{$info}')
+  %output:method('html')
+function dba:settings(
+  $error  as xs:string?,
+  $info   as xs:string?
+) as element(html) {
+  let $system := html:properties(db:system())
+  let $table-row := function($items) {
+    &lt;tr&gt;&lt;td&gt;{ $items }&lt;/td&gt;&lt;/tr&gt;
+  }
+  let $number := function($key, $label) {
+    $table-row((
+      $label,
+      &lt;br/&gt;,
+      &lt;input name='{ $key }' type='number' value='{ options:get($key) }'/&gt;
+    ))
+  }
+  let $string := function($key, $label) {
+    $table-row((
+      $label,
+      &lt;br/&gt;,
+      &lt;input name='{ $key }' type='text' value='{ options:get($key) }'/&gt;
+    ))
+  }
+  return html:wrap(map { 'header': $dba:CAT, 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td width='33%'&gt;
+        &lt;form action='settings' method='post'&gt;
+          &lt;h2&gt;Settings » { html:button('save', 'Save') }&lt;/h2&gt;
+          &lt;h3&gt;Queries&lt;/h3&gt;
+          &lt;table&gt;
+            {
+              $number($options:TIMEOUT, 'Timeout, in seconds (0 = disabled)'),
+              $number($options:MEMORY, 'Memory limit, in MB (0 = disabled)'),
+              $number($options:MAXCHARS, 'Maximum output size')
+            }
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;Permission:&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                &lt;select name='permission'&gt;{
+                  let $pm := options:get($options:PERMISSION)
+                  for $p in $options:PERMISSIONS
+                  return element option { attribute selected { }[$p = $pm], $p }
+                }&lt;/select&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+          &lt;h3&gt;Tables&lt;/h3&gt;
+          &lt;table&gt;{
+            $number($options:MAXROWS,  'Displayed table rows')
+          }&lt;/table&gt;
+          &lt;h3&gt;Logs&lt;/h3&gt;
+          &lt;table&gt;{
+            $string($options:IGNORE-LOGS, &lt;span&gt;Ignore entries (e.g. &lt;code&gt;/dba&lt;/code&gt;):&lt;/span&gt;)
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td width='33%'&gt;
+        &lt;form action='settings-gc' method='post'&gt;
+          &lt;h2&gt;Global Options » { html:button('gc', 'GC') }&lt;/h2&gt;
+          &lt;table&gt;{
+            $system/tr[th][3]/preceding-sibling::tr[not(th)]
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td width='33%'&gt;
+        &lt;h2&gt;Local Options&lt;/h2&gt;
+        &lt;table&gt;{
+          $system/tr[th][3]/following-sibling::tr
+        }&lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Saves the settings.
+ : @return redirection
+ :)
+declare
+  %rest:POST
+  %rest:path('/dba/settings')
+function dba:settings-save(
+) as element(rest:response) {
+  options:save(html:parameters()),
+  web:redirect($dba:CAT, map { 'info': 'Settings were saved.' })
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/options</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/html</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/settings"/><xqdoc:namespace prefix="options" uri="dba/options"/><xqdoc:namespace prefix="html" uri="dba/html"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Settings page.</xqdoc:description><xqdoc:param>$error  error string</xqdoc:param><xqdoc:param>$info   info string</xqdoc:param><xqdoc:return>page</xqdoc:return></xqdoc:comment><xqdoc:name>dba:settings</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/settings</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">error</xqdoc:literal><xqdoc:literal type="xs:string">{$error}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">info</xqdoc:literal><xqdoc:literal type="xs:string">{$info}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/settings") %rest:query-param("error", "{$error}") %rest:query-param("info", "{$info}") %output:method("html") function dba:settings($error as xs:string? , $info as xs:string?) as element(html)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>error</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>info</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>properties</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>system</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>wrap</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>button</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>button</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>items</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>table-row</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>table-row</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>label</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/settings</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>TIMEOUT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MEMORY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MAXCHARS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>PERMISSION</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>PERMISSIONS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pm</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>MAXROWS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>IGNORE-LOGS</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>system</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>system</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:settings(
+  $error  as xs:string?,
+  $info   as xs:string?
+) as element(html) {
+  let $system := html:properties(db:system())
+  let $table-row := function($items) {
+    &lt;tr&gt;&lt;td&gt;{ $items }&lt;/td&gt;&lt;/tr&gt;
+  }
+  let $number := function($key, $label) {
+    $table-row((
+      $label,
+      &lt;br/&gt;,
+      &lt;input name='{ $key }' type='number' value='{ options:get($key) }'/&gt;
+    ))
+  }
+  let $string := function($key, $label) {
+    $table-row((
+      $label,
+      &lt;br/&gt;,
+      &lt;input name='{ $key }' type='text' value='{ options:get($key) }'/&gt;
+    ))
+  }
+  return html:wrap(map { 'header': $dba:CAT, 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td width='33%'&gt;
+        &lt;form action='settings' method='post'&gt;
+          &lt;h2&gt;Settings » { html:button('save', 'Save') }&lt;/h2&gt;
+          &lt;h3&gt;Queries&lt;/h3&gt;
+          &lt;table&gt;
+            {
+              $number($options:TIMEOUT, 'Timeout, in seconds (0 = disabled)'),
+              $number($options:MEMORY, 'Memory limit, in MB (0 = disabled)'),
+              $number($options:MAXCHARS, 'Maximum output size')
+            }
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;Permission:&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                &lt;select name='permission'&gt;{
+                  let $pm := options:get($options:PERMISSION)
+                  for $p in $options:PERMISSIONS
+                  return element option { attribute selected { }[$p = $pm], $p }
+                }&lt;/select&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+          &lt;h3&gt;Tables&lt;/h3&gt;
+          &lt;table&gt;{
+            $number($options:MAXROWS,  'Displayed table rows')
+          }&lt;/table&gt;
+          &lt;h3&gt;Logs&lt;/h3&gt;
+          &lt;table&gt;{
+            $string($options:IGNORE-LOGS, &lt;span&gt;Ignore entries (e.g. &lt;code&gt;/dba&lt;/code&gt;):&lt;/span&gt;)
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td width='33%'&gt;
+        &lt;form action='settings-gc' method='post'&gt;
+          &lt;h2&gt;Global Options » { html:button('gc', 'GC') }&lt;/h2&gt;
+          &lt;table&gt;{
+            $system/tr[th][3]/preceding-sibling::tr[not(th)]
+          }&lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td width='33%'&gt;
+        &lt;h2&gt;Local Options&lt;/h2&gt;
+        &lt;table&gt;{
+          $system/tr[th][3]/following-sibling::tr
+        }&lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Saves the settings.</xqdoc:description><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:settings-save</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/settings</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/dba/settings") function dba:settings-save() as element(rest:response)</xqdoc:signature><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>save</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:name>parameters</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/settings</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:settings-save(
+) as element(rest:response) {
+  options:save(html:parameters()),
+  web:redirect($dba:CAT, map { 'info': 'Settings were saved.' })
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

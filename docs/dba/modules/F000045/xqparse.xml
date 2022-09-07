@@ -1,0 +1,37 @@
+<XQuery>(:~
+ : Drop patterns.
+ :
+ : @author Christian Grün, BaseX Team 2005-21, BSD License
+ :)
+<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/users'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
+
+<Prolog><ModuleImport><TOKEN>import</TOKEN> <TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>util</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/util'</StringLiteral> <TOKEN>at</TOKEN> <StringLiteral>'../lib/util.xqm'</StringLiteral></ModuleImport><TOKEN>;</TOKEN>
+
+(:~ Top category :)
+<AnnotatedDecl><TOKEN>declare</TOKEN> <VarDecl><TOKEN>variable</TOKEN> <TOKEN>$</TOKEN><QName>dba:SUB</QName> <TOKEN>:=</TOKEN> <StringLiteral>'user'</StringLiteral></VarDecl></AnnotatedDecl><TOKEN>;</TOKEN>
+
+(:~
+ : Drops a pattern.
+ : @param  $name      user name
+ : @param  $patterns  database patterns
+ : @return redirection
+ :)
+<AnnotatedDecl><TOKEN>declare</TOKEN>
+  <Annotation><TOKEN>%</TOKEN><QName>updating</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:GET</QName></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>'/dba/pattern-drop'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'name'</StringLiteral><TOKEN>,</TOKEN>    <StringLiteral>'{$name}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'pattern'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'{$patterns}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
+<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:pattern-drop</QName><TOKEN>(</TOKEN>
+  <ParamList><Param><TOKEN>$</TOKEN><QName>name</QName>      <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
+  <Param><TOKEN>$</TOKEN><QName>patterns</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <SequenceType><QName>xs:string</QName><TOKEN>*</TOKEN></SequenceType></TypeDeclaration></Param></ParamList>
+<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><TOKEN>empty-sequence</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
+  <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
+    <Expr><RelativePathExpr><VarRef><TOKEN>$</TOKEN><QName>patterns</QName></VarRef> <TOKEN>!</TOKEN> <FunctionCall><QName>user:drop</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <TOKEN>.</TOKEN><TOKEN>)</TOKEN></ArgumentList></FunctionCall></RelativePathExpr><TOKEN>,</TOKEN>
+    <FunctionCall><QName>util:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:SUB</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN>
+      <MapConstructorEntry><StringLiteral>'name'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef></MapConstructorEntry><TOKEN>,</TOKEN> <MapConstructorEntry><StringLiteral>'info'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>util:info</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>patterns</QName></VarRef><TOKEN>,</TOKEN> <StringLiteral>'pattern'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'dropped'</StringLiteral><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall></Expr>
+  <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
+    <FunctionCall><QName>util:redirect</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>dba:SUB</QName></VarRef><TOKEN>,</TOKEN> <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'error'</StringLiteral><TOKEN>:</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
+  <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
+<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
+<EOF/></XQuery>

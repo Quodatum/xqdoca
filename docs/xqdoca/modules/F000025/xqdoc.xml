@@ -1,0 +1,104 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="main"><xqdoc:uri>xqdoca-cmd.xq</xqdoc:uri><xqdoc:comment><xqdoc:description>Generate documentation for for XQuery sources</xqdoc:description><xqdoc:author>Andy Bunce (Quodatum)</xqdoc:author></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~  
+ : Generate documentation for for XQuery sources
+ : @author Andy Bunce (Quodatum)
+ :)
+
+import module namespace cmd = 'quodatum:command:tools' at "lib/command.xqm";
+
+declare variable $args as xs:string  external;
+(:~ expath metadata :)
+declare variable $expkg:=doc("expath-pkg.xml")/*;
+
+declare function local:resolve($path) as xs:string{
+  file:resolve-path($path,file:current-dir())
+};
+
+   
+let $args:=cmd:parse-args($args)
+let $args:=if(exists($args)) 
+           then $args 
+           else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
+for  $action in  $args
+
+return  
+    switch($action)
+    case "-h" return update:output(unparsed-text("xqdoca.txt"))
+    case "-v" return update:output($expkg/@version/string())
+    case "-install" return (cmd:install($expkg),update:output("install"))
+    case "-init" return
+                let $file:=local:resolve(".xqdoca") 
+                return if(not(file:exists($file)))
+                       then
+                        let $xml:=&lt;xqdoca xmlns="urn:quodatum:xqdoca" version="0.5"&gt;
+                              &lt;source&gt;.&lt;/source&gt;
+                              &lt;target&gt;xqdoca/&lt;/target&gt;
+                              &lt;/xqdoca&gt;
+                        return (file:write($file,$xml),update:output("file created"))     
+                       else update:output("file already exists")
+
+    default return let $src:=(cmd:check-dependancies($expkg),
+                              local:resolve($action)=&gt;trace("Processing: "))
+                   return xquery:eval-update(xs:anyURI("xqdoca.xq"),
+                                      map{"src": $src, 
+                                          "pass":true()}
+                                    )
+
+
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:command:tools</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="cmd" uri="quodatum:command:tools"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/><xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>args</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>expkg</xqdoc:name><xqdoc:comment><xqdoc:description>expath metadata</xqdoc:description></xqdoc:comment><xqdoc:type occurrence="*">node()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:name>local:resolve</xqdoc:name><xqdoc:signature>declare function local:resolve($path as item()*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>resolve-path</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>current-dir</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function local:resolve($path) as xs:string{
+  file:resolve-path($path,file:current-dir())
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>pseudo main function</xqdoc:description></xqdoc:comment><xqdoc:name>local:xqDoc-main</xqdoc:name><xqdoc:signature>local:xqDoc-main()</xqdoc:signature><xqdoc:body>let $args:=cmd:parse-args($args)
+let $args:=if(exists($args)) 
+           then $args 
+           else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
+for  $action in  $args
+
+return  
+    switch($action)
+    case "-h" return update:output(unparsed-text("xqdoca.txt"))
+    case "-v" return update:output($expkg/@version/string())
+    case "-install" return (cmd:install($expkg),update:output("install"))
+    case "-init" return
+                let $file:=local:resolve(".xqdoca") 
+                return if(not(file:exists($file)))
+                       then
+                        let $xml:=&lt;xqdoca xmlns="urn:quodatum:xqdoca" version="0.5"&gt;
+                              &lt;source&gt;.&lt;/source&gt;
+                              &lt;target&gt;xqdoca/&lt;/target&gt;
+                              &lt;/xqdoca&gt;
+                        return (file:write($file,$xml),update:output("file created"))     
+                       else update:output("file already exists")
+
+    default return let $src:=(cmd:check-dependancies($expkg),
+                              local:resolve($action)=&gt;trace("Processing: "))
+                   return xquery:eval-update(xs:anyURI("xqdoca.xq"),
+                                      map{"src": $src, 
+                                          "pass":true()}
+                                    )</xqdoc:body><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:command:tools</xqdoc:uri><xqdoc:name>parse-args</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xquery-local-functions</xqdoc:uri><xqdoc:name>resolve</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/util</xqdoc:uri><xqdoc:name>if</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc-available</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>unparsed-text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:command:tools</xqdoc:uri><xqdoc:name>install</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xquery-local-functions</xqdoc:uri><xqdoc:name>resolve</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/update</xqdoc:uri><xqdoc:name>output</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:command:tools</xqdoc:uri><xqdoc:name>check-dependancies</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xquery-local-functions</xqdoc:uri><xqdoc:name>resolve</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/xquery</xqdoc:uri><xqdoc:name>eval-update</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>anyURI</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>args</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>args</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>args</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>args</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>action</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>expkg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>expkg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>expkg</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>action</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>src</xqdoc:name></xqdoc:ref-variable><xqdoc:body>let $args:=cmd:parse-args($args)
+let $args:=if(exists($args)) 
+           then $args 
+           else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
+for  $action in  $args
+
+return  
+    switch($action)
+    case "-h" return update:output(unparsed-text("xqdoca.txt"))
+    case "-v" return update:output($expkg/@version/string())
+    case "-install" return (cmd:install($expkg),update:output("install"))
+    case "-init" return
+                let $file:=local:resolve(".xqdoca") 
+                return if(not(file:exists($file)))
+                       then
+                        let $xml:=&lt;xqdoca xmlns="urn:quodatum:xqdoca" version="0.5"&gt;
+                              &lt;source&gt;.&lt;/source&gt;
+                              &lt;target&gt;xqdoca/&lt;/target&gt;
+                              &lt;/xqdoca&gt;
+                        return (file:write($file,$xml),update:output("file created"))     
+                       else update:output("file already exists")
+
+    default return let $src:=(cmd:check-dependancies($expkg),
+                              local:resolve($action)=&gt;trace("Processing: "))
+                   return xquery:eval-update(xs:anyURI("xqdoca.xq"),
+                                      map{"src": $src, 
+                                          "pass":true()}
+                                    )</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"><title>Module imports diagram (Mermaid)</title><link rel="shortcut icon" type="image/x-icon" href="resources/xqdoc.png"></head><body><a href="index.html">home</a><div class="mermaid">&#xD;
+%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    &#xD;
+classDiagram&#xD;
+direction TB&#xD;
+class chat-util { &lt;&lt;hello &gt;&gt;}&#xD;
+ class chat-ws { &lt;&lt;hello &gt;&gt;}&#xD;
+ class chat { &lt;&lt;hello &gt;&gt;}&#xD;
+&#xD;
+chat-ws ..&gt;chat-util &#xD;
+             chat ..&gt;chat-util &#xD;
+            &#xD;
+link chat-util "modules/F000001/index.html" "This is a tooltip for chat/util" &#xD;
+ link chat-ws "modules/F000002/index.html" "This is a tooltip for chat-ws" &#xD;
+ link chat "modules/F000003/index.html" "This is a tooltip for chat" &#xD;
+&#xD;
+</div><script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>mermaid.initialize({
+  startOnLoad:true,
+  logLevel: "error", 
+  securityLevel: "loose", 
+  theme: (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" :  "default" 
+    });</script></body></html>
