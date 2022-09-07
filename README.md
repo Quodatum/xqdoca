@@ -19,7 +19,22 @@ Work in progress.
 1. Execute `xqdoca -install`
 ## Usage
 
-`xqdoca -h` displays a usage summary.
+XQDocA uses XML files to define a documentation tasks. These typically use the extension `.xqdoc`
+
+For example the file `samples/dba.xqdoca`
+```
+<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+    <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
+    <target>file:///tmp/dba/</target>
+</xqdoca>
+```
+Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
+`file:///tmp/dba/`
+
+Note: Currently `target` must be file protocol url ending with /
+
+`xqdoca -h` will display a summary of the options.
+
 
 
 ## builtin generators
