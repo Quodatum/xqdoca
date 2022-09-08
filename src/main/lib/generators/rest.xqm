@@ -46,7 +46,7 @@ function _:restxq($model,$opts)
 {
 let $annots as map(*)*:= xqd:rxq-paths($model)
 let $tree:=$annots?uri
-let $tree:=tree:build($tree)=>trace("before")=>tree:flatten()=>trace("flat:  ")
+let $tree:=tree:build($tree)=>tree:flatten()
 
 let $sections:=(
            _:summary($model, $opts, $tree),
@@ -81,7 +81,7 @@ as element(section)
         <p>This document provides details of the RestXQ annotations. These provide mappings from Web endpoints to XQuery code.</p>
          <dl>
             <dt>Base path</dt>
-            <dd>{ tree:base($tree=>trace("TREE:")) }</dd>
+            <dd>{ tree:base($tree) }</dd>
         </dl>
         </div> 
         else 

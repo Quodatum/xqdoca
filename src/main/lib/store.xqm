@@ -38,11 +38,17 @@ for $doc in $docs
 let $uri:=resolve-uri($doc?uri,$base)
 let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
 return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
+          case "file" return store:file($doc?document,store:file-to-native($uri),$opts)
           case "xmldb" return store:xmldb($doc?document,$uri,$opts)
           default return error("unknown protocol:" || $uri)
 };
 
+declare %private 
+function store:file-to-native($uri as xs:string)
+{
+  (: file:path-to-native errors if not exists :)
+substring-after($uri,"file:///")
+};
 (:~ 
  :save $data to file system $url , create folder tree if required
  :)

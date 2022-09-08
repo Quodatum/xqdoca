@@ -1,4 +1,4 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
     <source>C:\Users\andy\basex.home\basex.951\webapp\chat</source>
-    <target>file:///tmp/chat/</target>
+    <target>c:/tmp/chat/</target>
 </xqdoca>

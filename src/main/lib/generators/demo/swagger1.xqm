@@ -22,7 +22,7 @@ function _:swagger($model as map(*),
    <swagger>2.0</swagger>
    <info type="object">
     <version>1.0.0</version>
-    <title>Generated from { $model?project } at { current-dateTime() }</title>
+    <title>Generated from { $opts?project } at { current-dateTime() }</title>
     <description>Example generation from RESTXQ xquery sources</description>
     <termsOfService>http://swagger.io/terms/</termsOfService>
     <contact type="object">

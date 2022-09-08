@@ -23,18 +23,25 @@ for  $action in  $args
 return  
     switch($action)
     case "-h" return update:output(unparsed-text("xqdoca.txt"))
-    case "-v" return update:output($expkg/@version/string())
+
+    case "-v" return
+              let $xqd:= $expkg/@version/string()
+              let $java:= proc:property('java.runtime.version')
+              let $basex:= db:system()/generalinformation/version/string()
+              return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)
+
     case "-install" return (cmd:install($expkg),update:output("All dependancies installed."))
+
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 
                 return if(not(file:exists($file)))
                        then
-                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="{$expkg/@version}">
                               <source>.</source>
                               <target>xqdoca/</target>
                               </xqdoca>
                         return (file:write($file,$xml),update:output("file created"))     
-                       else update:output("file already exists")
+                       else update:output("xqdoca file already exists")
 
     default return let $src:=(cmd:check-dependancies($expkg),
                               local:resolve($action)=>trace("Processing: "))

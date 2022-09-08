@@ -16,16 +16,22 @@ declare option db:chop 'true';
 declare variable $src as xs:string  external;
 let $src:=$src
           =>file:resolve-path(file:current-dir())
-
+(: options with defaults:)
 let $options:=opts:as-map(doc($src)/*)
                =>opts:merge(opts:as-map(doc("config.xqdoca")/*))
-               =>map:merge(map:entry("project","DEF PROJ"))
 
 let $efolder:=$options?source
               =>file:resolve-path(file:current-dir())
               =>xs:anyURI()
 
 let $target:= $options?target
+              =>file:resolve-path(file:current-dir())
+              =>file:path-to-uri()
+              
+(: add computed defaults :)
+let $options:=opts:merge($options,map{
+                      "project": tokenize($efolder,"\" || file:dir-separator() )[last()-1]
+                      })
 
 let $files:=xqd:find-sources($efolder, $options?extensions)
 let $model:= xqd:snap($efolder, $files, $options?platform) 
@@ -42,7 +48,6 @@ return (
        update:output(
          <json type="object">
             <project>{ $options?project }</project>
-             <title>XQdocA generated</title>
               <source>{ $efolder }</source>
              <target>{ $target }</target>
               <created>{ current-dateTime() }</created>

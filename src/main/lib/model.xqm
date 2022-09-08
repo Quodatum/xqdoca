@@ -72,7 +72,7 @@ let $_:=trace(count($files),"files :")
 return map{ 
              "base-uri": $folder,
              "platform": $platform,
-             "project": trace(tokenize($folder,"/")[last()-1],"project"),
+
              "files": for $file at $pos in $files
                       let $id:= "F" || format-integer($pos,"000000")
                       let $full:= concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))

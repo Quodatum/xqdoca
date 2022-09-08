@@ -73,7 +73,7 @@ function _:annotations($model,$opts)
                <nav id="toc">
                         <h2>
                             <a href="index.html" >
-                                { $model?project }
+                                { $opts?project }
                             </a>
                             / Annotations
                         </h2>

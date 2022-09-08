@@ -1,4 +1,5 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+   <project>XQDocA</project>
     <source>C:\Users\andy\git\quodatum\xqdoca\src\main</source>
     <target>file:///tmp/xqdoca/</target>
     <outputs>
