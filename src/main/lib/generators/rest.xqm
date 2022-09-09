@@ -189,6 +189,7 @@ as element(nav)
                 </a>
                 / RestXQ
             </h2>
+           {page:related-buttons("global","restxq", $opts) }
            <h3>
                Contents
             </h3>

@@ -177,23 +177,7 @@ as element(html)
   let $resources:=page:resource-path($opts)
   return
     <html>
-      <head>
-       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
-       <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
-        <title>
-          { $opts?project } - xqDocA
-        </title>
-        
-        <link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" />
-        <link rel="stylesheet" type="text/css" href="{ $resources || $page:prism }prism.css"/>
-        <link rel="stylesheet" type="text/css" href="{ $resources }page.css" />
-        <link rel="stylesheet" type="text/css" href="{ $resources }query.css" />
-        <link rel="stylesheet" type="text/css" href="{ $resources }base.css" />
-     
-      
-      </head>
-
+      {page:head(  $opts?project || " - xqDocA",$resources)}
       <body class="home" id="top">
         <div id="main" >
         {$body}
@@ -207,6 +191,25 @@ as element(html)
         <script  src="{ $resources }xqdoca.js" type="text/javascript"> </script>
       </body>
     </html>
+};
+
+(:~ common html head
+@param resources relative path to resources
+ :)
+declare function page:head($title as xs:string,$resources as xs:string)
+as element(head){
+     <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+       <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
+        <title>{ $title } - xqDocA</title>
+        
+        <link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" />
+        <link rel="stylesheet" type="text/css" href="{ $resources || $page:prism }prism.css"/>
+        <link rel="stylesheet" type="text/css" href="{ $resources }page.css" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }query.css" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }base.css" />   
+      </head>
 };
 
 declare function page:resource-path($opts as map(*))

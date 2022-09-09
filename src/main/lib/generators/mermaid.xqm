@@ -8,6 +8,9 @@ xquery version "3.1";
  
 module namespace _ = 'quodatum:xqdoca.generator.mermaid';
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
@@ -45,7 +48,7 @@ function _:calls(
                  $opts as map(*)
                  )                         
 {
-	  _:build( $model?files, $model, map{"base":""})
+	  _:build( $model?files, $model, $opts)
 };
 
 (:~ generate mermaid class diagram :)
@@ -53,10 +56,10 @@ function _:calls(
                          $model as map(*),
                          $opts as map(*) )
  { 
-(: just files with prefix :) 
+(: just files with prefix ie xqm :) 
 let $files:=$files=>filter(function($i){exists($i?prefix)})
-let $classes:= $files!``[class `{ .?prefix }` { <<hello >>}
-]``
+let $classes:=  $files!_:class(.)
+              
 let $links:= $files!``[link `{ .?prefix }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
 ]``
 let $imports:=for $f in $files,
@@ -71,24 +74,35 @@ direction TB
 `{ $classes }`
 `{ $imports }`
 `{ $links }`
-]`` 
-return _:page-wrap($mermaid)
+]``
+let $related:= page:related-buttons("global","mermaid", $opts) 
+return _:page-wrap($mermaid,$related,$opts)
 };
 
-(:~ create wrapping html for mermaid diagram:)
-declare function _:page-wrap($mermaid as xs:string+)
+(:~ class def:)
+declare function _:class($file as map(*))
+as xs:string{
+let $ns:= $file?prefixes
+let $rest:=filter($file?xqdoc//xqdoc:annotation,xqa:is-rest("path",?,$ns))  
+
+let $type:= if(exists($rest)) 
+            then  '<< Rest >>'
+            else ''
+return ``[class `{ $file?prefix }` { `{ $type }` }
+]``
+};
+
+(:~html for mermaid diagram
+ :)
+declare function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
 as element(html){
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
-  <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
-  <title>Module imports diagram (Mermaid)</title>
-  <link rel="shortcut icon" type="image/x-icon" href="resources/xqdoc.png"/>
-</head>
+{_:head("Module imports diagram (Mermaid)","resources/")}
+
 <body>
-  <a href="index.html">home</a>
+  <nav id="toc"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
+  {$related}
+  </nav>
   <div class="mermaid">{ $mermaid }</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" 
   integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" 
@@ -101,4 +115,24 @@ as element(html){
     }});</script>
 </body>
 </html>
+};
+(:~ common html head
+@param resources relative path to resources
+ :)
+declare function _:head($title as xs:string,$resources as xs:string)
+as element(head){
+     <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+       <meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" />
+        <title>{ $title } - xqDocA</title>
+        
+        <link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" />
+        <link rel="stylesheet" type="text/css" href="{ $resources || $page:prism }prism.css"/>
+        <link rel="stylesheet" type="text/css" href="{ $resources }page.css" />
+        <!--
+        <link rel="stylesheet" type="text/css" href="{ $resources }query.css" />
+        <link rel="stylesheet" type="text/css" href="{ $resources }base.css" /> 
+        -->  
+      </head>
 };

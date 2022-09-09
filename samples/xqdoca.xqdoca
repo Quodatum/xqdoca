@@ -1,7 +1,7 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
    <project>XQDocA</project>
     <source>C:\Users\andy\git\quodatum\xqdoca\src\main</source>
-    <target>file:///tmp/xqdoca/</target>
+    <target>file:///tmp/xqdoca/xqdoca/</target>
     <outputs>
         <global>report imports  annotations mermaid xqdoca.xml</global>
         <module>module xqdoc xqparse</module>

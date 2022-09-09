@@ -34,7 +34,7 @@ declare variable $xqhtml:larr:="&#8598;";
  : "project": "vue-poc"
  :)
 declare 
-%xqdoca:global("index.html","Index of sources")
+%xqdoca:global("report","Index of sources")
 %xqdoca:output("index.html","xhtml") 
 function xqhtml:index-html($model as map(*),
                             $opts as map(*)
@@ -48,7 +48,7 @@ as document-node()
                  xqhtml:files($model,$opts),
                  xqhtml:annot($model,$opts)
              )
-let $links:= page:related-buttons("global","index.html", $opts)                 
+let $links:= page:related-buttons("global","report", $opts)                 
 let $d:=<div>
              <h1>
                  Project <span class="badge badge-info">
