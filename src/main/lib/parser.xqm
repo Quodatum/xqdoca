@@ -92,7 +92,7 @@ as element(xqdoc:xqdoc)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
 
-    let $name:=xqn:qmap($f/xqdoc:name=>trace("####A"),$prefixes, $def-fn)
+    let $name:=xqn:qmap($f/xqdoc:name,$prefixes, $def-fn)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then

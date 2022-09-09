@@ -27,6 +27,7 @@ let $efolder:=$options?source
 let $target:= $options?target
               =>file:resolve-path(file:current-dir())
               =>file:path-to-uri()
+              =>concat("/")
               
 (: add computed defaults :)
 let $options:=opts:merge($options,map{

@@ -1,18 +1,6 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
+(: Copyright (c) 2019-2022 Quodatum Ltd
+ : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  
  (:~
@@ -63,7 +51,7 @@ let $body:= <div>
                   </span>
                   &#160;RestXQ documentation 
               </h1>
-            {_:toc($model,$tree,$annots)}
+            {_:toc($opts,$tree,$annots)}
             { $sections }
            </div>
 return  page:wrap($body,$opts)
@@ -191,13 +179,13 @@ as element(*)*
 (:~  toc 
 @param $annots {url:{methods:}..}
 :)
-declare function _:toc($model as map(*),$tree as element(directory)?,$annots as map(*)*)
+declare function _:toc($opts as map(*),$tree as element(directory)?,$annots as map(*)*)
 as element(nav)
 {
      <nav id="toc">
             <h2>
                  <a href="index.html">
-                    { $model?project }
+                    { $opts?project }
                 </a>
                 / RestXQ
             </h2>

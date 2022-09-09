@@ -221,7 +221,9 @@ as xs:string
  : @param $tree xml 
  : @param $decorate function called on leafs
  :)
-declare function page:toc3($head as item(),$tree as element(directory),$decorate as function(*))
+declare function page:toc3($head as item(),
+$tree as element(directory),
+$decorate as function(*))
 as element(nav)
 {
     <nav id="toc">
@@ -246,15 +248,16 @@ as xs:string{
  : @param $head title
  : @param $section elements to toc
 :)
-declare function page:toc($head,$sections as element(section)*)
+declare function page:toc($head,$sections as element(section)*,$links)
 as element(nav)
 {
  <nav id="toc">
-            <h2>
+            <h2 class="h3 d-inline-block">
                 <a href="../index.html" class="mr-5 bg-info">↖</a>
                 <a id="contents"></a>              
                    { $head }
             </h2>
+            {$links}
             <ol class="toc">{
 			$sections!page:section-toc(.,position())
 			}</ol>
@@ -366,6 +369,28 @@ as xs:string*{
 let $selected:=$opts?outputs?($type)
  let $renderers:=$opts(".renderers")?($type)
  return page:tokens($selected)[not(. = $exclude)]
+};
+
+(:~ buttons of renderers
+ : @param type global or module
+ : @param exclude list of renderers to omit
+ :)
+declare 
+function page:related-buttons($type as xs:string,
+                        $exclude as xs:string*,
+                         $opts as map(*))                       
+as element(span)
+{
+let $list:=page:active-renderers($type,$opts,$exclude)
+ let $renderers:=$opts(".renderers")?($type)
+ return <span class="ml-2"> {
+for  $name in $list 
+let $rend :=  $renderers[?name=$name]
+for $def in  $rend
+order by $def?name
+return <a href="{ $def?uri }" title="{$def?description}" 
+        class="badge badge-pill badge-light"  style="margin-left:1em">{ $def?name }</a>
+}</span>
 };
 
 (:~ table of renderers

@@ -1,5 +1,5 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
     <project>data-server</project>
     <source>C:\Users\andy\git\bloomsbury\XML-CMS\data_server\eBloomsbury</source>
-    <target>file:///tmp/data_server/</target>
+    <target>file:///tmp/teacup/data_server/</target>
 </xqdoca>

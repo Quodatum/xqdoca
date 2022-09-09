@@ -50,7 +50,7 @@ let $uri:=if(empty($prefix))
           else if( map:contains($prefixes,$prefix)) 
                then $prefixes?($prefix)
                else 
-                    let $_:= trace($prefixes,"prefix: ")
+                    let $_:= trace('$',"prefix: ")
                     return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
              
 return map{
