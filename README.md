@@ -29,7 +29,7 @@ XQDocA uses XML files to define a documentation tasks. These typically use the e
 
 For example the file `samples/dba.xqdoca`
 ```
-<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
     <target>file:///tmp/dba/</target>
 </xqdoca>
@@ -210,6 +210,12 @@ The renderers use this map to build their outputs.
 
 XQdocA is released under the Apache License, Version 2.0
 
+## Third party components
+
+* Semantic versioning uses https://github.com/eXist-db/semver.xq
+* XQuery source highlighting uses Prism (https://prismjs.com/)
+* The mermaid renderer uses https://github.com/mermaid-js/mermaid
+
 ## Credit, Acknowledgements
 
 * Thanks to Darin McBeath for creating the original xqDoc http://xqdoc.org/.
@@ -217,4 +223,4 @@ XQdocA is released under the Apache License, Version 2.0
 
 * XQuery parsers were generated from EBNF using Gunther Rademacher's excellent http://www.bottlecaps.de/rex/
 
-* XQuery source highlighting uses Prism (https://prismjs.com/)
+

@@ -88,7 +88,11 @@ let $rest:=filter($file?xqdoc//xqdoc:annotation,xqa:is-rest("path",?,$ns))
 let $type:= if(exists($rest)) 
             then  '<< Rest >>'
             else ''
-return ``[class `{ $file?prefix }` { `{ $type }` }
+let $fns:="create()
+job()
+job-status()"
+return ``[class `{ $file?prefix || util:if($rest,":::cssRest") }` { `{ $type }` 
+`{ util:if($rest,$fns) }`}
 ]``
 };
 
@@ -100,7 +104,14 @@ as element(html){
 {_:head("Module imports diagram (Mermaid)","resources/")}
 
 <body>
-  <nav id="toc"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
+<style>
+    .cssRest > rect, line{{
+        fill:palegreen !important;
+        stroke:black !important;
+
+    }}
+</style>
+  <nav id="toc" style="position:absolute"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
   {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
