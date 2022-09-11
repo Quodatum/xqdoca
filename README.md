@@ -25,7 +25,7 @@ Work in progress.
 The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Usage
 
-XQDocA uses XML files to define a documentation tasks. These typically use the extension `.xqdoc`
+XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
 
 For example the file `samples/dba.xqdoca`
 ```
@@ -37,7 +37,7 @@ For example the file `samples/dba.xqdoca`
 Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
 `file:///tmp/dba/`
 
-Note: Currently `target` must be file protocol url ending with /
+If  `source` or `target` are relative urls they are resolved relative to the xqdoca file.
 
 `xqdoca -h` will display a summary of the options.
 

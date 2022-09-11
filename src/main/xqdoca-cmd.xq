@@ -36,7 +36,7 @@ return
                 let $file:=local:resolve(".xqdoca") 
                 return if(not(file:exists($file)))
                        then
-                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="{$expkg/@version}">
+                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
                               <source>.</source>
                               <target>xqdoca/</target>
                               </xqdoca>
