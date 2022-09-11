@@ -28,7 +28,7 @@ The XQDocA script uses the `basex` script. If the environment variable `BASEX_HO
 XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
 
 For example the file `samples/dba.xqdoca`
-```
+```xml
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
     <target>file:///tmp/dba/</target>
@@ -45,7 +45,7 @@ If  `source` or `target` are relative urls they are resolved relative to the xqd
 
 ## builtin generators
 
-```
+```xquery
 map {
   "output": "html5",
   "name": "index",
@@ -117,7 +117,7 @@ The first parameter is an arbitary name used to reference the generator in the r
 The second is a simple text description.
 The function must be of arity 2 and is called with the state and options as arguments.
 Example:
-```
+```xquery
 declare 
 %xqdoca:global("index","Index of sources")
 %xqdoca:output("index.html","html5") 
@@ -132,7 +132,7 @@ These functions generate one file per XQuery source file.
 The function must be of arity 3 and is called once for each source module 
 with the current file state and options and the state as arguments.
 Example:
-```
+```xquery
 declare 
 %xqdoca:module("module","Html5 page created from the XQuery source")
 %xqdoca:output("index.html","html5")
@@ -147,13 +147,13 @@ as document-node()
 All generator functions require an output annotation that controls the name and serialization of that output.
 The first parameter controls the name of the generated output. The second the serialization required.
 Examples:
-```
+```xquery
 %xqdoca:output("index.html","html5")
 %xqdoca:output("swagger.json","json")
 %xqdoca:output("xqparse.xml","xml")  
 ``` 
 #### current serialization types
-```
+```xquery
 map{
  "html5": map{"method": "html", "version":"5.0", "indent": "no"},
  "xml": map{"indent": "no"},
