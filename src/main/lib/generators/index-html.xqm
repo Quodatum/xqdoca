@@ -194,7 +194,7 @@ as element(div)
                  <td>{ xqhtml:truncate-text($desc,50) }</td>
                  <td >{   xqhtml:file-usage($file,$model) }</td>
 
-                 <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file) }</td>       
+                 <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file,page:badge#3) }</td>       
               
                  <td style="text-align: right">fn={$file?xqdoc//xqdoc:function=>count() }</td>
               </tr>

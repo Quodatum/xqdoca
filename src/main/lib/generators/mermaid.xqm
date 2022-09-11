@@ -79,7 +79,7 @@ let $related:= page:related-buttons("global","mermaid", $opts)
 return _:page-wrap($mermaid,$related,$opts)
 };
 
-(:~ class def:)
+(:~ generate mermaid class definition :)
 declare function _:class($file as map(*))
 as xs:string{
 let $ns:= $file?prefixes
@@ -91,9 +91,12 @@ let $type:= if(exists($rest))
 let $fns:="create()
 job()
 job-status()"
-return ``[class `{ $file?prefix || util:if($rest,":::cssRest") }` { `{ $type }` 
-`{ util:if($rest,$fns) }`}
+return if($rest)
+       then ``[class `{ $file?prefix }`:::cssRest { `{ $type }` 
+`{ $fns }`}
 ]``
+        else 'class ' || $file?prefix || '{ }
+'
 };
 
 (:~html for mermaid diagram

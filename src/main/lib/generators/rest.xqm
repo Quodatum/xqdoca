@@ -110,7 +110,7 @@ as element(div)
         <a href="#{ $rep?uri}#{ $method}">{ page:badge-method($method)}</a> &#160;
          { $rep?uri }
          <div style="float:right">
-         { xqa:badges($annots,$amap?file) }
+         { xqa:badges($annots, $amap?file, page:badge#3) }
        </div> 
     </h4>
     <dl>

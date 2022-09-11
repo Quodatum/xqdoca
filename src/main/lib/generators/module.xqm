@@ -1,20 +1,10 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
- 
- (:~
- : <h1>xqdoc-htmlmod.xqm</h1>
- : <p>Library to support html5 rendering of single xqdoc source</p>
- :
- : @author Andy Bunce
- : @version 0.2
- : @see https://github.com/Quodatum/xqdoca
- :)
- 
 (:~
- : Generate  html for xqdoc
+Library to support html5 rendering of single xqdoc source
+ @Copyright (c) 2019-2022 Quodatum Ltd
+ @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
+
 module namespace xqh = 'quodatum:xqdoca.mod-html';
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
@@ -62,7 +52,7 @@ let $d:=<div>
        <h1>
 			<span class="badge badge-info">{ $file?namespace }</span>&#160;
 			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
-            <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file)}</div>
+            <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file,page:badge#3) }</div>
 		</h1>
 {
          xqh:toc($xqd,$opts,$file),
@@ -134,7 +124,7 @@ as element(nav){
                     <span class="secno">{ concat('3.',$pos) }</span>
                     <span class="content">{ $id }</span>
                     <div style="float:right">
-                     {xqa:badges($var/xqdoc:annotations/xqdoc:annotation,$file)}
+                     {xqa:badges($var/xqdoc:annotations/xqdoc:annotation, $file, page:badge#3)}
                         </div>
                   </a>
                 </li>
@@ -159,7 +149,7 @@ as element(nav){
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
 											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
                       <div style="float:right">
-                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file)}
+                     {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file,page:badge#3)}
                         </div>
                         </span>  
 										</a>
@@ -302,7 +292,7 @@ as element(div)
      <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
                       <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">{ $name}#{ string(@arity) }</a>
-                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file) }
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }
                       
                     </span>
                           

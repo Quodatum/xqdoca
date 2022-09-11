@@ -1,26 +1,8 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : <h1>xqdoc-proj.xqm</h1>
- : <p>annotation utils</p>
- : 
- : @author Andy Bunce
- : @version 0.2
+(:~
+annotation utils
+ @Copyright (c) 2019-2022 Quodatum Ltd
+ @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  
 
@@ -28,7 +10,6 @@ module namespace xqa = 'quodatum:xqdoca.model.annotations';
 
 
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-import module namespace page = 'quodatum:xqdoca.page'  at "xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
@@ -73,9 +54,12 @@ declare variable $xqa:noteworthy:=(
 );
 
 (:~
- : html badges for annotations with known namespaces 
+ : html badges for annotations with known namespaces
+ @param  $button-render $badge?icon, $badge?class, $badge?title
  :)
-declare function xqa:badges($annos as element(xqdoc:annotation)*, $file as map(*))
+declare function xqa:badges($annos as element(xqdoc:annotation)*,
+                            $file as map(*),
+                            $button-render as function(*))
 {
   let $prefixes:=$file?prefixes
   let $others:=some $a in $annos satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)
@@ -83,9 +67,9 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*, $file as map(*
   return (
     for $badge in $xqa:noteworthy
     where   some $a in $annos satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)
-    return  page:badge($badge?icon, $badge?class, $badge?title)
+    return  $button-render($badge?icon, $badge?class, $badge?title)
     
-    ,if($others) then page:badge("A", "info", "Other annotations") else ()
+    ,if($others) then $button-render("A", "info", "Other annotations") else ()
     )
 };
 
