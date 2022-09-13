@@ -158,7 +158,7 @@ declare function _:outputs($annots as element(xqdoc:annotation)*,
 as element(*)*
 {
   let $ns:=$amap?file?prefixes
-  let $p:=filter($annots,xqa:is-rest("produces",?,$ns))
+  let $p:=filter($annots,xqa:is-rest(?,"produces",$ns))
   let $s:=filter($annots, xqa:is-out("method",?,$ns))
   return if ($p or $s)then
        (<dt>Output</dt>,
@@ -270,7 +270,7 @@ as element(*)
                                 $amap as map(*))
 as element(*)*
 {
-  let $aq:=filter($annots,xqa:is-rest($name,?,$amap?file?prefixes))
+  let $aq:=filter($annots,xqa:is-rest(?,$name,$amap?file?prefixes))
   return if($aq) then 
   (<dt>{ $title }</dt>,
          <dd>

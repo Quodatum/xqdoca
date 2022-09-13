@@ -160,7 +160,7 @@ map{
  "json": map{"method": "json"}
 }
 ```
-### Development notes
+## Development notes
 `xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
 combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
 
@@ -206,15 +206,17 @@ classDiagram
 
 The renderers use this map to build their outputs.
 
+### expath-pkg.xml
+The EXpath packaging [specification](http://expath.org/spec/pkg) is used to define the XQDocA version and also the semantic version requirements of it's dependencies.
 ## License
 
 XQdocA is released under the Apache License, Version 2.0
 
 ## Third party components
 
-* Semantic versioning uses https://github.com/eXist-db/semver.xq
-* XQuery source highlighting uses Prism (https://prismjs.com/)
-* The mermaid renderer uses https://github.com/mermaid-js/mermaid
+* Semantic versioning by https://github.com/eXist-db/semver.xq
+* XQuery source highlighting by Prism (https://prismjs.com/)
+* The diagram rendering by Mermaid https://github.com/mermaid-js/mermaid
 
 ## Credit, Acknowledgements
 

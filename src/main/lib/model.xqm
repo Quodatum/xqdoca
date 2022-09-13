@@ -273,9 +273,9 @@ as map(*)
 };
 
 (:~ files that import given namespace :)
-declare function xqd:where-imported($uri as xs:string,$model as map(*))
+declare function xqd:where-imported($files as map(*)*, $uri as xs:string)
 {
-  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
+  $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
 
 (: return  map{   imported-ns:(files that import...) }  :)

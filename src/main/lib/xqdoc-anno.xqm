@@ -74,7 +74,7 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*,
 };
 
 (:~  true if rest:name :)
-declare function xqa:is-rest($name,$a  as element(xqdoc:annotation),$ns as map(*))
+declare function xqa:is-rest($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))
 as xs:boolean
 {
   xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)
@@ -90,7 +90,7 @@ as xs:boolean
 declare function xqa:only-rest($annots  as element(xqdoc:annotation)*,$ns as map(*))
 as xs:boolean
 {
-  $annots=>filter(xqa:is-rest("path",?,$ns))
+  $annots=>filter(xqa:is-rest(?,"path",$ns))
 };
 
 declare function xqa:methods($annots  as element(xqdoc:annotation)*,$ns as map(*))

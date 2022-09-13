@@ -1,4 +1,4 @@
-<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
    <project>XQDocA</project>
     <source>src/main</source>
     <target>file:///tmp/xqdoca/xqdoca/</target>

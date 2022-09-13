@@ -9,7 +9,7 @@ xquery version "3.1";
  : <p>command line tool support.</p>
  : @version 0.3
  :)
-module namespace cmd = 'quodatum:command:tools';
+module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";
 

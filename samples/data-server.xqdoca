@@ -1,4 +1,4 @@
-<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <project>data-server</project>
     <source>C:\Users\andy\git\bloomsbury\XML-CMS\data_server\eBloomsbury</source>
     <target>file:///tmp/teacup/data_server/</target>

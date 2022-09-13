@@ -4,7 +4,7 @@ xquery version "3.1";
  : @author Andy Bunce (Quodatum)
  :)
 
-import module namespace cmd = 'quodatum:command:tools' at "lib/command.xqm";
+import module namespace cmd = 'quodatum:tools:commandline' at "lib/commandline.xqm";
 
 declare variable $args as xs:string  external;
 (:~ expath metadata :)

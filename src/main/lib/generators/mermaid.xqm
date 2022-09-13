@@ -14,31 +14,7 @@ import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-a
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-(:~ testing :)
-declare %private variable $_:sample:='
-classDiagram
-direction LR
-class audit
-Class01 ..> AveryLongClass 
-Class03 *-- Class04
-Class05 o-- Class06
-Class07 .. Class08
-Class09 --> C2 : Where am i?
-Class09 --* C3
-Class09 --|> Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-Class08 &lt;--> C2: Cool label
-class Class10 {
-  &lt;&lt;service>>
-  int id
-  size()
-}
-link Class01 "modules/F000002/index.html" "This is a tooltip for Class01" 
-';
+
 
 declare 
 %xqdoca:global("mermaid","Project wide module imports as a mermaid class diagram")
@@ -48,23 +24,23 @@ function _:calls(
                  $opts as map(*)
                  )                         
 {
-	  _:build( $model?files, $model, $opts)
+	  _:build( $model?files, $opts)
 };
 
 (:~ generate mermaid class diagram :)
  declare function _:build($files as map(*)*,         
-                         $model as map(*),
                          $opts as map(*) )
  { 
 (: just files with prefix ie xqm :) 
-let $files:=$files=>filter(function($i){exists($i?prefix)})
-let $classes:=  $files!_:class(.)
+let $friendly:= $files!_:class-name(.,position(),$files)
+
+let $classes:=  $friendly!_:class(.)
               
-let $links:= $files!``[link `{ .?prefix }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
+let $links:= $friendly!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
 ]``
-let $imports:=for $f in $files,
-                $i in xqd:where-imported($f?namespace,$model)=>filter(function($i){exists($i?prefix)})
-            return ``[`{ $i?prefix}` ..>`{ $f?prefix}` 
+let $imports:=for $f in $friendly,
+                $i in xqd:where-imported($friendly, $f?namespace)
+                return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
             ]``
         
 let $mermaid:=``[
@@ -82,21 +58,47 @@ return _:page-wrap($mermaid,$related,$opts)
 (:~ generate mermaid class definition :)
 declare function _:class($file as map(*))
 as xs:string{
+let $name:=$file?mermaid
 let $ns:= $file?prefixes
-let $rest:=filter($file?xqdoc//xqdoc:annotation,xqa:is-rest("path",?,$ns))  
+let $restfns:=$file?xqdoc
+              //xqdoc:function[
+                              xqdoc:annotations/xqdoc:annotation
+                              =>filter(xqa:is-rest(?,"path",$ns))
+                              ]
 
-let $type:= if(exists($rest)) 
-            then  '<< Rest >>'
-            else ''
-let $fns:="create()
-job()
-job-status()"
-return if($rest)
-       then ``[class `{ $file?prefix }`:::cssRest { `{ $type }` 
+let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
+let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
+return if($restfns)
+       then ``[class `{ $name }`:::cssRest { << Rest >> 
 `{ $fns }`}
 ]``
-        else 'class ' || $file?prefix || '{ }
+       else if($is-main)
+            then 'class ' || $name || ':::cssMain{ << ' || $file?path || ' >>}
 '
+            else 'class ' || $name || '{ }
+'
+};
+
+(:~ add "mermaid" key to map value unique label
+:)
+declare function _:class-name($file as map(*),$pos, $files as map(*)*)
+as map(*){
+  let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
+  let $name:=$fn($file)
+  let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=>count()
+  return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
+          $file)=>map:merge()
+ 
+};
+
+(:~ generate mermaid function list :)
+declare function _:class-fns-list($names as xs:string*)
+as xs:string{
+let $r:=$names!substring-after(.,":")
+        !concat(.,"()")
+        =>sort()
+        =>string-join(file:line-separator())
+return concat(file:line-separator(),$r,file:line-separator())
 };
 
 (:~html for mermaid diagram
@@ -111,7 +113,10 @@ as element(html){
     .cssRest > rect, line{{
         fill:palegreen !important;
         stroke:black !important;
-
+    }}
+    .cssMain > rect, line{{
+        fill:powderblue !important;
+        stroke:black !important;
     }}
 </style>
   <nav id="toc" style="position:absolute"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>

@@ -559,7 +559,7 @@ declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {
    let $ns:= $file?prefixes
-   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest("path",?,$ns))
+   let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest(?,"path",$ns))
    return <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
       {if(empty($rest)) then
