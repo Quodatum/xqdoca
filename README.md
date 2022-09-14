@@ -14,6 +14,7 @@ Work in progress.
 
 ## Requirements
 
+The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
 * `Basex` 9.5.1+ http://basex.org/
 * `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
 
@@ -47,8 +48,8 @@ If  `source` or `target` are relative urls they are resolved relative to the xqd
 
 ```xquery
 map {
-  "output": "html5",
-  "name": "index",
+  "output": "xhtml",
+  "name": "report",
   "uri": "index.html",
   "function": Q{quodatum:build.xqdoc-html}index-html2#2,
   "type": Q{https://github.com/Quodatum/xqdoca}global,
@@ -154,11 +155,14 @@ Examples:
 ``` 
 #### current serialization types
 ```xquery
-map{
- "html5": map{"method": "html", "version":"5.0", "indent": "no"},
- "xml": map{"indent": "no"},
- "json": map{"method": "json"}
-}
+(:~ defined serialization options :)
+declare variable $xqo:outputs:=map{                                   
+                  "html5": map{"method": "html", "version":"5.0", "indent": "no"},
+                  "xhtml": map{"method": "xhtml", "version":"1.1","indent": "no"},
+                  "xml": map{"indent": "no"},
+                  "json": map{"method": "json"},
+                  "text": map{"method": "text"}
+                };
 ```
 ## Development notes
 `xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
