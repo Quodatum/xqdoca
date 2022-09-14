@@ -196,7 +196,10 @@ as element(div)
 
                  <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file,page:badge#3) }</td>       
               
-                 <td style="text-align: right">fn={$file?xqdoc//xqdoc:function=>count() }</td>
+                 <td style="text-align: right">
+                 <div>V#{$file?xqdoc//xqdoc:variable=>count() }</div>
+                 <div>F#{$file?xqdoc//xqdoc:function=>count() }</div>
+                 </td>
               </tr>
         }
     </tbody>

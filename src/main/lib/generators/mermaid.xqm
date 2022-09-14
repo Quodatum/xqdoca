@@ -41,7 +41,7 @@ let $links:= $friendly!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is
 let $imports:=for $f in $friendly,
                 $i in xqd:where-imported($friendly, $f?namespace)
                 return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
-            ]``
+]``
         
 let $mermaid:=``[
 %%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
