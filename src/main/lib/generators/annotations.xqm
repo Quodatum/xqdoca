@@ -1,23 +1,14 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
+(:~ annotation report
+  Copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
- 
- (:~
- : <h1>xqdoc-html.xqm</h1>
- : <p>annotation report</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-
 module namespace _ = 'quodatum:xqdoca.generator.annotations';
-
 
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 

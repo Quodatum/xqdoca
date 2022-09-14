@@ -4,7 +4,7 @@ xquery version "3.1";
  : @author Andy Bunce (Quodatum)
  :)
 
-import module namespace cmd = 'quodatum:command:tools' at "lib/command.xqm";
+import module namespace cmd = 'quodatum:tools:commandline' at "lib/commandline.xqm";
 
 declare variable $args as xs:string  external;
 (:~ expath metadata :)
@@ -36,7 +36,7 @@ return
                 let $file:=local:resolve(".xqdoca") 
                 return if(not(file:exists($file)))
                        then
-                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="{$expkg/@version}">
+                        let $xml:=<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
                               <source>.</source>
                               <target>xqdoca/</target>
                               </xqdoca>

@@ -40,8 +40,6 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 (:~ restxq namespace :)
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
-(:~ regex for unnecessary RESTXQ path segment annotation :)
-declare %private variable $xqd:path-seq-default:=xqd:escape-for-regex("=[^/]+");
 
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
@@ -191,7 +189,7 @@ let $reports:= xqd:annots-rxq($model)
 (: map keyed on uris -ensure starts with / :)
 let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
 let $data:=map:merge(for $report in $reports
-          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
+          group by $uri:=$report?annot/xqdoc:literal
           let $methods:= map:merge(
                          for $annot in $report
                          let $hits:=for $method in $xqd:methods
@@ -206,14 +204,7 @@ let $uris:=sort(map:keys($data))
 return $data?($uris)        
 };
 
-(:~ tidy up restxq path annotations
- ensure leading slash, remove unnecesary {$xxxx=[^/]+}
- :)
-declare %private function xqd:rxq-path-normalize($path as xs:string)
-as xs:string{
-let $path:=replace($path,$xqd:path-seq-default,"")
-return if(starts-with($path,"/")) then $path else "/" || $path
-};
+
 
 (:~ 
  : map for each restxq:path annotation
@@ -282,9 +273,9 @@ as map(*)
 };
 
 (:~ files that import given namespace :)
-declare function xqd:where-imported($uri as xs:string,$model as map(*))
+declare function xqd:where-imported($files as map(*)*, $uri as xs:string)
 {
-  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
+  $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
 
 (: return  map{   imported-ns:(files that import...) }  :)
@@ -345,11 +336,3 @@ declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
 as xs:string*{
 map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
 };
-
-(:~ from functx = "http://www.functx.com"; :)
-declare %private 
-function xqd:escape-for-regex( $arg as xs:string? ) 
-as xs:string {
-   replace($arg,
-           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
- } ;

@@ -25,11 +25,11 @@ Work in progress.
 The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Usage
 
-XQDocA uses XML files to define a documentation tasks. These typically use the extension `.xqdoc`
+XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
 
 For example the file `samples/dba.xqdoca`
-```
-<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+```xml
+<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
     <target>file:///tmp/dba/</target>
 </xqdoca>
@@ -37,7 +37,7 @@ For example the file `samples/dba.xqdoca`
 Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
 `file:///tmp/dba/`
 
-Note: Currently `target` must be file protocol url ending with /
+If  `source` or `target` are relative urls they are resolved relative to the xqdoca file.
 
 `xqdoca -h` will display a summary of the options.
 
@@ -45,7 +45,7 @@ Note: Currently `target` must be file protocol url ending with /
 
 ## builtin generators
 
-```
+```xquery
 map {
   "output": "html5",
   "name": "index",
@@ -117,7 +117,7 @@ The first parameter is an arbitary name used to reference the generator in the r
 The second is a simple text description.
 The function must be of arity 2 and is called with the state and options as arguments.
 Example:
-```
+```xquery
 declare 
 %xqdoca:global("index","Index of sources")
 %xqdoca:output("index.html","html5") 
@@ -132,7 +132,7 @@ These functions generate one file per XQuery source file.
 The function must be of arity 3 and is called once for each source module 
 with the current file state and options and the state as arguments.
 Example:
-```
+```xquery
 declare 
 %xqdoca:module("module","Html5 page created from the XQuery source")
 %xqdoca:output("index.html","html5")
@@ -147,20 +147,20 @@ as document-node()
 All generator functions require an output annotation that controls the name and serialization of that output.
 The first parameter controls the name of the generated output. The second the serialization required.
 Examples:
-```
+```xquery
 %xqdoca:output("index.html","html5")
 %xqdoca:output("swagger.json","json")
 %xqdoca:output("xqparse.xml","xml")  
 ``` 
 #### current serialization types
-```
+```xquery
 map{
  "html5": map{"method": "html", "version":"5.0", "indent": "no"},
  "xml": map{"indent": "no"},
  "json": map{"method": "json"}
 }
 ```
-### Development notes
+## Development notes
 `xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
 combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
 
@@ -206,9 +206,17 @@ classDiagram
 
 The renderers use this map to build their outputs.
 
+### expath-pkg.xml
+The EXpath packaging [specification](http://expath.org/spec/pkg) is used to define the XQDocA version and also the semantic version requirements of it's dependencies.
 ## License
 
 XQdocA is released under the Apache License, Version 2.0
+
+## Third party components
+
+* Semantic versioning by https://github.com/eXist-db/semver.xq
+* XQuery source highlighting by Prism (https://prismjs.com/)
+* The diagram rendering by Mermaid https://github.com/mermaid-js/mermaid
 
 ## Credit, Acknowledgements
 
@@ -217,4 +225,4 @@ XQdocA is released under the Apache License, Version 2.0
 
 * XQuery parsers were generated from EBNF using Gunther Rademacher's excellent http://www.bottlecaps.de/rex/
 
-* XQuery source highlighting uses Prism (https://prismjs.com/)
+
