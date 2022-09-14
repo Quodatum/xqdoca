@@ -26,11 +26,49 @@ function store:store($docs as map(*)*,$base as xs:string)
 for $doc in $docs
 let $uri:=resolve-uri($doc?uri,$base)
 let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
+let $document:=store:doc-tweak($doc,$opts)
+
 return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,store:file-to-native($uri),$opts)
-          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
+          case "file" return store:file($document,store:file-to-native($uri),$opts)
+          case "xmldb" return store:xmldb($document,$uri,$opts)
           default return error("unknown protocol:" || $uri)
 };
+
+(:~ return document, set namespace if xhtml :)
+declare function store:doc-tweak($doc as map(*),$opts as map(*)){
+ if($opts?method eq "xhtml")
+ then 
+    let $_:=($doc?uri,name($doc?document))=>trace("O###")
+    return store:as-xhtml($doc?document)
+  else $doc?document
+};
+
+declare function store:as-xhtml($doc)
+{
+  store:change-element-ns-deep($doc,"http:/www.w3.org/1999/xhtml","")
+};
+declare function store:change-element-ns-deep
+  ( $nodes as node()* ,
+    $newns as xs:string ,
+    $prefix as xs:string )  as node()* {
+
+  for $node in $nodes
+  return if ($node instance of element())
+         then (element
+               {QName ($newns,
+                          concat($prefix,
+                                    if ($prefix = '')
+                                    then ''
+                                    else ':',
+                                    local-name($node)))}
+               {$node/@*,
+                store:change-element-ns-deep($node/node(),
+                                           $newns, $prefix)})
+         else if ($node instance of document-node())
+         then store:change-element-ns-deep($node/node(),
+                                           $newns, $prefix)
+         else $node
+ };
 
 declare %private 
 function store:file-to-native($uri as xs:string)

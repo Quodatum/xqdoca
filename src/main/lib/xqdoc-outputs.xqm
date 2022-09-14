@@ -44,7 +44,7 @@ declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","ou
 declare variable $xqo:outputs:=map{
                                     
                                      "html5": map{"method": "html", "version":"5.0", "indent": "no"},
-                                     "xhtml": map{"method": "xhtml", "version":"1.1","indent": "no"},
+                                     "xhtml": map{"method": "xhtml", "version":"1.1","indent": "yes"},
                                      "xml": map{"indent": "no"},
                                      "json": map{"method": "json"},
                                      "text": map{"method": "text"}

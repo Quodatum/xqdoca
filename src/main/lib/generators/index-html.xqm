@@ -189,7 +189,7 @@ as element(div)
                        return $ns
          let $desc:= $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description=>string()
         return  <tr>
-                <td>{page:link-module($file) }</td>
+                <td style="word-break:break-all;">{page:link-module($file) }</td>
                 <td title="prefix">{ $file?prefix}</td>
                  <td>{ xqhtml:truncate-text($desc,50) }</td>
                  <td >{   xqhtml:file-usage($file,$model) }</td>
