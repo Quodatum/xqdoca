@@ -42,6 +42,12 @@ function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:st
 as map(*)
 {
  let $_:=util:if(empty($token),error("NO TOK"))
+ return if(starts-with($token,"Q{"))
+        then map{
+           "uri": $token=>substring-after("{")=>substring-before("}"),
+           "name": $token=>substring-after("}") 
+        }
+        else
  let $n:=tokenize($token,":")
 let $prefix:=if(count($n)=2)then $n[1] else ()
 let $name:=if(count($n)=2)then  $n[2] else $n[1]
