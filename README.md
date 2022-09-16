@@ -12,18 +12,25 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019
 
 Work in progress.
 
+
+
+## Install
+1. download source [zip](https://github.com/Quodatum/xqdoca/releases/) and unzip a folder
+1. Add the `/bin` folder to your `PATH`
+1. Execute `xqdoca -install`. 
+The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Requirements
 
 The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
-* `Basex` 9.5.1+ http://basex.org/
-* `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
+```xml
+<package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
+	version="0.7.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
+	<title>XQdocA - XQuery code documentation generator</title>
+  <dependency processor="http://basex.org/" semver-min="9.5.1" semver-max="9.99.99"/>
+  <dependency name="http://expkg-zone58.github.io/ex-xparse" semver-min="0.7.10" />
+</package>
+```
 
-## Install
-1. unzip dist bundle to a folder
-1. Add the `/bin` folder to your `PATH`
-1. Execute `xqdoca -install`. 
-
-The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Usage
 
 XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
