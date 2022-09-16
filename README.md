@@ -18,6 +18,7 @@ Work in progress.
 1. download source [zip](https://github.com/Quodatum/xqdoca/releases/) and unzip a folder
 1. Add the `/bin` folder to your `PATH`
 1. Execute `xqdoca -install`. 
+
 The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Requirements
 
@@ -33,7 +34,7 @@ The code to be processed must be syntactically valid from the perspective of the
 
 ## Usage
 
-XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
+XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoca`
 
 For example the file `samples/dba.xqdoca`
 ```xml
@@ -45,7 +46,7 @@ For example the file `samples/dba.xqdoca`
 Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
 `file:///tmp/dba/`
 
-If  `source` or `target` are relative urls they are resolved relative to the xqdoca file.
+If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location.
 
 `xqdoca -h` will display a summary of the options.
 
