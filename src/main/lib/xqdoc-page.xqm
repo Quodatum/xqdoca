@@ -28,7 +28,7 @@ import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.x
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 (:~ prism version path from resources/ :)
-declare variable $page:prism  as xs:string :="prism/1.24.1/";
+declare variable $page:prism  as xs:string :="prism/1.29.0/";
 
 (:~ make html href-able id :)
 declare function page:id($id as xs:string)
@@ -353,7 +353,7 @@ else
 declare function page:date($when as xs:dateTime)
 as element(span)
 {
-  <span title="{ $when }" >{ format-dateTime($when, "[FNn], [MNn] [D1o] [Y0000]") }</span>
+  <span title="{ $when }" >{ format-dateTime($when, "[FNn], [D1o] [MNn] [Y0000]") }</span>
 };
 
 (:~ formated datetime for now :)

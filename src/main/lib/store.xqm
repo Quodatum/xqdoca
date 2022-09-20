@@ -1,17 +1,11 @@
 xquery version "3.1";
-(:
+(:~
+ <p>Save documents to file system or database. Data is supplied as a map which 
+ : includes serialization options</p>
  : Copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  
- (:~
- : <h1>store.xqm</h1>
- : <p>Save documents to file system or database. Data is supplied as a map which 
- : includes serialization options</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
 module namespace store = 'quodatum:xqdoca:store';
 
 
@@ -38,15 +32,21 @@ return switch (substring-before($uri,":"))
 declare function store:doc-tweak($doc as map(*),$opts as map(*)){
  if($opts?method eq "xhtml")
  then 
-    let $_:=($doc?uri,name($doc?document))=>trace("O###")
+    let $_:=($doc?uri,name($doc?document))
     return store:as-xhtml($doc?document)
   else $doc?document
 };
 
+(:~ set doc ns to html
+@param $doc html doc in no namespace
+@todo set contenttype
+:)
 declare function store:as-xhtml($doc)
 {
   store:change-element-ns-deep($doc,"http:/www.w3.org/1999/xhtml","")
 };
+
+(:~ functx :)
 declare function store:change-element-ns-deep
   ( $nodes as node()* ,
     $newns as xs:string ,

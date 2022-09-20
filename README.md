@@ -34,7 +34,9 @@ The code to be processed must be syntactically valid from the perspective of the
 
 ## Usage
 
-XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoca`
+`xqdoca -h` will display a summary of the options.
+
+XQDocA uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
 
 For example the file `samples/dba.xqdoca`
 ```xml
@@ -46,9 +48,11 @@ For example the file `samples/dba.xqdoca`
 Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
 `file:///tmp/dba/`
 
-If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location.
+If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
+Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
 
-`xqdoca -h` will display a summary of the options.
+
+
 
 
 
