@@ -1,11 +1,10 @@
 xquery version "3.1";
 (:~ annotation report
-  Copyright (c) 2019-2022 Quodatum Ltd
+  @copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
-import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
 
@@ -17,8 +16,8 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare 
 %xqdoca:global("annotations","Summary of XQuery annotation use")
 %xqdoca:output("annotations.html","xhtml") 
-function _:annotations($model,$opts)
-{
+function _:annotations($model as map(*),$opts as map(*))
+as element(html){
   let $ns-map:=xqa:annotations($model)
   let $sections:=(
              _:summary($model,$opts),
@@ -71,7 +70,7 @@ function _:annotations($model,$opts)
 };
 
 declare function _:anno-calls($ns as xs:string, $name as xs:string,$a)
-{
+as element(div){
  <div class="div4">
      <h4><a id="{{{ $ns }}}{ $name }"/>{{{ $ns }}}{$name}
       <div style="float:right"><span class="badge badge-info">{count($a)}</span></div>
@@ -109,6 +108,7 @@ as element(section)
  </section>
 };
 
+(:~ table of contents as list from namespace list :)
 declare function _:toc($ns as xs:string*)
 as element(ol)
 {

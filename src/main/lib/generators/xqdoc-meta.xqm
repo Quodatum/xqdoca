@@ -1,19 +1,10 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
+(:~
+   <p>Generate meta data about the <code>xqDocA</code> run</p>
+   @copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  
- (:~
- : <h1>meta.xqm</h1>
- : <p>Generate meta data about the <code>xqDocA</code> run</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-(:~
- : Generate metadata about the current xqdoca execution
- :)
 module namespace _ = 'quodatum:xqdoca.generator.meta';
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 

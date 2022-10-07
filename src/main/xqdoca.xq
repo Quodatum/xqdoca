@@ -31,7 +31,8 @@ let $target:= $options?target
               
 (: add computed defaults :)
 let $options:=opts:merge($options,map{
-                      "project": tokenize($efolder,"\" || file:dir-separator() )[last()-1]
+                      "project": tokenize($efolder,"\" || file:dir-separator() )[last()-1],
+                      "xqdoca": doc("expath-pkg.xml")/*/@version/string()
                       })
 
 let $files:=xqd:find-sources($efolder, $options?extensions)
@@ -48,6 +49,7 @@ return (
       (: arbitrary result for reporting :) 
        update:output(
          <json type="object">
+            <xqdoca>{ $options?xqdoca }</xqdoca>
             <project>{ $options?project }</project>
               <source>{ $efolder }</source>
              <target>{ $target }</target>

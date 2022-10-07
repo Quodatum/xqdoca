@@ -1,19 +1,12 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
- 
- (:~
- : <h1>store.xqm</h1>
+(:~
  : <p>Save documents to file system or database. Data is supplied as a map which 
  : includes serialization options</p>
- :
- : @author Andy Bunce
- : @version 0.2
+ : @Copyright (c) 2019-2022 Quodatum Ltd
+ : @author Andy Bunce, Quodatum, License: Apache-2.0
+ 
  :)
 module namespace store = 'quodatum:xqdoca:store';
-
 
 (:~
  : store a set of  o/ps below $base
@@ -43,10 +36,17 @@ declare function store:doc-tweak($doc as map(*),$opts as map(*)){
   else $doc?document
 };
 
+(:~ copy with all nodes in no namespace are set to the xhtml namespace :)
 declare function store:as-xhtml($doc)
 {
   store:change-element-ns-deep($doc,"http:/www.w3.org/1999/xhtml","")
 };
+
+(:~ 
+The functx:change-element-ns-deep function changes the namespace 
+ of the XML elements in $nodes to $newns
+@see  http://www.xqueryfunctions.com/xq/functx_change-element-ns-deep.html
+:)
 declare function store:change-element-ns-deep
   ( $nodes as node()* ,
     $newns as xs:string ,

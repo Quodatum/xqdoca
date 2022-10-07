@@ -1,20 +1,10 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
+(:~
+ : <p>Render to o/p xqdoc and xqparse XML files</p>
+ : @copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  
- (:~
- : <h1>XML outputs</h1>
- : <p>Render to o/p xqdoc and xqparse XML files</p>
- :
- : @author Andy Bunce
- : @version 0.2
- : @see https://github.com/Quodatum/xqdoca
- :)
- 
-(:~
- : Generate  XML for xqdoc
- :)
 module namespace _ = 'quodatum:xqdoca.generator.simple';
 
 

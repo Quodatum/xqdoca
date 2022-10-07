@@ -305,7 +305,7 @@ as element(div)
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-      {xqh:tags($funs/xqdoc:comment/(* except xqdoc:description)) }
+      {xqh:tags($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return))) }
       
      
        
@@ -402,16 +402,16 @@ as element(p)
  : @see some text
  :)
 declare function xqh:see($v as element(xqdoc:see))
-as element(p)
+as element(span)
 {
   let $items:=tokenize($v,";")
   let $first:=$items[1]
-  return  <p>See also:
+  return  <span>See also:
           {switch(true())
           case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
           case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
           default return if(page:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
-        }</p>
+        }</span>
 };
   
 declare function xqh:annotations($v as element(xqdoc:annotations))
@@ -544,15 +544,26 @@ as element(*)*
 		</dd>
 };
 
+(:~ tags list :)
 declare function xqh:tags($tags as element(*)*)
 {
- for $tag in $tags return
-typeswitch ($tag)
-  case element (xqdoc:see) return	xqh:see($tag)
-  case element (xqdoc:author) return	<p>Author: {string($tag)}</p>
-  case element (xqdoc:version) return<p>Version: {string($tag)}</p>
-  case element (xqdoc:custom) return<p>{ $tag/@tag/string()} : {string($tag)}</p>  
-  default return()
+<ul>{ $tags ! <li>{ xqh:tag(.) }</li> }</ul>
+};
+
+(:~ html for tag, often <span/> :)
+declare function xqh:tag($tag as element(*))
+as element(span)?{
+  let $name:=if($tag instance of element(xqdoc:custom))
+             then $tag/@tag/string()
+             else local-name($tag)
+
+return typeswitch ($tag)
+       case element (xqdoc:see) return xqh:see($tag)
+       default return
+            <span>
+                <span class="badge badge-pill badge-light" >@{ $name }</span>:
+                <span>{ string($tag) }</span>
+            </span>
 };
  
 declare function xqh:restxq($xqd,$file as map(*))

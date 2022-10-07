@@ -1,27 +1,14 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
+(:~
+ : <p>generate html import summary</p>
+ : @Copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
- 
- (:~
- : <h1>xqdoc-html.xqm</h1>
- : <p>Library to support html5 rendering of xqdoc</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-(:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
- :)
+
 module namespace _ = 'quodatum:xqdoca.generator.imports';
 
-import module namespace tree = 'quodatum:data.tree' at "../tree.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
