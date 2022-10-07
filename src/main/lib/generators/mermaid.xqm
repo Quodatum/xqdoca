@@ -65,21 +65,25 @@ let $restfns:=$file?xqdoc
                               xqdoc:annotations/xqdoc:annotation
                               =>filter(xqa:is-rest(?,"path",$ns))
                               ]
+let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
 
 let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
-let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
+let $vars:=$file?xqdoc
+              //xqdoc:variable/xqdoc:name=>_:class-vars-list()
+
 return if($restfns)
-       then ``[class `{ $name }`:::cssRest { << Rest >> 
+       then ``[class `{ $name }`:::cssRest { << Rest `{$file?path }`>> 
 `{ $fns }`}
 ]``
        else if($is-main)
-            then 'class ' || $name || ':::cssMain{ << ' || $file?path || ' >>}
-'
-            else 'class ' || $name || '{ }
-'
+            then ``[class `{ $name }`:::cssMain{ << `{ $file?path }` >>
+`{ $vars }`}
+]``
+            else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
+]``
 };
 
-(:~ add "mermaid" key to map value unique label
+(:~ add "mermaid" key to $file map value unique label
 :)
 declare function _:class-name($file as map(*),$pos, $files as map(*)*)
 as map(*){
@@ -101,6 +105,14 @@ let $r:=$names!substring-after(.,":")
 return concat(file:line-separator(),$r,file:line-separator())
 };
 
+(:~ generate mermaid vars list :)
+declare function _:class-vars-list($names as xs:string*)
+as xs:string{
+let $r:=$names
+        =>sort()
+        =>string-join(file:line-separator())
+return concat(file:line-separator(),$r,file:line-separator())
+};
 (:~html for mermaid diagram
  :)
 declare function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))

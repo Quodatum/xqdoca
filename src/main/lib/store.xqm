@@ -31,12 +31,15 @@ return switch (substring-before($uri,":"))
 declare function store:doc-tweak($doc as map(*),$opts as map(*)){
  if($opts?method eq "xhtml")
  then 
-    let $_:=($doc?uri,name($doc?document))=>trace("O###")
+    let $_:=($doc?uri,name($doc?document))
     return store:as-xhtml($doc?document)
   else $doc?document
 };
 
-(:~ copy with all nodes in no namespace are set to the xhtml namespace :)
+(:~ set doc ns to html
+@param $doc html doc in no namespace
+@todo set contenttype
+:)
 declare function store:as-xhtml($doc)
 {
   store:change-element-ns-deep($doc,"http:/www.w3.org/1999/xhtml","")

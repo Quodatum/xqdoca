@@ -13,7 +13,6 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019
 
 Work in progress.
 
-## Requirements
 
 * `Basex` 9.5.1+ http://basex.org/ 
 * `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
@@ -24,10 +23,26 @@ The code to be documented must be valid from the perspective of the version of B
 1. Add the `/bin` folder from above to your `PATH`
 1. Execute `xqdoca -install` in a command window. 
 
-The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script from that `/bin` folder otherwise  it will search for basex on the `PATH`
+The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
+## Requirements
+
+The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
+```xml
+<package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
+	version="0.7.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
+	<title>XQdocA - XQuery code documentation generator</title>
+  <dependency processor="http://basex.org/" semver-min="9.5.1" semver-max="9.99.99"/>
+  <dependency name="http://expkg-zone58.github.io/ex-xparse" semver-min="0.7.10" />
+</package>
+```
+
 ## Usage
 
-XQDocA uses XML files to define the documentation task. These typically use the extension `.xqdoc`
+`xqdoca -h` will display a summary of the options.
+
+`xqdoca -h` will display a summary of the options.
+
+XQDocA uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
 
 For example the file `samples/dba.xqdoca`
 ```xml
@@ -39,7 +54,10 @@ For example the file `samples/dba.xqdoca`
 Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
 `file:///tmp/dba/`
 
-If  `source` or `target` are relative urls they are resolved relative to the xqdoca file.
+If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
+Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
+
+
 
 Values not specified in the `xqdoca` file are taken from the conf.xqdoca file
 ```xml
@@ -56,7 +74,6 @@ Values not specified in the `xqdoca` file are taken from the conf.xqdoca file
 </xqdoca>
 ```
 
-`xqdoca -h` will display a summary of the options.
 
 ## Built-in generators
 
