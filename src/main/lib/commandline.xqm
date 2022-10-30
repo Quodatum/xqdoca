@@ -1,14 +1,9 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
- 
- (:~
- : <h1>command.xqm</h1>
- : <p>command line tool support.</p>
- : @version 0.3
- :)
+(:~
+ <p>command line tool support.</p>
+ @copyright Copyright (c) 2019-2022 Quodatum Ltd
+ @version 0.3
+:)
 module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";

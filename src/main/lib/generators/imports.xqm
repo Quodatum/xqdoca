@@ -34,20 +34,38 @@ function _:imports($model,$opts)
   )
   let $links:= page:related-buttons("global","imports", $opts) 
   let $body:=<div>
-     <h1>Project <span class="badge badge-info">
+              <h1>Project <span class="badge badge-info">
                       { $opts?project }
                   </span>
                   &#160;Imports 
               </h1>
 
-            {page:toc($opts?project,$sections,$links), 
-            $sections}    
+            { (:page:toc($opts?project,$sections,$links) :) }
+            <nav id="toc">
+                        <h2>
+                            <a href="index.html" >
+                                { $opts? project }
+                            </a>
+                            / Imports
+                        </h2>
+              { $links}
+                <h3>
+                  Contents
+                </h3>
+              { _:toc(map:keys($imports) => sort())}
+              </nav> 
+            { $sections}    
        </div>
   return  page:wrap($body,$opts)
 };
 
-
-declare function _:by-ns($ns,$files){
+(:~
+@param $ns namespace
+@param $files 
+:)
+declare function _:by-ns($ns as xs:string,
+                         $files as map(*)*)
+{
    <div class="div3" >
            <h3><a id="{ $ns }"/>{ $ns } <small> is imported by </small>
            <div  style="float:right"><a href="#{ $ns }">#</a></div>
@@ -68,4 +86,19 @@ as element(section)
     <p>Lists all modules imported.</p>
     { page:related-links("global","imports", $opts) }
  </section>
+};
+
+(:~ table of contents as list from namespace list :)
+declare function _:toc($imports as xs:string*)
+as element(ol)
+{
+ let $t:=<directory>
+      <f target="#summary" name="Summary"/>
+      <directory target="#imports" name="Imports {count($imports)}">{
+     $imports!<f target="#{.}" name="{.}" />
+      }</directory>
+     </directory>
+ return <ol class="toc">
+        {$t/*!page:tree-list(.,position(),page:toc-render#2,99)}
+        </ol>    
 };

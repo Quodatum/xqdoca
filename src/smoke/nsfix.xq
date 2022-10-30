@@ -1,7 +1,11 @@
 (: parse with namespace change :)
 import module namespace xp="expkg-zone58:text.parse";
-declare %updating function local:decl($tree,$ns){
-  replace value of node $tree/LibraryModule/ModuleDecl/StringLiteral with ``[ "`{ $ns }`"]``
+declare %updating function local:decl($tree as element(XQuery),
+                                      $ns as xs:string)
+{
+  replace value of node 
+  $tree/LibraryModule/ModuleDecl/StringLiteral 
+  with ``[ "`{ $ns }`"]``
 };
 
 let $t:="C:\Users\andy\basex.home\basex.945\etc\xqdoc\admin.xqm"

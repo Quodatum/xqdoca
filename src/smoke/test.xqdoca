@@ -1,0 +1,14 @@
+<!-- default options for xqdoca -->
+<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
+    <source>C:\Users\andy\git\quodatum\xqdoca\</source>
+    <target>file:///{webpath}/static/xqdoc/{project}/</target>
+   
+    <defaults>
+        <global>     
+          <mermaid>
+          <direction>TB</direction>
+          </mermaid>
+        </global>
+       
+    </defaults>
+</xqdoca>

@@ -1,8 +1,8 @@
 xquery version "3.1";
 (:~ annotation report
   @copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
+  @author Andy Bunce, Quodatum, License: Apache-2.0
+:)
 module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
@@ -20,10 +20,10 @@ function _:annotations($model as map(*),$opts as map(*))
 as element(html){
   let $ns-map:=xqa:annotations($model)
   let $sections:=(
-             _:summary($model,$opts),
+             _:summary($model, $opts, $ns-map),
              <section id="annotations">
                  <h2>Annotations</h2>
-                 <p>There are { map:size($ns-map) } annotation namespaces in use.</p>
+
                  {
                  for $ns in map:keys($ns-map)
                  order by $ns
@@ -98,12 +98,14 @@ as element(div){
 </div>        
 };
 
-declare function _:summary($model,$opts)
+declare function _:summary($model,
+                           $opts, 
+                           $ns-map as map(*))
 as element(section)
 {
   <section id="summary">
     <h2>Summary</h2>
-    <p>This document itemises the use of annotations in this project.</p>
+    <p>This project uses { map:size($ns-map) } annotation namespaces.</p>
      { page:related-links("global","annotations", $opts) }
  </section>
 };

@@ -1,4 +1,6 @@
-(: find annotated funcs :)
+(:~
+ information about renderers as map(*)* 
+:)
 
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "../main/lib/xqdoc-outputs.xqm";
 let $path:="generators/"
