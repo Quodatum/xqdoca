@@ -94,7 +94,7 @@ as element(ol)
 {
  let $t:=<directory>
       <f target="#summary" name="Summary"/>
-      <directory target="#imports" name="Imports {count($imports)}">{
+      <directory target="#imports" name="Imports">{
      $imports!<f target="#{.}" name="{.}" />
       }</directory>
      </directory>

@@ -1,15 +1,10 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
+(:~
+ <p>Library to support html5 rendering of xqdoc</p>
+ @copyright Copyright (c) 2019-2022 Quodatum Ltd
+ @author Andy Bunce, Quodatum, License: Apache-2.0
+:)
  
- (:~
- : <h1>xqdoc-html.xqm</h1>
- : <p>Library to support html5 rendering of xqdoc</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
  
 (:~
  : Generate XQuery  documentation in html
