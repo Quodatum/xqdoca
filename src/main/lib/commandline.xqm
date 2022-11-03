@@ -18,6 +18,10 @@ let $r:= fold-left(
 return ($r?tokens, if(string-length($r?current) ne 0) then $r?current else ())
 };
 
+(:~
+state machine apply input $char to $state
+@return state  
+:)
 declare %private function cmd:parse2($state as map(*),$char as xs:string)
 as map(*){
  let $new:=switch ($char)
