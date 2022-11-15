@@ -9,7 +9,7 @@ xquery version "3.1";
 module namespace _ = 'quodatum:xqdoca.generator.mermaid';
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../xqdoc-anno.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../annotations.xqm";
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";

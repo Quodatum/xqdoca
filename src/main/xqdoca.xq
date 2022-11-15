@@ -16,6 +16,7 @@ declare option db:chop 'true';
 declare variable $src as xs:string  external;
 let $src:=$src
           =>file:resolve-path(file:current-dir())
+          
 (: options with defaults:)
 let $options:=opts:as-map(doc($src)/*)
                =>opts:merge(opts:as-map(doc("config.xqdoca")/*))

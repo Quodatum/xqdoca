@@ -1,6 +1,6 @@
 # XQdocA
 
-Generates documentation from XQuery sources based on XQDoc style comments and also the use of annotations.
+Generate documentation from XQuery sources based on XQDoc style comments and also the use of annotations.
 
 The outputs can be changed or extended with custom generators that are dynamically 
 located and loaded at run time. 

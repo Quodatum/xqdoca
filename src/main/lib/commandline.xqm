@@ -8,6 +8,8 @@ module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";
 
+declare variable $cmd:repo-list:= "repositories.xml";
+
 (:~  simple command line parse splits on space unless in quotes :)
 declare function cmd:parse-args($str as xs:string)
 as xs:string*{
@@ -85,7 +87,7 @@ as xs:boolean{
 (:~ url to install package $name where version is compatable with spec :)
 declare function cmd:package-url($name as xs:string,$spec as element(*))
 as xs:string{
-     let $hits:=doc("repositories.xml")/repositories/repository
+     let $hits:=doc($cmd:repo-list)/repositories/repository
                  /package[@name=$name]/release[not(cmd:semver-fails(@version,$spec))]
      return if(empty($hits))
             then  error(xs:QName("pkg:version"),"no source for :" || $name)

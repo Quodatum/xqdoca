@@ -1,7 +1,6 @@
 <!-- where to find packages -->
 <repositories>
     <repository>
-
         <package name="http://expkg-zone58.github.io/ex-xparse" xml:base="https://github.com/expkg-zone58/ex-xparse/releases/download/">
             <release version="0.7.12">v0.7.12/ex-xparse-0.7.12.xar</release>
             <release version="0.7.8">v0.7.8/ex-xparse-0.7.8.xar</release>
@@ -13,6 +12,10 @@
 
         <package name="http://github.com/Schematron/schematron-basex" xml:base="https://github.com/Schematron/schematron-basex/raw/master/dist/schematron-basex-1.2.xar">
             <release version="1.2.0">raw/master/dist/schematron-basex-1.2.xar</release>
+        </package>
+
+        <package name="https://doi.org/10.5281/zenodo.1495494" xml:base="https://github.com/schxslt/schxslt/releases/download/">
+            <release version="1.9.4">v1.9.4/schxslt-basex-1.9.4.xar</release>
         </package>
     </repository>
 </repositories>

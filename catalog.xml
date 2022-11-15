@@ -1,0 +1,7 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+    <uri
+        name="http://www.xqdoc.org/1.0"
+        uri="./src/main/etc/models/xqdoc-1.2.xsd" />
+  
+  </catalog>

@@ -33,7 +33,7 @@ module namespace xqd = 'quodatum:xqdoca.model';
 
 import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "annotations.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
