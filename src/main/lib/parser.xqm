@@ -138,7 +138,7 @@ as element(*)*
  : @param $e is FunctionCall or ArrowExpr 
  :)
 declare function xqp:invoke-fn(
-                 $e as element(FunctionCall),
+                 $e as element( (:  FunctionCall :) ),
                  $prefixes as map(*),
                  $def-fn)
 as element(xqdoc:invoked)*
@@ -165,14 +165,15 @@ declare function xqp:invoke-arrow($e as element(ArrowExpr),
 as element(xqdoc:invoked)*
 {
 for $arrow in $e/TOKEN[. = "=&gt;"]
-let $fname:=$arrow/following-sibling::*[1]
-let $arglist:=$arrow/following-sibling::*[2]
-let $arity:=1+count($arglist/*[not(TOKEN)])
+let $fname:=$arrow/following-sibling::QName
+let $arglist:=$arrow/following-sibling::ArgumentList
+let $arity:=1+count($arglist/*[not(self::TOKEN)])
 let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
-        </xqdoc:invoked>   
+        </xqdoc:invoked>
+        =>trace("invoke-arrow: ")   
 };
 
 (:~  build invoked nodes for function call

@@ -12,7 +12,7 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
 
-(:~ annotations page :)
+(:~ HTML for annotations report :)
 declare 
 %xqdoca:global("annotations","Summary of XQuery annotation use")
 %xqdoca:output("annotations.html","xhtml") 

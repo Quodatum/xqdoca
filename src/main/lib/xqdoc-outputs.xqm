@@ -8,8 +8,6 @@ o/p  utils
 
 module namespace xqo = 'quodatum:xqdoca.outputs';
 
-
-
 (:~ xqdoca annotation namespace :)
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
@@ -93,8 +91,8 @@ as map(*)*
 { 
   let $funs:=xqo:load-generators("generators/")
   
-  let $globals:=xqo:tokens($opts?outputs?global)
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
+  let $wanted:=xqo:tokens($opts?outputs?global)
+  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$wanted]
   
   let $modules:=xqo:tokens($opts?outputs?module)
   let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]

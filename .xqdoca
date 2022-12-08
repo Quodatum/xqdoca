@@ -3,7 +3,7 @@
     <source>src/main</source>
     <target>file:///tmp/xqdoca/xqdoca/</target>
     <outputs>
-        <global>report imports  annotations mermaid xqdoca.xml</global>
+        <global>report imports  annotations mermaid mermaid.mmd xqdoca.xml lint xqdoc-validate</global>
         <module>module xqdoc xqparse</module>
     </outputs>
 </xqdoca>

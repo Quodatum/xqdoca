@@ -10,7 +10,8 @@ module namespace xqcom = 'quodatum:xqdoca.model.comment';
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-declare variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated'
+(:~ xqdoc tags :)
+declare variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'
                               =>tokenize(',');
 
 (:~ @return xqdoc:comment if xqdoc comments in closest direct preceding-sibling of $node  :)

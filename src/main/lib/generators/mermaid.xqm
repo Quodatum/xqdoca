@@ -1,10 +1,11 @@
 xquery version "3.1";
 (:~
- : simple mermaid diagram generation 
- :
- : @author Andy Bunce
- : @since 2022-08-30
- :)
+Diagrams showing project module imports. Generated with `mermaid.js`.
+
+@see https://mermaid-js.github.io/mermaid/#/
+@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@author Andy Bunce, Quodatum, License: Apache-2.0
+:)
  
 module namespace _ = 'quodatum:xqdoca.generator.mermaid';
 import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
@@ -15,48 +16,52 @@ declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
-
+(:~ generate html page containing import imports diagram using mermaid.js :)
 declare 
-%xqdoca:global("mermaid","Project wide module imports as a mermaid class diagram")
+%xqdoca:global("mermaid","Project wide module imports as html mermaid class diagram")
 %xqdoca:output("mermaid.html","html5") 
-function _:calls(        
+function _:html(        
                  $model as map(*),
                  $opts as map(*)
                  )                         
 {
-	  _:build( $model?files, $opts)
+	  let $mermaid:=_:mmd( $model, $opts)
+    let $related:= page:related-buttons("global","mermaid", $opts) 
+    return _:page-wrap($mermaid,$related,$opts)
 };
 
-(:~ generate mermaid class diagram :)
- declare function _:build($files as map(*)*,         
-                         $opts as map(*) )
- { 
+(:~ generate text for mermaid class diagram in mmd format:)
+ declare 
+ %xqdoca:global("mermaid.mmd","Project wide module imports as a mermaid class diagram")
+%xqdoca:output("mermaid.mmd","text") 
+ function _:mmd($model as map(*),         
+                $opts as map(*) )
+ as xs:string{ 
+let $files:=$model?files
 (: just files with prefix ie xqm :) 
 let $friendly:= $files!_:class-name(.,position(),$files)
 
-let $classes:=  $friendly!_:class(.)
-              
+let $classes:=  $friendly!_:class(.)             
 let $links:= $friendly!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
 ]``
 let $imports:=for $f in $friendly,
                 $i in xqd:where-imported($friendly, $f?namespace)
                 return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
 ]``
-        
-let $mermaid:=``[
-%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+       
+return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
 classDiagram
 direction TB
 `{ $classes }`
 `{ $imports }`
 `{ $links }`
 ]``
-let $related:= page:related-buttons("global","mermaid", $opts) 
-return _:page-wrap($mermaid,$related,$opts)
+
 };
 
 (:~ generate mermaid class definition :)
-declare function _:class($file as map(*))
+declare %private
+function _:class($file as map(*))
 as xs:string{
 let $name:=$file?mermaid
 let $ns:= $file?prefixes
@@ -85,7 +90,8 @@ return if($restfns)
 
 (:~ add "mermaid" key to $file map value unique label
 :)
-declare function _:class-name($file as map(*),$pos, $files as map(*)*)
+declare %private 
+function _:class-name($file as map(*),$pos, $files as map(*)*)
 as map(*){
   let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
   let $name:=$fn($file)
@@ -96,7 +102,8 @@ as map(*){
 };
 
 (:~ generate mermaid function list :)
-declare function _:class-fns-list($names as xs:string*)
+declare %private
+function _:class-fns-list($names as xs:string*)
 as xs:string{
 let $r:=$names!substring-after(.,":")
         !concat(.,"()")
@@ -106,16 +113,19 @@ return concat(file:line-separator(),$r,file:line-separator())
 };
 
 (:~ generate mermaid vars list :)
-declare function _:class-vars-list($names as xs:string*)
+declare %private
+function _:class-vars-list($names as xs:string*)
 as xs:string{
 let $r:=$names
         =>sort()
         =>string-join(file:line-separator())
 return concat(file:line-separator(),$r,file:line-separator())
 };
-(:~html for mermaid diagram
+
+(:~ html wrapping for mermaid diagram
  :)
-declare function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
+declare %private
+function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
 as element(html){
 <html lang="en">
 {_:head("Module imports diagram (Mermaid)","resources/")}
@@ -131,13 +141,14 @@ as element(html){
         stroke:black !important;
     }}
 </style>
-  <nav id="toc" style="position:absolute"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
+  <nav id="toc" style="position:absolute;top:0"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
   {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" 
-  integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.2/mermaid.min.js" 
+  integrity="sha512-IX+bU+wShHqfqaMHLMrtwi4nK6W/Z+QdZoL4kPNtRxI2wCLyHPMAdl3a43Fv1Foqv4AP+aiW6hg1dcrTt3xc+Q==" 
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
   <script>mermaid.initialize({{
   startOnLoad:true,
   logLevel: "error", 
@@ -147,10 +158,12 @@ as element(html){
 </body>
 </html>
 };
+
 (:~ common html head
 @param resources relative path to resources
  :)
-declare function _:head($title as xs:string,$resources as xs:string)
+declare %private
+function _:head($title as xs:string,$resources as xs:string)
 as element(head){
      <head>
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

@@ -3,7 +3,7 @@ xquery version "3.1";
 create xqdoc from parse tree 
  @Copyright (c) 2022 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
- @TODO refs,return
+ @TODO refs,external
 :)
  
 
@@ -30,7 +30,7 @@ as element(xqdoc:xqdoc)
 		<xqdoc:version>1.2</xqdoc:version>
 	</xqdoc:control>{
 	   xqdc:module($parse)
-    ,xqdc:imports($parse)
+    ,$parse/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
     ,xqdc:namespaces($parse)
     ,xqdc:variables($parse,$opts)
     ,xqdc:functions($parse,$opts)
@@ -80,7 +80,6 @@ as element(xqdoc:namespaces)
         for $import in $parse/LibraryModule/Prolog/(ModuleImport|NamespaceDecl)
         let $uri:=$import/StringLiteral[1]=>xqdc:unquote()
         let $prefix:= $import/NCName/string()
-        let $comment:= $import/NCName/string()
         return <xqdoc:namespace prefix="{ $prefix}" uri="{ $uri }">{
                    xqcom:comment($import)
         }</xqdoc:namespace>
@@ -100,6 +99,7 @@ as element(xqdoc:variable){
 	let $name:=$vardecl/QName/string()
 
   return <xqdoc:variable>
+     {$vardecl/TOKEN[.="external"]!attribute external {"true"}}
 			<xqdoc:name>{ $name }</xqdoc:name>
       { $vardecl/parent::AnnotatedDecl/Annotation
         !<xqdoc:annotations>{xqdc:annotation(.)}</xqdoc:annotations>,
@@ -120,7 +120,8 @@ as element(xqdoc:functions)
 
 declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
- <xqdoc:function arity="{ count($fundecl/ParamList/Param) }">
+ <xqdoc:function arity="{ count($fundecl/Param) }">
+      {$fundecl/TOKEN[.="external"]!attribute external {"true"}}
 			<xqdoc:name>{ $fundecl/QName/string() }</xqdoc:name>
        { $fundecl/parent::AnnotatedDecl/Annotation
          !<xqdoc:annotations>{xqdc:annotation(.)}</xqdoc:annotations>}
@@ -132,7 +133,11 @@ as element(xqdoc:function){
       <xqdoc:parameters>
       { $fundecl/ParamList/Param!xqdc:param(.) }
       </xqdoc:parameters>
-			<xqdoc:return>@TODO</xqdoc:return>
+			<xqdoc:return>{
+        $fundecl/SequenceType!( attribute occurrence {TOKEN/string() },  QName/string() ),
+        if(not($fundecl/SequenceType))
+        then $fundecl/*[last()-1]/string() (: before EnclosedExpr :)
+      }</xqdoc:return>
       { xqdc:refs($fundecl) }
       { xqdc:body($fundecl) }
 	</xqdoc:function>

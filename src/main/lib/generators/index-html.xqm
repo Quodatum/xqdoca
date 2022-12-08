@@ -8,9 +8,6 @@ xquery version "3.1";
  
 (:~
  : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
  :)
 module namespace xqhtml = 'quodatum:xqdoca.generator.index';
 

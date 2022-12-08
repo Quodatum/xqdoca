@@ -5,7 +5,7 @@
     <extensions>*.xqm,*.xq,*.xquery</extensions>
     <platform>basex</platform>
     <outputs>
-        <global>report imports  annotations restxq mermaid xqdoca.xml</global>
+        <global>report imports  annotations restxq mermaid mermaid.mmd xqdoca.xml</global>
         <module>module xqdoc xqparse</module>
     </outputs>
 </xqdoca>

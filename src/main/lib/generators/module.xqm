@@ -70,12 +70,8 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
     <section id="summary">
     <h2>Summary</h2>
     <div>{ $mod/xqdoc:comment/xqdoc:description/(node()|text()) }</div> 
-		<dl>
-			<dt>Tags</dt>
-			<dd>
-			{xqh:tags($mod/xqdoc:comment/(* except xqdoc:description)) }
-			</dd>
-		</dl>
+			{xqh:when ($mod/xqdoc:comment/xqdoc:see,xqh:tags("See also",?)) }
+			{xqh:when($mod/xqdoc:comment/(* except (xqdoc:description | xqdoc:see)),xqh:tags("Tags",?)) }
      { page:related-links("module","module", $opts) }
     </section>
   };
@@ -242,7 +238,7 @@ return
 				<dt class="label">Type</dt>
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
-      {xqh:tags($v/xqdoc:comment/(* except xqdoc:description)) }
+      {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
 		</div>
 };  
@@ -297,22 +293,19 @@ as element(div)
                     </span>
                           
                  }</p>
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
-			<dt class="label">Signature</dt>
+    <dt class="label">Signature</dt>
 			<dd>
 			{$funs!xqh:function-signature(.) }
-			</dd>
+			</dd>             
+		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
+			
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
-      {xqh:tags($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return))) }
-      
-     
-       
+      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return)),xqh:tags("Tags",?)) }    
+       {xqh:invoked-by($funs, $qmap , $model)}   
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
-     
-       {xqh:invoked-by($funs, $qmap , $model)}
-         
+   
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
         <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
@@ -406,7 +399,7 @@ as element(span)
 {
   let $items:=tokenize($v,";")
   let $first:=$items[1]
-  return  <span>See also:
+  return  <span>
           {switch(true())
           case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
           case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
@@ -418,7 +411,7 @@ declare function xqh:annotations($v as element(xqdoc:annotations))
 as element(*)
 {
 		<details>
-			<summary>Annotations</summary>
+			<summary>Annotations ({count($v/xqdoc:annotation)})</summary>
 			<table class="data">
 				<tbody>{ 
        for $a in $v/xqdoc:annotation
@@ -545,9 +538,14 @@ as element(*)*
 };
 
 (:~ tags list :)
-declare function xqh:tags($tags as element(*)*)
-{
-<ul>{ $tags ! <li>{ xqh:tag(.) }</li> }</ul>
+declare function xqh:tags($title as xs:string,$tags as element(*)+)
+as element(dl)?{ 
+  <dl>
+			<dt title="{count($tags)}">{ $title  }</dt>
+			<dd>
+        <ul>{ $tags ! <li>{ xqh:tag(.) }</li> }</ul>
+      </dd>
+   </dl>
 };
 
 (:~ html for tag, often <span/> :)

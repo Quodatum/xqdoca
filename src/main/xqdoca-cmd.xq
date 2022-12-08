@@ -1,7 +1,8 @@
 xquery version "3.1";
 (:~  
- : Generate documentation for for XQuery sources
- : @author Andy Bunce (Quodatum)
+ Process xqdoca command line options and execution
+ @see xqdoc.xq 
+ @author Andy Bunce (Quodatum)
  :)
 
 import module namespace cmd = 'quodatum:tools:commandline' at "lib/commandline.xqm";
@@ -22,7 +23,8 @@ for  $action in  $args
 
 return  
     switch($action)
-    case "-h" return update:output(unparsed-text("xqdoca.txt"))
+    case "-h" return 
+              update:output(unparsed-text("xqdoca.txt"))
 
     case "-v" return
               let $xqd:= $expkg/@version/string()
@@ -43,9 +45,10 @@ return
                         return (file:write($file,$xml),update:output("file created"))     
                        else update:output("xqdoca file already exists")
 
-    default return let $src:=(cmd:check-dependancies($expkg),
-                              local:resolve($action)=>trace("Processing: "))
-                   return xquery:eval-update(xs:anyURI("xqdoca.xq"),
+    default return 
+            let $src:=(cmd:check-dependancies($expkg),
+                        local:resolve($action)=>trace("Processing: "))
+            return xquery:eval-update(xs:anyURI("xqdoca.xq"),
                                       map{"src": $src, 
                                           "pass":true()}
                                     )

@@ -1,34 +1,10 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : <h1>xqdoc-proj.xqm</h1>
- : <p>Analyse XQuery source</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
 (:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+  <p>Analyse XQuery source</p>
+  @copyright (c) 2019-2022 Quodatum Ltd
+  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
+ 
 module namespace xqd = 'quodatum:xqdoca.model';
 
 import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
@@ -47,7 +23,11 @@ declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 
-(:~  files to process from extensions :)
+(:~  file paths below folder with matching extensions
+ @param $efolder start folder
+ @param $extensions string using Glob_Syntax 
+ @see https://docs.basex.org/wiki/Commands#Glob_Syntax
+ :)
 declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
 as xs:string*
 {
@@ -78,6 +58,7 @@ return map{
                       let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
                       let $isParsed:=$analysis?xqparse instance of element(XQuery)
                       let $prefixes:=xqd:namespaces( $analysis?xqdoc)
+                                    
                       let $base:=map{
                               "index": $pos,
                               "path": translate($file,"\","/"),
@@ -273,7 +254,7 @@ as map(*)
 };
 
 (:~ files that import given namespace :)
-declare function xqd:where-imported($files as map(*)*, $uri as xs:string)
+declare function xqd:where-imported($files as map(*)*, $uri as xs:string?)
 {
   $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
@@ -331,7 +312,7 @@ as map(*)
   }
 };
 
-(:~ the prefix for this module :)
+(:~ the prefixes defined infor this namespace :)
 declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
 as xs:string*{
 map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
