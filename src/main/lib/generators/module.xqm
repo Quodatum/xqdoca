@@ -69,12 +69,32 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
  {
     <section id="summary">
     <h2>Summary</h2>
-    <div>{ $mod/xqdoc:comment/xqdoc:description/(node()|text()) }</div> 
-			{xqh:when ($mod/xqdoc:comment/xqdoc:see,xqh:tags("See also",?)) }
-			{xqh:when($mod/xqdoc:comment/(* except (xqdoc:description | xqdoc:see)),xqh:tags("Tags",?)) }
-     { page:related-links("module","module", $opts) }
+       { $mod/xqdoc:comment=>xqh:comment($opts) } 
+		   { page:related-links("module","module", $opts) }
     </section>
   };
+
+declare function xqh:comment($comment as element(xqdoc:comment),
+                            $opts as map(*)
+                            )
+ as element(*)+
+ {
+  let $desc:=$comment/xqdoc:description/(node()|text())
+  let $result:= if(exists($desc))
+                then <div>{$desc}</div>
+                else  <div>MISSING</div>
+
+  return ($result
+          ,xqh:tags("See also",$comment/xqdoc:see)
+          ,xqh:tags("Authors",$comment/xqdoc:author)
+          ,xqh:tags("Parameters",$comment/xqdoc:param)
+          ,xqh:tags("Return",$comment/xqdoc:return)
+          ,xqh:tags("Errors",$comment/xqdoc:error)
+          ,xqh:tags("Deprecated",$comment/xqdoc:deprecated)
+          ,xqh:tags("Since",$comment/xqdoc:since)
+          ,xqh:tags("Custom",$comment/xqdoc:custom)      
+  )
+ };
 
 
 declare function xqh:toc($xqd,$opts,$file as map(*))
@@ -296,7 +316,8 @@ as element(div)
     <dt class="label">Signature</dt>
 			<dd>
 			{$funs!xqh:function-signature(.) }
-			</dd>             
+			</dd>
+               
 		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
 			
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
@@ -538,14 +559,15 @@ as element(*)*
 };
 
 (:~ tags list :)
-declare function xqh:tags($title as xs:string,$tags as element(*)+)
+declare function xqh:tags($title as xs:string,$tags as element(*)*)
 as element(dl)?{ 
-  <dl>
-			<dt title="{count($tags)}">{ $title  }</dt>
-			<dd>
-        <ul>{ $tags ! <li>{ xqh:tag(.) }</li> }</ul>
-      </dd>
-   </dl>
+  if($tags)
+  then <dl>
+        <dt title="{count($tags)}">{ $title  }</dt>
+        <dd>
+          <ul>{ $tags ! <li>{ xqh:tag(.) }</li> }</ul>
+        </dd>
+      </dl>
 };
 
 (:~ html for tag, often <span/> :)
@@ -557,6 +579,7 @@ as element(span)?{
 
 return typeswitch ($tag)
        case element (xqdoc:see) return xqh:see($tag)
+       case element (xqdoc:author) return <span>{string($tag)}</span>
        default return
             <span>
                 <span class="badge badge-pill badge-light" >@{ $name }</span>:

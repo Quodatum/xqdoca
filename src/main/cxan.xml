@@ -1,0 +1,10 @@
+<package xmlns="http://cxan.org/ns/package" id="xqdoca">
+    <abstract>XQuery documentation generation</abstract>
+    <author id="quodatum">quodatum</author>
+    <maintainer id="abunce">Andy Bunce</maintainer>
+    <home>https://github.com/Quodatum/xqdoca</home>
+    <category id="libs">Library</category>
+    <tag>xquery</tag>
+    <tag>documentation</tag>
+    <tag>graphic</tag>
+</package>

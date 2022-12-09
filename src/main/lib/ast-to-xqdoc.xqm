@@ -24,38 +24,39 @@ as element(xqdoc:xqdoc)
 declare function xqdc:create($parse as element(XQuery),$opts as map(*))
 as element(xqdoc:xqdoc)
 {
-  <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
+  let $mod:= $parse/Module
+  return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
 		<xqdoc:date>{ current-dateTime() }</xqdoc:date>
 		<xqdoc:version>1.2</xqdoc:version>
 	</xqdoc:control>{
-	   xqdc:module($parse)
-    ,$parse/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
-    ,xqdc:namespaces($parse)
-    ,xqdc:variables($parse,$opts)
-    ,xqdc:functions($parse,$opts)
+	   xqdc:module($mod)
+    ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
+    ,xqdc:namespaces($mod)
+    ,xqdc:variables($mod,$opts)
+    ,xqdc:functions($mod,$opts)
   }</xqdoc:xqdoc>
 };
 
-declare %private function xqdc:module($parse as element(XQuery))
+declare %private function xqdc:module($parse as element(Module))
 as element(xqdoc:module)
 {
 let $type:=if($parse/LibraryModule) then "library" else "main"
 let $name:=$parse/LibraryModule/ModuleDecl/NCName/string()
 let $uri:=$parse/LibraryModule/ModuleDecl/StringLiteral/xqdc:unquote(.)
-let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)
-let $desc:= xqcom:comment-parse($com)          
+let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)=>trace("DD")
+          
 return 
     <xqdoc:module type="{ $type }">
       <xqdoc:uri>{ $uri }</xqdoc:uri>
       <xqdoc:name>{ $name }</xqdoc:name>
-      { xqcom:comment-xml($desc)} 
+      { $com } 
       <xqdoc:body>
       </xqdoc:body>
     </xqdoc:module>
 };
 
-declare %private function xqdc:imports($parse as element(XQuery))
+declare %private function xqdc:imports($parse as element(Module))
 as element(xqdoc:imports)
 {
   <xqdoc:imports>{
@@ -67,7 +68,7 @@ as element(xqdoc:imports)
 }</xqdoc:imports>
 }; 
 
-declare %private function xqdc:namespaces($parse as element(XQuery))
+declare %private function xqdc:namespaces($parse as element(Module))
 as element(xqdoc:namespaces)
 {
   let $this:=if($parse/LibraryModule)
@@ -86,7 +87,7 @@ as element(xqdoc:namespaces)
   }</xqdoc:namespaces>
 };  
 
-declare %private function xqdc:variables($parse as element(XQuery), $opts as map(*))
+declare %private function xqdc:variables($parse as element(Module), $opts as map(*))
 as element(xqdoc:variables)
 {
   element {"xqdoc:variables"} { 
@@ -111,7 +112,7 @@ as element(xqdoc:variable){
 		</xqdoc:variable>
 };
 
-declare %private function xqdc:functions($parse as element(XQuery), $opts)
+declare %private function xqdc:functions($parse as element(Module), $opts)
 as element(xqdoc:functions)
 {
   let $items:= $parse/*/Prolog/AnnotatedDecl/FunctionDecl   
@@ -169,10 +170,11 @@ as element(*)*
 };
 
 (:~  :)
-declare %private function xqdc:invoked($element as xs:string,
-                                       $uri as xs:string,
-                                       $name as xs:string,
-                                       $arity as xs:integer?)
+declare %private 
+function xqdc:invoked($element as xs:string,
+                      $uri as xs:string,
+                      $name as xs:string,
+                      $arity as xs:integer?)
 as element(*)
 {
  element {$element} {

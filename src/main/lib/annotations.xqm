@@ -50,6 +50,13 @@ declare variable $xqa:noteworthy:=(
     "title":'UNIT',
     "icon": 'T',
     "class": 'primary'
+  },
+   map{
+    "uri":'https://github.com/Quodatum/xqdoca',
+    "name":'output',
+    "title":'XQdocA',
+    "icon": 'D',
+    "class": 'success'
   }
 );
 
@@ -62,11 +69,13 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*,
                             $button-render as function(*))
 {
   let $prefixes:=$file?prefixes
-  let $others:=some $a in $annos satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)
-                                               return not($m?uri = $xqa:noteworthy?uri)
+  let $others:= some $a in $annos 
+                satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)
+                          return not($m?uri = $xqa:noteworthy?uri)
   return (
     for $badge in $xqa:noteworthy
-    where   some $a in $annos satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)
+    where some $a in $annos 
+          satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)
     return  $button-render($badge?icon, $badge?class, $badge?title)
     
     ,if($others) then $button-render("A", "info", "Other annotations") else ()

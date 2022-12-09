@@ -26,7 +26,8 @@ as element(xqdoc:comment)?{
 };
 
 (:~ parse xqdoc comment to map :)
-declare function xqcom:comment-parse($comment as xs:string?)
+declare %private
+function xqcom:comment-parse($comment as xs:string?)
 as map(*)?{
   let $comment:=xqcom:trim($comment)
   return if(starts-with($comment,'(:~'))
@@ -45,7 +46,8 @@ as map(*)?{
 };
 
 (:~ update parse $state from  $line :)
-declare function xqcom:comment-parse($state as map(*),$line as xs:string)
+declare %private
+function xqcom:comment-parse($state as map(*),$line as xs:string)
 as map(*){
 
   let $reg:="^\s*@(\w+)\s+(.+)$"
@@ -53,28 +55,34 @@ as map(*){
   return if($is-tag)
          then 
          let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()
+         let $tag:=map{"tag": $match[1], "txt": $match[2]}
          return 
-              if($match[1]=$xqcom:TAGS )
-              then  map:put($state,$match[1],($state?($match) ,$match[2]))
-              else  map:put($state,'custom',($state?custom ,$match[2]))                 
+              if($tag?tag =$xqcom:TAGS )
+              then  map:put($state,$match[1],($state?($match[1]) ,$tag))
+              else  map:put($state,'custom',($state?custom ,$tag))                 
          else 
          map:put($state,'description',$state?description || " " || $line)
 };
 
-declare function xqcom:comment-xml($state as map(*)?)
+declare %private
+function xqcom:comment-xml($state as map(*)?)
 as element(xqdoc:comment)?{
   if(exists($state)) 
   then <xqdoc:comment>{
-        for $key in ($xqcom:TAGS,'custom')
+        for $key in ($xqcom:TAGS)
         where map:contains($state,$key)
         return for $tag in $state?($key)
-               return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} {$tag}
+               return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} {
+                if($key eq "custom") then attribute tag { $tag?tag} else (),
+                if($key="description") then $tag else $tag?txt
+                }
       }</xqdoc:comment>
   else ()
 };
 
 (:~ remove leading/trailing whitespace :)
-declare function xqcom:trim
+declare %private
+function xqcom:trim
   ( $arg as xs:string? )  as xs:string {
   replace(replace($arg,'\s+$',''),'^\s+','')
  };

@@ -5,5 +5,5 @@ Usage xqdoca [options] [files]
    -v       display version
    -h       display this help
    -init    create .xqdoca file in current directory if not existing
-   -install attempt to install missing dependancies
+   -update  update XQdocA required packages (as specified in expath-pkg.xml).
 

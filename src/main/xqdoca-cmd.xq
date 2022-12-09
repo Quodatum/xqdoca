@@ -32,7 +32,8 @@ return
               let $basex:= db:system()/generalinformation/version/string()
               return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)
 
-    case "-install" return (cmd:install($expkg),update:output("All dependancies installed."))
+    case "-install" 
+    case "-update" return (cmd:install($expkg),update:output("All dependancies installed."))
 
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 

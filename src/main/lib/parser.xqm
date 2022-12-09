@@ -172,8 +172,7 @@ let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
-        </xqdoc:invoked>
-        =>trace("invoke-arrow: ")   
+        </xqdoc:invoked> 
 };
 
 (:~  build invoked nodes for function call

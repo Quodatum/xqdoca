@@ -40,7 +40,9 @@ as map(*){
   return map:merge(($new,$state))       
 };
 
-(:~ raise error if deps missing 
+(:~ raise error if deps missing
+@error  pkg:version Basex version running now is not supported
+@error  pkg:missing package missing
 @return version :)
 declare function cmd:check-dependancies($pkg as element(pkg:package))
 as empty-sequence(){
