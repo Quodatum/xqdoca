@@ -159,11 +159,14 @@ as element(nav){
               group by $name:=$fun/xqdoc:name
               order by $name
               count $pos
+              let $display:=substring-after($name,":")
+              let $display:=if($display eq "") then $name else $display
+              let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/string()
               return
 									<li>
 										<a href="#{$name}">
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
-											<span class="content" title="{$fun[1]/xqdoc:description/string()}">{ $name }
+											<span class="content" title="{ $desc }">{ $display }
                       <div style="float:right">
                      {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file,page:badge#3)}
                         </div>
@@ -578,8 +581,15 @@ as element(span)?{
              else local-name($tag)
 
 return typeswitch ($tag)
-       case element (xqdoc:see) return xqh:see($tag)
-       case element (xqdoc:author) return <span>{string($tag)}</span>
+       case element (xqdoc:param) | element(xqdoc:return)
+          return () (: ignore :)
+
+       case element (xqdoc:see) 
+          return xqh:see($tag)
+
+       case element (xqdoc:author) 
+          return <span>{string($tag)}</span>
+
        default return
             <span>
                 <span class="badge badge-pill badge-light" >@{ $name }</span>:

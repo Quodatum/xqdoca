@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:~
-create xqdoc comment from xquery comment 
+create xqdoc comment from xquery parse comment 
  @Copyright (c) 2022 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)

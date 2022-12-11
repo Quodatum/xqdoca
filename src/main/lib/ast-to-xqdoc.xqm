@@ -11,11 +11,18 @@ module namespace xqdc = 'quodatum:xqdoca.model.xqdoc';
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
+(:~ default options :)
+declare variable $xqdc:defaults:=map{
+                          "body-full": false(),  (: include full source as xqdoc:body :)
+                          "body-items": true(), (: include item (fn,var) source as xqdoc:body :)
+                          "refs": true()        (: include xref info :)
+                          };
+
 (:~ create xqdoc from parse tree :)
 declare function xqdc:create($parse as element(XQuery))
 as element(xqdoc:xqdoc)
 {
-   xqdc:create($parse,map{})
+   xqdc:create($parse,$xqdc:defaults)
 };
 
 (:~ create xqdoc from parse tree 
@@ -30,7 +37,7 @@ as element(xqdoc:xqdoc)
 		<xqdoc:date>{ current-dateTime() }</xqdoc:date>
 		<xqdoc:version>1.2</xqdoc:version>
 	</xqdoc:control>{
-	   xqdc:module($mod)
+	   xqdc:module($mod, $opts)
     ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
     ,xqdc:namespaces($mod)
     ,xqdc:variables($mod,$opts)
@@ -38,7 +45,7 @@ as element(xqdoc:xqdoc)
   }</xqdoc:xqdoc>
 };
 
-declare %private function xqdc:module($parse as element(Module))
+declare %private function xqdc:module($parse as element(Module), $opts as map(*))
 as element(xqdoc:module)
 {
 let $type:=if($parse/LibraryModule) then "library" else "main"
@@ -50,9 +57,8 @@ return
     <xqdoc:module type="{ $type }">
       <xqdoc:uri>{ $uri }</xqdoc:uri>
       <xqdoc:name>{ $name }</xqdoc:name>
-      { $com } 
-      <xqdoc:body>
-      </xqdoc:body>
+      { $com }
+      { util:if($opts?body-full,xqdc:body(root($parse)))} 
     </xqdoc:module>
 };
 
@@ -108,7 +114,7 @@ as element(xqdoc:variable){
 		  xqcom:comment($vardecl/..),
       $vardecl/TypeDeclaration!xqdc:type(.),
       xqdc:refs($vardecl),
-      xqdc:body($vardecl) }
+      util:if($opts?body-items,xqdc:body($vardecl)) }
 		</xqdoc:variable>
 };
 
@@ -121,7 +127,7 @@ as element(xqdoc:functions)
 
 declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
- <xqdoc:function arity="{ count($fundecl/Param) }">
+ <xqdoc:function arity="{ count($fundecl/ParamList/Param) }">
       {$fundecl/TOKEN[.="external"]!attribute external {"true"}}
 			<xqdoc:name>{ $fundecl/QName/string() }</xqdoc:name>
        { $fundecl/parent::AnnotatedDecl/Annotation
@@ -130,7 +136,7 @@ as element(xqdoc:function){
       <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
                         =>string-join(" ")=>normalize-space()
        }</xqdoc:signature>
-			{  xqcom:comment($fundecl/..)}
+			{  xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
       <xqdoc:parameters>
       { $fundecl/ParamList/Param!xqdc:param(.) }
       </xqdoc:parameters>
@@ -140,7 +146,7 @@ as element(xqdoc:function){
         then $fundecl/*[last()-1]/string() (: before EnclosedExpr :)
       }</xqdoc:return>
       { xqdc:refs($fundecl) }
-      { xqdc:body($fundecl) }
+      { util:if($opts?body-items,xqdc:body($fundecl)) }
 	</xqdoc:function>
 };
 

@@ -3,9 +3,7 @@ xquery version "3.1";
  <p>namespace and qname utils</p>
  @copyright (c) 2019-2022 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
-
-
+:)
 module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
@@ -46,10 +44,11 @@ return map{
            "name": $name} 
 };
 
-declare function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
+(:~ true if $uri and $name match $qmap :)
+declare function xqn:eq($qmap as map(*),$uri as xs:string, $name as xs:string) 
 as xs:boolean
 {
-  $a?name=$name and $a?uri=$uri
+  $qmap?name=$name and $qmap?uri=$uri
 };
 
 
