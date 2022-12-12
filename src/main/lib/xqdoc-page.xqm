@@ -402,12 +402,13 @@ as element(table)?
                  {
                   for  $name in $list 
                   let $rend :=  $renderers[?name=$name]
-                 
+
                   return (for $def in  $rend
                           order by $def?name
+                          let $target:=if($def?output = ("xml","text")) then "_blank" else "_self"
                          return <tr>
                                  <td><a href="{ $def?uri }">{ 
-                                     attribute target {},
+                                     attribute target { $target},
                                      $def?name }</a></td>
                                   <td>{ $def?description }</td>
                                   <td>{ $def?output }</td>
