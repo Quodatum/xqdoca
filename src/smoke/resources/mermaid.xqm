@@ -8,15 +8,15 @@ Diagrams showing project module imports. Generated with `mermaid.js`.
 :)
  
 module namespace _ = 'quodatum:xqdoca.generator.mermaid';
-import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
-import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../annotations.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "../../main/lib/model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../../main/lib/xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../../main/lib/annotations.xqm";
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
-(:~ generate html page containing import imports diagram using mermaid.js :)
+(:~ Generate html page containing imports diagram rendered by mermaid.js :)
 declare 
 %xqdoca:global("imports-diag","Project wide module imports as html mermaid class diagram")
 %xqdoca:output("mermaid.html","html5") 
@@ -30,7 +30,7 @@ function _:html(
     return _:page-wrap($mermaid,$related,$opts)
 };
 
-(:~ generate text for mermaid class diagram in mmd format:)
+(:~ Generate text for import diagram in mmd format:)
  declare 
  %xqdoca:global("mermaid.mmd","Project wide module imports as a mermaid class diagram")
 %xqdoca:output("mermaid.mmd","text") 
@@ -91,7 +91,7 @@ return if($restfns)
 (:~ add "mermaid" key to $file map value unique label
 :)
 declare %private 
-function _:class-name($file as map(*), $pos as xs:integer, $files as map(*)*)
+function _:class-name($file as map(*),$pos, $files as map(*)*)
 as map(*){
   let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
   let $name:=$fn($file)

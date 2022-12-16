@@ -219,7 +219,7 @@ as element(section){
     </p>{
      page:calls(
 		     $x?importedby?namespace!page:link-module(.,$model),
-		     $x?url,
+		     $x?uri,
 		     $x?imports/xqdoc:uri/string()!page:link-module(.,$model)
    )
   }

@@ -18,25 +18,25 @@ declare variable $xqdc:defaults:=map{
                           "refs": true()        (: include xref info :)
                           };
 
-(:~ create xqdoc from parse tree :)
-declare function xqdc:create($parse as element(XQuery))
+(:~ build xqdoc from parse tree :)
+declare function xqdc:build($parse as element(XQuery))
 as element(xqdoc:xqdoc)
 {
-   xqdc:create($parse,$xqdc:defaults)
+   xqdc:build($parse,$xqdc:defaults)
 };
 
-(:~ create xqdoc from parse tree 
+(:~ build xqdoc from parse tree 
  @param $opts {body:, refs:}
 :)
-declare function xqdc:create($parse as element(XQuery),$opts as map(*))
+declare function xqdc:build($parse as element(XQuery),$opts as map(*))
 as element(xqdoc:xqdoc)
 {
   let $mod:= $parse/Module
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
-		<xqdoc:date>{ current-dateTime() }</xqdoc:date>
-		<xqdoc:version>1.2</xqdoc:version>
-	</xqdoc:control>{
+      <xqdoc:date>{ current-dateTime() }</xqdoc:date>
+      <xqdoc:version>xqdoca@{  $opts?xqdoca }</xqdoc:version>
+	  </xqdoc:control>{
 	   xqdc:module($mod, $opts)
     ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
     ,xqdc:namespaces($mod)

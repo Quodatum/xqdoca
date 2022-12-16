@@ -50,7 +50,7 @@ as element(span)
 {
    let $desc:=  $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description
    return <span>
-    <a href="{ $file?href }index.html" title="{ $desc }">{ $file?namespace }</a> 
+    <a href="{ $file?href }index.html" title="{ page:line-wrap($desc,60) }">{ $file?namespace }</a> 
    </span>
 };
 
@@ -124,24 +124,24 @@ as element(span)
 (:~
  :  connections 3 column list 
  :)
-declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
+declare function page:calls($calls-this as item()*, $this, $called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-      <div style="display: flex; justify-content: space-between; align-items:center;">
-        <div style="">{ if (count($calls-this)) 
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex-grow: 1;padding:10px;">{ if (count($calls-this)) 
                                   then $calls-this!<div style="text-align: right;" >{.}</div>
                                   else "(None)"   
       }</div>
                       
-     <div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;">
+     <div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;">
          <div><div>imports</div>&#x2192;</div>
-        <div class="badge badge-info">this</div>
+        <div class="badge badge-info">{ $this }</div>
         <div><div>imports</div>&#x2192;</div>
      </div>
      
-    <div style="display: flex;justify-content: space-between;align-items:center;">
+    <div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;">
     <div style="">{ if(count($called-by-this)) 
                               then $called-by-this!<div style="text-align: left;">{.}</div>
                               else "(None)"
@@ -374,7 +374,7 @@ for  $name in $list
 let $rend :=  $renderers[?name=$name]
 for $def in  $rend
 order by $def?name
-return <a href="{ $def?uri }" title="{$def?description}" 
+return <a href="{ $def?uri }" title="{ page:line-wrap($def?description,60) }" 
         class="badge badge-pill badge-light"  style="margin-left:1em">{ $def?name }</a>
 }</span>
 };
@@ -486,4 +486,12 @@ as xs:string*
 declare function page:line-count($txt as xs:string?)
 as xs:integer{
   tokenize($txt, '(\r\n?|\n\r?)')=>count()
+};
+
+(:~ break lines longer than width by inserting newline chars
+:)
+declare function page:line-wrap($string as xs:string?,$width as xs:integer)
+as xs:string?{
+  $string=>normalize-space()=>concat(" ")=>replace(``[(.{0,`{ $width }`})
+]``,'$1&#xA;')
 };

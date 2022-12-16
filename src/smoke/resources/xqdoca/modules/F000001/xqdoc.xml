@@ -1,0 +1,180 @@
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-12-16T22:54:33.281Z</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.mermaid</xqdoc:uri><xqdoc:name>mermaid.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Diagrams showing project module imports. Generated with `mermaid.js`.</xqdoc:description><xqdoc:see>https://mermaid-js.github.io/mermaid/#/</xqdoc:see><xqdoc:custom tag="copyright">Copyright (c) 2019-2022 Quodatum Ltd</xqdoc:custom><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="__source">mermaid.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
+(:~
+Diagrams showing project module imports. Generated with `mermaid.js`.
+
+@see https://mermaid-js.github.io/mermaid/#/
+@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@author Andy Bunce, Quodatum, License: Apache-2.0
+:)
+ 
+module namespace _ = 'quodatum:xqdoca.generator.mermaid';
+import module namespace xqd = 'quodatum:xqdoca.model' at "../../main/lib/model.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../../main/lib/xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../../main/lib/annotations.xqm";
+
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+declare namespace xqdoc="http://www.xqdoc.org/1.0";
+
+
+(:~ Generate html page containing imports diagram rendered by mermaid.js :)
+declare 
+%xqdoca:global("imports-diag","Project wide module imports as html mermaid class diagram")
+%xqdoca:output("mermaid.html","html5") 
+function _:html(        
+                 $model as map(*),
+                 $opts as map(*)
+                 )                         
+{
+	  let $mermaid:=_:mmd( $model, $opts)
+    let $related:= page:related-buttons("global","mermaid", $opts) 
+    return _:page-wrap($mermaid,$related,$opts)
+};
+
+(:~ Generate text for import diagram in mmd format:)
+ declare 
+ %xqdoca:global("mermaid.mmd","Project wide module imports as a mermaid class diagram")
+%xqdoca:output("mermaid.mmd","text") 
+ function _:mmd($model as map(*),         
+                $opts as map(*) )
+ as xs:string{ 
+let $files:=$model?files
+(: just files with prefix ie xqm :) 
+let $friendly:= $files!_:class-name(.,position(),$files)
+
+let $classes:=  $friendly!_:class(.)             
+let $links:= $friendly!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
+]``
+let $imports:=for $f in $friendly,
+                $i in xqd:where-imported($friendly, $f?namespace)
+                return ``[`{ $i?mermaid}` ..&gt;`{ $f?mermaid}` 
+]``
+       
+return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+classDiagram
+direction TB
+`{ $classes }`
+`{ $imports }`
+`{ $links }`
+]``
+
+};
+
+(:~ generate mermaid class definition :)
+declare %private
+function _:class($file as map(*))
+as xs:string{
+let $name:=$file?mermaid
+let $ns:= $file?prefixes
+let $restfns:=$file?xqdoc
+              //xqdoc:function[
+                              xqdoc:annotations/xqdoc:annotation
+                              =&gt;filter(xqa:is-rest(?,"path",$ns))
+                              ]
+let $fns:=$restfns/xqdoc:name=&gt;_:class-fns-list()
+
+let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
+let $vars:=$file?xqdoc
+              //xqdoc:variable/xqdoc:name=&gt;_:class-vars-list()
+
+return if($restfns)
+       then ``[class `{ $name }`:::cssRest { &lt;&lt; Rest `{$file?path }`&gt;&gt; 
+`{ $fns }`}
+]``
+       else if($is-main)
+            then ``[class `{ $name }`:::cssMain{ &lt;&lt; `{ $file?path }` &gt;&gt;
+`{ $vars }`}
+]``
+            else ``[class `{ $name }` { &lt;&lt; `{ tokenize($file?path,"/")[last()] }` &gt;&gt;}
+]``
+};
+
+(:~ add "mermaid" key to $file map value unique label
+:)
+declare %private 
+function _:class-name($file as map(*),$pos, $files as map(*)*)
+as map(*){
+  let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
+  let $name:=$fn($file)
+  let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=&gt;count()
+  return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
+          $file)=&gt;map:merge()
+ 
+};
+
+(:~ generate mermaid function list :)
+declare %private
+function _:class-fns-list($names as xs:string*)
+as xs:string{
+let $r:=$names!substring-after(.,":")
+        !concat(.,"()")
+        =&gt;sort()
+        =&gt;string-join(file:line-separator())
+return concat(file:line-separator(),$r,file:line-separator())
+};
+
+(:~ generate mermaid vars list :)
+declare %private
+function _:class-vars-list($names as xs:string*)
+as xs:string{
+let $r:=$names
+        =&gt;sort()
+        =&gt;string-join(file:line-separator())
+return concat(file:line-separator(),$r,file:line-separator())
+};
+
+(:~ html wrapping for mermaid diagram
+ :)
+declare %private
+function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
+as element(html){
+&lt;html lang="en"&gt;
+{_:head("Module imports diagram (Mermaid)","resources/")}
+
+&lt;body&gt;
+&lt;style&gt;
+    .cssRest &gt; rect, line{{
+        fill:palegreen !important;
+        stroke:black !important;
+    }}
+    .cssMain &gt; rect, line{{
+        fill:powderblue !important;
+        stroke:black !important;
+    }}
+&lt;/style&gt;
+  &lt;nav id="toc" style="position:absolute;top:0"&gt;&lt;span&gt;&lt;span class="badge badge-info"&gt;{$opts?project}&lt;/span&gt; - Module dependancy diagram (mermaid)&lt;/span&gt;
+  {$related}
+  &lt;/nav&gt;
+  &lt;div class="mermaid"&gt;{ $mermaid }&lt;/div&gt;
+  &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js" 
+  integrity="sha512-ku2nmBrzAXY5YwohzTqLYH1/lvyMrpTVxgQKrvTabd/b/uesqltLORdmpVapYv6QhZVCLUX6wkvFaKOAY4xpUA==" crossorigin="anonymous" referrerpolicy="no-referrer"&gt;&lt;/script&gt;  
+  &lt;script&gt;mermaid.initialize({{
+  startOnLoad:true,
+  logLevel: "error", 
+  securityLevel: "loose", 
+  theme: (window.matchMedia &amp;amp;&amp;amp; window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" :  "default" 
+    }});&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+};
+
+(:~ common html head
+@param resources relative path to resources
+ :)
+declare %private
+function _:head($title as xs:string,$resources as xs:string)
+as element(head){
+     &lt;head&gt;
+       &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+       &lt;meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/&gt; 
+       &lt;meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca" /&gt;
+        &lt;title&gt;{ $title } - xqDocA&lt;/title&gt;
+        
+        &lt;link rel="shortcut icon" type="image/x-icon" href="{ $resources }xqdoc.png" /&gt;
+        &lt;link rel="stylesheet" type="text/css" href="{ $resources || $page:prism }prism.css"/&gt;
+        &lt;link rel="stylesheet" type="text/css" href="{ $resources }page.css" /&gt;
+        &lt;!--
+        &lt;link rel="stylesheet" type="text/css" href="{ $resources }query.css" /&gt;
+        &lt;link rel="stylesheet" type="text/css" href="{ $resources }base.css" /&gt; 
+        --&gt;  
+      &lt;/head&gt;
+};</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.page</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.mermaid"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="page" uri="quodatum:xqdoca.page"/><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Generate html page containing imports diagram rendered by mermaid.js</xqdoc:description></xqdoc:comment><xqdoc:name>_:html</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">imports-diag</xqdoc:literal><xqdoc:literal type="xs:string">Project wide module imports as html mermaid class diagram</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">mermaid.html</xqdoc:literal><xqdoc:literal type="xs:string">html5</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("imports-diag", "Project wide module imports as html mermaid class diagram") %Q{https://github.com/Quodatum/xqdoca}output("mermaid.html", "html5") function _:html($model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Generate text for import diagram in mmd format</xqdoc:description></xqdoc:comment><xqdoc:name>_:mmd</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">mermaid.mmd</xqdoc:literal><xqdoc:literal type="xs:string">Project wide module imports as a mermaid class diagram</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">mermaid.mmd</xqdoc:literal><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("mermaid.mmd", "Project wide module imports as a mermaid class diagram") %Q{https://github.com/Quodatum/xqdoca}output("mermaid.mmd", "text") function _:mmd($model as map(*) , $opts as map(*)) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>generate mermaid class definition</xqdoc:description></xqdoc:comment><xqdoc:name>_:class</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:class($file as map(*)) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>add "mermaid" key to $file map value unique label</xqdoc:description></xqdoc:comment><xqdoc:name>_:class-name</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:class-name($file as map(*) , $pos as item()* , $files as (map(*))*) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pos</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>generate mermaid function list</xqdoc:description></xqdoc:comment><xqdoc:name>_:class-fns-list</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:class-fns-list($names as xs:string*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>names</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>generate mermaid vars list</xqdoc:description></xqdoc:comment><xqdoc:name>_:class-vars-list</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:class-vars-list($names as xs:string*) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>names</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>html wrapping for mermaid diagram</xqdoc:description></xqdoc:comment><xqdoc:name>_:page-wrap</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:page-wrap($mermaid as xs:string+ , $related as item()* , $opts as map(*)) as element(html)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>mermaid</xqdoc:name><xqdoc:type occurrence="+">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>related</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>common html head</xqdoc:description><xqdoc:param>resources relative path to resources</xqdoc:param></xqdoc:comment><xqdoc:name>_:head</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function _:head($title as xs:string , $resources as xs:string) as element(head)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>title</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>resources</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(head)</xqdoc:type></xqdoc:return></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

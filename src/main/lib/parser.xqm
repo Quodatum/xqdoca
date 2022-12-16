@@ -87,11 +87,11 @@ as element(xqdoc:xqdoc)
      let $fmap:=map:merge((
                 xqp:funmap($xqparse, $prefixes, $def-fn),
                 if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
-         ))                       
+         ))
+                     
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
-
     let $name:=xqn:qmap($f/xqdoc:name,$prefixes, $def-fn)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
@@ -101,8 +101,7 @@ as element(xqdoc:xqdoc)
                     insert node <xqdoc:body>{$parse/string()}</xqdoc:body> into $f
                   )
                else
-                  let $a:=trace(map:keys($fmap),"FMAP: ")
-                  return error(xs:QName("xqp:enrich"),"key not found " || $key)  
+                   error(xs:QName("xqp:enrich"),"key not found " || $key)  
   }
  
   return $xqdoc
@@ -165,7 +164,7 @@ declare function xqp:invoke-arrow($e as element(ArrowExpr),
 as element(xqdoc:invoked)*
 {
 for $arrow in $e/TOKEN[. = "=&gt;"]
-let $fname:=$arrow/following-sibling::QName
+let $fname:=$arrow/(following-sibling::QName|following-sibling::TOKEN)
 let $arglist:=$arrow/following-sibling::ArgumentList
 let $arity:=1+count($arglist/*[not(self::TOKEN)])
 let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
@@ -201,7 +200,7 @@ as map(*)
 (
   $n//(ModuleDecl|ModuleImport|NamespaceDecl)
   !map:entry(NCName[1]/string(),StringLiteral[1]/substring(.,2,string-length(.)-2))
-)=>map:merge()  
+)=>map:merge()
 };
 
 
@@ -230,8 +229,7 @@ as map(*)
                         else if($name instance of element(URIQualifiedName)) then
                                 xqn:uriqname($name)
                         else 
-                             let $_:=trace($name,"name")
-                             return error(xs:QName("xqp:funmap"), "bad name: ", $name)
+                             error(xs:QName("xqp:funmap"), "bad name: ", $name)
              let $arity:=count($f/(Param|ParamList/Param))
              let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)
              return map:entry($key,$f)

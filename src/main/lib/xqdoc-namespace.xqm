@@ -7,10 +7,11 @@ xquery version "3.1";
 module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $prefixes map of namespaces
- : @param $defaultns namespace for no prefix
- : @return <pre>
+@param $e is from QName or TOKEN in some cases e.g "count"
+@param $prefixes map of namespaces
+@param $defaultns namespace for no prefix
+@error xqn:qmap NO TOK
+@return <pre>
  map{
     "uri": ..,
      "name": ..} 

@@ -10,7 +10,7 @@ module namespace xqcom = 'quodatum:xqdoca.model.comment';
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-(:~ xqdoc tags :)
+(:~ xqdoc tags - order is significant :)
 declare variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'
                               =>tokenize(',');
 
@@ -64,18 +64,23 @@ as map(*){
          map:put($state,'description',$state?description || " " || $line)
 };
 
+(:~
+  xqdoc:comment from state or empty if none , items ordered as schema
+:)
 declare %private
 function xqcom:comment-xml($state as map(*)?)
 as element(xqdoc:comment)?{
   if(exists($state)) 
   then <xqdoc:comment>{
         for $key in ($xqcom:TAGS)
+            ,$tag in $state?($key)
         where map:contains($state,$key)
-        return for $tag in $state?($key)
-               return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} {
-                if($key eq "custom") then attribute tag { $tag?tag} else (),
-                if($key="description") then $tag else $tag?txt
-                }
+        let $_:=trace($key,"^^^")
+        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} 
+                       {
+                        if($key eq "custom") then attribute tag { $tag?tag} else (),
+                        if($key="description") then $tag else $tag?txt
+                        }
       }</xqdoc:comment>
   else ()
 };

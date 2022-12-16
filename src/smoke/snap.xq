@@ -11,4 +11,6 @@ declare variable $efolder as xs:anyURI := $dba;
 let $files:=xqd:find-sources($efolder,"*.xqm,*.xq,*.xquery")
 let $model:= xqd:snap($efolder,$files,"basex") 
 for $file in $model?files
-return map{"path": $file?path,"prefixes": $file?prefixes, "href": $file?href }
+return map{"path": $file?path,
+           "prefixes": $file?prefixes,
+           "href": $file?href }

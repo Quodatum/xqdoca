@@ -1,0 +1,1 @@
+<xqdoca created="2022-12-16T22:54:33.281Z"><xqdoca>0.8.0</xqdoca><target>xqdoca/</target><outputs><global>report imports  annotations restxq mermaid mermaid.mmd xqdoca.xml</global><module>module xqdoc xqparse</module></outputs><platform>basex</platform><extensions>*.xqm,*.xq,*.xquery</extensions><project>.</project><source>.</source></xqdoca>

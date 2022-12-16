@@ -56,15 +56,18 @@ return map{
                       let $full:= concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
                       let $spath:= translate($file,"\","/")
                       let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
+
                       let $isParsed:=$analysis?xqparse instance of element(XQuery)
-                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
-                                    
+                      let $prefixes:=xqd:namespaces( $analysis?xqdoc) 
+                                     
+
+                      let $uri:= $analysis?xqdoc/xqdoc:module/xqdoc:uri/string(.)             
                       let $base:=map{
                               "index": $pos,
                               "path": translate($file,"\","/"),
                               "href": ``[modules/`{ $id }`/]``,
                               "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
+                              "prefix": xqd:prefix-for-ns($uri,$prefixes),
                               "prefixes": $prefixes,
                               "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
                               "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
@@ -248,9 +251,10 @@ declare
 function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
 as map(*)
 {
-  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
-  !map:entry(string(@prefix),string(@uri))
-  =>map:merge()
+  let $ns:=$xqdoc/xqdoc:namespaces/xqdoc:namespace
+  return $ns
+        !map:entry(string(@prefix),string(@uri))
+        =>map:merge()
 };
 
 (:~ files that import given namespace :)
@@ -312,7 +316,7 @@ as map(*)
   }
 };
 
-(:~ the prefixes defined infor this namespace :)
+(:~ the prefixes defined for this namespace in prefix map:)
 declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
 as xs:string*{
 map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
