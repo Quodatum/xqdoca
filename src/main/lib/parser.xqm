@@ -1,33 +1,15 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : <h1>xqdoc-parser.xqm</h1>
- : <p>generate and Analyse XQuery parse tree</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
+(:~
+<p>generate and Analyse XQuery parse tree</p>
+@copyright (c) 2019-2022 Quodatum Ltd
+@author Andy Bunce, Quodatum, License: Apache-2.0
+:)
 
 module namespace xqp = 'quodatum:xqdoca.parser';
 
 import module namespace xp="expkg-zone58:text.parse";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
@@ -36,6 +18,8 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare variable $xqp:xparse_opts:=map{
   "basex":  map{ "lang":"xquery", "version":"3.1 basex",  "flatten":true() }
 };
+
+declare variable $xqp:trace as xs:boolean:=true();
 
  (:~  Enrich trapping errors
  :)
@@ -48,14 +32,20 @@ try{
       xqp:enrich($xqdoc,$xqparse,$prefixes) 
     }   catch * {
       let $err:=map{
+        "code": $err:code, 
+        "value": $err:value,
+        "module": $err:module,
+        "line-number": $err:line-number, (: line number where the error occurred:)
+        "column-number": $err:column-number, (: column number where the error occurred :)
         "description": $err:description,
-        "additional": $err:additional
+        "additional": $err:additional 
       } 
       let $_:= trace($err ,"Enrich error: ")
       return $xqdoc
 } 
 };
-                                    
+
+                                  
 (:~  Enrich BaseX built-in xqDoc by
  : adding function source and X-ref info
  :)
@@ -92,7 +82,8 @@ as element(xqdoc:xqdoc)
    (: insert function source :)
   let $xqdoc:= $xqdoc transform with {
     for $f in ./xqdoc:functions/xqdoc:function
-    let $name:=xqn:qmap($f/xqdoc:name,$prefixes, $def-fn)
+    let $name:=$f/xqdoc:name
+    let $name:=xqn:qmap($name,$prefixes, $def-fn)
     let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$f/@arity)
     let $parse:= map:get($fmap,$key)
     return if(map:contains($fmap,$key))then
@@ -124,13 +115,14 @@ as xs:string
  : @param $expand function to map prefixes to namespaces
  : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
  :)
-declare function xqp:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)
+declare  function xqp:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)
 as element(*)*
 {
   $e//FunctionCall!xqp:invoke-fn(.,$prefixes, $def-fn),
   $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes, $def-fn),
   $e//VarRef!xqp:ref-variable(.,$prefixes, $def-fn) 
 };
+
 
 
 (:~  build invoked nodes for function call
@@ -276,3 +268,8 @@ as element(*)
   xp:parse($xq || "",$xqp:xparse_opts($platform)) 
 };
 
+declare function xqp:trace($items as item()*,$label as xs:string)
+as item()*
+{  
+  if($xqp:trace) then trace($items,$label)
+};

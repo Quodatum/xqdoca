@@ -10,6 +10,8 @@ module namespace xqd = 'quodatum:xqdoca.model';
 import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "annotations.xqm";
+import module namespace xqdc = 'quodatum:xqdoca.model.xqdoc' at 'ast-to-xqdoc.xqm';
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
@@ -89,12 +91,15 @@ as map(*)
  :)
 declare function xqd:xqdoc($url as xs:string)
 as element(xqdoc:xqdoc)
-{  
+{ 
+  (: 
  try{
-   inspect:xqdoc($url)
+   xqdc:build($url )
  } catch * { 
    <xqdoc:xqdoc>{$err:code } - { $err:description }</xqdoc:xqdoc>
 }
+:)
+xqdc:build($url )
 };
 
 (:~ 
@@ -102,41 +107,17 @@ as element(xqdoc:xqdoc)
  : @param $url xquery source
  : @param platform xquery platform id
  : @param $opts custom tags to add
- : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> ,annotations:{}*}
+ : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> }
  :)
-declare function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
+declare function xqd:analyse($url as xs:string, $platform as xs:string, $opts as map(*))
 as map(*)
 {  
-  let $xqd:=xqd:xqdoc($url)
-  (: add custom tags :)
-  let $enh:=$xqd 
-            transform with {
-                  for $tag in map:keys($opts)
-                  where xqdoc:module[@type="library"]/xqdoc:comment
-                  
-                  return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
-                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
-            }
-  (: insert full source into module :)
-  let $src:=unparsed-text($url)  
-  let $enh:=$enh transform with {
-    if(xqdoc:module) then 
-          insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module
-    else
-        ()
-  }
-  (: add enrichments from parse tree :)
-  let $parse:=xqp:parse($src,$platform)
-  
-  let $prefixes:=map:merge((
-                 xqd:namespaces($enh),
-                 xqn:static-prefix-map($platform)
-               ))
-  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
-                   
-  return map{"xqdoc": $enh, 
+   let $parse:= xqp:parse($url,$platform)
+   let $xqdoc:= if($parse instance of element(XQuery)) 
+                then xqdc:build($parse)               
+  return map{"xqdoc": $xqdoc, 
              "xqparse": $parse
-              }
+            }
 };
 
 (:~ 

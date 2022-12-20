@@ -38,8 +38,8 @@ as element(xqdoc:xqdoc)
       <xqdoc:version>xqdoca@{  $opts?xqdoca }</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $opts)
-    ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($parse)
-    ,xqdc:namespaces($mod)
+    ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($mod)
+    ,xqdc:namespaces($mod)=>trace("NS: ")
     ,xqdc:variables($mod,$opts)
     ,xqdc:functions($mod,$opts)
   }</xqdoc:xqdoc>
@@ -155,7 +155,7 @@ as element(xqdoc:parameter)
 {
  <xqdoc:parameter>
  	  <xqdoc:name>{ $param/QName/string() }</xqdoc:name>
-	 {xqdc:type($param/TypeDeclaration)}
+	 { $param/TypeDeclaration!xqdc:type(.)}
  </xqdoc:parameter>
 };
 

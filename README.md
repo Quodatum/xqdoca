@@ -13,11 +13,8 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019
 
 Work in progress.
 
+Runs with BaseX 9.5.1+ 9.7.99
 
-* `Basex` 9.5.1+ http://basex.org/ 
-* `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
-
-The code to be documented must be valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
 ## Install
 1. unzip dist bundle to a folder, or clone the respostory
 1. Add the `/bin` folder from above to your `PATH`
@@ -27,6 +24,7 @@ The XQDocA script uses the `basex` script. If the environment variable `BASEX_HO
 ## Requirements
 
 The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
+### Expath package
 ```xml
 <package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
 	version="0.7.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
