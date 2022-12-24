@@ -14,7 +14,7 @@ module namespace xqn = 'quodatum:xqdoca.namespaces';
 @return <pre>
  map{
     "uri": ..,
-     "name": ..} 
+    "name": ..} 
  }
  :</pre>
  :)
@@ -29,20 +29,20 @@ as map(*)
            "name": $token=>substring-after("}") 
         }
         else
- let $n:=tokenize($token,":")
-let $prefix:=if(count($n)=2)then $n[1] else ()
-let $name:=if(count($n)=2)then  $n[2] else $n[1]
-let $uri:=if(empty($prefix)) 
-          then  $defaultns
-          else if( map:contains($prefixes,$prefix)) 
-               then $prefixes?($prefix)
-               else 
-                    let $_:= trace(map:size($prefixes),"missing prefix:" || $prefix || ": ")
-                    return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
-             
-return map{
-           "uri": $uri,
-           "name": $name} 
+          let $n:=tokenize($token,":")
+          let $prefix:=if(count($n)=2)then $n[1] else ()
+          let $name:=if(count($n)=2)then  $n[2] else $n[1]
+          let $uri:=if(empty($prefix)) 
+                    then  $defaultns
+                    else if( map:contains($prefixes,$prefix)) 
+                        then $prefixes?($prefix)
+                        else 
+                          let $_:= trace(map:size($prefixes),"missing prefix:" || $prefix || ": ")
+                          return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
+                      
+          return map{
+                    "uri": $uri,
+                    "name": $name} 
 };
 
 (:~ true if $uri and $name match $qmap :)

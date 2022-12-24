@@ -37,16 +37,19 @@ as xs:string*
 };
 
 (:~
- : load and parse source xquery files
- : @param $efolder root path for source files
- : @param $files files to process as relative paths
- : @param $platform target XQuery engine e.g "basex"
- : @return state map
+  load and parse source xquery files
+  @param $efolder root path for source files
+  @param $files files to process as relative paths
+  @param $platform target XQuery engine e.g "basex"
+  @return state map
+  @error xqd:platform "Unknown platform: "
  :)
 declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
 as map(*)
 {
-let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
+let $_:=if(map:contains($xqp:xparse_opts,$platform)) 
+        then () 
+        else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
 let $folder:= translate($efolder,"\","/")
 let $_:=trace(count($files),"files :")
 return map{ 
@@ -103,7 +106,7 @@ xqdc:build($url )
 };
 
 (:~ 
- : Generate xqdoc adding custom opts 
+ : Generate parse and xqdoc for xquery at location $url 
  : @param $url xquery source
  : @param platform xquery platform id
  : @param $opts custom tags to add
@@ -112,9 +115,20 @@ xqdc:build($url )
 declare function xqd:analyse($url as xs:string, $platform as xs:string, $opts as map(*))
 as map(*)
 {  
-   let $parse:= xqp:parse($url,$platform)
+   let $xq as xs:string := unparsed-text($url)
+   let $parse:= xqp:parse($xq,$platform)
+   
    let $xqdoc:= if($parse instance of element(XQuery)) 
-                then xqdc:build($parse)               
+                then xqdc:build($parse,
+                                map{
+                                    "body-full": false(),  (: include full source as xqdoc:body :)
+                                    "body-items": true(), (: include item (fn,var) source as xqdoc:body :)
+                                    "refs": true(),        (: include xref info :)
+                                    "url": $url
+                                   }
+   )
+                else prof:dump($url,"PARSE FAIL: ")
+                              
   return map{"xqdoc": $xqdoc, 
              "xqparse": $parse
             }
@@ -129,6 +143,7 @@ as map(*)*
   let $ns:= xqd:namespaces($xqdoc)
  for $a in $xqdoc//xqdoc:annotation
  let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
+ (:~ let $_:=trace($a,"ANNNNO: ") ~:)
  return map{"annotation":$name, "xqdoc": $a} 
 };
 

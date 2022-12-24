@@ -32,11 +32,12 @@ as element(html){
                             <h3>{page:section((2,$c))} { $ns }</h3>
                             {sort(distinct-values($ns-map?($ns)?annotation?name)) 
                             !<span style="margin-left:1em" >
-                            <a href="#{{{ $ns}}}{.}">{.}</a>
+                                <a href="#{{{ $ns}}}{.}">{.}</a>
                              </span>}
                             {for $a in $ns-map?($ns)
                             group by $name:=$a?annotation?name
                             order by lower-case($name)
+                            (:~ let $_:=trace($a?annotation,"ANNO: ") ~:)
                             return _:anno-calls($ns,$name,$a) 
                       } </section>       
            }</section>

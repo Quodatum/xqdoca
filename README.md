@@ -196,6 +196,7 @@ declare variable $xqo:outputs:=map{
 ## Development notes
 `basex -bsrc=.xqdoca src\main\xqdoca.xq`
 
+
 `xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
 combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
 

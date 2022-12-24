@@ -16,7 +16,9 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 (:~ xparser defaults :)
 declare variable $xqp:xparse_opts:=map{
-  "basex":  map{ "lang":"xquery", "version":"3.1 basex",  "flatten":true() }
+  "basex":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": true() }
+  , "fat":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }
+
 };
 
 declare variable $xqp:trace as xs:boolean:=true();
@@ -264,8 +266,8 @@ as map(*)
  :)
 declare function xqp:parse($xq as xs:string,$platform as xs:string)
 as element(*)
-{  
-  xp:parse($xq || "",$xqp:xparse_opts($platform)) 
+{ 
+  xp:parse($xq ,$xqp:xparse_opts($platform)) 
 };
 
 declare function xqp:trace($items as item()*,$label as xs:string)

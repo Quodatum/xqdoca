@@ -4,4 +4,4 @@ declare variable $xquery:="../test/samples/sample.xqm";
 
 $xquery
 !fetch:text(resolve-uri(.))
-!xqp:parse(.,"basex")
+!xqp:parse(.,"fat")

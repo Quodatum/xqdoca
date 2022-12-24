@@ -35,11 +35,12 @@ as element(xqdoc:xqdoc)
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
       <xqdoc:date>{ current-dateTime() }</xqdoc:date>
-      <xqdoc:version>xqdoca@{  $opts?xqdoca }</xqdoc:version>
+      <xqdoc:version>1.2</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $opts)
     ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($mod)
-    ,xqdc:namespaces($mod)=>trace("NS: ")
+    ,xqdc:namespaces($mod)
+     (:~ =>trace("NS: ") ~:)
     ,xqdc:variables($mod,$opts)
     ,xqdc:functions($mod,$opts)
   }</xqdoc:xqdoc>
@@ -50,8 +51,12 @@ as element(xqdoc:module)
 {
 let $type:=if($parse/LibraryModule) then "library" else "main"
 let $name:=$parse/LibraryModule/ModuleDecl/NCName/string()
+
 let $uri:=$parse/LibraryModule/ModuleDecl/StringLiteral/xqdc:unquote(.)
-let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)=>trace("DD")
+let $uri:= if(exists($uri)) then $uri else replace($opts?url,".*/(.*)","$1")
+
+let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)
+          (: =>trace("DD") :)
           
 return 
     <xqdoc:module type="{ $type }">
@@ -85,6 +90,7 @@ as element(xqdoc:namespaces)
   return <xqdoc:namespaces>{
         $this,
         for $import in $parse/LibraryModule/Prolog/(ModuleImport|NamespaceDecl)
+        let $_:=trace($import,"III")
         let $uri:=$import/StringLiteral[1]=>xqdc:unquote()
         let $prefix:= $import/NCName/string()
         return <xqdoc:namespace prefix="{ $prefix}" uri="{ $uri }">{
@@ -127,8 +133,10 @@ as element(xqdoc:functions)
 
 declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
- <xqdoc:function arity="{ count($fundecl/ParamList/Param) }">
+ <xqdoc:function arity="{ count($fundecl/(Param|ParamList/Param)) }">
+    
       {$fundecl/TOKEN[.="external"]!attribute external {"true"}}
+       {  xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
 			<xqdoc:name>{ $fundecl/QName/string() }</xqdoc:name>
        { $fundecl/parent::AnnotatedDecl/Annotation
          !<xqdoc:annotations>{xqdc:annotation(.)}</xqdoc:annotations>}
@@ -136,15 +144,15 @@ as element(xqdoc:function){
       <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
                         =>string-join(" ")=>normalize-space()
        }</xqdoc:signature>
-			{  xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
+			
       <xqdoc:parameters>
-      { $fundecl/ParamList/Param!xqdc:param(.) }
+      { $fundecl/(.|ParamList)/Param!xqdc:param(.) }
       </xqdoc:parameters>
-			<xqdoc:return>{
+			<xqdoc:return><xqdoc:type>{
         $fundecl/SequenceType!( attribute occurrence {TOKEN/string() },  QName/string() ),
         if(not($fundecl/SequenceType))
         then $fundecl/*[last()-1]/string() (: before EnclosedExpr :)
-      }</xqdoc:return>
+      }</xqdoc:type></xqdoc:return>
       { xqdc:refs($fundecl) }
       { util:if($opts?body-items,xqdc:body($fundecl)) }
 	</xqdoc:function>
@@ -171,8 +179,8 @@ as element(xqdoc:type){
 declare %private function xqdc:refs($ast as element(*))
 as element(*)*
 {
- let $_:=trace("refs",$ast)
- return () 
+ (:~ let $_:=trace("refs",$ast) ~:)
+  () 
 };
 
 (:~  :)
@@ -194,14 +202,18 @@ as element(*)
 declare %private function xqdc:body($ast as element(*))
 as element(xqdoc:body)
 {
-<xqdoc:body xml:space="preserve">{$ast/string()}</xqdoc:body>
+<xqdoc:body>{$ast/string()}</xqdoc:body>
  };
  
- (:~ annotation code :)
+ (:~ annotation code 
+ <pre>
+ <Annotation><TOKEN>%</TOKEN><TOKEN>updating</TOKEN></Annotation>
+ </pre>
+ :)
 declare %private function xqdc:annotation($anno as element(Annotation))
 as element(xqdoc:annotation)
 {
-<xqdoc:annotation name="{ $anno/QName/string() }">{
+<xqdoc:annotation name="{ $anno/*[2]/string() }">{
  for $a in $anno/*
  return typeswitch($a)
         case element(StringLiteral) 

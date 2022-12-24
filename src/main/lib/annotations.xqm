@@ -129,7 +129,7 @@ as map(*)
 
 (:~ annotations grouped by uri with added file reference 
  : <pre>map{uri:map{
- :           "annotation":{"name:,"uri":}, "xqdoc": <xqdoc:annotation/>, "file":}
+ :           "annotation":{"name": ,"uri":}, "xqdoc": <xqdoc:annotation/>, "file":}
  :           }*
  : </pre>
  :)

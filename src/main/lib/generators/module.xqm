@@ -69,7 +69,7 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
  {
     <section id="summary">
     <h2>Summary</h2>
-       { $mod/xqdoc:comment=>xqh:comment($opts) } 
+       { if($mod/xqdoc:comment) then xqh:comment($mod/xqdoc:comment,$opts) } 
 		   { page:related-links("module","module", $opts) }
     </section>
   };
@@ -523,7 +523,7 @@ as element(*)*
 };
  
 declare function xqh:error($v as element(xqdoc:error))
-{
+as element(*)*{
 		<dt class="label">Error</dt>,
 		<dd>
 		{ $v/(node()|text()) }

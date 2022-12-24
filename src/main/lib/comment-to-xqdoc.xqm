@@ -75,7 +75,7 @@ as element(xqdoc:comment)?{
         for $key in ($xqcom:TAGS)
             ,$tag in $state?($key)
         where map:contains($state,$key)
-        let $_:=trace($key,"^^^")
+        (:~ let $_:=trace($key,"^^^") ~:)
         return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} 
                        {
                         if($key eq "custom") then attribute tag { $tag?tag} else (),
