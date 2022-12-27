@@ -22,11 +22,11 @@ let $options:=opts:as-map(doc($src)/*)
                =>opts:merge(opts:as-map(doc("config.xqdoca")/*))
 
 let $efolder:=$options?source
-              =>file:resolve-path(file:current-dir())
+              =>file:resolve-path($src)
               =>xs:anyURI()
 
 let $target:= $options?target
-              =>file:resolve-path(file:current-dir())
+              =>file:resolve-path($src)
               =>file:path-to-uri()
               =>concat("/")
               
