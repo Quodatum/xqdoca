@@ -140,32 +140,37 @@ as element(xqdoc:function){
   <xqdoc:function >
     {  $fundecl/TOKEN[.="external"]!attribute external {"true"}}
     {  xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
-		<xqdoc:name>{ $fundecl/EQName/string() =>trace("FUN: ")}</xqdoc:name>
+		<xqdoc:name>{ 
+      $fundecl/EQName/string() 
+      (:~ =>trace("FUN: ") ~:)
+      }</xqdoc:name>
+
      { if($fundecl/parent::AnnotatedDecl[Annotation])
       then <xqdoc:annotations>{
               $fundecl/parent::AnnotatedDecl/Annotation!xqdc:annotation(.) }
           </xqdoc:annotations>}
+      
+      <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
+                        =>string-join(" ")=>normalize-space()
+       }</xqdoc:signature>
+
+      <xqdoc:parameters>
+         { $fundecl/(.|ParamList)/Param!xqdc:param(.) }
+      </xqdoc:parameters>
+
+      {   xqdc:return($fundecl)
+        , xqdc:refs($fundecl) 
+        ,util:if($opts?body-items,xqdc:body($fundecl)) }
   </xqdoc:function>
 };
 
 declare %private function xqdc:functionX($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
  <xqdoc:function >
-   
-      
-      
- 
-      <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
-                        =>string-join(" ")=>normalize-space()
-       }</xqdoc:signature>
-			
-      <xqdoc:parameters>
-      { $fundecl/(.|ParamList)/Param!xqdc:param(.) }
-      </xqdoc:parameters>
+   	
+    
 
-      {   xqdc:return($fundecl)
-        , xqdc:refs($fundecl) 
-        ,util:if($opts?body-items,xqdc:body($fundecl)) }
+      
      
 	</xqdoc:function>
 };
@@ -195,8 +200,7 @@ as element(xqdoc:return)
 declare %private function xqdc:type($type as element(TypeDeclaration))
 as element(xqdoc:type){
  <xqdoc:type >{
-     $type/SequenceType!attribute occurrence {TOKEN/string() },  
-     ($type | $type/SequenceType)/QName/string() 
+       ( $type/SequenceType)/string() 
  }</xqdoc:type>
 };
 
@@ -239,9 +243,7 @@ declare %private function xqdc:annotation($anno as element(Annotation))
 as element(xqdoc:annotation)
 {
 <xqdoc:annotation name="{ $anno/EQName/string() }">{
-   let $_:=trace(serialize($anno),"AAAAAQ")
  for $a in $anno/*
-
  return typeswitch($a)
         case element(Literal) 
           return <xqdoc:literal type="xs:string">{ string($a) }</xqdoc:literal>

@@ -188,22 +188,25 @@ let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
 (:~ 
  : extract set of namespace declarations from XQuery parse descendants to map{prefix->uri}
  :)
-declare function xqp:namespaces($n as element())
+declare function xqp:namespaces-parse($n as element())
 as map(*)
 {
 (
   $n//(ModuleDecl|ModuleImport|NamespaceDecl)
-  !map:entry(NCName[1]/string(),StringLiteral[1]/substring(.,2,string-length(.)-2))
+  !map:entry(NCName[1]/string(),URILiteral[1]/substring(.,2,string-length(.)-2))
 )=>map:merge()
+=>trace("NSP: ")
 };
 
 
 
-(:~  map of known namespaces including static :)
-declare function xqp:prefixes($e as element(),$platform as xs:string)
+(:~  map of known namespaces including static 
+like inspect:static-context((),"namespaces") 
+:)
+declare function xqp:namespaces($e as element(),$platform as xs:string)
 as map(*)
 {(
-  xqp:namespaces($e),
+  xqp:namespaces-parse($e),
  xqn:static-prefix-map($platform)
 ) =>map:merge()
 };

@@ -245,8 +245,8 @@ declare function xqh:variable($v as element(xqdoc:variable),
                               $file as map(*))
 as element(div)
 {
-let $id:= concat('$',$v/xqdoc:name)
-let $qmap:=xqn:qmap($v/xqdoc:name,$file?prefixes, $file?default-fn-uri)
+let $id:= concat('$',$v/xqdoc:name)=>trace("VNAME:")
+let $qmap:=xqn:qmap($v/xqdoc:name,$file?namespaces, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
 		<div class="div3">
@@ -297,7 +297,7 @@ as element(div)
 {
     let $funs:=sort($funs,(),function($f){$f/@arity})
 		let $name:=$funs[1]/xqdoc:name/string()
-    let $qmap:= xqn:qmap($name, $file?prefixes, $file?default-fn-uri)
+    let $qmap:= xqn:qmap($name, $file?namespaces, $file?default-fn-uri)
 	  return
 		<div class="div3">
 			<h3><a id="{$name}"/> { 
@@ -380,7 +380,7 @@ let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
                                      and @arity=$funs/@arity 
                                      and xqdoc:uri= $qmap?uri 
                                 ]]
-                    let $qname:=xqn:qmap($function/xqdoc:name,$file?prefixes,$file?default-fn-uri)                         
+                    let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
                     return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
                     
           let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
@@ -600,7 +600,7 @@ return typeswitch ($tag)
 declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {
-   let $ns:= $file?prefixes
+   let $ns:= $file?namespaces
    let $rest:=filter($xqd//xqdoc:annotation,xqa:is-rest(?,"path",$ns))
    return <div class="div2">
 			<h2><a id="restxq"/>6 RestXQ</h2>
@@ -617,7 +617,7 @@ as element(div)
       <tbody>{ for $r in $rest
                let $path:= $r/xqdoc:literal/string()
                let $obj:=xqa:name-detail($r/../..,$file)  (: map{ "given": $name/string(), "uri": $qmap?uri, "name": $lname, "xqdoc": $e} :)
-               let $methods:=xqa:methods($obj?xqdoc//xqdoc:annotation, $file?prefixes) 
+               let $methods:=xqa:methods($obj?xqdoc//xqdoc:annotation, $file?namespaces) 
                order by $path
               return <tr>
                 <td>{  $r/xqdoc:literal/string() }</td>

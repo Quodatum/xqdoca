@@ -84,14 +84,14 @@ as xs:string
  : @param $map keys are prefixes items are namespaces
  : @return namespace for prefix
   :)
-declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
+declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $prefixes as map(*))
 as xs:string{
   if(empty($prefix)) then
     $default
-  else if(map:contains($map, $prefix))then 
-   $map?($prefix)
+  else if(map:contains($prefixes, $prefix))then 
+   $prefixes?($prefix)
    else
-   let $_:=trace($map,"prefixes")
+   let $_:=trace($prefixes,"map-prefix: ")
    return "*** " || trace($prefix,"**prefix not found:" ),
    error()
 };
@@ -113,6 +113,7 @@ declare function xqn:static-prefix-map($platform as xs:string)
 as map(*)
 {
  fetch:text(resolve-uri(``[../etc/models/`{ $platform }`.json]``,static-base-uri()))
- =>parse-json() 
+ =>parse-json()
+ (: =>trace("PLATFORM ")  :)
 };
 

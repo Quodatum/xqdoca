@@ -174,7 +174,7 @@ as element(div)
        { for $file  at $pos in $files
         let $type:=xqd:file-parsed-type($file)
          order by $type, $file?namespace
-         let $ns:=$file?prefixes
+         let $ns:=$file?namespaces
          let $annots:= for $a in $file?annotations
                        group by $ns:=$a?annotation?uri
                        order by $ns

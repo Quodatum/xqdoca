@@ -68,7 +68,7 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*,
                             $file as map(*),
                             $button-render as function(*))
 {
-  let $prefixes:=$file?prefixes
+  let $prefixes:=$file?namespaces
   let $others:= some $a in $annos 
                 satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)
                           return not($m?uri = $xqa:noteworthy?uri)
@@ -116,7 +116,7 @@ declare function xqa:name-detail($e as element(*),$file as map(*))
 as map(*)
 {
   let $name:=$e/xqdoc:name
-       let $qmap:=xqn:qmap($name, $file?prefixes, $file?default-fn-uri)
+       let $qmap:=xqn:qmap($name, $file?namespaces, $file?default-fn-uri)
        let $lname:=if($e instance of element(xqdoc:function)) then
                      concat($qmap?name,"#",$e/@arity)
                    else

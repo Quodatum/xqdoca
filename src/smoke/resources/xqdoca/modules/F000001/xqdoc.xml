@@ -64,7 +64,7 @@ declare %private
 function _:class($file as map(*))
 as xs:string{
 let $name:=$file?mermaid
-let $ns:= $file?prefixes
+let $ns:= $file?namespaces
 let $restfns:=$file?xqdoc
               //xqdoc:function[
                               xqdoc:annotations/xqdoc:annotation

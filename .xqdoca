@@ -4,16 +4,16 @@
     <target>file:///tmp/xqdoca/xqdoca/</target>
     <outputs>
         <global>report 
-        <!--imports  
+        imports  
         annotations 
         imports-diag 
         mermaid.mmd    
-        lint -->
+        lint 
         xqdoca.xml
         xqdoc-validate
         </global>
         <module>
-        <!-- module -->
+         module
         xqdoc 
         xqparse
         </module>

@@ -62,8 +62,9 @@ return map{
                       let $spath:= translate($file,"\","/")
                       let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
 
-                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
-                      let $prefixes:=xqd:namespaces( $analysis?xqdoc) 
+                      let $isParsed:= $analysis?xqparse instance of element(XQuery)
+                      let $namespaces:= xqp:namespaces( $analysis?xqparse, $platform) 
+                                        (:~ =>trace("prefixes: ") ~:)
                                      
 
                       let $uri:= $analysis?xqdoc/xqdoc:module/xqdoc:uri/string(.)             
@@ -72,8 +73,8 @@ return map{
                               "path": translate($file,"\","/"),
                               "href": ``[modules/`{ $id }`/]``,
                               "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($uri,$prefixes),
-                              "prefixes": $prefixes,
+                              "prefix": xqd:prefix-for-ns($uri,$namespaces),
+                              "namespaces": $namespaces,
                               "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
                               "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
                               "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
@@ -255,6 +256,7 @@ as map(*)
 
 (:~ files that import given namespace :)
 declare function xqd:where-imported($files as map(*)*, $uri as xs:string?)
+as map(*)*
 {
   $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };

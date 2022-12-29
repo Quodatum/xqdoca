@@ -66,7 +66,7 @@ as element(span)
 {  
    let $files:= $model?files[?namespace=$uri]
    let $clark:= xqn:clark-name($uri,$name)
-   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?namespaces)
    let $root:="../../"
    return if(empty($files)) then
            <span class="badge badge-warning" title="Externally defined">{ $clark }</span>
@@ -106,7 +106,7 @@ function page:link-function2($uri as xs:string,
 as element(span)
 {  
    let $clark:= xqn:clark-name($uri,$name)
-   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?namespaces)
    let $root:=if($fromModule) then "../../" else ""
    return  <span>
             <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
