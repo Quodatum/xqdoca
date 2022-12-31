@@ -30,7 +30,9 @@ declare variable $xqo:outputs:=map{
                                      "text": map{"method": "text"}
                                    };
 
-
+(:~ full path to resources sources :)
+declare variable $xqo:resources as xs:anyURI:=resolve-uri('../etc/resources');
+ 
 
 
 (:~ save runtime support files to output
@@ -41,10 +43,10 @@ function xqo:export-resources($target as xs:string)
 as empty-sequence(){
   let $res:=$target || "resources"
   let $_:=trace($target,"target:")
-  let $_:=trace(resolve-uri('resources'),"src:")   
+  let $_:=trace($xqo:resources,"src:")   
 return  (
   if(file:exists($res)) then file:delete($res,true()) else (),
-  file:copy(resolve-uri('resources'),$target)
+  file:copy($xqo:resources,$target)
       )
 };
 

@@ -131,7 +131,14 @@ as element(xqdoc:functions)
   let $items:= $module/*/Prolog/AnnotatedDecl/FunctionDecl 
   let $_:=trace(count($items),"FUNDEC")  
   return <xqdoc:functions>{  
-          $items!xqdc:function(., $opts) 
+          $items!xqdc:function(., $opts)
+        (:~ @TODO
+        if ($body) then (
+              insert node xqp:main($body) as last into xqdoc:functions,
+              insert node <xqdoc:namespace prefix="local" uri="http://www.w3.org/2005/xquery-local-functions"/>
+                    into xqdoc:namespaces
+                  ) ~:)
+                      
           }</xqdoc:functions>
 }; 
 
