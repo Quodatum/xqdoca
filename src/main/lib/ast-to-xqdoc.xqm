@@ -132,6 +132,7 @@ as element(xqdoc:functions)
   let $_:=trace(count($items),"FUNDEC")  
   return <xqdoc:functions>{  
           $items!xqdc:function(., $opts)
+          ,xqdc:main($module/MainModule/QueryBody)
         (:~ @TODO
         if ($body) then (
               insert node xqp:main($body) as last into xqdoc:functions,
@@ -140,8 +141,25 @@ as element(xqdoc:functions)
                   ) ~:)
                       
           }</xqdoc:functions>
-}; 
+};
 
+(:~  create dummy function for main modules
+ :)
+ declare function xqdc:main($body as element(*)?)
+ as element(xqdoc:function)?
+ {
+   if($body) then
+        <xqdoc:function arity="0">
+          <xqdoc:comment>
+          <xqdoc:description>pseudo main function</xqdoc:description>
+         </xqdoc:comment>
+         <xqdoc:name>local:xqDoc-main</xqdoc:name>
+         <xqdoc:signature>local:xqDoc-main()</xqdoc:signature>
+         <xqdoc:body>{string($body)}</xqdoc:body>
+         </xqdoc:function>
+   else
+    ()
+ };
 declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
   <xqdoc:function >

@@ -91,7 +91,7 @@ as map(*){
 declare function xqo:render( $model as map(*),$opts as map(*))
 as map(*)*
 { 
-  let $funs:=xqo:load-generators("generators/")
+  let $funs:=xqo:load-generators("../generators/")
   
   let $wanted:=xqo:tokens($opts?outputs?global)
   let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$wanted]

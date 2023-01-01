@@ -31,7 +31,7 @@ function _:rename($file as map(*),
   }
   (: add an import :)
     let $i:=``[;
-import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm']``
+import module namespace xqd = 'quodatum:xqdoca.model' at '../../lib/model.xqm']``
    let $parse := $parse transform with {
     .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node <ModuleImport>{$i}</ModuleImport> after .)
   }

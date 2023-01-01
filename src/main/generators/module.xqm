@@ -7,10 +7,10 @@ Library to support html5 rendering of single xqdoc source
 
 module namespace xqh = 'quodatum:xqdoca.mod-html';
 
-import module namespace xqd = 'quodatum:xqdoca.model' at "../model.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../annotations.xqm";
-import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
-import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../xqdoc-namespace.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "../lib/model.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../lib/annotations.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../lib/xqdoc-page.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "../lib/xqdoc-namespace.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";

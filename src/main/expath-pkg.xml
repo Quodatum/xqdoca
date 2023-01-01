@@ -1,6 +1,6 @@
 <!-- semver from https://exist-db.org/exist/apps/doc/repo-->
 <package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
-	version="0.8.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
+	version="0.8.1" spec="1.0" xmlns="http://expath.org/ns/pkg">
 	<title>XQdocA - XQuery code documentation generator</title>
   <dependency processor="http://basex.org/" semver-min="9.5.1" semver-max="9.99.99"/>
   <dependency name="http://expkg-zone58.github.io/ex-xparse" semver-min="0.7.12" />

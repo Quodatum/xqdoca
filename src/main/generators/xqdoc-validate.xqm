@@ -9,8 +9,8 @@ module namespace _ = 'quodatum:xqdoca.generator.validate-xqdoc';
 
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
-(: declare variable $xsd:="../../etc/models/xqdoc-1.0.01132014.xsd"; :)
-declare variable $_:xsd:="../../etc/models/xqdoc-1.2.xsd";
+(: declare variable $xsd:="../etc/models/xqdoc-1.0.01132014.xsd"; :)
+declare variable $_:xsd:="../etc/models/xqdoc-1.2.xsd";
 
 declare 
 %xqdoca:global("xqdoc-validate","validate generated xqdoc files")

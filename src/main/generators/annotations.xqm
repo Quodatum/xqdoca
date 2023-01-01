@@ -5,8 +5,8 @@ xquery version "3.1";
 :)
 module namespace _ = 'quodatum:xqdoca.generator.annotations';
 
-import module namespace page = 'quodatum:xqdoca.page'  at "../xqdoc-page.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../annotations.xqm";
+import module namespace page = 'quodatum:xqdoca.page'  at "../lib/xqdoc-page.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../lib/annotations.xqm";
 
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";

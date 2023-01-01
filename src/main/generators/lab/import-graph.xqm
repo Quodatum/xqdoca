@@ -8,7 +8,7 @@ xquery version "3.1";
  
 module namespace _ = 'quodatum:xqdoca.generator.calls';
 
-import module namespace xqd = 'quodatum:xqdoca.model' at "../../model.xqm";
+import module namespace xqd = 'quodatum:xqdoca.model' at "../../lib/model.xqm";
 import module namespace gxq = 'quodatum:service.graphxq' at "graphxq.xqm";
 
 

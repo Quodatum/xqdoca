@@ -58,7 +58,7 @@ declare function xqp:enrich(
 as element(xqdoc:xqdoc)
 {
  
-   (: add xqDoc-main for main modules :)
+   (: add xqDoc-main for main modules
   let $body:= $xqparse//MainModule/*[2]
   let $xqdoc:= $xqdoc transform with {
                
@@ -71,14 +71,16 @@ as element(xqdoc:xqdoc)
                        ()
               }
               
-   
+    :)
  
     (: default function namespace? :)
     let $def-fn as xs:string:= xqp:default-fn-uri($xqparse)
-                   
+     let $body:= $xqparse//MainModule/QueryBody             
      let $fmap:=map:merge((
                 xqp:funmap($xqparse, $prefixes, $def-fn),
-                if($body) then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) else ()
+                if($body) 
+                then map:entry("Q{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0",$body) 
+                else ()
          ))
                      
    (: insert function source :)
@@ -234,23 +236,8 @@ as map(*)
 };
 
 
-(:~  create dummy function for main modules
- :)
- declare function xqp:main($body as element(*)?)
- as element(xqdoc:function)?
- {
-   if($body) then
-        <xqdoc:function arity="0">
-          <xqdoc:comment>
-          <xqdoc:description>pseudo main function</xqdoc:description>
-         </xqdoc:comment>
-         <xqdoc:name>local:xqDoc-main</xqdoc:name>
-         <xqdoc:signature>local:xqDoc-main()</xqdoc:signature>
-         <xqdoc:body>{string($body)}</xqdoc:body>
-         </xqdoc:function>
-   else
-    ()
- };
+
+
  (:~ 
  : all namespaces in xqdoc as map{prefix.. uri}
   :)
