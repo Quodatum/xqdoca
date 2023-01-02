@@ -1,14 +1,18 @@
 xquery version "3.1";
 (:~
- : talk to graphxq server.
- : Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
+talk to graphxq server.
+@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@author Andy Bunce, Quodatum, License: Apache-2.0
+:)
 module namespace gxq = 'quodatum:service.graphxq';
 import module namespace http="http://expath.org/ns/http-client";
 
+(:~ graphxq server url :)
 declare variable $gxq:server:= "http://localhost:8984/graphxq/";
-declare variable $gxq:server-ok:= 200=http:send-request(<http:request method='get' status-only='true'/>, $gxq:server)/@status;
+
+(:~ test server available :)
+declare variable $gxq:server-ok as xs:boolean:= 200=http:send-request(<http:request method='get' status-only='true'/>, $gxq:server)/@status;
+
 (:~
  : convert dotml to svg 
  : @parm $data is dotml as XML

@@ -250,6 +250,8 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="uri" type="uri"/>
+                        <!-- @author APB 2022-12-05 -->
+                        <xsd:element name="at" type="uri" minOccurs="0" maxOccurs="unbounded"/>
                         <xsd:element name="comment" type="comment" minOccurs="0"/>
                     </xsd:sequence>
                     <xsd:attribute name="type" use="optional">
@@ -260,8 +262,7 @@
                             </xsd:restriction>
                         </xsd:simpleType>
                     </xsd:attribute>
-                    <xsd:attribute name="at" type="xsd:string" use="optional"/>
-                </xsd:complexType>
+                 </xsd:complexType>
               
             </xsd:element>
         </xsd:sequence>

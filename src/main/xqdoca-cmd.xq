@@ -6,10 +6,13 @@ xquery version "3.1";
  :)
 
 import module namespace cmd = 'quodatum:tools:commandline' at "lib/commandline.xqm";
+declare namespace pkg="http://expath.org/ns/pkg";
 
+(:~ command line args :)
 declare variable $args as xs:string  external;
-(:~ expath metadata :)
-declare variable $expkg:=doc("expath-pkg.xml")/*;
+
+(:~ expath metadata from expath-pkg.xml :)
+declare variable $expkg as element(pkg:package):= doc("expath-pkg.xml")/*;
 
 declare function local:resolve($path) as xs:string{
   file:resolve-path($path,file:current-dir())

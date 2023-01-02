@@ -96,7 +96,7 @@ declare function xqh:comment($comment as element(xqdoc:comment),
   )
  };
 
-
+(:~ Table of contents :)
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
   let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
@@ -245,15 +245,16 @@ declare function xqh:variable($v as element(xqdoc:variable),
                               $file as map(*))
 as element(div)
 {
-let $id:= concat('$',$v/xqdoc:name)=>trace("VNAME:")
+let $name:= concat('$',$v/xqdoc:name)=>trace("VNAME:")
 let $qmap:=xqn:qmap($v/xqdoc:name,$file?namespaces, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
 		<div class="div3">
 			<h3>
-      <a id="{$id }"/> 
-      {$v!<a id="{ xqn:clark-name($qmap?uri, "$" || $qmap?name) }"/>}
-       { page:section($section) } {$id }
+      <a id="{$name }"/> 
+      <a id="{ xqn:clark-name($qmap?uri, "$" || $qmap?name) }"/>
+      <a href="#{ $name }">{ page:section($section) }</a> 
+      {$name }
       </h3>
 			<dl>
         <dt class="label">Summary</dt>
@@ -263,6 +264,10 @@ return
 			</dl>
       {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
+       <details>
+        <summary>Source ( {sum($v !xqdoc:body/page:line-count(.)) } lines)</summary>
+        { $v! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
+      </details>
 		</div>
 };  
 
@@ -300,29 +305,24 @@ as element(div)
     let $qmap:= xqn:qmap($name, $file?namespaces, $file?default-fn-uri)
 	  return
 		<div class="div3">
-			<h3><a id="{$name}"/> { 
-                $funs!<a id="{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }"/> 
-              , page:section($section) } { $name }
-			  <div style="float:right">
-				<a href="#{ $name }" >#</a>
-				</div>
+			<h3><a id="{$name}"/> 
+      {  $funs!<a id="{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }"/> }
+      <a href="#{ $name }">{ page:section($section) }</a>   
+      { $name }
 			</h3>
      
-     <p>Arities: {  $funs 
+    <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
                       <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">{ $name}#{ string(@arity) }</a>
-                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }
-                      
-                    </span>
-                          
-                 }</p>
-    <dt class="label">Signature</dt>
-			<dd>
+                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }                     
+                    </span>                          
+                 }
+    </p>
+    { xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
+    <dt class="label">Signatures</dt>
+		<dd>
 			{$funs!xqh:function-signature(.) }
-			</dd>
-               
-		{ xqh:when ($funs/xqdoc:comment/xqdoc:description=>head(),xqh:description#1) }
-			
+		</dd>	
 			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
 	    { $funs[1]!xqh:return(.) }
 		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
@@ -551,7 +551,8 @@ as element(div){
       
 		</div>
 };
-	
+
+
 declare function xqh:description($v as element(xqdoc:description))
 as element(*)*
 {

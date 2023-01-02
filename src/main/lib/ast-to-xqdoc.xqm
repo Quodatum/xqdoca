@@ -5,9 +5,8 @@ create xqdoc from parse tree
  @author Andy Bunce, Quodatum, License: Apache-2.0
  @TODO refs,external
 :)
- 
+ module namespace xqdc = 'quodatum:xqdoca.model.xqdoc';
 
-module namespace xqdc = 'quodatum:xqdoca.model.xqdoc';
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
@@ -38,7 +37,7 @@ as element(xqdoc:xqdoc)
       <xqdoc:version>1.2</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $opts)
-    ,$mod/LibraryModule/Prolog[ModuleImport]!xqdc:imports($mod)
+    ,xqdc:imports($mod)
     ,xqdc:namespaces($mod)
      (:~ =>trace("NS: ") ~:)
     ,xqdc:variables($mod,$opts)
@@ -52,7 +51,7 @@ as element(xqdoc:module)
 let $type:=if($parse/LibraryModule) then "library" else "main"
 let $name:=$parse/LibraryModule/ModuleDecl/NCName/string()
 
-let $uri:=$parse/LibraryModule/ModuleDecl/StringLiteral/xqdc:unquote(.)
+let $uri:=$parse/LibraryModule/ModuleDecl/URILiteral/xqdc:unquote(.)
 let $uri:= if(exists($uri)) then $uri else replace($opts?url,".*/(.*)","$1")
 
 let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)
@@ -68,15 +67,20 @@ return
 };
 
 declare %private function xqdc:imports($parse as element(Module))
-as element(xqdoc:imports)
+as element(xqdoc:imports)?
 {
-  <xqdoc:imports>{
-    for $import in $parse/LibraryModule/Prolog/ModuleImport
-    let $s:=$import/StringLiteral!xqdc:unquote(.)
-    return  <xqdoc:import type="library">
-              <xqdoc:uri>{$s[1] }</xqdoc:uri>
-            </xqdoc:import>
-}</xqdoc:imports>
+  let $imports:=$parse/(MainModule|LibraryModule)/Prolog/Import/ModuleImport
+              
+  return if(exists($imports))
+         then <xqdoc:imports>{
+                  for $import in $imports
+                  let $uri:= $import/URILiteral/string(.)
+                  return  <xqdoc:import type="library">
+                            <xqdoc:uri>{ xqdc:unquote($uri[1]) }</xqdoc:uri>
+                            {tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at> 
+                             ,xqcom:comment($import)}
+                          </xqdoc:import>
+                  }</xqdoc:imports>
 }; 
 
 declare %private function xqdc:namespaces($parse as element(Module))
@@ -119,7 +123,7 @@ as element(xqdoc:variable){
         !<xqdoc:annotations>{xqdc:annotation(.)}</xqdoc:annotations>,
  
 		  xqcom:comment($vardecl/..),
-      $vardecl/TypeDeclaration!xqdc:type(.),
+      $vardecl/TypeDeclaration/SequenceType!xqdc:type(.),
       xqdc:refs($vardecl),
       util:if($opts?body-items,xqdc:body($vardecl)) }
 		</xqdoc:variable>
@@ -151,20 +155,22 @@ as element(xqdoc:functions)
    if($body) then
         <xqdoc:function arity="0">
           <xqdoc:comment>
-          <xqdoc:description>pseudo main function</xqdoc:description>
+          <xqdoc:description>The query body.</xqdoc:description>
+          <xqdoc:custom tag="note">pseudo main function as per http//xqdoc.org</xqdoc:custom>
          </xqdoc:comment>
          <xqdoc:name>local:xqDoc-main</xqdoc:name>
          <xqdoc:signature>local:xqDoc-main()</xqdoc:signature>
          <xqdoc:body>{string($body)}</xqdoc:body>
          </xqdoc:function>
-   else
-    ()
  };
+
 declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
 as element(xqdoc:function){
-  <xqdoc:function >
-    {  $fundecl/TOKEN[.="external"]!attribute external {"true"}}
-    {  xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
+  let $params:= $fundecl/(.|ParamList)/Param
+  return <xqdoc:function>
+    {  $fundecl/TOKEN[.="external"]!attribute external {"true"},
+       attribute arity {count($params)},
+      xqcom:comment(util:or($fundecl/..,$fundecl/../Prolog))}
 		<xqdoc:name>{ 
       $fundecl/EQName/string() 
       (:~ =>trace("FUN: ") ~:)
@@ -180,7 +186,7 @@ as element(xqdoc:function){
        }</xqdoc:signature>
 
       <xqdoc:parameters>
-         { $fundecl/(.|ParamList)/Param!xqdc:param(.) }
+         { $params!xqdc:param(.) }
       </xqdoc:parameters>
 
       {   xqdc:return($fundecl)
@@ -189,43 +195,35 @@ as element(xqdoc:function){
   </xqdoc:function>
 };
 
-declare %private function xqdc:functionX($fundecl as element(FunctionDecl), $opts as map(*))
-as element(xqdoc:function){
- <xqdoc:function >
-   	
-    
-
-      
-     
-	</xqdoc:function>
-};
 
 (: xqdoc parameter from parse Param :)
 declare %private function xqdc:param($param as element(Param))
 as element(xqdoc:parameter)
 {
  <xqdoc:parameter>
- 	  <xqdoc:name>{ $param/QName/string() }</xqdoc:name>
-	 { $param/TypeDeclaration!xqdc:type(.)}
+ 	  <xqdoc:name>{ $param/EQName/string() }</xqdoc:name>
+	 { $param/TypeDeclaration/SequenceType!xqdc:type(.)}
  </xqdoc:parameter>
 };
 
 (: xqdoc return from parse fundecl :)
 declare %private function xqdc:return($fundecl as element(FunctionDecl))
-as element(xqdoc:return)
+as element(xqdoc:return)?
 {
-<xqdoc:return><xqdoc:type>{
-        $fundecl/SequenceType!( attribute occurrence {TOKEN/string() },  QName/string() ),
-        if(not($fundecl/SequenceType))
-        then $fundecl/*[last()-1]/string() (: before EnclosedExpr :)
-      }
-</xqdoc:type></xqdoc:return>
+  if($fundecl/SequenceType)
+  then <xqdoc:return>{ xqdc:type($fundecl/SequenceType) }</xqdoc:return>
 };
 
-declare %private function xqdc:type($type as element(TypeDeclaration))
-as element(xqdoc:type){
+(:~ xqdoc type from parse sequencetype :)
+declare %private function xqdc:type($type as element(SequenceType)?)
+as element(xqdoc:type)?
+{
+  if(exists($type))
+  then 
  <xqdoc:type >{
-       ( $type/SequenceType)/string() 
+       if($type/OccurrenceIndicator)
+       then attribute occurrence {$type/OccurrenceIndicator/string()}
+      ,$type/*=>head()=>string() 
  }</xqdoc:type>
 };
 

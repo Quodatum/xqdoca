@@ -5,7 +5,6 @@ xquery version "3.1";
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
- 
 (:~
  : Generate XQuery  documentation in html
  :)
@@ -15,6 +14,7 @@ import module namespace tree = 'quodatum:data.tree' at "../lib/tree.xqm";
 import module namespace xqd = 'quodatum:xqdoca.model' at "../lib/model.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../lib/annotations.xqm";
 import module namespace page = 'quodatum:xqdoca.page'  at "../lib/xqdoc-page.xqm";
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
 
@@ -35,8 +35,8 @@ as document-node()
 {
  let $sections:=(
                  xqhtml:summary($model,$opts),
-                 xqhtml:modules("main_mods" ,"Main modules",$model?files[?xqdoc/xqdoc:module/@type="main"],$model),
-                 xqhtml:modules("library_mods" ,"Library modules",$model?files[?xqdoc/xqdoc:module/@type="library"],$model),
+                 xqhtml:modules("main_mods" ,"XQuery Main",$model?files[?xqdoc/xqdoc:module/@type="main"],$model),
+                 xqhtml:modules("library_mods" ,"XQuery Library",$model?files[?xqdoc/xqdoc:module/@type="library"],$model),
                  xqhtml:files($model,$opts),
                  xqhtml:annot($model,$opts)
              )
@@ -85,8 +85,8 @@ as element(section)
                          return map:entry($uri,$a)
                        )
    return <section id="annotation">
-              <h2>Annotations</h2>
-              <p> A total of {count( $model?files?annotations)} annotations are defined. The Annotations use {map:size(($ns-map))} namespaces.
+              <h2>{ ``[Annotation namespaces (`{ map:size($ns-map) }`)]`` }</h2>
+              <p> A total of {count( $model?files?annotations)} annotations are defined. 
               </p>{
                for $ns in map:keys($ns-map)
                order by $ns
@@ -174,7 +174,6 @@ as element(div)
        { for $file  at $pos in $files
         let $type:=xqd:file-parsed-type($file)
          order by $type, $file?namespace
-         let $ns:=$file?namespaces
          let $annots:= for $a in $file?annotations
                        group by $ns:=$a?annotation?uri
                        order by $ns

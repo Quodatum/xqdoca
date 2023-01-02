@@ -9,6 +9,7 @@ Diagrams showing project module imports. Generated with `mermaid.js`.
  
 module namespace _ = 'quodatum:xqdoca.generator.mermaid';
 import module namespace xqd = 'quodatum:xqdoca.model' at "../lib/model.xqm";
+(:~ html page utils :)
 import module namespace page = 'quodatum:xqdoca.page'  at "../lib/xqdoc-page.xqm";
 import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "../lib/annotations.xqm";
 
@@ -98,7 +99,6 @@ as map(*){
   let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=>count()
   return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
           $file)=>map:merge()
- 
 };
 
 (:~ generate mermaid function list :)
