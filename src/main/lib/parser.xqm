@@ -105,14 +105,14 @@ as element(xqdoc:xqdoc)
 (:~ default function namespace
  : NOTE if parse failed will return "http://www.w3.org/2005/xpath-functions"
  :)
-declare function xqp:default-fn-uri($xqparse as element(*))
+declare function xqp:default-fn-uri($xqparse as element(XQuery))
 as xs:string
 {
   let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl
   return if( empty($def-fn) ) then
                     "http://www.w3.org/2005/xpath-functions"
                   else
-                   $def-fn/StringLiteral!substring(.,2,string-length(.)-2)
+                   $def-fn/URILiteral!substring(.,2,string-length(.)-2)
 };
 
 (:~ scan tree below $e for references
