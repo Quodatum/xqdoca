@@ -36,7 +36,8 @@ return
               return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)
 
     case "-install" 
-    case "-update" return (cmd:install($expkg),update:output("All dependancies installed."))
+    case "-update" return (cmd:install($expkg)
+                          ,update:output("All dependancies installed."))
 
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 

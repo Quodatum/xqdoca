@@ -87,9 +87,9 @@ as xs:boolean{
 };
 
 (:~ url to install package $name where version is compatable with spec :)
-declare function cmd:package-url($name as xs:string,$spec as element(*))
+declare function cmd:package-url($name as xs:string,$spec as element(*),$store-url as xs:anyURI)
 as xs:string{
-     let $hits:=doc($cmd:repo-list)/repositories/repository
+     let $hits:=doc($store-url)/repositories/repository
                  /package[@name=$name]/release[not(cmd:semver-fails(@version,$spec))]
      return if(empty($hits))
             then  error(xs:QName("pkg:version"),"no source for :" || $name)
@@ -100,6 +100,6 @@ declare function cmd:install($pkg as element(pkg:package))
 as empty-sequence(){
     for  $p in $pkg/pkg:dependency[@name]
     where cmd:not-installed($p/@name,$p)
-    let $src:=cmd:package-url($p/@name,$p)
+    let $src:=cmd:package-url($p/@name, $p, $cmd:repo-list)
     return repo:install($src=>trace("Installing: "))
 };

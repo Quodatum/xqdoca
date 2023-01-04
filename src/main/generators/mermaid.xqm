@@ -140,6 +140,10 @@ as element(html){
         fill:powderblue !important;
         stroke:black !important;
     }}
+     .cssDoca > rect, line{{
+        fill:yellow !important;
+        stroke:black !important;
+    }}
 </style>
   <nav id="toc" style="position:absolute;top:0"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
   {$related}

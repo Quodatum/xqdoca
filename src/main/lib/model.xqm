@@ -75,7 +75,7 @@ return map{
                               "parsed": $isParsed,
                               "prefix": xqd:prefix-for-ns($uri,$namespaces),
                               "namespaces": $namespaces,
-                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
+                              "annotations": xqd:anno($analysis?xqdoc,$platform), (: sequence map{annotation:, xqdoc: } :)
                               "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
                               "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
                            }
@@ -138,10 +138,10 @@ as map(*)
 (:~ 
  : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
  :)
-declare function xqd:anno($xqdoc as element(xqdoc:xqdoc))
+declare function xqd:anno($xqdoc as element(xqdoc:xqdoc),$platform as xs:string)
 as map(*)*
 {
-  let $ns:= xqd:namespaces($xqdoc)
+  let $ns:= xqp:namespaces($xqdoc,$platform)
  for $a in $xqdoc//xqdoc:annotation
  let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
  (:~ let $_:=trace($a,"ANNNNO: ") ~:)

@@ -255,6 +255,8 @@ return
       <a id="{ xqn:clark-name($qmap?uri, "$" || $qmap?name) }"/>
       <a href="#{ $name }">{ page:section($section) }</a> 
       {$name }
+      {if(boolean($v/@external))
+       then <div style="float:right" class="badge badge-info">EXTERNAL</div>}
       </h3>
 			<dl>
         <dt class="label">Summary</dt>
@@ -264,7 +266,7 @@ return
 			</dl>
       {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
-       <details>
+       <details open="open">
         <summary>Source ( {sum($v !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $v! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>

@@ -1,8 +1,8 @@
 xquery version "3.1";
 
 (:~  
- : Generate documentation for for XQuery sources
- : @return info about the run (json format)  
+  Generate documentation for for XQuery sources
+ 
  :)
 
 
@@ -14,6 +14,8 @@ declare option db:chop 'true';
  
 (:~  path to XML options file :)
 declare variable $src as xs:string  external;
+
+(:  @return info about the run (json format) :)
 let $src:=$src
           =>file:resolve-path(file:current-dir())
           

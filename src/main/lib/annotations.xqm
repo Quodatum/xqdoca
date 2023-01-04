@@ -13,6 +13,7 @@ import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.x
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
+declare variable $xqa:nsXQDOC:='https://github.com/Quodatum/xqdoca';
 declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';
 declare variable $xqa:nsOUT:='http://www.w3.org/2010/xslt-xquery-serialization';
 
@@ -89,19 +90,14 @@ as xs:boolean
   xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)
 };
 
-declare function xqa:is-out($name,$a  as element(xqdoc:annotation),$ns as map(*))
+declare function xqa:is-out($a as element(xqdoc:annotation),$name as xs:string,$ns as map(*))
 as xs:boolean
 {
   xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsOUT,$name)
 };
 
 
-declare function xqa:only-rest($annots  as element(xqdoc:annotation)*,$ns as map(*))
-as xs:boolean
-{
-  $annots=>filter(xqa:is-rest(?,"path",$ns))
-};
-
+(:~ :)
 declare function xqa:methods($annots  as element(xqdoc:annotation)*,$ns as map(*))
 as xs:string*
 {

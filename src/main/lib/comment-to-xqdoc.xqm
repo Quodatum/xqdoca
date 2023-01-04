@@ -25,7 +25,8 @@ as element(xqdoc:comment)?{
               =>xqcom:comment-xml()
 };
 
-(:~ parse xqdoc comment to map :)
+(:~ parse xqdoc comment to map 
+@todo use _tag to track last updated :)
 declare %private
 function xqcom:comment-parse($comment as xs:string?)
 as map(*)?{
@@ -39,7 +40,8 @@ as map(*)?{
                    !util:if(starts-with(.,":"), xqcom:trim(substring(.,2)), .)
        let $state:= map{
                       'description': '',
-                      'params': ()
+                      'params': (),
+                      '_tag': 'description'
                         }
        return  fold-left($lines,$state,xqcom:comment-parse#2)
      
@@ -61,7 +63,7 @@ as map(*){
               then  map:put($state,$match[1],($state?($match[1]) ,$tag))
               else  map:put($state,'custom',($state?custom ,$tag))                 
          else 
-         map:put($state,'description',$state?description || " " || $line)
+         map:put($state,'description',$state?description || file:line-separator() || $line)
 };
 
 (:~
@@ -78,13 +80,26 @@ as element(xqdoc:comment)?{
         (:~ let $_:=trace($key,"^^^") ~:)
         return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} 
                        {
-                        if($key eq "custom") then attribute tag { $tag?tag} else (),
-                        if($key="description") then $tag else $tag?txt
+                        if($key eq "custom") then attribute tag { $tag?tag},
+                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)
                         }
       }</xqdoc:comment>
   else ()
 };
 
+(:~ text treat as html if valid :)
+declare %private
+function xqcom:text( $txt as xs:string? )  as item()* 
+{
+  try{
+   if(every $c in ("<",">","/") satisfies contains($txt,$c))
+   then parse-xml-fragment($txt)/*
+   else $txt
+  }catch *{
+    $txt
+  }
+ };
+ 
 (:~ remove leading/trailing whitespace :)
 declare %private
 function xqcom:trim

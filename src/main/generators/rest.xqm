@@ -159,7 +159,7 @@ as element(*)*
 {
   let $ns:=$amap?file?prefixes
   let $p:=filter($annots,xqa:is-rest(?,"produces",$ns))
-  let $s:=filter($annots, xqa:is-out("method",?,$ns))
+  let $s:=filter($annots, xqa:is-out(?,"method",$ns))
   return if ($p or $s)then
        (<dt>Output</dt>,
         <dd>{if($s)then
