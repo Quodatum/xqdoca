@@ -11,7 +11,7 @@ declare function opts:as-map($a as element(*))
 as map(*){
  $a/* ! map:entry(name(.), util:if (*,  opts:as-map(.),string(.)))
 =>map:merge()
-=>trace("AS_MAP: ")
+(: =>trace("AS_MAP: ") :)
 };
 
 (: add defaults to opts :)

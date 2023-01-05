@@ -33,7 +33,7 @@ function _:html(
 
 (:~ generate text for mermaid class diagram in mmd format:)
  declare 
- %xqdoca:global("mermaid.mmd","Project wide module imports as a mermaid class diagram")
+ %xqdoca:global("imports-diag.mmd","Project wide module imports as a mermaid class diagram")
 %xqdoca:output("mermaid.mmd","text") 
  function _:mmd($model as map(*),         
                 $opts as map(*) )

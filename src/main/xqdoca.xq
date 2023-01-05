@@ -39,8 +39,8 @@ let $options:=opts:merge($options,map{
                       })
 
 let $files:=xqd:find-sources($efolder, $options?extensions)
-let $model:= xqd:snap($efolder, $files, $options?platform) 
-
+let $model:= xqd:snap($efolder, $files, $options?platform)
+let $_:=trace(0,"SNAP complete") 
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)
 let $target:=xqd:target($target,$options)   

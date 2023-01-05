@@ -109,10 +109,9 @@ declare function xqp:default-fn-uri($xqparse as element(XQuery))
 as xs:string
 {
   let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl
-  return if( empty($def-fn) ) then
-                    "http://www.w3.org/2005/xpath-functions"
-                  else
-                   $def-fn/URILiteral!substring(.,2,string-length(.)-2)
+  return if( empty($def-fn) ) 
+         then "http://www.w3.org/2005/xpath-functions"
+         else $def-fn/URILiteral!substring(.,2,string-length(.)-2)
 };
 
 (:~ scan tree below $e for references
@@ -185,34 +184,6 @@ let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
         </xqdoc:ref-variable>   
 };
 
-
-
-(:~ 
- : extract set of namespace declarations from XQuery parse descendants to map{prefix->uri}
- :)
-declare function xqp:namespaces-parse($n as element())
-as map(*)
-{
-(
-  $n//(ModuleDecl|ModuleImport|NamespaceDecl)
-  !map:entry(NCName[1]/string(),URILiteral[1]/substring(.,2,string-length(.)-2))
-)=>map:merge()
-=>trace("NSP: ")
-};
-
-
-
-(:~  map of known namespaces including static 
-like inspect:static-context((),"namespaces") 
-:)
-declare function xqp:namespaces($e as element(),$platform as xs:string)
-as map(*)
-{(
-  xqp:namespaces-parse($e),
- xqn:static-prefix-map($platform)
-) =>map:merge()
-};
-
 (:~  map of function declarations
  : @result map where keys are Qname with # arity items are xqParse trees
  : @param $def-fn default function namespace
@@ -233,22 +204,6 @@ as map(*)
              let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)
              return map:entry($key,$f)
  return map:merge($items)
-};
-
-
-
-
- (:~ 
- : all namespaces in xqdoc as map{prefix.. uri}
-  :)
-declare 
-%private 
-function xqp:namespaces-xqdoc($xqdoc as element(xqdoc:xqdoc))
-as map(*)
-{
-  $xqdoc/xqdoc:namespaces/xqdoc:namespace
-  !map:entry(string(@prefix),string(@uri))
-  =>map:merge()
 };
 
 (:~ parse XQuery 

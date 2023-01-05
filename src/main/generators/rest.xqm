@@ -1,19 +1,10 @@
 xquery version "3.1";
-(: Copyright (c) 2019-2022 Quodatum Ltd
- : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
- 
- (:~
- : <h1>restxq renderer</h1>
- : <p>HTML describing the rest interface</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
 (:~
- : Generate RESTXQ XQuery  documentation in html
+  <p>Generate HTML describing the rest interface</p> 
+  @copyright (c) 2019-2022 Quodatum Ltd
+  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
+
 module namespace _ = 'quodatum:xqdoca.generator.rest';
 
 import module namespace tree = 'quodatum:data.tree' at "../lib/tree.xqm";
@@ -157,7 +148,7 @@ declare function _:outputs($annots as element(xqdoc:annotation)*,
                            $amap as map(*))
 as element(*)*
 {
-  let $ns:=$amap?file?prefixes
+  let $ns:=$amap?file?namespaces
   let $p:=filter($annots,xqa:is-rest(?,"produces",$ns))
   let $s:=filter($annots, xqa:is-out(?,"method",$ns))
   return if ($p or $s)then
@@ -270,7 +261,7 @@ as element(*)
                                 $amap as map(*))
 as element(*)*
 {
-  let $aq:=filter($annots,xqa:is-rest(?,$name,$amap?file?prefixes))
+  let $aq:=filter($annots,xqa:is-rest(?,$name,$amap?file?namespaces))
   return if($aq) then 
   (<dt>{ $title }</dt>,
          <dd>

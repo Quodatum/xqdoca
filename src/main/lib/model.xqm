@@ -58,27 +58,16 @@ return map{
 
              "files": for $file at $pos in $files
                       let $id:= "F" || format-integer($pos,"000000")
-                      let $full:= concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
+                      let $full:= concat($efolder , $file)
+                                  =>trace(``[FILE `{ $pos }` :]``)
                       let $spath:= translate($file,"\","/")
                       let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
 
-                      let $isParsed:= $analysis?xqparse instance of element(XQuery)
-                      let $namespaces:= xqp:namespaces( $analysis?xqparse, $platform) 
-                                        (:~ =>trace("prefixes: ") ~:)
-                                     
-
-                      let $uri:= $analysis?xqdoc/xqdoc:module/xqdoc:uri/string(.)             
                       let $base:=map{
                               "index": $pos,
                               "path": translate($file,"\","/"),
-                              "href": ``[modules/`{ $id }`/]``,
-                              "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($uri,$namespaces),
-                              "namespaces": $namespaces,
-                              "annotations": xqd:anno($analysis?xqdoc,$platform), (: sequence map{annotation:, xqdoc: } :)
-                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
-                           }
+                              "href": ``[modules/`{ $id }`/]``
+                               }
                       return map:merge(($base,$analysis))  
            }
 
@@ -90,21 +79,6 @@ as map(*)
  xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
 };
 
-(:~ generate xqdoc
- : result is <XQuery> or <ERROR>
- :)
-declare function xqd:xqdoc($url as xs:string)
-as element(xqdoc:xqdoc)
-{ 
-  (: 
- try{
-   xqdc:build($url )
- } catch * { 
-   <xqdoc:xqdoc>{$err:code } - { $err:description }</xqdoc:xqdoc>
-}
-:)
-xqdc:build($url )
-};
 
 (:~ 
  : Generate parse and xqdoc for xquery at location $url 
@@ -118,21 +92,34 @@ as map(*)
 {  
    let $xq as xs:string := unparsed-text($url)
    let $parse:= xqp:parse($xq,$platform)
-   
-   let $xqdoc:= if($parse instance of element(XQuery)) 
-                then xqdc:build($parse,
+   let $isParsed:= $parse instance of element(XQuery)
+   return if($isParsed)
+          then let $xqdoc:=  xqdc:build($parse,
                                 map{
                                     "body-full": false(),  (: include full source as xqdoc:body :)
                                     "body-items": true(), (: include item (fn,var) source as xqdoc:body :)
                                     "refs": true(),        (: include xref info :)
                                     "url": $url
                                    }
-   )
-                else prof:dump($url,"PARSE FAIL: ")
-                              
-  return map{"xqdoc": $xqdoc, 
-             "xqparse": $parse
-            }
+                            )
+            let $namespaces:= xqd:namespaces( $xqdoc, $platform) 
+                                        (:~ =>trace("prefixes: ") ~:)
+            let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
+            return map{
+                      "xqdoc": $xqdoc, 
+                      "xqparse": $parse,
+                      "prefix": xqd:prefix-for-ns($uri,$namespaces),
+                      "namespaces": $namespaces,
+                      "annotations": xqd:anno($xqdoc,$platform), (: sequence map{annotation:, xqdoc: } :)
+                      "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                      "default-fn-uri": xqp:default-fn-uri($parse)      
+                      }
+
+          else (
+            map{"xqparse": $parse},
+            prof:dump($url,"PARSE FAIL: ")
+          )                  
+ 
 };
 
 (:~ 
@@ -141,7 +128,7 @@ as map(*)
 declare function xqd:anno($xqdoc as element(xqdoc:xqdoc),$platform as xs:string)
 as map(*)*
 {
-  let $ns:= xqp:namespaces($xqdoc,$platform)
+  let $ns:= xqd:namespaces($xqdoc,$platform)
  for $a in $xqdoc//xqdoc:annotation
  let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
  (:~ let $_:=trace($a,"ANNNNO: ") ~:)
@@ -157,7 +144,21 @@ as xs:string{
    else
        $file?xqdoc/xqdoc:module/@type/string() 
 };
-        
+
+(:~ 
+ : extract set of namespace declarations from XQuery parse descendants to map{prefix->uri}
+ :)
+declare function xqd:namespaces-xqdoc($n as element(xqdoc:xqdoc))
+as map(*)
+{
+(
+  $n/xqdoc:namespaces/xqdoc:namespace
+  !map:entry(@prefix/string(),@uri/string())
+)=>map:merge()
+(: =>trace("NSP: ") :)
+};
+
+
 (:~ return sequence of maps describing restxq ordered by rest:path
  : {uri:.., 
  : methods : {METHODS: {id:.., uri:.. ,function:}}
@@ -252,6 +253,17 @@ as map(*)
   return $ns
         !map:entry(string(@prefix),string(@uri))
         =>map:merge()
+};
+
+(:~  map of known namespaces including static 
+like inspect:static-context((),"namespaces") 
+:)
+declare function xqd:namespaces($xqdoc as element(xqdoc:xqdoc),$platform as xs:string)
+as map(*)
+{(
+  xqd:namespaces-xqdoc($xqdoc)=>trace("NS@xqdoc: "),
+ xqn:static-prefix-map($platform)
+) =>map:merge()
 };
 
 (:~ files that import given namespace :)

@@ -7,7 +7,7 @@
         imports  
         annotations 
         imports-diag 
-        mermaid.mmd    
+        imports-diag.mmd    
         lint 
         xqdoca.xml
         xqdoc-validate

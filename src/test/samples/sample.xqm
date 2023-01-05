@@ -1,8 +1,8 @@
 (:~ 
  : This module provides some sample functions to demonstrate
  : the features of the xqdoc format.
- :
- : @author   Quodatum Team
+ : @note foo does not exist
+ : @author   Quodatum 
  : @see      https://github.com/Quodatum/xqdoca
  : @version  1.0
  :)

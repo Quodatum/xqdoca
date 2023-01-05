@@ -39,7 +39,6 @@ as element(xqdoc:xqdoc)
 	   xqdc:module($mod, $opts)
     ,xqdc:imports($mod)
     ,xqdc:namespaces($mod)
-     (:~ =>trace("NS: ") ~:)
     ,xqdc:variables($mod,$opts)
     ,xqdc:functions($mod,$opts)
   }</xqdoc:xqdoc>
@@ -93,10 +92,10 @@ as element(xqdoc:namespaces)
                 return <xqdoc:namespace prefix="{ $name}" uri="{ $uri }"/>
   return <xqdoc:namespaces>{
         $this,
-        for $import in $parse/LibraryModule/Prolog/(ModuleImport|NamespaceDecl)
- 
-        let $uri:=$import/URILiteral/StringLiteral[1]=>xqdc:unquote()
-        let $prefix:= $import/(.|NCName)/NCName[not(NCName)]/string()
+        for $import in $parse/(MainModule|LibraryModule)/Prolog/(Import/ModuleImport|NamespaceDecl)
+        (: let $_:=trace($import,"FFF:" ) :)
+        let $uri:=($import/URILiteral/StringLiteral)[1]=>xqdc:unquote()
+        let $prefix:= $import/NCName/string()
         return <xqdoc:namespace prefix="{ $prefix}" uri="{ $uri }">{
                    xqcom:comment($import)
         }</xqdoc:namespace>
@@ -114,7 +113,8 @@ as element(xqdoc:variables)
 
 declare %private function  xqdc:variable($vardecl as element(VarDecl), $opts as map(*))
 as element(xqdoc:variable){
-	let $name:=$vardecl/VarName/string()=>trace("VAR: ")
+	let $name:=$vardecl/VarName/string()
+  (: =>trace("VAR: ") :)
 
   return <xqdoc:variable>
      {$vardecl/TOKEN[.="external"]!attribute external {"true"}}
