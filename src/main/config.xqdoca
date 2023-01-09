@@ -5,7 +5,27 @@
     <extensions>*.xqm,*.xq,*.xquery</extensions>
     <platform>basex</platform>
     <outputs>
-        <global>report restxq imports imports-diag imports-diag.mmd annotations xqdoca.xml</global>
-        <module>module xqdoc xqparse</module>
+        <global>
+            report
+            restxq
+            imports
+            imports-diag imports-diag.mmd 
+            annotations 
+            xqdoca.xml
+            xqdoc-validate
+        </global>
+        <module>
+            module 
+            xqdoc 
+            xqparse
+        </module>
     </outputs>
+    <!--
+    xqdoc items to include
+    -->
+    <xqdoc>
+        <body-full>true</body-full>
+        <body-items>true</body-items>
+        <refs>true</refs>
+    </xqdoc>
 </xqdoca>

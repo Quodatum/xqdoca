@@ -1,8 +1,7 @@
 xquery version "3.1";
-
 (:~  
-  Generate documentation for for XQuery sources
- 
+  Generate documentation form XQuery sources
+  @author Andy Bunce (Quodatum)
  :)
 
 
@@ -13,22 +12,23 @@ import module namespace opts = 'quodatum:xqdoca:options' at "lib/options.xqm";
 declare option db:chop 'true';
  
 (:~  path to XML options file :)
-declare variable $src as xs:string  external;
+declare variable $config-path as xs:string  external;
 
 (:  @return info about the run (json format) :)
-let $src:=$src
+let $config-path:=$config-path
           =>file:resolve-path(file:current-dir())
           
 (: options with defaults:)
-let $options:=opts:as-map(doc($src)/*)
+let $options:=opts:as-map(doc($config-path)/*)
                =>opts:merge(opts:as-map(doc("config.xqdoca")/*))
+               =>trace("OPTS: ")
 
 let $efolder:=$options?source
-              =>file:resolve-path($src)
+              =>file:resolve-path($config-path)
               =>xs:anyURI()
 
 let $target:= $options?target
-              =>file:resolve-path($src)
+              =>file:resolve-path($config-path)
               =>file:path-to-uri()
               =>concat("/")
               
@@ -39,7 +39,7 @@ let $options:=opts:merge($options,map{
                       })
 
 let $files:=xqd:find-sources($efolder, $options?extensions)
-let $model:= xqd:snap($efolder, $files, $options?platform)
+let $model:= xqd:snap($efolder, $files, $options)
 let $_:=trace(0,"SNAP complete") 
 (: generate  outputs :)
 let $pages:= xqo:render($model,$options)

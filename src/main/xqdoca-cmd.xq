@@ -54,7 +54,7 @@ return
             let $src:=(cmd:check-dependancies($expkg),
                         local:resolve($action)=>trace("Processing: "))
             return xquery:eval-update(xs:anyURI("xqdoca.xq"),
-                                      map{"src": $src, 
+                                      map{"config-path": $src, 
                                           "pass":true()}
                                     )
 

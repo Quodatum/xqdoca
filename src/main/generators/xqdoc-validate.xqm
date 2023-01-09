@@ -23,13 +23,15 @@ let $schema:=resolve-uri($_:xsd,static-base-uri())=>trace("xqdoc schema: ")
 let $reports:=for $f in $model?files
               return $f?xqdoc!validate:xsd-report(.,$schema) 
                       transform with {
-                         insert node attribute source { $f?path } into .
-                        ,insert node attribute xqdoc { $f?href } into .
+                         insert node (attribute source { $f?path },
+                                      attribute xqdoc { $f?href }
+                         ) into .
                       }
 
 return <errors>{ 
         attribute created { current-dateTime() }
         , attribute schema { $schema }
+        , attribute errors { count($reports[status eq 'invalid']) }
         , $reports }
         </errors>
 };

@@ -3,31 +3,17 @@ xquery version "3.1";
 create xqdoc from parse tree 
  @Copyright (c) 2022 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
- @TODO refs,external
+ @TODO refs
 :)
  module namespace xqdc = 'quodatum:xqdoca.model.xqdoc';
 
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-(:~ default options :)
-declare variable $xqdc:defaults:=map{
-                          "body-full": false(),  (: include full source as xqdoc:body :)
-                          "body-items": true(), (: include item (fn,var) source as xqdoc:body :)
-                          "refs": true()        (: include xref info :)
-                          };
-
-(:~ build xqdoc from parse tree :)
-declare function xqdc:build($parse as element(XQuery))
-as element(xqdoc:xqdoc)
-{
-   xqdc:build($parse,$xqdc:defaults)
-};
-
-(:~ build xqdoc from parse tree 
- @param $opts {body:, refs:}
+(:~ build xqdoc from XQuery parse tree 
+ @param $opts {"body-full","body-items","refs"}
 :)
-declare function xqdc:build($parse as element(XQuery),$opts as map(*))
+declare function xqdc:build($parse as element(XQuery),$url as xs:string,$opts as map(*))
 as element(xqdoc:xqdoc)
 {
   let $mod:= $parse/Module
@@ -36,7 +22,7 @@ as element(xqdoc:xqdoc)
       <xqdoc:date>{ current-dateTime() }</xqdoc:date>
       <xqdoc:version>1.2</xqdoc:version>
 	  </xqdoc:control>{
-	   xqdc:module($mod, $opts)
+	   xqdc:module($mod, $url, $opts)
     ,xqdc:imports($mod)
     ,xqdc:namespaces($mod)
     ,xqdc:variables($mod,$opts)
@@ -44,14 +30,15 @@ as element(xqdoc:xqdoc)
   }</xqdoc:xqdoc>
 };
 
-declare %private function xqdc:module($parse as element(Module), $opts as map(*))
+declare %private function xqdc:module($parse as element(Module),$url as xs:string, $opts as map(*))
 as element(xqdoc:module)
 {
 let $type:=if($parse/LibraryModule) then "library" else "main"
 let $name:=$parse/LibraryModule/ModuleDecl/NCName/string()
 
-let $uri:=$parse/LibraryModule/ModuleDecl/URILiteral/xqdc:unquote(.)
-let $uri:= if(exists($uri)) then $uri else replace($opts?url,".*/(.*)","$1")
+let $uri:=if($type eq 'library')
+          then $parse/LibraryModule/ModuleDecl/URILiteral/xqdc:unquote(.) 
+          else $url=>translate("\","/")=>replace(".*/(.*)","$1")
 
 let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)
           (: =>trace("DD") :)
@@ -61,7 +48,7 @@ return
       <xqdoc:uri>{ $uri }</xqdoc:uri>
       <xqdoc:name>{ $name }</xqdoc:name>
       { $com }
-      { util:if($opts?body-full,xqdc:body(root($parse)))} 
+      { util:if(xqdc:opt($opts,"body-full"),xqdc:body(root($parse)))} 
     </xqdoc:module>
 };
 
@@ -119,13 +106,14 @@ as element(xqdoc:variable){
   return <xqdoc:variable>
      {$vardecl/TOKEN[.="external"]!attribute external {"true"}}
 			<xqdoc:name>{ $name }</xqdoc:name>
-      { $vardecl/parent::AnnotatedDecl/Annotation
-        !<xqdoc:annotations>{xqdc:annotation(.)}</xqdoc:annotations>,
- 
-		  xqcom:comment($vardecl/..),
-      $vardecl/TypeDeclaration/SequenceType!xqdc:type(.),
-      xqdc:refs($vardecl),
-      util:if($opts?body-items,xqdc:body($vardecl)) }
+      { 
+        xqcom:comment($vardecl/..)
+        ,$vardecl/parent::AnnotatedDecl/Annotation
+       =>xqdc:wrap(xs:QName('xqdoc:annotations'),xqdc:annotation#1) 
+
+       ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
+       ,xqdc:refs($vardecl)
+       ,util:if(xqdc:opt($opts,"body-items"),xqdc:body($vardecl)) }
 		</xqdoc:variable>
 };
 
@@ -148,6 +136,7 @@ as element(xqdoc:functions)
 };
 
 (:~  create dummy function for main modules
+@todo pull real comments
  :)
  declare function xqdc:main($body as element(*)?)
  as element(xqdoc:function)?
@@ -176,34 +165,33 @@ as element(xqdoc:function){
       (:~ =>trace("FUN: ") ~:)
       }</xqdoc:name>
 
-     { if($fundecl/parent::AnnotatedDecl[Annotation])
-      then <xqdoc:annotations>{
-              $fundecl/parent::AnnotatedDecl/Annotation!xqdc:annotation(.) }
-          </xqdoc:annotations>}
+     { $fundecl/parent::AnnotatedDecl/Annotation
+       =>xqdc:wrap( xs:QName('xqdoc:annotations'), xqdc:annotation#1) }
+      
       
       <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
                         =>string-join(" ")=>normalize-space()
        }</xqdoc:signature>
 
-      <xqdoc:parameters>
-         { $params!xqdc:param(.) }
-      </xqdoc:parameters>
-
-      {   xqdc:return($fundecl)
+      {   xqdc:parameters($params)  
+        , xqdc:return($fundecl)
         , xqdc:refs($fundecl) 
-        ,util:if($opts?body-items,xqdc:body($fundecl)) }
+        ,util:if(xqdc:opt($opts,"body-items"),xqdc:body($fundecl)) }
   </xqdoc:function>
 };
 
 
 (: xqdoc parameter from parse Param :)
-declare %private function xqdc:param($param as element(Param))
-as element(xqdoc:parameter)
+declare %private function xqdc:parameters($params as element(Param)*)
+as element(xqdoc:parameters)?
 {
- <xqdoc:parameter>
- 	  <xqdoc:name>{ $param/EQName/string() }</xqdoc:name>
-	 { $param/TypeDeclaration/SequenceType!xqdc:type(.)}
- </xqdoc:parameter>
+  if(exists($params))
+  then <xqdoc:parameters>{
+          $params!<xqdoc:parameter>
+                      <xqdoc:name>{ EQName/string() }</xqdoc:name>
+                      { TypeDeclaration/SequenceType!xqdc:type(.)}
+                  </xqdoc:parameter>
+      }</xqdoc:parameters>
 };
 
 (: xqdoc return from parse fundecl :)
@@ -277,6 +265,18 @@ as element(xqdoc:annotation)
 }</xqdoc:annotation>
 };
 
+(:~  get boolean option :)
+declare %private function xqdc:opt($opts as map(*), $opt as xs:string)
+as xs:boolean{
+   $opts?xqdoc($opt)=>xs:boolean() (: =>trace($opt || ": " ) :)
+};
+
+(:~ if items then apply $fun to each and wrap result sequence in $qname :)
+declare %private function xqdc:wrap($items as item()*,$qname as xs:QName,$fun as function(*))
+as element(*)?{
+if(exists($items))
+then element {$qname}{ $items!$fun(.)}
+};
 
 (:~  remove start and end quote marks :)
 declare %private function xqdc:unquote($s as xs:string)

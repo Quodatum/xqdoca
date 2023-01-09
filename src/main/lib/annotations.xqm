@@ -31,13 +31,7 @@ declare variable $xqa:noteworthy:=(
     'icon': 'U',
     "class": 'danger'
   },
-    map{
-    "uri":'http://www.w3.org/2012/xquery',
-    "name":'private',
-    "title":'Private',
-    'icon': 'P',
-    "class": 'dark'
-  },
+ 
    map{
     "uri":'http://exquery.org/ns/restxq',
     "name":'path',
@@ -61,6 +55,15 @@ declare variable $xqa:noteworthy:=(
   }
 );
 
+declare variable $xqa:private:=
+   map{
+    "uri":'http://www.w3.org/2012/xquery',
+    "name":'private',
+    "title":'Private',
+    'icon': 'P',
+    "class": 'dark'
+  };
+  
 (:~
  : html badges for annotations with known namespaces
  @param  $button-render $badge?icon, $badge?class, $badge?title
