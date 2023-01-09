@@ -107,7 +107,7 @@ as element(xqdoc:variable){
      {$vardecl/TOKEN[.="external"]!attribute external {"true"}}
 			<xqdoc:name>{ $name }</xqdoc:name>
       { 
-        xqcom:comment($vardecl/..)
+         xqcom:comment($vardecl/..)
         ,$vardecl/parent::AnnotatedDecl/Annotation
        =>xqdc:wrap(xs:QName('xqdoc:annotations'),xqdc:annotation#1) 
 
