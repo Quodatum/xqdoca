@@ -151,8 +151,6 @@
                     <xsd:restriction base="xsd:string">
                         <xsd:enumeration value="1.0"/>
                         <xsd:enumeration value="1.1"/>
-                        <!-- xqdoca uses? -->
-                        <xsd:enumeration value="1.2"/>
                         <xsd:enumeration value="N/A"/>
                     </xsd:restriction>
                 </xsd:simpleType>

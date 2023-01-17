@@ -24,6 +24,7 @@
     xqdoc items to include
     -->
     <xqdoc>
+        <schema>1.1</schema>
         <body-full>true</body-full>
         <body-items>true</body-items>
         <refs>true</refs>

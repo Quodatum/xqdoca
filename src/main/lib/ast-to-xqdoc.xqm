@@ -20,7 +20,7 @@ as element(xqdoc:xqdoc)
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
       <xqdoc:date>{ current-dateTime() }</xqdoc:date>
-      <xqdoc:version>1.2</xqdoc:version>
+      <xqdoc:version>1.1</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $url, $opts)
     ,xqdc:imports($mod)
