@@ -8,7 +8,7 @@ module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";
 
-declare variable $cmd:repo-list:= "repositories.xml";
+declare variable $cmd:repo-list:= "https://raw.githubusercontent.com/expkg-zone58/catalog/main/repositories.xml";
 
 (:~  simple command line parse splits on space unless in quotes :)
 declare function cmd:parse-args($str as xs:string)
@@ -44,7 +44,7 @@ as map(*){
 @error  pkg:version Basex version running now is not supported
 @error  pkg:missing package missing
 @return version :)
-declare function cmd:check-dependancies($pkg as element(pkg:package))
+declare function cmd:check-dependencies($pkg as element(pkg:package))
 as empty-sequence(){
   let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]
   let $basex-active:= db:system()/generalinformation/version
@@ -86,17 +86,20 @@ as xs:boolean{
    satisfies cmd:semver-fails($v/@version,$spec)           
 };
 
-(:~ url to install package $name where version is compatable with spec :)
+(:~ url to install package $name where version is compatable with spec
+@param $store-url url listing packages
+:)
 declare function cmd:package-url($name as xs:string,$spec as element(*),$store-url as xs:anyURI)
 as xs:string{
      let $hits:=doc($store-url)/repositories/repository
-                 /package[@name=$name]/release[not(cmd:semver-fails(@version,$spec))]
+                 /package[@name=$name]/releases/release[not(cmd:semver-fails(@version,$spec))]
      return if(empty($hits))
             then  error(xs:QName("pkg:version"),"no source for :" || $name)
             else resolve-uri($hits[1],base-uri($hits[1]))
 };
 
-declare function cmd:install($pkg as element(pkg:package))
+(:~ install all dependencies from packages :)
+declare function cmd:install-dependencies($pkg as element(pkg:package))
 as empty-sequence(){
     for  $p in $pkg/pkg:dependency[@name]
     where cmd:not-installed($p/@name,$p)

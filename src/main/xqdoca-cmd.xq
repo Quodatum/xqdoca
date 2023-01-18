@@ -36,7 +36,7 @@ return
               return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)
 
     case "-install" 
-    case "-update" return (cmd:install($expkg)
+    case "-update" return (cmd:install-dependencies($expkg)
                           ,update:output("All dependancies installed."))
 
     case "-init" return
@@ -51,7 +51,7 @@ return
                        else update:output("xqdoca file already exists")
 
     default return 
-            let $src:=(cmd:check-dependancies($expkg),
+            let $src:=(cmd:check-dependencies($expkg),
                         local:resolve($action)=>trace("Processing: "))
             return xquery:eval-update(xs:anyURI("xqdoca.xq"),
                                       map{"config-path": $src, 

@@ -16,11 +16,12 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 declare function xqdc:build($parse as element(XQuery),$url as xs:string,$opts as map(*))
 as element(xqdoc:xqdoc)
 {
+  let $version:=$opts?xqdoc?version
   let $mod:= $parse/Module
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
       <xqdoc:date>{ current-dateTime() }</xqdoc:date>
-      <xqdoc:version>1.1</xqdoc:version>
+      <xqdoc:version>{$version}</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $url, $opts)
     ,xqdc:imports($mod)
@@ -271,16 +272,21 @@ as xs:boolean{
    $opts?xqdoc($opt)=>xs:boolean() (: =>trace($opt || ": " ) :)
 };
 
+declare %private function xqdc:schema-ok($option as xs:string, $version as xs:string)
+as xs:boolean{
+ true()
+};
+
 (:~ if items then apply $fun to each and wrap result sequence in $qname :)
 declare %private function xqdc:wrap($items as item()*,$qname as xs:QName,$fun as function(*))
 as element(*)?{
-if(exists($items))
-then element {$qname}{ $items!$fun(.)}
+  if(exists($items))
+  then element {$qname}{ $items!$fun(.)}
 };
 
 (:~  remove start and end quote marks :)
 declare %private function xqdc:unquote($s as xs:string)
 as xs:string{
-replace($s,'^[''"](.*)[''"]$','$1')
+  replace($s,'^[''"](.*)[''"]$','$1')
 };
 

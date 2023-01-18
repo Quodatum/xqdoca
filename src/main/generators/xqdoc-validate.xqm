@@ -22,7 +22,7 @@ function _:validate(    $model as map(*),
                         $opts as map(*)
                         )                           
 as element(errors){
-let $xsd:=$_:schemas?($opts?xqdoc?schema)
+let $xsd:=$_:schemas?($opts?xqdoc?version)
 let $schema:=resolve-uri($xsd,static-base-uri())=>trace("xqdoc schema: ")
 let $reports:=for $f in $model?files
               return $f?xqdoc!validate:xsd-report(.,$schema) 
