@@ -22,7 +22,7 @@ let $args:=cmd:parse-args($args)
 let $args:=if(exists($args)) 
            then $args 
            else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
-for  $action in  $args
+for  $action at $pos in  $args
 
 return  
     switch($action)
@@ -39,6 +39,8 @@ return
     case "-update" return (cmd:install-dependencies($expkg)
                           ,update:output("All dependancies installed."))
 
+    case "-pull"  return update:output("Pull: " || $args[$pos +1]) 
+          
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 
                 return if(not(file:exists($file)))

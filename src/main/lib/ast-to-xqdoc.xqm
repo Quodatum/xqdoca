@@ -24,13 +24,20 @@ as element(xqdoc:xqdoc)
       <xqdoc:version>{$version}</xqdoc:version>
 	  </xqdoc:control>{
 	   xqdc:module($mod, $url, $opts)
-    ,xqdc:imports($mod)
+
+    ,xqdc:wrap($parse/(MainModule|LibraryModule)/Prolog/Import/ModuleImport
+                ,xs:QName("xqdoc:imports")
+                ,xqdoc:import)
+ 
     ,xqdc:namespaces($mod)
-    ,xqdc:variables($mod,$opts)
-    ,xqdc:functions($mod,$opts)
+    ,xqdc:variables($mod, $opts)
+    ,xqdc:functions($mod, $opts)
   }</xqdoc:xqdoc>
 };
 
+(:~ generate xqdoc:module from parse 
+@param $url source location, the last segment is written to xqdoc:uri for main modules
+:)
 declare %private function xqdc:module($parse as element(Module),$url as xs:string, $opts as map(*))
 as element(xqdoc:module)
 {
@@ -53,22 +60,18 @@ return
     </xqdoc:module>
 };
 
-declare %private function xqdc:imports($parse as element(Module))
-as element(xqdoc:imports)?
+
+declare %private function xqdc:import($import as element(ModuleImport), $opts as map(*))
+as element(xqdoc:import)
 {
-  let $imports:=$parse/(MainModule|LibraryModule)/Prolog/Import/ModuleImport
-              
-  return if(exists($imports))
-         then <xqdoc:imports>{
-                  for $import in $imports
-                  let $uri:= $import/URILiteral/string(.)
-                  return  <xqdoc:import type="library">
-                            <xqdoc:uri>{ xqdc:unquote($uri[1]) }</xqdoc:uri>
-                            {tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at> 
-                             ,xqcom:comment($import)}
-                          </xqdoc:import>
-                  }</xqdoc:imports>
-}; 
+   let $uri:= $import/URILiteral/string(.)
+   return <xqdoc:import type="library">
+              <xqdoc:uri>{ xqdc:unquote($uri[1]) }</xqdoc:uri>
+              {util:if(xqdc:is11($opts),tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at>) 
+                ,xqcom:comment($import)}
+          </xqdoc:import>
+};
+
 
 declare %private function xqdc:namespaces($parse as element(Module))
 as element(xqdoc:namespaces)
@@ -105,16 +108,17 @@ as element(xqdoc:variable){
   (: =>trace("VAR: ") :)
 
   return <xqdoc:variable>
-     {$vardecl/TOKEN[.="external"]!attribute external {"true"}}
+     { util:if(xqdc:is11($opts),$vardecl/TOKEN[.="external"]!attribute external {"true"})}
 			<xqdoc:name>{ $name }</xqdoc:name>
       { 
          xqcom:comment($vardecl/..)
-        ,$vardecl/parent::AnnotatedDecl/Annotation
-       =>xqdc:wrap(xs:QName('xqdoc:annotations'),xqdc:annotation#1) 
+        ,xqdc:wrap($vardecl/parent::AnnotatedDecl/Annotation
+                   ,xs:QName('xqdoc:annotations')
+                   ,xqdc:annotation#1) 
 
        ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
-       ,xqdc:refs($vardecl)
-       ,util:if(xqdc:opt($opts,"body-items"),xqdc:body($vardecl)) }
+       ,util:if(xqdc:is11($opts),xqdc:refs($vardecl))
+       ,util:if(xqdc:is11($opts) and xqdc:opt($opts,"body-items"),xqdc:body($vardecl)) }
 		</xqdoc:variable>
 };
 
@@ -272,9 +276,10 @@ as xs:boolean{
    $opts?xqdoc($opt)=>xs:boolean() (: =>trace($opt || ": " ) :)
 };
 
-declare %private function xqdc:schema-ok($option as xs:string, $version as xs:string)
+(:~ return true if o/p xqdoc 1.1 format :)
+declare %private function xqdc:is11($opts as map(*))
 as xs:boolean{
- true()
+ $opts?xqdoc?version eq "1.1"
 };
 
 (:~ if items then apply $fun to each and wrap result sequence in $qname :)

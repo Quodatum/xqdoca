@@ -16,7 +16,7 @@ Work in progress.
 Runs with BaseX 9.5.1+ 9.7.99
 
 ## Install
-1. unzip dist bundle to a folder, or clone the respostory
+1. unzip dist bundle to a folder, or clone the respository
 1. Add the `/bin` folder from above to your `PATH`
 1. Execute `xqdoca -install` in a command window to ensure required repository modules are installed. 
 
@@ -28,11 +28,9 @@ The code to be processed must be syntactically valid from the perspective of the
 
 ## Usage
 
-`xqdoca -h` will display a summary of the options.
+`XQDocA` uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
 
-`xqdoca -h` will display a summary of the options.
-
-XQDocA uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
+The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
 
 For example the file `samples/dba.xqdoca`
 ```xml
@@ -41,11 +39,27 @@ For example the file `samples/dba.xqdoca`
     <target>file:///tmp/dba/</target>
 </xqdoca>
 ```
-Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
+Then 
+```xqdoca samples/dba.xqdoca``` 
+will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to the folder
 `file:///tmp/dba/`
 
-If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
+If  `source` or `target` are relative urls they are resolved relative to the `.xqdoca` file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
 Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
+
+
+`xqdoca options....`
+
+
+`xqdoca -h` will display a summary of the options.
+
+`xqdoca -h` will display a summary of the options.
+
+## Configuration
+| XPath from root                                     | Description| Example |
+| --------------------------------------------------- | ---------- | ------- |
+| `source` | directory containing source files | `C:\....\basex.951\webapp\dba`     |
+| `target`  | directory for output           | `file:///tmp/dba/`        |
 
 
 ## Built-in generators
@@ -171,8 +185,7 @@ declare variable $xqo:outputs:=map{
 ## Development notes
 `basex -bconfig-path=.xqdoca src\main\xqdoca.xq`
 
-`xqdoca` execution scans the source folder to locate XQuery sources. These are then parsed using a 
-combination of the `ex-parse` package and a xqdoc file generated from the parse.
+`xqdoca` execution scans the source folder to locate XQuery sources. These are then parsed using the `ex-parse` package and a xqdoc file generated from the parse.
 
 The results are used to create an in-memory map
 

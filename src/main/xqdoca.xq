@@ -14,7 +14,7 @@ declare option db:chop 'true';
 (:~  path to XML options file :)
 declare variable $config-path as xs:string  external;
 
-(:  @return info about the run (json format) :)
+(:  fully resolve opts path :)
 let $config-path:=$config-path
           =>file:resolve-path(file:current-dir())
           

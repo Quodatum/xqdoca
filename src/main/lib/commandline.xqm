@@ -49,15 +49,14 @@ as empty-sequence(){
   let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]
   let $basex-active:= db:system()/generalinformation/version
   return 
-  
-  if(cmd:semver-fails( $basex-active , $basex))
-  then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }`  not be supported]``)
-  else (
-         for $p in $pkg/pkg:dependency[@name]
-         return if(cmd:not-installed($p/@name,$p)) 
-                then error(xs:QName("pkg:missing"),"No suitable version found in repo for: " || $p/@name) 
-                else ()
-        )
+         if(cmd:semver-fails( $basex-active , $basex))
+         then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }`  not be supported]``)
+         else (
+                  for $p in $pkg/pkg:dependency[@name]
+                  return if(cmd:not-installed($p/@name,$p)) 
+                        then error(xs:QName("pkg:missing"),"No suitable version found in repo for: " || $p/@name) 
+                        else ()
+               )
 };
 
 (:~ check if semver $version is NOT allowed by $spec 
@@ -66,17 +65,17 @@ as empty-sequence(){
 :)
 declare function cmd:semver-fails($version as xs:string,$spec as element(*))
 as xs:boolean{
-if($spec/@version)
-then semver:ne($version,$spec/@version,true())
-else 
-     let $min:=if($spec/@semver-min)
-               then semver:lt($version,$spec/@semver-min,true())
-               else false()
+   if($spec/@version)
+   then semver:ne($version,$spec/@version,true())
+   else 
+      let $min:=if($spec/@semver-min)
+                  then semver:lt($version,$spec/@semver-min,true())
+                  else false()
 
-     let $max:=if($spec/@semver-max)
-               then semver:gt($version,$spec/@semver-max,true())
-               else false()                             
-     return $min or $max                     
+      let $max:=if($spec/@semver-max)
+                  then semver:gt($version,$spec/@semver-max,true())
+                  else false()                             
+      return $min or $max                     
 };
 
 (:~ no suitable version of package installed :)

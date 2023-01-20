@@ -93,27 +93,26 @@ as map(*)
 {  
    let $xq as xs:string := unparsed-text($url)
    let $parse:= xqp:parse($xq,$opts?platform)
-   let $isParsed:= $parse instance of element(XQuery)
-   return if($isParsed)
-          then let $xqdoc:=  xqdc:build($parse,$spath,$opts)
-                               
-            let $namespaces:= xqd:namespaces( $xqdoc, $opts?platform) 
-                                        (:~ =>trace("prefixes: ") ~:)
-            let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
-            return map{
-                      "xqdoc": $xqdoc, 
-                      "xqparse": $parse,
-                      "prefix": xqd:prefix-for-ns($uri,$namespaces),
-                      "namespaces": $namespaces,
-                      "annotations": xqd:anno($xqdoc,$opts?platform), (: sequence map{annotation:, xqdoc: } :)
-                      "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                      "default-fn-uri": xqp:default-fn-uri($parse)      
-                      }
-
-          else (
-            map{"xqparse": $parse},
-            prof:dump($url,"PARSE FAIL: ")
-          )                  
+   let $isParsed:=  $parse instance of element(XQuery)
+   let $result:= map{ 
+              "xqparse": $parse,
+              "isParsed":  $parse instance of element(XQuery)
+              }
+   let $analysis:= if($isParsed)
+                then let $xqdoc:=  xqdc:build($parse,$spath,$opts)                    
+                     let $namespaces:= xqd:namespaces( $xqdoc, $opts?platform) 
+                                                  (:~ =>trace("prefixes: ") ~:)
+                      let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
+                      return map{
+                                "xqdoc": $xqdoc, 
+                                "prefix": xqd:prefix-for-ns($uri,$namespaces),
+                                "namespaces": $namespaces,
+                                "annotations": xqd:anno($xqdoc,$opts?platform), (: sequence map{annotation:, xqdoc: } :)
+                                "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                                "default-fn-uri": xqp:default-fn-uri($parse)      
+                                }
+                else prof:dump($url,"PARSE FAIL: ")
+    return ($result,$analysis)=>map:merge()                         
  
 };
 
