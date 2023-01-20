@@ -60,7 +60,7 @@ return
     </xqdoc:module>
 };
 
-
+(:~ xqdoc:import from ModuleImport :)
 declare %private function xqdc:import($import as element(ModuleImport), $opts as map(*))
 as element(xqdoc:import)
 {
@@ -108,7 +108,8 @@ as element(xqdoc:variable){
   (: =>trace("VAR: ") :)
 
   return <xqdoc:variable>
-     { util:if(xqdc:is11($opts),$vardecl/TOKEN[.="external"]!attribute external {"true"})}
+     { util:if(xqdc:is11($opts)
+              ,$vardecl/TOKEN[.="external"]!attribute external {"true"})}
 			<xqdoc:name>{ $name }</xqdoc:name>
       { 
          xqcom:comment($vardecl/..)
@@ -117,12 +118,16 @@ as element(xqdoc:variable){
                    ,xqdc:annotation#1) 
 
        ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
-       ,util:if(xqdc:is11($opts),xqdc:refs($vardecl))
-       ,util:if(xqdc:is11($opts) and xqdc:opt($opts,"body-items"),xqdc:body($vardecl)) }
+
+       ,util:if(xqdc:is11($opts)
+               ,xqdc:refs($vardecl))
+
+       ,util:if(xqdc:is11($opts) and xqdc:opt($opts,"body-items")
+                ,xqdc:body($vardecl)) }
 		</xqdoc:variable>
 };
 
-declare %private function xqdc:functions($module as element(Module), $opts)
+declare %private function xqdc:functions($module as element(Module), $opts as map(*))
 as element(xqdoc:functions)
 {
   let $items:= $module/*/Prolog/AnnotatedDecl/FunctionDecl 
@@ -181,7 +186,8 @@ as element(xqdoc:function){
       {   xqdc:parameters($params)  
         , xqdc:return($fundecl)
         , xqdc:refs($fundecl) 
-        ,util:if(xqdc:opt($opts,"body-items"),xqdc:body($fundecl)) }
+        ,util:if(xqdc:opt($opts,"body-items")
+                ,xqdc:body($fundecl)) }
   </xqdoc:function>
 };
 

@@ -4,7 +4,7 @@ import module namespace xqp = 'quodatum:xqdoca.parser' at "../main/lib/parser.xq
 declare variable $xquery:="../test/samples/sample.xqm";
 
 "../main/lib/xqdoc-namespace.xqm"
-!fetch:text(resolve-uri(.))
+!unparsed-text(resolve-uri(.))
 !xqp:parse(.,"basex")
-!xqdc:build(.)
+!xqdc:build(.,"PAtH",map{})
 (: /Module :)

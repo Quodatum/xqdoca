@@ -22,7 +22,7 @@ let $args:=cmd:parse-args($args)
 let $args:=if(exists($args)) 
            then $args 
            else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
-for  $action at $pos in  $args
+let  $action :=head($args)
 
 return  
     switch($action)
@@ -39,7 +39,7 @@ return
     case "-update" return (cmd:install-dependencies($expkg)
                           ,update:output("All dependancies installed."))
 
-    case "-pull"  return update:output("Pull: " || $args[$pos +1]) 
+    case "-pull"  return update:output("Pull: " || $args) 
           
     case "-init" return
                 let $file:=local:resolve(".xqdoca") 
@@ -52,12 +52,13 @@ return
                         return (file:write($file,$xml),update:output("file created"))     
                        else update:output("xqdoca file already exists")
 
-    default return 
-            let $src:=(cmd:check-dependencies($expkg),
-                        local:resolve($action)=>trace("Processing: "))
+    default return (
+           cmd:check-dependencies($expkg)
+            ,for $href in $args 
+            let $src:=local:resolve($href)=>trace("Processing: ")
             return xquery:eval-update(xs:anyURI("xqdoca.xq"),
                                       map{"config-path": $src, 
                                           "pass":true()}
                                     )
-
+                  )
 
