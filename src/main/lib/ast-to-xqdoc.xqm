@@ -48,8 +48,8 @@ let $uri:=if($type eq 'library')
           then $parse/LibraryModule/ModuleDecl/URILiteral/xqdc:unquote(.) 
           else $url=>translate("\","/")=>replace(".*/(.*)","$1")
 
-let $com:=$parse/(LibraryModule|MainModule)!xqcom:comment(.)
-          (: =>trace("DD") :)
+let $com:=$parse!xqcom:comment(.)
+           =>trace("Mod comm: ")
           
 return 
     <xqdoc:module type="{ $type }">
@@ -130,8 +130,7 @@ as element(xqdoc:variable){
 declare %private function xqdc:functions($module as element(Module), $opts as map(*))
 as element(xqdoc:functions)
 {
-  let $items:= $module/*/Prolog/AnnotatedDecl/FunctionDecl 
-  let $_:=trace(count($items),"FUNDEC")  
+  let $items:= $module/*/Prolog/AnnotatedDecl/FunctionDecl  
   return <xqdoc:functions>{  
           $items!xqdc:function(., $opts)
           ,xqdc:main($module/MainModule/QueryBody)

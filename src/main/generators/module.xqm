@@ -245,7 +245,7 @@ declare function xqh:variable($v as element(xqdoc:variable),
                               $file as map(*))
 as element(div)
 {
-let $name:= concat('$',$v/xqdoc:name)=>trace("VNAME:")
+let $name:= concat('$',$v/xqdoc:name) (: =>trace("VNAME:") :)
 let $qmap:=xqn:qmap($v/xqdoc:name,$file?namespaces, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return

@@ -21,7 +21,7 @@ let $config-path:=$config-path
 (: options with defaults:)
 let $options:=opts:as-map(doc($config-path)/*)
                =>opts:merge(opts:as-map(doc("config.xqdoca")/*))
-               =>trace("OPTS: ")
+          (:     =>trace("OPTS: ") :)
 
 let $efolder:=$options?source
               =>file:resolve-path($config-path)
