@@ -370,13 +370,22 @@ as element(span)
 let $list:=page:active-renderers($type,$opts,$exclude)
  let $renderers:=$opts(".renderers")?($type)
  return <span class="ml-2"> {
-for  $name in $list 
-let $rend :=  $renderers[?name=$name]
-for $def in  $rend
-order by $def?name
-return <a href="{ $def?uri }" title="{ page:line-wrap($def?description,60) }" 
-        class="badge badge-pill badge-light"  style="margin-left:1em">{ $def?name }</a>
+      for  $name in $list 
+      let $rend :=  $renderers[?name=$name]
+      for $def in  $rend
+      order by $def?name
+      return page:alink($def)
 }</span>
+};
+
+(:~ link to render output :)
+declare function page:alink($def as map(*))
+as element(a){
+  let $target:=if($def?output = ("xml","text")) then "_blank" else "_self"
+  return <a href="{ $def?uri }" title="{ page:line-wrap($def?description,60) }" 
+        class="badge badge-pill badge-light"  style="margin-left:1em">{ 
+                      attribute target { $target},
+                      $def?name }</a>
 };
 
 (:~ table of renderers
@@ -404,12 +413,9 @@ as element(table)?
                   let $rend :=  $renderers[?name=$name]
 
                   return (for $def in  $rend
-                          order by $def?name
-                          let $target:=if($def?output = ("xml","text")) then "_blank" else "_self"
+                         order by $def?name
                          return <tr>
-                                 <td><a href="{ $def?uri }">{ 
-                                     attribute target { $target},
-                                     $def?name }</a></td>
+                                 <td>{page:alink($def)}</td>
                                   <td>{ $def?description }</td>
                                   <td>{ $def?output }</td>
                                  </tr>,

@@ -52,6 +52,13 @@ declare variable $xqa:noteworthy:=(
     "title":'XQdocA',
     "icon": 'D',
     "class": 'success'
+  },
+   map{
+    "uri":'http://www.w3.org/2012/xquery',
+    "name":'private',
+    "title":'Private',
+    'icon': 'P',
+    "class": 'dark'
   }
 );
 

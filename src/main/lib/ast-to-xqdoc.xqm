@@ -48,8 +48,10 @@ let $uri:=if($type eq 'library')
           then $parse/LibraryModule/ModuleDecl/URILiteral/xqdc:unquote(.) 
           else $url=>translate("\","/")=>replace(".*/(.*)","$1")
 
-let $com:=$parse!xqcom:comment(.)
-           =>trace("Mod comm: ")
+let $com:=util:or(xqcom:comment($parse)
+                  ,xqcom:comment($parse/(LibraryModule|MainModule))
+                 )
+                 =>trace("Mod comm: ")
           
 return 
     <xqdoc:module type="{ $type }">
@@ -267,7 +269,7 @@ as element(xqdoc:annotation)
  for $a in $anno/*
  return typeswitch($a)
         case element(Literal) 
-          return <xqdoc:literal type="xs:string">{ string($a) }</xqdoc:literal>
+          return <xqdoc:literal type="xs:string">{ xqdc:unquote($a) }</xqdoc:literal>
         case element(TOKEN)  | element(EQName) | text()  (: ignore these :)
           return ()
         default 

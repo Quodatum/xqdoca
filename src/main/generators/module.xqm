@@ -315,7 +315,7 @@ as element(div)
      
     <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
-                      <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">{ $name}#{ string(@arity) }</a>
+                      <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">#{ string(@arity) }</a>
                       { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }                     
                     </span>                          
                  }
@@ -517,7 +517,7 @@ as element(*)*
 					{ $f/xqdoc:return/xqdoc:type/(string(),@occurrence/string()) }
 					</code>
 					{for $comment in $f/xqdoc:comment/xqdoc:return
-					return $comment/(node()|text())
+					return " " || $comment/(node()|text())
         }
 				</li>
 			</ul>
@@ -539,26 +539,32 @@ as element(div){
 		  ( 
 			{for $p in $v/xqdoc:parameters/xqdoc:parameter
 			return	(
-        <code class="arg">${ $p/xqdoc:name/string() }</code>,
-				<code class="as">&#160;as&#160;</code>,
-				<code class="type">{ $p/xqdoc:type/string() }	{ $p/xqdoc:type/@occurrence/string() }</code>,
-			  if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else () 
-		)}
-	 )
-			<code class="as">&#160;as&#160;</code>
-			<code class="return-type">
-			{ $v/xqdoc:return/xqdoc:type }
-			{ $v/xqdoc:return/xqdoc:type/@occurrence/string() }
-			</code>
-      
-		</div>
+        <code class="arg">${ $p/xqdoc:name/string() }</code>
+        ,xqh:as($p/xqdoc:type)
+				,if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else ")" 
+      ),
+      xqh:as($v/xqdoc:return/xqdoc:type)
+     }
+      </div>
 };
 
+declare function xqh:as($t as element(xqdoc:type)?)
+as element(code)*
+{
+  if(exists($t))
+  then (
+    <code class="as">&#160;as&#160;</code>
+    ,<code class="type">
+        { string($t)  }
+        { $t/@occurrence/string() }
+    </code>
+  )
+};
 
 declare function xqh:description($v as element(xqdoc:description))
 as element(*)*
 {
-  		<dt class="label">Summary</dt>,
+  	<dt class="label">Summary</dt>,
 		<dd>
 			{ $v/(node()|text()) }
 		</dd>

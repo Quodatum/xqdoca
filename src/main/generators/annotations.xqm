@@ -45,9 +45,8 @@ as element(html){
     let $links:= page:related-buttons("global","annotations", $opts)
   let $body:=<div>
               <h1>
-                     Project <span class="badge badge-info">
-                      { $opts?project }
-                  </span>
+                     Project 
+                     <span class="badge badge-info">{ $opts?project }</span>
                   &#160;Annotations 
               </h1>
               
