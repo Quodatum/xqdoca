@@ -7,6 +7,7 @@
  : @version  1.0
  :)
 module namespace samples = 'http://basex.org/modules/samples';
+(:~  this at does not exist :)
 import module namespace admin = 'http://basex.org/modules/admin' at "foo";
 (:~ This is a sample string. :)
 declare variable $samples:test-string as xs:string := 'this is a string';

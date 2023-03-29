@@ -302,7 +302,8 @@ function xqh:function($funs as element(xqdoc:function)*,
                               $model as map(*))
 as element(div)
 {
-    let $funs:=sort($funs,(),function($f){$f/@arity})
+    let $funs:=sort($funs,(),function($f){number($f/@arity)})
+    let $maxfn:=$funs[last()] (: assume max arity has comments :)
 		let $name:=$funs[1]/xqdoc:name/string()
     let $qmap:= xqn:qmap($name, $file?namespaces, $file?default-fn-uri)
 	  return
@@ -325,9 +326,9 @@ as element(div)
 		<dd>
 			{$funs!xqh:function-signature(.) }
 		</dd>	
-			{ $funs[1]/xqdoc:parameters!xqh:parameters(.) } 
-	    { $funs[1]!xqh:return(.) }
-		  { $funs[1]/xqdoc:comment/xqdoc:error!xqh:error(.) }
+			{ $maxfn/xqdoc:parameters!xqh:parameters(.) } 
+	    { $maxfn!xqh:return(.) }
+		  { $maxfn/xqdoc:comment/xqdoc:error!xqh:error(.) }
       {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return)),xqh:tags("Tags",?)) }    
        {xqh:invoked-by($funs, $qmap , $model)}   
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
@@ -537,13 +538,15 @@ as element(div){
 		<div class="proto">
 			<code class="function">{ $v/xqdoc:name/string() }</code>
 		  ( 
-			{for $p in $v/xqdoc:parameters/xqdoc:parameter
-			return	(
-        <code class="arg">${ $p/xqdoc:name/string() }</code>
-        ,xqh:as($p/xqdoc:type)
-				,if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else ")" 
-      ),
-      xqh:as($v/xqdoc:return/xqdoc:type)
+			{
+        for $p in $v/xqdoc:parameters/xqdoc:parameter
+          return	(
+            <code class="arg">${ $p/xqdoc:name/string() }</code>
+            ,xqh:as($p/xqdoc:type)
+            ,if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else "" 
+          )
+       ,")"
+       ,xqh:as($v/xqdoc:return/xqdoc:type)
      }
       </div>
 };

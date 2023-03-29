@@ -40,13 +40,13 @@ function _:html(
  as xs:string{ 
 let $files:=$model?files
 (: just files with prefix ie xqm :) 
-let $friendly:= $files!_:class-name(.,position(),$files)
+let $files:= $files!_:class-name(.,position(),$files)
 
-let $classes:=  $friendly!_:class(.)             
-let $links:= $friendly!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
+let $classes:=  $files!_:class(.)             
+let $links:= $files!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
 ]``
-let $imports:=for $f in $friendly,
-                $i in xqd:where-imported($friendly, $f?namespace)
+let $imports:=for $f in $files,
+                $i in xqd:where-imported($files, $f?namespace)
                 return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
 ]``
        
@@ -66,6 +66,7 @@ function _:class($file as map(*))
 as xs:string{
 let $name:=$file?mermaid
 let $ns:= $file?namespaces
+let $annotations:= xqa:annotations($file)
 let $restfns:=$file?xqdoc
               //xqdoc:function[
                               xqdoc:annotations/xqdoc:annotation
@@ -75,7 +76,8 @@ let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
 
 let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
 let $vars:=$file?xqdoc
-              //xqdoc:variable/xqdoc:name=>_:class-vars-list()
+              //xqdoc:variable/xqdoc:name
+              => _:class-vars-list()
 
 return if($restfns)
        then ``[class `{ $name }`:::cssRest { << Rest `{$file?path }`>> 

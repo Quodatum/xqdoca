@@ -37,21 +37,24 @@ declare variable $xqa:noteworthy:=(
     "name":'path',
     "title":'RESTXQ',
     "icon": 'R',
-    "class": 'success'
+    "class": 'success',
+    "callable": true()
   },
    map{
     "uri":'http://basex.org/modules/unit',
     "name":'test',
     "title":'UNIT',
     "icon": 'T',
-    "class": 'primary'
+    "class": 'primary',
+    "callable": true()
   },
    map{
     "uri":'https://github.com/Quodatum/xqdoca',
     "name":'output',
     "title":'XQdocA',
     "icon": 'D',
-    "class": 'success'
+    "class": 'success',
+    "callable": true()
   },
    map{
     "uri":'http://www.w3.org/2012/xquery',
@@ -139,11 +142,11 @@ as map(*)
  :           }*
  : </pre>
  :)
-declare function xqa:annotations($model as map(*))
+declare function xqa:annotations($files as map(*)*)
 as map(*)
 { 
   map:merge(
-          for $f in $model?files, $a in $f?annotations
+          for $f in $files, $a in $f?annotations
           group by $uri:=$a?annotation?uri
            return map:entry($uri,for-each-pair($a,$f,
                    function($a,$f){map:merge(($a,map:entry("file", $f)))}

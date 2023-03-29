@@ -25,9 +25,9 @@ as element(xqdoc:xqdoc)
 	  </xqdoc:control>{
 	   xqdc:module($mod, $url, $opts)
 
-    ,xqdc:wrap($parse/(MainModule|LibraryModule)/Prolog/Import/ModuleImport
+    ,xqdc:wrap($parse/Module/(MainModule|LibraryModule)/Prolog/Import/ModuleImport
                 ,xs:QName("xqdoc:imports")
-                ,xqdoc:import)
+                ,xqdc:import(?,$opts))
  
     ,xqdc:namespaces($mod)
     ,xqdc:variables($mod, $opts)

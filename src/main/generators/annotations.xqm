@@ -18,7 +18,7 @@ declare
 %xqdoca:output("annotations.html","xhtml") 
 function _:annotations($model as map(*),$opts as map(*))
 as element(html){
-  let $ns-map:=xqa:annotations($model)
+  let $ns-map:=xqa:annotations($model?files)
   let $sections:=(
              _:summary($model, $opts, $ns-map),
              <section id="annotations">

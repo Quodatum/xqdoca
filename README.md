@@ -237,7 +237,7 @@ XQdocA is released under the Apache License, Version 2.0
 
 ## Third party components
 
-* Semantic versioning by https://github.com/eXist-db/semver.xq
+* Semantic versioning from eXist-db https://github.com/eXist-db/semver.xq
 * XQuery source highlighting by Prism (https://prismjs.com/)
 * The diagram rendering by Mermaid https://github.com/mermaid-js/mermaid
 

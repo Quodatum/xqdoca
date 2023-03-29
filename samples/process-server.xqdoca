@@ -1,5 +1,5 @@
 <!-- Requires MIXEDUPDATES -->
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\andy\git\bloomsbury\XML-CMS\process_server\</source>
-    <target>file:///tmp/teacup/process_server/</target>
+    <target>file:///tmp/teacup/latest/process_server/</target>
 </xqdoca>
