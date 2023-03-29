@@ -1,6 +1,6 @@
 # XQdocA
 
-Generates documentation from XQuery sources based on XQDoc style comments and also the use of annotations.
+Generate documentation from XQuery sources based on XQDoc style comments and the usage of XQuery annotations.
 
 The outputs can be changed or extended with custom generators that are dynamically 
 located and loaded at run time. 
@@ -13,36 +13,24 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019
 
 Work in progress.
 
+Runs with BaseX 9.5.1+ 9.7.99
 
-* `Basex` 9.5.1+ http://basex.org/ 
-* `ex-parse` 0.7.8+ (install from https://github.com/expkg-zone58/ex-xparse/releases/)
-
-The code to be documented must be valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
 ## Install
-1. unzip dist bundle to a folder, or clone the respostory
+1. unzip dist bundle to a folder, or clone the respository
 1. Add the `/bin` folder from above to your `PATH`
-1. Execute `xqdoca -install` in a command window. 
+1. Execute `xqdoca -install` in a command window to ensure required repository modules are installed. 
 
 The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 ## Requirements
 
 The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
-```xml
-<package abbrev="xqdoca" name="https://github.com/Quodatum/xqdoca"
-	version="0.7.0" spec="1.0" xmlns="http://expath.org/ns/pkg">
-	<title>XQdocA - XQuery code documentation generator</title>
-  <dependency processor="http://basex.org/" semver-min="9.5.1" semver-max="9.99.99"/>
-  <dependency name="http://expkg-zone58.github.io/ex-xparse" semver-min="0.7.10" />
-</package>
-```
+
 
 ## Usage
 
-`xqdoca -h` will display a summary of the options.
+`XQDocA` uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
 
-`xqdoca -h` will display a summary of the options.
-
-XQDocA uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
+The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
 
 For example the file `samples/dba.xqdoca`
 ```xml
@@ -51,28 +39,27 @@ For example the file `samples/dba.xqdoca`
     <target>file:///tmp/dba/</target>
 </xqdoca>
 ```
-Then `xqdoca samples/dba.xqdoca` will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to 
+Then 
+```xqdoca samples/dba.xqdoca``` 
+will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to the folder
 `file:///tmp/dba/`
 
-If  `source` or `target` are relative urls they are resolved relative to the xqdoca file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
+If  `source` or `target` are relative urls they are resolved relative to the `.xqdoca` file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
 Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
 
 
+`xqdoca options....`
 
-Values not specified in the `xqdoca` file are taken from the conf.xqdoca file
-```xml
-<!-- default options for xqdoca -->
-<xqdoca xmlns="urn:quodatum:xqdoca" version="0.5">
-    <source>C:\Users\andy\git\quodatum\xqdoca\</source>
-    <target>file:///{webpath}/static/xqdoc/{project}/</target>
-    <extensions>*.xqm,*.xq,*.xquery</extensions>
-    <platform>basex</platform>
-    <outputs>
-        <global>report imports  annotations restxq mermaid xqdoca.xml</global>
-        <module>module xqdoc xqparse</module>
-    </outputs>
-</xqdoca>
-```
+
+`xqdoca -h` will display a summary of the options.
+
+`xqdoca -h` will display a summary of the options.
+
+## Configuration
+| XPath from root                                     | Description| Example |
+| --------------------------------------------------- | ---------- | ------- |
+| `source` | directory containing source files | `C:\....\basex.951\webapp\dba`     |
+| `target`  | directory for output           | `file:///tmp/dba/`        |
 
 
 ## Built-in generators
@@ -196,8 +183,9 @@ declare variable $xqo:outputs:=map{
                 };
 ```
 ## Development notes
-`xqdoca` execution scans the source folder to locate XQuery sources. These are then analysed using a 
-combination of the `ex-parse` package and the BaseX `inspect:xqdoc` function.
+`basex -bconfig-path=.xqdoca src\main\xqdoca.xq`
+
+`xqdoca` execution scans the source folder to locate XQuery sources. These are then parsed using the `ex-parse` package and a xqdoc file generated from the parse.
 
 The results are used to create an in-memory map
 
@@ -217,7 +205,7 @@ classDiagram
     +namespace
     +xqdoc
     +xparse
-    +prefixes
+    +namespaces
    }
    class xqdoc{
     <<element(xqdoc)>>
@@ -249,7 +237,7 @@ XQdocA is released under the Apache License, Version 2.0
 
 ## Third party components
 
-* Semantic versioning by https://github.com/eXist-db/semver.xq
+* Semantic versioning from eXist-db https://github.com/eXist-db/semver.xq
 * XQuery source highlighting by Prism (https://prismjs.com/)
 * The diagram rendering by Mermaid https://github.com/mermaid-js/mermaid
 

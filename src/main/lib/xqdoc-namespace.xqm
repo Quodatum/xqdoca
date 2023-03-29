@@ -3,19 +3,18 @@ xquery version "3.1";
  <p>namespace and qname utils</p>
  @copyright (c) 2019-2022 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
-
-
+:)
 module namespace xqn = 'quodatum:xqdoca.namespaces';
 
 (:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $prefixes map of namespaces
- : @param $defaultns namespace for no prefix
- : @return <pre>
+@param $e is from QName or TOKEN in some cases e.g "count"
+@param $prefixes map of namespaces
+@param $defaultns namespace for no prefix
+@error xqn:qmap NO TOK
+@return <pre>
  map{
     "uri": ..,
-     "name": ..} 
+    "name": ..} 
  }
  :</pre>
  :)
@@ -23,33 +22,34 @@ declare
 function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:string)
 as map(*)
 {
- let $_:=util:if(empty($token),error("NO TOK"))
+ let $_:=util:if(empty($token),error(xs:QName("xqn:qmap"),"NO TOK"))
  return if(starts-with($token,"Q{"))
         then map{
            "uri": $token=>substring-after("{")=>substring-before("}"),
            "name": $token=>substring-after("}") 
         }
         else
- let $n:=tokenize($token,":")
-let $prefix:=if(count($n)=2)then $n[1] else ()
-let $name:=if(count($n)=2)then  $n[2] else $n[1]
-let $uri:=if(empty($prefix)) 
-          then  $defaultns
-          else if( map:contains($prefixes,$prefix)) 
-               then $prefixes?($prefix)
-               else 
-                    let $_:= trace('$',"prefix: ")
-                    return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
-             
-return map{
-           "uri": $uri,
-           "name": $name} 
+          let $n:=tokenize($token,":")
+          let $prefix:=if(count($n)=2)then $n[1] else ()
+          let $name:=if(count($n)=2)then  $n[2] else $n[1]
+          let $uri:=if(empty($prefix)) 
+                    then  $defaultns
+                    else if( map:contains($prefixes,$prefix)) 
+                        then $prefixes?($prefix)
+                        else 
+                          let $_:= trace(map:size($prefixes),"missing prefix:" || $prefix || ": ")
+                          return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
+                      
+          return map{
+                    "uri": $uri,
+                    "name": $name} 
 };
 
-declare function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
+(:~ true if $uri and $name match $qmap :)
+declare function xqn:eq($qmap as map(*),$uri as xs:string, $name as xs:string) 
 as xs:boolean
 {
-  $a?name=$name and $a?uri=$uri
+  $qmap?name=$name and $qmap?uri=$uri
 };
 
 
@@ -84,14 +84,14 @@ as xs:string
  : @param $map keys are prefixes items are namespaces
  : @return namespace for prefix
   :)
-declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
+declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $prefixes as map(*))
 as xs:string{
   if(empty($prefix)) then
     $default
-  else if(map:contains($map, $prefix))then 
-   $map?($prefix)
+  else if(map:contains($prefixes, $prefix))then 
+   $prefixes?($prefix)
    else
-   let $_:=trace($map,"prefixes")
+   let $_:=trace($prefixes,"map-prefix: ")
    return "*** " || trace($prefix,"**prefix not found:" ),
    error()
 };
@@ -113,6 +113,7 @@ declare function xqn:static-prefix-map($platform as xs:string)
 as map(*)
 {
  fetch:text(resolve-uri(``[../etc/models/`{ $platform }`.json]``,static-base-uri()))
- =>parse-json() 
+ =>parse-json()
+ (: =>trace("PLATFORM ")  :)
 };
 

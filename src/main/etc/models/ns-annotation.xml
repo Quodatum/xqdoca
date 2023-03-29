@@ -22,5 +22,9 @@
     
     <namespace ns="http://www.w3.org/2012/xquery" prefix="xquery">
         <doc href="http://www.w3.org/2012/xquery"></doc>
-    </namespace>  
+    </namespace>
+    
+    <namespace ns="https://github.com/Quodatum/xqdoca" prefix="xqdoca">
+        <doc href="https://github.com/Quodatum/xqdoca"></doc>
+    </namespace>    
 </annotations>

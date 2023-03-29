@@ -1,39 +1,17 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : <h1>xqdoc-proj.xqm</h1>
- : <p>Analyse XQuery source</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
 (:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
+  <p>Analyse XQuery source</p>
+  @copyright (c) 2019-2022 Quodatum Ltd
+  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
+ 
 module namespace xqd = 'quodatum:xqdoca.model';
 
 import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
 import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno.xqm";
+import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "annotations.xqm";
+import module namespace xqdc = 'quodatum:xqdoca.model.xqdoc' at 'ast-to-xqdoc.xqm';
+
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
@@ -47,7 +25,11 @@ declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
 declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 
 
-(:~  files to process from extensions :)
+(:~  file paths below folder with matching extensions
+ @param $efolder start folder
+ @param $extensions string using Glob_Syntax 
+ @see https://docs.basex.org/wiki/Commands#Glob_Syntax
+ :)
 declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
 as xs:string*
 {
@@ -55,16 +37,20 @@ as xs:string*
 };
 
 (:~
- : load and parse source xquery files
- : @param $efolder root path for source files
- : @param $files files to process as relative paths
- : @param $platform target XQuery engine e.g "basex"
- : @return state map
+  load and parse source xquery files
+  @param $efolder root path for source files
+  @param $files files to process as relative paths
+  @param $platform target XQuery engine e.g "basex"
+  @return state map
+  @error xqd:platform "Unknown platform: "
  :)
-declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
+declare function xqd:snap($efolder as xs:string, $files as xs:string*,$opts as map(*))
 as map(*)
 {
-let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
+  let $platform:=$opts?platform
+let $_:=if(map:contains($xqp:xparse_opts,$platform)) 
+        then () 
+        else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
 let $folder:= translate($efolder,"\","/")
 let $_:=trace(count($files),"files :")
 return map{ 
@@ -73,22 +59,16 @@ return map{
 
              "files": for $file at $pos in $files
                       let $id:= "F" || format-integer($pos,"000000")
-                      let $full:= concat($efolder || "/", $file=>trace(``[FILE `{ $pos }` :]``))
+                      let $full:= concat($efolder , $file)
+                                  =>trace(``[FILE `{ $pos }` :]``)
                       let $spath:= translate($file,"\","/")
-                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
-                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
-                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
+                      let $analysis:= xqd:analyse($full, $spath, $opts)
+
                       let $base:=map{
                               "index": $pos,
                               "path": translate($file,"\","/"),
-                              "href": ``[modules/`{ $id }`/]``,
-                              "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
-                              "prefixes": $prefixes,
-                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
-                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
-                           }
+                              "href": ``[modules/`{ $id }`/]``
+                               }
                       return map:merge(($base,$analysis))  
            }
 
@@ -100,70 +80,52 @@ as map(*)
  xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
 };
 
-(:~ generate xqdoc
- : result is <XQuery> or <ERROR>
- :)
-declare function xqd:xqdoc($url as xs:string)
-as element(xqdoc:xqdoc)
-{  
- try{
-   inspect:xqdoc($url)
- } catch * { 
-   <xqdoc:xqdoc>{$err:code } - { $err:description }</xqdoc:xqdoc>
-}
-};
 
 (:~ 
- : Generate xqdoc adding custom opts 
+ : Generate parse and xqdoc for xquery at location $url 
  : @param $url xquery source
  : @param platform xquery platform id
- : @param $opts custom tags to add
- : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> ,annotations:{}*}
+ : @param $opts xqdoca opts
+ : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> }
  :)
-declare function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
+declare function xqd:analyse($url as xs:string, $spath as xs:string, $opts as map(*))
 as map(*)
 {  
-  let $xqd:=xqd:xqdoc($url)
-  (: add custom tags :)
-  let $enh:=$xqd 
-            transform with {
-                  for $tag in map:keys($opts)
-                  where xqdoc:module[@type="library"]/xqdoc:comment
-                  
-                  return insert node <xqdoc:custom tag="_{ $tag }">{ $opts?($tag) }</xqdoc:custom> 
-                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
-            }
-  (: insert full source into module :)
-  let $src:=unparsed-text($url)  
-  let $enh:=$enh transform with {
-    if(xqdoc:module) then 
-          insert node <xqdoc:body>{$src}</xqdoc:body> into xqdoc:module
-    else
-        ()
-  }
-  (: add enrichments from parse tree :)
-  let $parse:=xqp:parse($src,$platform)
-  
-  let $prefixes:=map:merge((
-                 xqd:namespaces($enh),
-                 xqn:static-prefix-map($platform)
-               ))
-  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
-                   
-  return map{"xqdoc": $enh, 
-             "xqparse": $parse
+   let $xq as xs:string := unparsed-text($url)
+   let $parse:= xqp:parse($xq,$opts?platform)
+   let $isParsed:=  $parse instance of element(XQuery)
+   let $result:= map{ 
+              "xqparse": $parse,
+              "isParsed":  $parse instance of element(XQuery)
               }
+   let $analysis:= if($isParsed)
+                then let $xqdoc:=  xqdc:build($parse,$spath,$opts)                    
+                     let $namespaces:= xqd:namespaces( $xqdoc, $opts?platform) 
+                                                  (:~ =>trace("prefixes: ") ~:)
+                      let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
+                      return map{
+                                "xqdoc": $xqdoc, 
+                                "prefix": xqd:prefix-for-ns($uri,$namespaces),
+                                "namespaces": $namespaces,
+                                "annotations": xqd:anno($xqdoc,$opts?platform), (: sequence map{annotation:, xqdoc: } :)
+                                "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
+                                "default-fn-uri": xqp:default-fn-uri($parse)      
+                                }
+                else prof:dump($url,"PARSE FAIL: ")
+    return ($result,$analysis)=>map:merge()                         
+ 
 };
 
 (:~ 
  : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
  :)
-declare function xqd:anno($xqdoc as element(xqdoc:xqdoc))
+declare function xqd:anno($xqdoc as element(xqdoc:xqdoc),$platform as xs:string)
 as map(*)*
 {
-  let $ns:= xqd:namespaces($xqdoc)
+  let $ns:= xqd:namespaces($xqdoc,$platform)
  for $a in $xqdoc//xqdoc:annotation
  let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
+ (:~ let $_:=trace($a,"ANNNNO: ") ~:)
  return map{"annotation":$name, "xqdoc": $a} 
 };
 
@@ -176,7 +138,21 @@ as xs:string{
    else
        $file?xqdoc/xqdoc:module/@type/string() 
 };
-        
+
+(:~ 
+ : extract set of namespace declarations from XQuery parse descendants to map{prefix->uri}
+ :)
+declare function xqd:namespaces-xqdoc($n as element(xqdoc:xqdoc))
+as map(*)
+{
+(
+  $n/xqdoc:namespaces/xqdoc:namespace
+  !map:entry(@prefix/string(),@uri/string())
+)=>map:merge()
+(: =>trace("NSP: ") :)
+};
+
+
 (:~ return sequence of maps describing restxq ordered by rest:path
  : {uri:.., 
  : methods : {METHODS: {id:.., uri:.. ,function:}}
@@ -267,13 +243,27 @@ declare
 function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
 as map(*)
 {
-  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
-  !map:entry(string(@prefix),string(@uri))
-  =>map:merge()
+  let $ns:=$xqdoc/xqdoc:namespaces/xqdoc:namespace
+  return $ns
+        !map:entry(string(@prefix),string(@uri))
+        =>map:merge()
+};
+
+(:~  map of known namespaces including static 
+like inspect:static-context((),"namespaces") 
+:)
+declare function xqd:namespaces($xqdoc as element(xqdoc:xqdoc),$platform as xs:string)
+as map(*)
+{(
+  xqd:namespaces-xqdoc($xqdoc)
+  (: =>trace("NS@xqdoc: ") :)
+ ,xqn:static-prefix-map($platform)
+) =>map:merge()
 };
 
 (:~ files that import given namespace :)
-declare function xqd:where-imported($files as map(*)*, $uri as xs:string)
+declare function xqd:where-imported($files as map(*)*, $uri as xs:string?)
+as map(*)*
 {
   $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
@@ -331,7 +321,7 @@ as map(*)
   }
 };
 
-(:~ the prefix for this module :)
+(:~ the prefixes defined for this namespace in prefix map:)
 declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
 as xs:string*{
 map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})

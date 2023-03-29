@@ -1,26 +1,9 @@
 xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : <p>html utilities for page generation</p>
- :
- : @author Andy Bunce
- : @version 0.2
- :)
+(:~
+<p>html utilities for page generation</p>
+@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@author Andy Bunce, Quodatum, License: Apache-2.0
+:)
  
 
 module namespace page = 'quodatum:xqdoca.page';
@@ -67,7 +50,7 @@ as element(span)
 {
    let $desc:=  $file?xqdoc/xqdoc:module/xqdoc:comment/xqdoc:description
    return <span>
-    <a href="{ $file?href }index.html" title="{ $desc }">{ $file?namespace }</a> 
+    <a href="{ $file?href }index.html" title="{ page:line-wrap($desc,60) }">{ $file?namespace }</a> 
    </span>
 };
 
@@ -83,7 +66,7 @@ as element(span)
 {  
    let $files:= $model?files[?namespace=$uri]
    let $clark:= xqn:clark-name($uri,$name)
-   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?namespaces)
    let $root:="../../"
    return if(empty($files)) then
            <span class="badge badge-warning" title="Externally defined">{ $clark }</span>
@@ -123,7 +106,7 @@ function page:link-function2($uri as xs:string,
 as element(span)
 {  
    let $clark:= xqn:clark-name($uri,$name)
-   let $pname:= xqn:prefixed-name($uri,$name,$file?prefixes)
+   let $pname:= xqn:prefixed-name($uri,$name,$file?namespaces)
    let $root:=if($fromModule) then "../../" else ""
    return  <span>
             <a href="{ $root }{ $file?href }index.html#{ $clark }" title="{ $file?path }">{ $pname }</a> 
@@ -141,24 +124,24 @@ as element(span)
 (:~
  :  connections 3 column list 
  :)
-declare function page:calls($calls-this as item()*,$this,$called-by-this as item()*)
+declare function page:calls($calls-this as item()*, $this, $called-by-this as item()*)
 as element(div)?
 {
   if(0=count($calls-this) and 0=count($called-by-this))then ()
   else 
-      <div style="display: flex; justify-content: space-between; align-items:center;">
-        <div style="">{ if (count($calls-this)) 
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex-grow: 1;padding:10px;">{ if (count($calls-this)) 
                                   then $calls-this!<div style="text-align: right;" >{.}</div>
                                   else "(None)"   
       }</div>
                       
-     <div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;">
+     <div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;">
          <div><div>imports</div>&#x2192;</div>
-        <div class="badge badge-info">this</div>
+        <div class="badge badge-info">{ $this }</div>
         <div><div>imports</div>&#x2192;</div>
      </div>
      
-    <div style="display: flex;justify-content: space-between;align-items:center;">
+    <div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;">
     <div style="">{ if(count($called-by-this)) 
                               then $called-by-this!<div style="text-align: left;">{.}</div>
                               else "(None)"
@@ -387,13 +370,22 @@ as element(span)
 let $list:=page:active-renderers($type,$opts,$exclude)
  let $renderers:=$opts(".renderers")?($type)
  return <span class="ml-2"> {
-for  $name in $list 
-let $rend :=  $renderers[?name=$name]
-for $def in  $rend
-order by $def?name
-return <a href="{ $def?uri }" title="{$def?description}" 
-        class="badge badge-pill badge-light"  style="margin-left:1em">{ $def?name }</a>
+      for  $name in $list 
+      let $rend :=  $renderers[?name=$name]
+      for $def in  $rend
+      order by $def?name
+      return page:alink($def)
 }</span>
+};
+
+(:~ link to render output :)
+declare function page:alink($def as map(*))
+as element(a){
+  let $target:=if($def?output = ("xml","text")) then "_blank" else "_self"
+  return <a href="{ $def?uri }" title="{ page:line-wrap($def?description,60) }" 
+        class="badge badge-pill badge-light"  style="margin-left:1em">{ 
+                      attribute target { $target},
+                      $def?name }</a>
 };
 
 (:~ table of renderers
@@ -419,11 +411,11 @@ as element(table)?
                  {
                   for  $name in $list 
                   let $rend :=  $renderers[?name=$name]
-                 
+
                   return (for $def in  $rend
-                          order by $def?name
+                         order by $def?name
                          return <tr>
-                                 <td><a href="{ $def?uri }">{ $def?name }</a></td>
+                                 <td>{page:alink($def)}</td>
                                   <td>{ $def?description }</td>
                                   <td>{ $def?output }</td>
                                  </tr>,
@@ -500,4 +492,12 @@ as xs:string*
 declare function page:line-count($txt as xs:string?)
 as xs:integer{
   tokenize($txt, '(\r\n?|\n\r?)')=>count()
+};
+
+(:~ break lines longer than width by inserting newline chars
+:)
+declare function page:line-wrap($string as xs:string?,$width as xs:integer)
+as xs:string?{
+  $string=>normalize-space()=>concat(" ")=>replace(``[(.{0,`{ $width }`})
+]``,'$1&#xA;')
 };

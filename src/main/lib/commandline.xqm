@@ -8,6 +8,8 @@ module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";
 
+declare variable $cmd:repo-list:= "https://raw.githubusercontent.com/expkg-zone58/catalog/main/repositories.xml";
+
 (:~  simple command line parse splits on space unless in quotes :)
 declare function cmd:parse-args($str as xs:string)
 as xs:string*{
@@ -18,6 +20,10 @@ let $r:= fold-left(
 return ($r?tokens, if(string-length($r?current) ne 0) then $r?current else ())
 };
 
+(:~
+state machine apply input $char to $state
+@return state  
+:)
 declare %private function cmd:parse2($state as map(*),$char as xs:string)
 as map(*){
  let $new:=switch ($char)
@@ -34,22 +40,23 @@ as map(*){
   return map:merge(($new,$state))       
 };
 
-(:~ raise error if deps missing 
+(:~ raise error if deps missing
+@error  pkg:version Basex version running now is not supported
+@error  pkg:missing package missing
 @return version :)
-declare function cmd:check-dependancies($pkg as element(pkg:package))
+declare function cmd:check-dependencies($pkg as element(pkg:package))
 as empty-sequence(){
   let $basex:=$pkg/pkg:dependency[@processor="http://basex.org/"]
   let $basex-active:= db:system()/generalinformation/version
   return 
-  
-  if(cmd:semver-fails( $basex-active , $basex))
-  then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }`  not be supported]``)
-  else (
-         for $p in $pkg/pkg:dependency[@name]
-         return if(cmd:not-installed($p/@name,$p)) 
-                then error(xs:QName("pkg:missing"),"No suitable version found in repo for: " || $p/@name) 
-                else ()
-        )
+         if(cmd:semver-fails( $basex-active , $basex))
+         then error(xs:QName("pkg:version"),``[BaseX version `{ $basex-active }`  not be supported]``)
+         else (
+                  for $p in $pkg/pkg:dependency[@name]
+                  return if(cmd:not-installed($p/@name,$p)) 
+                        then error(xs:QName("pkg:missing"),"No suitable version found in repo for: " || $p/@name) 
+                        else ()
+               )
 };
 
 (:~ check if semver $version is NOT allowed by $spec 
@@ -58,17 +65,17 @@ as empty-sequence(){
 :)
 declare function cmd:semver-fails($version as xs:string,$spec as element(*))
 as xs:boolean{
-if($spec/@version)
-then semver:ne($version,$spec/@version,true())
-else 
-     let $min:=if($spec/@semver-min)
-               then semver:lt($version,$spec/@semver-min,true())
-               else false()
+   if($spec/@version)
+   then semver:ne($version,$spec/@version,true())
+   else 
+      let $min:=if($spec/@semver-min)
+                  then semver:lt($version,$spec/@semver-min,true())
+                  else false()
 
-     let $max:=if($spec/@semver-max)
-               then semver:gt($version,$spec/@semver-max,true())
-               else false()                             
-     return $min or $max                     
+      let $max:=if($spec/@semver-max)
+                  then semver:gt($version,$spec/@semver-max,true())
+                  else false()                             
+      return $min or $max                     
 };
 
 (:~ no suitable version of package installed :)
@@ -78,20 +85,23 @@ as xs:boolean{
    satisfies cmd:semver-fails($v/@version,$spec)           
 };
 
-(:~ url to install package $name where version is compatable with spec :)
-declare function cmd:package-url($name as xs:string,$spec as element(*))
+(:~ url to install package $name where version is compatable with spec
+@param $store-url url listing packages
+:)
+declare function cmd:package-url($name as xs:string,$spec as element(*),$store-url as xs:anyURI)
 as xs:string{
-     let $hits:=doc("repositories.xml")/repositories/repository
-                 /package[@name=$name]/release[not(cmd:semver-fails(@version,$spec))]
+     let $hits:=doc($store-url)/repositories/repository
+                 /package[@name=$name]/releases/release[not(cmd:semver-fails(@version,$spec))]
      return if(empty($hits))
             then  error(xs:QName("pkg:version"),"no source for :" || $name)
             else resolve-uri($hits[1],base-uri($hits[1]))
 };
 
-declare function cmd:install($pkg as element(pkg:package))
+(:~ install all dependencies from packages :)
+declare function cmd:install-dependencies($pkg as element(pkg:package))
 as empty-sequence(){
     for  $p in $pkg/pkg:dependency[@name]
     where cmd:not-installed($p/@name,$p)
-    let $src:=cmd:package-url($p/@name,$p)
+    let $src:=cmd:package-url($p/@name, $p, $cmd:repo-list)
     return repo:install($src=>trace("Installing: "))
 };
