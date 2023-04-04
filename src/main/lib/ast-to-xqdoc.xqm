@@ -10,6 +10,12 @@ create xqdoc from parse tree
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
+(: Hack @see basex.json:)
+declare variable $xqdc:namespaces:=
+<xqdoc:namespaces>
+   <xqdoc:namespace prefix="rest"  uri="http://exquery.org/ns/restxq"/>
+</xqdoc:namespaces>;
+
 (:~ build xqdoc from XQuery parse tree 
  @param $opts {"body-full","body-items","refs"}
 :)
@@ -29,7 +35,7 @@ as element(xqdoc:xqdoc)
                 ,xs:QName("xqdoc:imports")
                 ,xqdc:import(?,$opts))
  
-    ,xqdc:namespaces($mod)
+    ,xqdc:namespaces($mod,$xqdc:namespaces)
     ,xqdc:variables($mod, $opts)
     ,xqdc:functions($mod, $opts)
   }</xqdoc:xqdoc>
@@ -51,7 +57,7 @@ let $uri:=if($type eq 'library')
 let $com:=util:or(xqcom:comment($parse)
                   ,xqcom:comment($parse/(LibraryModule|MainModule))
                  )
-                 =>trace("Mod comm: ")
+                (: =>trace("Mod comm: ") :)
           
 return 
     <xqdoc:module type="{ $type }">
@@ -75,7 +81,8 @@ as element(xqdoc:import)
 };
 
 
-declare %private function xqdc:namespaces($parse as element(Module))
+declare %private function xqdc:namespaces($parse as element(Module),
+$staticContext as element(xqdoc:namespaces))
 as element(xqdoc:namespaces)
 {
   let $this:=if($parse/LibraryModule)
@@ -83,7 +90,7 @@ as element(xqdoc:namespaces)
                 let $name:=$parse/LibraryModule/ModuleDecl/(.|NCName)/NCName[not(NCName)]/string()
                 let $uri:=$parse/LibraryModule/ModuleDecl/URILiteral/StringLiteral/xqdc:unquote(.)
                 return <xqdoc:namespace prefix="{ $name}" uri="{ $uri }"/>
-  return <xqdoc:namespaces>{
+  let $namespaces:=(
         $this,
         for $import in $parse/(MainModule|LibraryModule)/Prolog/(Import/ModuleImport|NamespaceDecl)
         (: let $_:=trace($import,"FFF:" ) :)
@@ -92,7 +99,11 @@ as element(xqdoc:namespaces)
         return <xqdoc:namespace prefix="{ $prefix}" uri="{ $uri }">{
                    xqcom:comment($import)
         }</xqdoc:namespace>
-  }</xqdoc:namespaces>
+  )
+   let $prefixes:=$parse//QName[contains(.,":")]!substring-before(.,":")=>distinct-values()
+   let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]=>trace("MISS: ")
+   let $static:=$staticContext/xqdoc:namespace[@prefix=$prefixes]=>trace("hit: ")
+  return <xqdoc:namespaces>{ $namespaces, $static }</xqdoc:namespaces>
   (: =>trace("NSSS") :)
 };  
 

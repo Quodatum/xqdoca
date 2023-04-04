@@ -216,7 +216,7 @@ declare function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
                                  $aname as xs:string) 
 as element(xqdoc:annotation)*
 {
- let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=trace($annotns,"XXXX")]/@prefix/string()
  return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
 
 };

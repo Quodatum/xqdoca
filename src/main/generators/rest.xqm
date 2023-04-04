@@ -24,6 +24,7 @@ declare
 function _:restxq($model,$opts)
 {
 let $annots as map(*)*:= xqd:rxq-paths($model)
+
 let $tree:=$annots?uri
 let $tree:=tree:build($tree)=>tree:flatten()
 
