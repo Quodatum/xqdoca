@@ -17,10 +17,17 @@ declare variable $xqdc:namespaces:=
 </xqdoc:namespaces>;
 
 (:~ build xqdoc from XQuery parse tree 
+ @param $parse xml parse tree
+ @param $url source path
+ @param $staticNS map of known namespaces
  @param $opts {"body-full","body-items","refs"}
+
 :)
-declare function xqdc:build($parse as element(XQuery),$url as xs:string,$opts as map(*))
-as element(xqdoc:xqdoc)
+declare function xqdc:build($parse as element(XQuery),
+                            $url as xs:string,
+                            $staticNS as map(*),
+                            $opts as map(*)
+) as element(xqdoc:xqdoc)
 {
   let $version:=$opts?xqdoc?version
   let $mod:= $parse/Module
@@ -101,8 +108,8 @@ as element(xqdoc:namespaces)
         }</xqdoc:namespace>
   )
    let $prefixes:=$parse//QName[contains(.,":")]!substring-before(.,":")=>distinct-values()
-   let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]=>trace("MISS: ")
-   let $static:=$staticContext/xqdoc:namespace[@prefix=$prefixes]=>trace("hit: ")
+   let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]
+   let $static:=$staticContext/xqdoc:namespace[@prefix=$prefixes]
   return <xqdoc:namespaces>{ $namespaces, $static }</xqdoc:namespaces>
   (: =>trace("NSSS") :)
 };  

@@ -98,8 +98,9 @@ as map(*)
               "xqparse": $parse,
               "isParsed":  $parse instance of element(XQuery)
               }
+   let $staticNS:=map{} (: @TODO models/basex.json :)
    let $analysis:= if($isParsed)
-                then let $xqdoc:=  xqdc:build($parse,$spath,$opts)                    
+                   then let $xqdoc:=  xqdc:build($parse,$spath,$staticNS,$opts)                    
                      let $namespaces:= xqd:namespaces( $xqdoc, $opts?platform) 
                                                   (:~ =>trace("prefixes: ") ~:)
                       let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
@@ -111,7 +112,7 @@ as map(*)
                                 "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
                                 "default-fn-uri": xqp:default-fn-uri($parse)      
                                 }
-                else prof:dump($url,"PARSE FAIL: ")
+                    else prof:dump($url,"PARSE FAIL: ")
     return ($result,$analysis)=>map:merge()                         
  
 };
@@ -195,7 +196,7 @@ return $data?($uris)
 declare function xqd:annots-rxq($model as map(*))
 as map(*)*
 {
-  for $f  in $model?files
+  for $f  in $model?files[?isParsed]
   for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
   let $function:= $annot/../..
   let $a:=((xqa:name-detail($function,$f),
@@ -216,7 +217,7 @@ declare function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
                                  $aname as xs:string) 
 as element(xqdoc:annotation)*
 {
- let $prefixes:=$xqdoc//xqdoc:namespace[@uri=trace($annotns,"XXXX")]/@prefix/string()
+ let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
  return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
 
 };
