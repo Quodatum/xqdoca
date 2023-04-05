@@ -10,11 +10,7 @@ create xqdoc from parse tree
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
-(: Hack @see basex.json:)
-declare variable $xqdc:namespaces:=
-<xqdoc:namespaces>
-   <xqdoc:namespace prefix="rest"  uri="http://exquery.org/ns/restxq"/>
-</xqdoc:namespaces>;
+
 
 (:~ build xqdoc from XQuery parse tree 
  @param $parse xml parse tree
@@ -42,7 +38,7 @@ declare function xqdc:build($parse as element(XQuery),
                 ,xs:QName("xqdoc:imports")
                 ,xqdc:import(?,$opts))
  
-    ,xqdc:namespaces($mod,$xqdc:namespaces)
+    ,xqdc:namespaces($mod,$staticNS)
     ,xqdc:variables($mod, $opts)
     ,xqdc:functions($mod, $opts)
   }</xqdoc:xqdoc>
@@ -89,7 +85,7 @@ as element(xqdoc:import)
 
 
 declare %private function xqdc:namespaces($parse as element(Module),
-$staticContext as element(xqdoc:namespaces))
+$staticNS as map(*))
 as element(xqdoc:namespaces)
 {
   let $this:=if($parse/LibraryModule)
@@ -109,8 +105,11 @@ as element(xqdoc:namespaces)
   )
    let $prefixes:=$parse//QName[contains(.,":")]!substring-before(.,":")=>distinct-values()
    let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]
-   let $static:=$staticContext/xqdoc:namespace[@prefix=$prefixes]
-  return <xqdoc:namespaces>{ $namespaces, $static }</xqdoc:namespaces>
+   let $static:=$prefixes!util:if(map:contains($staticNS,.),
+                          <xqdoc:namespace prefix="{ . }" uri="{ $staticNS(.) }" />
+                          )
+ 
+  return <xqdoc:namespaces>{ $namespaces,$static }</xqdoc:namespaces>
   (: =>trace("NSSS") :)
 };  
 

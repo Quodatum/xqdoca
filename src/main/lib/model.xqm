@@ -18,7 +18,8 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 (:~ restxq namespace :)
 declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
 declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
-
+(: statically known modules :)
+declare variable $xqd:staticNS:=json:doc("../etc/models/basex.json", map { 'format': 'xquery' });
 (:~ 
  : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
  :)
@@ -98,9 +99,9 @@ as map(*)
               "xqparse": $parse,
               "isParsed":  $parse instance of element(XQuery)
               }
-   let $staticNS:=map{} (: @TODO models/basex.json :)
+   
    let $analysis:= if($isParsed)
-                   then let $xqdoc:=  xqdc:build($parse,$spath,$staticNS,$opts)                    
+                   then let $xqdoc:=  xqdc:build($parse,$spath,$xqd:staticNS,$opts)                    
                      let $namespaces:= xqd:namespaces( $xqdoc, $opts?platform) 
                                                   (:~ =>trace("prefixes: ") ~:)
                       let $uri:= $xqdoc/xqdoc:module/xqdoc:uri/string(.)                 
