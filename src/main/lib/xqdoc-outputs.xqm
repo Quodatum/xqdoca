@@ -5,7 +5,7 @@ xquery version "3.1";
  : o/p  utils
  : @Copyright (c) 2019-2022 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
- :)
+ ::)
 
 
 module namespace xqo = 'quodatum:xqdoca.outputs';
@@ -29,10 +29,12 @@ declare variable $xqo:ann-output := QName("https://github.com/Quodatum/xqdoca",
                                           "output");
 
 (:~ defined serialization options :)
-declare variable $xqo:outputs := map { "html5" : map { "method" : "html",
-    "version" : "5.0", "indent" : "no" }, "xhtml" : map { "method" : "xhtml",
-    "version" : "1.1", "indent" : "no" }, "xml" : map { "indent" : "no" },
-    "json" : map { "method" : "json" }, "text" : map { "method" : "text" } };
+declare variable $xqo:outputs := map { 
+    "html5" : map { "method" : "html", "version" : "5.0", "indent" : "no" }, 
+    "xhtml" : map { "method" : "xhtml",   "version" : "1.0",  'html-version': '5.0', "indent" : "no" }, 
+    "xml" : map { "indent" : "no" },
+    "json" : map { "method" : "json" }, 
+    "text" : map { "method" : "text" } };
 
 (:~ full path to resources sources :)
 declare variable $xqo:resources as xs:anyURI := resolve-uri('../etc/resources');
@@ -41,7 +43,7 @@ declare variable $xqo:resources as xs:anyURI := resolve-uri('../etc/resources');
 
 (:~ save runtime support files to output
  : @param $target destination folder
- :)
+ ::)
 declare %updating function xqo:export-resources($target as xs:string)
 as empty-sequence () { let $res := $target || "resources"
 let $_ := trace($target, "target:")
@@ -56,7 +58,7 @@ return
 
 (:~
  : list xqdoca render functions found in the static context
- :)
+ ::)
 declare function xqo:renderers($funs as function (*)*, $qname as xs:QName)
 as function (*)* { for $f in $funs
 let $ann := inspect:function-annotations($f)
@@ -65,7 +67,7 @@ return $f };
 
 (:~
  : info about a render function
- :)
+ ::)
 declare function xqo:render-map($function as function (*)?)
 as map (*) { let $ann := inspect:function-annotations($function)
 let $key :=
@@ -83,7 +85,7 @@ return
 (:~
  :  render $outputs defined in $opts against state
  : @return seq of outputs generated suitable for"storing"
- :)
+ ::)
 declare function xqo:render($model as map (*), $opts as map (*))
 as map (*)* { let $funs := xqo:load-generators("../generators/")
 let $wanted := xqo:tokens($opts? outputs? global)
@@ -114,7 +116,7 @@ return
 (:~
  : dynamically load functions from *.xqm modules from generators directory into
  : static context
- :)
+ ::)
 declare function xqo:load-generators($path as xs:string)
 as function (*)* { let $base := resolve-uri($path, static-base-uri())
 return
@@ -123,14 +125,14 @@ return
 
 (:~
  : parse tokens
- :)
+ ::)
 declare function xqo:tokens($s as xs:string)
 as xs:string* { $s => normalize-space() => tokenize("[\s,]+") };
 
 (:~
  : zip all
  : @param $target destination folder using file protocoleg file:///
- :)
+ ::)
 declare %updating function xqo:zip($target as xs:string, $name as xs:string)
 as empty-sequence () { let $files :=
     file:list($target => trace("Creating zip: "), true()) ! util:if(not(
