@@ -67,7 +67,7 @@ return
       <xqdoc:uri>{ $uri }</xqdoc:uri>
       <xqdoc:name>{ $name }</xqdoc:name>
       { $com }
-      { util:if(xqdc:opt($opts,"body-full"),xqdc:body(root($parse)))} 
+      { if(xqdc:opt($opts,"body-full")) then xqdc:body(root($parse))} 
     </xqdoc:module>
 };
 
@@ -78,7 +78,7 @@ as element(xqdoc:import)
    let $uri:= $import/URILiteral/string(.)
    return <xqdoc:import type="library">
               <xqdoc:uri>{ xqdc:unquote($uri[1]) }</xqdoc:uri>
-              {util:if(xqdc:is11($opts),tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at>) 
+              {(if(xqdc:is11($opts)) then tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at>) 
                 ,xqcom:comment($import)}
           </xqdoc:import>
 };
@@ -105,8 +105,8 @@ as element(xqdoc:namespaces)
   )
    let $prefixes:=$parse//QName[contains(.,":")]!substring-before(.,":")=>distinct-values()
    let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]
-   let $static:=$prefixes!util:if(map:contains($staticNS,.),
-                          <xqdoc:namespace prefix="{ . }" uri="{ $staticNS(.) }" />
+   let $static:=$prefixes!(if(map:contains($staticNS,.))
+                          then <xqdoc:namespace prefix="{ . }" uri="{ $staticNS(.) }" />
                           )
  
   return <xqdoc:namespaces>{ $namespaces,$static }</xqdoc:namespaces>
@@ -127,8 +127,8 @@ as element(xqdoc:variable){
   (: =>trace("VAR: ") :)
 
   return <xqdoc:variable>
-     { util:if(xqdc:is11($opts)
-              ,$vardecl/TOKEN[.="external"]!attribute external {"true"})}
+     { if(xqdc:is11($opts)) 
+       then $vardecl/TOKEN[.="external"]!attribute external {"true"} }
 			<xqdoc:name>{ $name }</xqdoc:name>
       { 
          xqcom:comment($vardecl/..)
@@ -138,11 +138,10 @@ as element(xqdoc:variable){
 
        ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
 
-       ,util:if(xqdc:is11($opts)
-               ,xqdc:refs($vardecl))
+       ,if(xqdc:is11($opts)) then xqdc:refs($vardecl)
 
-       ,util:if(xqdc:is11($opts) and xqdc:opt($opts,"body-items")
-                ,xqdc:body($vardecl)) }
+       ,if(xqdc:is11($opts) and xqdc:opt($opts,"body-items"))
+        then xqdc:body($vardecl) }
 		</xqdoc:variable>
 };
 
@@ -204,8 +203,7 @@ as element(xqdoc:function){
       {   xqdc:parameters($params)  
         , xqdc:return($fundecl)
         , xqdc:refs($fundecl) 
-        ,util:if(xqdc:opt($opts,"body-items")
-                ,xqdc:body($fundecl)) }
+        ,if(xqdc:opt($opts,"body-items")) then xqdc:body($fundecl) }
   </xqdoc:function>
 };
 
@@ -248,8 +246,8 @@ as element(xqdoc:type)?
 declare %private function xqdc:refs($ast as element(*))
 as element(*)*
 {
- (:~ let $_:=trace("refs",$ast) ~:)
-  () 
+ (: let $_:=trace("refs",$ast)
+ return :) () 
 };
 
 (:~  :)

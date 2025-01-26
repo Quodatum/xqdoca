@@ -162,7 +162,7 @@ as element(html)
     <html>
       {page:head(  $opts?project || " - xqDocA",$resources)}
       <body class="home" id="top">
-        <div id="main" >
+        <div id="main" class="line-numbers">
         {$body}
         </div>
         <div class="footer">

@@ -1,6 +1,6 @@
 xquery version "3.1";
 (:~
-  <p>Analyse XQuery source</p>
+<p>Analyse XQuery source</p>
   @copyright (c) 2019-2022 Quodatum Ltd
   @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
@@ -60,7 +60,7 @@ return map{
 
              "files": for $file at $pos in $files
                       let $id:= "F" || format-integer($pos,"000000")
-                      let $full:= concat($efolder , $file)
+                      let $full:= xqd:path-tidy(file:resolve-path($file,$efolder))
                                   =>trace(``[FILE `{ $pos }` :]``)
                       let $spath:= translate($file,"\","/")
                       let $analysis:= xqd:analyse($full, $spath, $opts)
@@ -75,6 +75,17 @@ return map{
 
 };
 
+declare function xqd:path-tidy($p as xs:string) as xs:string{
+  let $p:=tokenize($p,"\\")
+  let $f:=function($res,$this){
+    if($this="..") 
+    then tail($res)
+    else ($this,$res)
+  }
+  let $a:= fold-left($p,(),$f)
+  return string-join(reverse($a),"/")
+};
+
 declare function xqd:snap($efolder as xs:string, $platform as xs:string)
 as map(*)
 {
@@ -87,7 +98,9 @@ as map(*)
  : @param $url xquery source
  : @param platform xquery platform id
  : @param $opts xqdoca opts
- : @result map keys of {xqdoc: <xqdoc:xqdoc/>, xqparse: <XQuery/> }
+ : @result map keys of {xqdoc: <xqdoc:xqdoc/>
+, xqparse: <XQuery/>
+ }
  :)
 declare function xqd:analyse($url as xs:string, $spath as xs:string, $opts as map(*))
 as map(*)
@@ -134,8 +147,7 @@ as map(*)*
 (:~ return 'library','main','#ERROR' 
 :)
 declare function xqd:file-parsed-type($file as map(*))
-as xs:string{
-   if($file?xqparse/name()="ERROR") then 
+as xs:string{ if($file?xqparse/name()="ERROR") then 
       "#ERROR"
    else
        $file?xqdoc/xqdoc:module/@type/string() 
@@ -148,9 +160,7 @@ declare function xqd:namespaces-xqdoc($n as element(xqdoc:xqdoc))
 as map(*)
 {
 (
-  $n/xqdoc:namespaces/xqdoc:namespace
-  !map:entry(@prefix/string(),@uri/string())
-)=>map:merge()
+  $n/xqdoc:namespaces/xqdoc:namespace !map:entry(@prefix/string(),@uri/string()) )=>map:merge()
 (: =>trace("NSP: ") :)
 };
 
@@ -166,7 +176,8 @@ as map(*)*
 let $reports:= xqd:annots-rxq($model)
 (: map keyed on uris -ensure starts with / :)
 let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
-let $data:=map:merge(for $report in $reports
+let $data:=map:merge(
+          for $report in $reports
           group by $uri:=$report?annot/xqdoc:literal
           let $methods:= map:merge(
                          for $annot in $report
@@ -266,8 +277,7 @@ as map(*)
 (:~ files that import given namespace :)
 declare function xqd:where-imported($files as map(*)*, $uri as xs:string?)
 as map(*)*
-{
-  $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
+{ $files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
 };
 
 (: return  map{   imported-ns:(files that import...) }  :)
@@ -289,9 +299,7 @@ as map(*)
 (
   for $f in $model?files
   group by $ns:=$f?namespace
-  return map:entry( $ns,  $f)
-)
-=>map:merge(map { 'duplicates': 'combine' })
+  return map:entry( $ns, $f) ) =>map:merge(map { 'duplicates': 'combine' })
 };
 
 
@@ -302,8 +310,7 @@ as xs:string
 {
  let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
  let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
-return $target
-=>replace("\{project\}",string($opts?project))
+return $target =>replace("\{project\}",string($opts?project))
 =>replace("\{webpath\}",translate($webpath,"\","/"))
 }; 
 

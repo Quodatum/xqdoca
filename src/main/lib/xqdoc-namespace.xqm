@@ -22,7 +22,7 @@ declare
 function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:string)
 as map(*)
 {
- let $_:=util:if(empty($token),error(xs:QName("xqn:qmap"),"NO TOK"))
+ let $_:=if(empty($token)) then error(xs:QName("xqn:qmap"),"NO TOK")
  return if(starts-with($token,"Q{"))
         then map{
            "uri": $token=>substring-after("{")=>substring-before("}"),

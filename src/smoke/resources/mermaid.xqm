@@ -96,9 +96,9 @@ as map(*){
   let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
   let $name:=$fn($file)
   let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=>count()
-  return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
-          $file)=>map:merge()
- 
+  let $name:= translate($name,"-","_") || (if($count gt 0) then  "Δ" ||1+ $count) 
+  return (map:entry("mermaid",  $name),$file)
+          =>map:merge()
 };
 
 (:~ generate mermaid function list :)
@@ -145,8 +145,8 @@ as element(html){
   {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js" 
-  integrity="sha512-ku2nmBrzAXY5YwohzTqLYH1/lvyMrpTVxgQKrvTabd/b/uesqltLORdmpVapYv6QhZVCLUX6wkvFaKOAY4xpUA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js" integrity="sha512-6a80OTZVmEJhqYJUmYd5z8yHUCDlYnj6q9XwB/gKOEyNQV/Q8u+XeSG59a2ZKFEHGTYzgfOQKYEBtrZV7vBr+Q==" 
+crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
   <script>mermaid.initialize({{
   startOnLoad:true,
   logLevel: "error", 

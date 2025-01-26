@@ -6,10 +6,8 @@ xquery version "3.1";
  :)
  
 module namespace _ = 'quodatum:xqdoca.generator.simple';
-
-
-
 declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
+
 declare
 %xqdoca:module("xqdoc","xqDoc xml file from the source module")
 %xqdoca:output("xqdoc.xml","xml") 

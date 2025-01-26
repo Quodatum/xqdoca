@@ -1,0 +1,1 @@
+{"cells":[{"kind":2,"language":"xquery","value":"(:<:)\r\nimport module namespace xqp = 'quodatum:xqdoca.parser' at '../src/main/lib/parser.xqm';\r\n"},{"kind":2,"language":"xquery","value":"xqp:parse(\"2+2\",\"basex10\")"},{"kind":2,"language":"xquery","value":" db:system() "}]}

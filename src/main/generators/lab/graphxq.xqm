@@ -42,7 +42,8 @@ return gxq:post('/api/dotml', $form, $data)
 };
 
 (:~ graphxq request :)
-declare function gxq:post($url as xs:string, $form as element(http:multipart),$data ){
+declare function gxq:post($url as xs:string, $form as element(http:multipart),$data )
+{
   let $req:= <http:request method="POST"  xmlns="http://expath.org/ns/http-client">
               { $form}
             </http:request>

@@ -21,7 +21,7 @@ declare variable $xqp:xparse_opts:=map{
 
 };
 
-declare variable $xqp:trace as xs:boolean:=true();
+declare variable $xqp:trace as xs:boolean:=false();
 
  
 (:~ default function namespace

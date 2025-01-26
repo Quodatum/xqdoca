@@ -9,7 +9,7 @@ import module namespace xqd = 'quodatum:xqdoca.model' at "lib/model.xqm";
 import module namespace xqo = 'quodatum:xqdoca.outputs' at "lib/xqdoc-outputs.xqm";
 import module namespace store = 'quodatum:xqdoca:store' at "lib/store.xqm";
 import module namespace opts = 'quodatum:xqdoca:options' at "lib/options.xqm"; 
-declare option db:chop 'true';
+
  
 (:~  path to XML options file :)
 declare variable $config-path as xs:string  external;

@@ -3,7 +3,7 @@ xquery version "3.1";
 Diagrams showing project module imports. Generated with `mermaid.js`.
 
 @see https://mermaid-js.github.io/mermaid/#/
-@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@copyright Copyright (c) 2019-2024 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -49,10 +49,16 @@ let $imports:=for $f in $files,
                 $i in xqd:where-imported($files, $f?namespace)
                 return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
 ]``
-       
+let $actors:=``[
+ class RESTXQ:::cssRest { }
+ class INVOKE:::cssMain { }
+ class TEST { }
+]``
+
 return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
 classDiagram
 direction TB
+`{ $actors }`
 `{ $classes }`
 `{ $imports }`
 `{ $links }`
@@ -82,10 +88,12 @@ let $vars:=$file?xqdoc
 return if($restfns)
        then ``[class `{ $name }`:::cssRest { << Rest `{$file?path }`>> 
 `{ $fns }`}
+RESTXQ..>`{ $name }`
 ]``
        else if($is-main)
             then ``[class `{ $name }`:::cssMain{ << `{ $file?path }` >>
 `{ $vars }`}
+INVOKE..>`{ $name }`
 ]``
             else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
 ]``
@@ -99,8 +107,9 @@ as map(*){
   let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
   let $name:=$fn($file)
   let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=>count()
-  return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
-          $file)=>map:merge()
+  let $name:= translate($name,"-","_") || (if($count gt 0) then  "Δ" ||1+ $count) 
+  return (map:entry("mermaid",  $name),$file)
+          =>map:merge()
 };
 
 (:~ generate mermaid function list :)
@@ -151,7 +160,9 @@ as element(html){
   {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.4.3/mermaid.min.js" integrity="sha512-lr1gBg9uLeq7cCfTulxEDXATlfDzLRLMMY0T0GxHv27+XsKytKuJwIQvSZRNw2C4fZWSMf9C+SPnT10ArLI8Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  <script>mermaid.initialize({{
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js" integrity="sha512-6a80OTZVmEJhqYJUmYd5z8yHUCDlYnj6q9XwB/gKOEyNQV/Q8u+XeSG59a2ZKFEHGTYzgfOQKYEBtrZV7vBr+Q==" 
+   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>mermaid.initialize({{
   startOnLoad:true,
   logLevel: "error", 
   securityLevel: "loose", 

@@ -1,4 +1,4 @@
 {
     "liveServer.settings.port": 5501,
-    "basexTools.xquery.showHovers": true
+    "basexTools.xquery.showHovers": false
 }

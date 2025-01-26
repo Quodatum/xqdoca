@@ -172,5 +172,5 @@ as xs:string*
 {
   tokenize($url,"/\{")
   !replace(.,"\s*(\$\w*).*","$1")
-  !util:if(starts-with(.,"$"),.)
+  !(if (starts-with(.,"$")) then .)
 };    

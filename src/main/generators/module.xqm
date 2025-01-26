@@ -52,7 +52,10 @@ let $d:=if($file?isParsed)
                     xqh:restxq($xqd,$file),
                       <section id="source">
                         <h2 >Source Code</h2>
-                        <pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
+                        <pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html" >
+                        <code class="language-xquery"  data-prismjs-copy="Copy to clipboard">{ 
+                          $xqd/xqdoc:module/xqdoc:body/string() 
+                          }</code></pre>
                       </section>
                             }
                     </div>
@@ -334,7 +337,9 @@ as element(div)
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
         <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
-        { $funs! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
+        { $funs! <pre class="no-line-numbers" style="white-space:pre-wrap;">
+        <code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code>
+        </pre> }
       </details>
 		</div>
 };
