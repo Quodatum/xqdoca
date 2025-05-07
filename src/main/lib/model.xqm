@@ -34,7 +34,7 @@ declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
 declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
 as xs:string*
 {
-  file:list($efolder,true(),$extensions)
+  file:list($efolder,true(),$extensions)[matches(.,"[^\\/]$")]
 };
 
 (:~

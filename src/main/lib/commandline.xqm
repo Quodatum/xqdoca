@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  <p>command line tool support.</p>
- @copyright Copyright (c) 2019-2022 Quodatum Ltd
+ @copyright Copyright (c) 2019-2025 Quodatum Ltd
  @version 0.3
 :)
 module namespace cmd = 'quodatum:tools:commandline';
