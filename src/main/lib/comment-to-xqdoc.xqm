@@ -37,7 +37,7 @@ as map(*)?{
                    =>substring(4,string-length($comment)-5)
                    =>tokenize("\n")
        let $lines:=$lines!xqcom:trim(.)
-                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)))
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)
        let $state:= map{
                       'description': '',
                       'params': (),
