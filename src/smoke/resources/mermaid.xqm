@@ -3,7 +3,7 @@ xquery version "3.1";
 Diagrams showing project module imports. Generated with `mermaid.js`.
 
 @see https://mermaid-js.github.io/mermaid/#/
-@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@copyright Copyright (c) 2019-2026 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  

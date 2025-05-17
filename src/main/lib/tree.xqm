@@ -3,7 +3,7 @@ xquery version "3.1";
  
 (:~
 <p>Convert sequence of paths as strings to an sequence of xml trees representing the paths.</p>
-@Copyright (c) 2022 Quodatum Ltd
+@Copyright (c) 2026 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace tree = 'quodatum:data.tree';

@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  : <p>Render to o/p xqdoc and xqparse XML files</p>
- : @copyright (c) 2019-2022 Quodatum Ltd
+ : @copyright (c) 2019-2026 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
  

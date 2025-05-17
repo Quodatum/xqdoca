@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 annotation utils
- @Copyright (c) 2019-2022 Quodatum Ltd
+ @Copyright (c) 2019-2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  

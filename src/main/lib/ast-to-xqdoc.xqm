@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 create xqdoc from parse tree 
- @Copyright (c) 2022 Quodatum Ltd
+ @Copyright (c) 2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
  @TODO refs
 :)

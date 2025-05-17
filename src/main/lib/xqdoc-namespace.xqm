@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  <p>namespace and qname utils</p>
- @copyright (c) 2019-2022 Quodatum Ltd
+ @copyright (c) 2019-2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace xqn = 'quodatum:xqdoca.namespaces';

@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 talk to graphxq server.
-@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@copyright Copyright (c) 2019-2026 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace gxq = 'quodatum:service.graphxq';
