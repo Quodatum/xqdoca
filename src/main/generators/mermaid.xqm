@@ -158,7 +158,7 @@ as element(html){
 
 <body>
   <nav id="toc" style="position:absolute;top:0"><span>
-    <span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
+    <span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram</span>
     {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
