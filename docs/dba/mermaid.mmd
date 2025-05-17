@@ -1,0 +1,399 @@
+%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+classDiagram
+direction TB
+
+class RESTXQ:::cssrest  
+class INVOKE:::cssmain  
+class TEST:::cssunit
+
+class dba:::cssrest { << Rest databases/backups/backup-create.xqm>> 
+
+backup-create()
+db-optimize-all()
+db-rename()
+}
+RESTXQ..>dba
+ class dbaΔ2:::cssrest { << Rest databases/backups/backup-download.xqm>> 
+
+backup-download()
+}
+RESTXQ..>dbaΔ2
+ class local { << backup-drop.xqm >>}
+ class localΔ2 { << backup-restore.xqm >>}
+ class dbaΔ3:::cssrest { << Rest databases/backups/backup-upload.xqm>> 
+
+file-upload()
+}
+RESTXQ..>dbaΔ3
+ class dbaΔ4:::cssrest { << Rest databases/resources/db-delete.xqm>> 
+
+db-delete()
+}
+RESTXQ..>dbaΔ4
+ class dbaΔ5:::cssrest { << Rest databases/resources/db-download.xqm>> 
+
+db-download()
+}
+RESTXQ..>dbaΔ5
+ class dbaΔ6:::cssrest { << Rest databases/resources/db-put.xqm>> 
+
+db-put()
+db-put-post()
+}
+RESTXQ..>dbaΔ6
+ class dbaΔ7:::cssrest { << Rest databases/resources/db-query.xqm>> 
+
+db-query()
+}
+RESTXQ..>dbaΔ7
+ class dbaΔ8:::cssrest { << Rest databases/resources/db-rename.xqm>> 
+
+db-rename()
+db-rename()
+}
+RESTXQ..>dbaΔ8
+ class dbaΔ9:::cssrest { << Rest databases/resources/db-replace.xqm>> 
+
+db-replace()
+db-replace-post()
+}
+RESTXQ..>dbaΔ9
+ class dbaΔ10:::cssrest { << Rest databases/resources/resource.xqm>> 
+
+resource-redirect()
+}
+RESTXQ..>dbaΔ10
+ class dbaΔ11:::cssrest { << Rest databases/database.xqm>> 
+
+database()
+database-redirect()
+}
+RESTXQ..>dbaΔ11
+ class dbaΔ12:::cssrest { << Rest databases/databases.xqm>> 
+
+databases()
+databases-redirect()
+}
+RESTXQ..>dbaΔ12
+ class dbaΔ13:::cssrest { << Rest databases/db-alter.xqm>> 
+
+db-alter()
+db-alter()
+}
+RESTXQ..>dbaΔ13
+ class dbaΔ14:::cssrest { << Rest databases/db-copy.xqm>> 
+
+db-copy()
+db-copy()
+}
+RESTXQ..>dbaΔ14
+ class dbaΔ15:::cssrest { << Rest databases/db-create.xqm>> 
+
+db-create()
+db-create()
+}
+RESTXQ..>dbaΔ15
+ class dbaΔ16:::cssrest { << Rest databases/db-drop.xqm>> 
+
+db-drop()
+}
+RESTXQ..>dbaΔ16
+ class dbaΔ17:::cssrest { << Rest databases/db-optimize.xqm>> 
+
+db-optimize()
+db-optimize()
+db-optimize-all()
+}
+RESTXQ..>dbaΔ17
+ class dbaΔ18:::cssrest { << Rest files/dir-change.xqm>> 
+
+dir-change()
+}
+RESTXQ..>dbaΔ18
+ class dbaΔ19:::cssrest { << Rest files/dir-create.xqm>> 
+
+dir-create()
+}
+RESTXQ..>dbaΔ19
+ class dbaΔ20:::cssrest { << Rest files/file-delete.xqm>> 
+
+file-delete()
+}
+RESTXQ..>dbaΔ20
+ class dbaΔ21:::cssrest { << Rest files/file-download.xqm>> 
+
+file-download()
+}
+RESTXQ..>dbaΔ21
+ class dbaΔ22:::cssrest { << Rest files/file-start.xqm>> 
+
+file-start()
+}
+RESTXQ..>dbaΔ22
+ class dbaΔ23:::cssrest { << Rest files/file-upload.xqm>> 
+
+file-upload()
+}
+RESTXQ..>dbaΔ23
+ class dbaΔ24:::cssrest { << Rest files/files.xqm>> 
+
+files()
+files-redirect()
+}
+RESTXQ..>dbaΔ24
+ class dbaΔ25:::cssrest { << Rest jobs/job-remove.xqm>> 
+
+job-stop()
+}
+RESTXQ..>dbaΔ25
+ class dbaΔ26:::cssrest { << Rest jobs/job-result.xqm>> 
+
+job-result()
+}
+RESTXQ..>dbaΔ26
+ class localΔ3 { << jobs.xqm >>}
+ class config { << config.xqm >>}
+ class localΔ4 { << html.xqm >>}
+ class options { << options.xqm >>}
+ class util { << util.xqm >>}
+ class dbaΔ27:::cssrest { << Rest logs/log-delete.xqm>> 
+
+log-delete()
+}
+RESTXQ..>dbaΔ27
+ class dbaΔ28:::cssrest { << Rest logs/log-download.xqm>> 
+
+log-download()
+}
+RESTXQ..>dbaΔ28
+ class localΔ5 { << logs.xqm >>}
+ class dbaΔ29:::cssrest { << Rest queries/queries.xqm>> 
+
+queries()
+}
+RESTXQ..>dbaΔ29
+ class dbaΔ30:::cssrest { << Rest queries/query-close.xqm>> 
+
+query-close()
+}
+RESTXQ..>dbaΔ30
+ class dbaΔ31:::cssrest { << Rest queries/query-eval.xqm>> 
+
+query-eval()
+query-update()
+}
+RESTXQ..>dbaΔ31
+ class dbaΔ32:::cssrest { << Rest queries/query-open.xqm>> 
+
+query-open()
+}
+RESTXQ..>dbaΔ32
+ class dbaΔ33:::cssrest { << Rest queries/query-save.xqm>> 
+
+query-save()
+}
+RESTXQ..>dbaΔ33
+ class dbaΔ34:::cssrest { << Rest sessions/session-kill.xqm>> 
+
+drop()
+}
+RESTXQ..>dbaΔ34
+ class dbaΔ35:::cssrest { << Rest sessions/sessions-list.xqm>> 
+
+sessions()
+users-redirect()
+}
+RESTXQ..>dbaΔ35
+ class dbaΔ36:::cssrest { << Rest settings/settings-gc.xqm>> 
+
+settings-gc()
+}
+RESTXQ..>dbaΔ36
+ class dbaΔ37:::cssrest { << Rest settings/settings.xqm>> 
+
+settings()
+settings-save()
+}
+RESTXQ..>dbaΔ37
+ class dbaΔ38:::cssrest { << Rest stores/stores-deletekeys.xqm>> 
+
+deletekeys()
+}
+RESTXQ..>dbaΔ38
+ class dbaΔ39:::cssrest { << Rest stores/stores.xqm>> 
+
+sessions()
+users-redirect()
+}
+RESTXQ..>dbaΔ39
+ class dbaΔ40:::cssrest { << Rest users/pattern-add.xqm>> 
+
+create()
+pattern-add()
+}
+RESTXQ..>dbaΔ40
+ class dbaΔ41:::cssrest { << Rest users/pattern-drop.xqm>> 
+
+pattern-drop()
+}
+RESTXQ..>dbaΔ41
+ class dbaΔ42:::cssrest { << Rest users/user-create.xqm>> 
+
+user-create()
+user-create()
+}
+RESTXQ..>dbaΔ42
+ class dbaΔ43:::cssrest { << Rest users/user-drop.xqm>> 
+
+user-drop()
+}
+RESTXQ..>dbaΔ43
+ class dbaΔ44:::cssrest { << Rest users/user-update.xqm>> 
+
+user-update()
+users-info()
+}
+RESTXQ..>dbaΔ44
+ class dbaΔ45:::cssrest { << Rest users/user.xqm>> 
+
+user()
+user-redirect()
+}
+RESTXQ..>dbaΔ45
+ class dbaΔ46:::cssrest { << Rest users/users.xqm>> 
+
+users()
+users-redirect()
+}
+RESTXQ..>dbaΔ46
+ class dbaΔ47:::cssrest { << Rest common.xqm>> 
+
+file()
+redirect()
+unknown()
+}
+RESTXQ..>dbaΔ47
+ class dbaΔ48:::cssrest { << Rest login.xqm>> 
+
+login()
+login-check()
+logout()
+}
+RESTXQ..>dbaΔ48
+
+dbaΔ18 ..>config 
+ dbaΔ19 ..>config 
+ dbaΔ20 ..>config 
+ dbaΔ21 ..>config 
+ dbaΔ22 ..>config 
+ dbaΔ23 ..>config 
+ dbaΔ24 ..>config 
+ util ..>config 
+ dbaΔ29 ..>config 
+ dbaΔ30 ..>config 
+ dbaΔ32 ..>config 
+ dbaΔ33 ..>config 
+ dbaΔ35 ..>config 
+ dbaΔ39 ..>config 
+ dbaΔ46 ..>config 
+ dbaΔ48 ..>config 
+ dbaΔ24 ..>options 
+ config ..>options 
+ util ..>options 
+ dbaΔ37 ..>options 
+ dbaΔ40 ..>options 
+ dbaΔ42 ..>options 
+ dbaΔ45 ..>options 
+ dba ..>util 
+ dbaΔ3 ..>util 
+ dbaΔ4 ..>util 
+ dbaΔ6 ..>util 
+ dbaΔ7 ..>util 
+ dbaΔ8 ..>util 
+ dbaΔ9 ..>util 
+ dbaΔ11 ..>util 
+ dbaΔ12 ..>util 
+ dbaΔ13 ..>util 
+ dbaΔ14 ..>util 
+ dbaΔ15 ..>util 
+ dbaΔ16 ..>util 
+ dbaΔ17 ..>util 
+ dbaΔ20 ..>util 
+ dbaΔ23 ..>util 
+ dbaΔ24 ..>util 
+ dbaΔ25 ..>util 
+ dbaΔ27 ..>util 
+ dbaΔ31 ..>util 
+ dbaΔ34 ..>util 
+ dbaΔ35 ..>util 
+ dbaΔ38 ..>util 
+ dbaΔ39 ..>util 
+ dbaΔ40 ..>util 
+ dbaΔ41 ..>util 
+ dbaΔ42 ..>util 
+ dbaΔ43 ..>util 
+ dbaΔ44 ..>util 
+
+
+classDef cssrest fill:palegreen
+classDef cssmain fill:powderblue
+classDef cssunit fill:yellow
+
+link dba "modules/F000001/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ2 "modules/F000002/index.html" "This is a tooltip for dba/databases"
+ link local "modules/F000003/index.html" "This is a tooltip for "
+ link localΔ2 "modules/F000004/index.html" "This is a tooltip for "
+ link dbaΔ3 "modules/F000005/index.html" "This is a tooltip for dba/files"
+ link dbaΔ4 "modules/F000006/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ5 "modules/F000007/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ6 "modules/F000008/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ7 "modules/F000009/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ8 "modules/F000010/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ9 "modules/F000011/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ10 "modules/F000012/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ11 "modules/F000013/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ12 "modules/F000014/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ13 "modules/F000015/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ14 "modules/F000016/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ15 "modules/F000017/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ16 "modules/F000018/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ17 "modules/F000019/index.html" "This is a tooltip for dba/databases"
+ link dbaΔ18 "modules/F000020/index.html" "This is a tooltip for dba/files"
+ link dbaΔ19 "modules/F000021/index.html" "This is a tooltip for dba/files"
+ link dbaΔ20 "modules/F000022/index.html" "This is a tooltip for dba/files"
+ link dbaΔ21 "modules/F000023/index.html" "This is a tooltip for dba/files"
+ link dbaΔ22 "modules/F000024/index.html" "This is a tooltip for dba/files"
+ link dbaΔ23 "modules/F000025/index.html" "This is a tooltip for dba/files"
+ link dbaΔ24 "modules/F000026/index.html" "This is a tooltip for dba/files"
+ link dbaΔ25 "modules/F000027/index.html" "This is a tooltip for dba/jobs"
+ link dbaΔ26 "modules/F000028/index.html" "This is a tooltip for dba/jobs"
+ link localΔ3 "modules/F000029/index.html" "This is a tooltip for "
+ link config "modules/F000030/index.html" "This is a tooltip for dba/config"
+ link localΔ4 "modules/F000031/index.html" "This is a tooltip for "
+ link options "modules/F000032/index.html" "This is a tooltip for dba/options"
+ link util "modules/F000033/index.html" "This is a tooltip for dba/util"
+ link dbaΔ27 "modules/F000034/index.html" "This is a tooltip for dba/logs"
+ link dbaΔ28 "modules/F000035/index.html" "This is a tooltip for dba/logs"
+ link localΔ5 "modules/F000036/index.html" "This is a tooltip for "
+ link dbaΔ29 "modules/F000037/index.html" "This is a tooltip for dba/queries"
+ link dbaΔ30 "modules/F000038/index.html" "This is a tooltip for dba/queries"
+ link dbaΔ31 "modules/F000039/index.html" "This is a tooltip for dba/queries"
+ link dbaΔ32 "modules/F000040/index.html" "This is a tooltip for dba/queries"
+ link dbaΔ33 "modules/F000041/index.html" "This is a tooltip for dba/queries"
+ link dbaΔ34 "modules/F000042/index.html" "This is a tooltip for dba/sessions"
+ link dbaΔ35 "modules/F000043/index.html" "This is a tooltip for dba/sessions"
+ link dbaΔ36 "modules/F000044/index.html" "This is a tooltip for dba/settings"
+ link dbaΔ37 "modules/F000045/index.html" "This is a tooltip for dba/settings"
+ link dbaΔ38 "modules/F000046/index.html" "This is a tooltip for dba/stores"
+ link dbaΔ39 "modules/F000047/index.html" "This is a tooltip for dba/stores"
+ link dbaΔ40 "modules/F000048/index.html" "This is a tooltip for dba/users"
+ link dbaΔ41 "modules/F000049/index.html" "This is a tooltip for dba/users"
+ link dbaΔ42 "modules/F000050/index.html" "This is a tooltip for dba/users"
+ link dbaΔ43 "modules/F000051/index.html" "This is a tooltip for dba/users"
+ link dbaΔ44 "modules/F000052/index.html" "This is a tooltip for dba/users"
+ link dbaΔ45 "modules/F000053/index.html" "This is a tooltip for dba/users"
+ link dbaΔ46 "modules/F000054/index.html" "This is a tooltip for dba/users"
+ link dbaΔ47 "modules/F000055/index.html" "This is a tooltip for dba/common"
+ link dbaΔ48 "modules/F000056/index.html" "This is a tooltip for dba/login"
+
+

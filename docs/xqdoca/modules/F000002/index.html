@@ -1,88 +1,194 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.generator.rename</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>XQDocA - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">quodatum:xqdoca.generator.calls</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-success" title="XQdocA">D</span></div></h1><nav id="toc"><h2><a href="../../index.html">XQDocA</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.generator.rename</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#_:rename"><span class="secno">4.1</span><span class="content" title="">_:rename<div style="float:right"><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>rewrite code</div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>__source : lib/generators/demo/refactor.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.generator.calls</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#_:build"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;import svg for set of files">build<div style="float:right"></div></span></a></li><li><a href="#_:build-old"><span class="secno">4.2</span><span class="content" title="&#xD;&#xA;import svg for set of files">build-old<div style="float:right"></div></span></a></li><li><a href="#_:calls"><span class="secno">4.3</span><span class="content" title="">calls<div style="float:right"><span class="badge badge-success" title="XQdocA">D</span></div></span></a></li><li><a href="#_:edge"><span class="secno">4.4</span><span class="content" title="&#xD;&#xA;create edge">edge<div style="float:right"></div></span></a></li><li><a href="#_:graph"><span class="secno">4.5</span><span class="content" title="&#xD;&#xA;create dotml graph">graph<div style="float:right"></div></span></a></li><li><a href="#_:module"><span class="secno">4.6</span><span class="content" title="">module<div style="float:right"><span class="badge badge-success" title="XQdocA">D</span></div></span></a></li><li><a href="#_:node"><span class="secno">4.7</span><span class="content" title="&#xD;&#xA;create node&#xD;&#xA;">node<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+import diagrams using svg, requires   access to a graphxq server&#xD;
+&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Andy Bunce</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">0</span> modules. It imports
-    <span class="badge badge-info">0</span> modules.
-    </p></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="_:rename"></a><a id="{quodatum:xqdoca.generator.rename}rename#3"></a>4.1 _:rename<div style="float:right"><a href="#_:rename">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.rename}rename#3">_:rename#3</a><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>code rewritting</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">_:rename</code>
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">quodatum:xqdoca.generator.calls</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000020/index.html" title="lib/model.xqm">quodatum:xqdoca.model</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000001/index.html" title="generators/lab/graphxq.xqm">quodatum:service.graphxq</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="_:build"></a><a id="{quodatum:xqdoca.generator.calls}build#3"></a><a href="#_:build">4.1 </a>_:build</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}build#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+import svg for set of files</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:build</code>
 		  ( 
-			<code class="arg">$file</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as"> as </code><code class="return-type">map(*)</code></li><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invokes 3 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg">('refactor','simple code change examples.')</code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg">('rename.xqm','text')</code></td></tr></tbody></table></details><details><summary>Source ( 29 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:rename($file as map(*), 
-                  $model as map(*),
-                  $opts as map(*)
-                  )                    
-{
-
-
-  let $parse:=$file?xqparse 
-  
-  (: change function names that are called :)
-  let $parse := $parse transform with {
-    .//FunctionCall/QName
-    !.[contains(.,":")]
-    !( replace value of node . with . || "-XQDOCA")
-  }
-  (: add an import :)
-    let $i:=``[;
-import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm']``
-   let $parse := $parse transform with {
-    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)
-  }
-  (: change name of function :)
-   let $parse := $parse transform with {
-    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))
-  }
-  let $result:=``[(:  xqDocA added a comment :)
-]`` || $parse
-  return $result
-  }</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>_</td><td><span><a href="../../modules/F000002/index.html" title="lib/generators/demo/refactor.xqm">quodatum:xqdoca.generator.rename</a></span></td></tr><tr><td>xqdoca</td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
-(:~
- : rewrite code  
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-module namespace _ = 'quodatum:xqdoca.generator.rename';
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-(:~ 
- : code rewritting
- :)
-declare 
-%xqdoca:module("refactor","simple code change examples.")
-%xqdoca:output("rename.xqm","text") 
-function _:rename($file as map(*), 
-                  $model as map(*),
-                  $opts as map(*)
-                  )                    
-{
-
-
-  let $parse:=$file?xqparse 
-  
-  (: change function names that are called :)
-  let $parse := $parse transform with {
-    .//FunctionCall/QName
-    !.[contains(.,":")]
-    !( replace value of node . with . || "-XQDOCA")
-  }
-  (: add an import :)
-    let $i:=``[;
-import module namespace xqd = 'quodatum:xqdoca.model' at '../main/lib/model.xqm']``
-   let $parse := $parse transform with {
-    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)
-  }
-  (: change name of function :)
-   let $parse := $parse transform with {
-    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))
-  }
-  let $result:=``[(:  xqDocA added a comment :)
-]`` || $parse
-  return $result
-  };
-</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+			<code class="arg">$files</code><code class="as"> as </code><code class="type">map(*)*</code>, <code class="arg">$_model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">document-node()</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as"> as </code><code class="return-type">map(*)*</code></li><li>_model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">document-node()</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 13 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:build($files as map(*)*,         &#xD;
+                         $_model as map(*),&#xD;
+                         $opts as map(*) )&#xD;
+as document-node(){                   &#xD;
+   let $nodes:=$files!_:node(.,$opts) &#xD;
+                &#xD;
+	let $edges := for $f  in  $files &#xD;
+                return _:edge($f,$f)&#xD;
+	let $dot:=_:graph(($nodes,$edges),$opts)&#xD;
+           &#xD;
+	let $svg:=gxq:dotml2($dot)&#xD;
+	return $svg&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:build-old"></a><a id="{quodatum:xqdoca.generator.calls}build-old#3"></a><a href="#_:build-old">4.2 </a>_:build-old</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}build-old#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+import svg for set of files</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:build-old</code>
+		  ( 
+			<code class="arg">$files</code><code class="as"> as </code><code class="type">map(*)*</code>, <code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as"> as </code><code class="return-type">map(*)*</code></li><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 20 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:build-old($files as map(*)*,         &#xD;
+                         $model as map(*),&#xD;
+                         $opts as map(*) )&#xD;
+ {&#xD;
+    let $imports:= xqd:imports($model)&#xD;
+  let $defs:=xqd:defs($model)                        &#xD;
+    let $op:=for $f in  ($files[ ?xqdoc//xqdoc:import[@type="library"]]&#xD;
+                        ,$model?files[map:contains($imports,?namespace)]&#xD;
+                      )&#xD;
+	          let $n:= _:node($f,$opts) &#xD;
+	          let $ins:=$f?xqdoc//xqdoc:import[@type="library"]/xqdoc:uri/string()        &#xD;
+	          let $e:=$ins! $defs(.)!_:edge(.,$f)&#xD;
+	          return ($n,$e)&#xD;
+	 &#xD;
+	let $dot:=&lt;dotml:graph rankdir = "LR"&gt;	&#xD;
+             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{ $op }&#xD;
+            &lt;/dotml:graph&gt;&#xD;
+	(: let $svg:=_:dotml2($dot) :)&#xD;
+	return $dot&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:calls"></a><a id="{quodatum:xqdoca.generator.calls}calls#2"></a><a href="#_:calls">4.3 </a>_:calls</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}calls#2">#2</a><span class="badge badge-success" title="XQdocA">D</span></span></p><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:calls</code>
+		  ( 
+			<code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (2)</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:global</code></td><td><code class="arg">('imports.svg','Project all module imports as svg')</code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg">('imports.svg','xml')</code></td></tr></tbody></table></details><details><summary>Source ( 7 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:calls(        &#xD;
+                 $model as map(*),&#xD;
+                 $opts as map(*)&#xD;
+                 )                         &#xD;
+{&#xD;
+	  _:build( $model?files, $model, map{"base":""})&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:edge"></a><a id="{quodatum:xqdoca.generator.calls}edge#2"></a><a href="#_:edge">4.4 </a>_:edge</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}edge#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+create edge</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:edge</code>
+		  ( 
+			<code class="arg">$to</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$from</code><code class="as"> as </code><code class="type">map(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>to<code class="as"> as </code><code class="return-type">map(*)</code></li><li>from<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:edge($to as map(*),$from as map(*)){&#xD;
+  &lt;dotml:edge from="N{ $from?index}"  to="N{ $to?index}"/&gt;&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:graph"></a><a id="{quodatum:xqdoca.generator.calls}graph#2"></a><a href="#_:graph">4.5 </a>_:graph</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}graph#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+create dotml graph</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:graph</code>
+		  ( 
+			<code class="arg">$nodes</code>, <code class="arg">$opts</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>nodes<code class="as"> as </code><code class="return-type"></code></li><li>opts<code class="as"> as </code><code class="return-type"></code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:graph($nodes,$opts){&#xD;
+ &lt;dotml:graph  rankdir="LR" bgcolor="silver"&gt;	&#xD;
+             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{  &#xD;
+             $nodes&#xD;
+}&lt;/dotml:graph&gt;  &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:module"></a><a id="{quodatum:xqdoca.generator.calls}module#3"></a><a href="#_:module">4.6 </a>_:module</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}module#3">#3</a><span class="badge badge-success" title="XQdocA">D</span></span></p><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:module</code>
+		  ( 
+			<code class="arg">$file</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>file<code class="as"> as </code><code class="return-type">map(*)</code></li><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (2)</summary><table class="data"><tbody><tr><td><code class="function">%xqdoca:module</code></td><td><code class="arg">('imports.svg','imports for this module as svg')</code></td></tr><tr><td><code class="function">%xqdoca:output</code></td><td><code class="arg">('imports.svg','xml')</code></td></tr></tbody></table></details><details><summary>Source ( 7 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:module($file as map(*),         &#xD;
+               $model as map(*),&#xD;
+               $opts as map(*)&#xD;
+              )&#xD;
+{&#xD;
+   _:build( $file, $model, map{"base":"../../"})      &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="_:node"></a><a id="{quodatum:xqdoca.generator.calls}node#2"></a><a href="#_:node">4.7 </a>_:node</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.generator.calls}node#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+create node&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">_:node</code>
+		  ( 
+			<code class="arg">$f</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">element(dotml:record)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>f<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(dotml:record)</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 8 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function _:node($f as map(*), $opts as map(*))&#xD;
+as element(dotml:record)&#xD;
+{&#xD;
+  &lt;dotml:record  URL="{ $opts?base }{ $f?href }imports.svg"&gt;&#xD;
+    &lt;dotml:node id="N{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"  fillcolor="#FFFFFF"/&gt;&#xD;
+    &lt;dotml:node id="X{ $f?index}" label="{ $f?path }" URL="http://nowhere.com" /&gt;&#xD;
+  &lt;/dotml:record&gt;&#xD;
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>_</td><td><span><a href="../../modules/F000002/index.html" title="generators/lab/import-graph.xqm">quodatum:xqdoca.generator.calls</a></span></td></tr><tr><td>dotml</td><td><span class="badge badge-warning" title="Externally defined">http://www.martin-loetzsch.de/DOTML</span></td></tr><tr><td>gxq</td><td><span><a href="../../modules/F000001/index.html" title="generators/lab/graphxq.xqm">quodatum:service.graphxq</a></span></td></tr><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>svg</td><td><span class="badge badge-warning" title="Externally defined">quodatum:xqdoca.generator.svg</span></td></tr><tr><td>xqd</td><td><span><a href="../../modules/F000020/index.html" title="lib/model.xqm">quodatum:xqdoca.model</a></span></td></tr><tr><td>xqdoc</td><td><span class="badge badge-warning" title="Externally defined">http://www.xqdoc.org/1.0</span></td></tr><tr><td>xqdoca</td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";&#xD;
+(:~&#xD;
+ : import diagrams using svg, requires   access to a graphxq server&#xD;
+ :&#xD;
+ : @author Andy Bunce&#xD;
+ : @version 0.2&#xD;
+ :)&#xD;
+ &#xD;
+module namespace _ = 'quodatum:xqdoca.generator.calls';&#xD;
+&#xD;
+import module namespace xqd = 'quodatum:xqdoca.model' at "../../lib/model.xqm";&#xD;
+import module namespace gxq = 'quodatum:service.graphxq' at "graphxq.xqm";&#xD;
+&#xD;
+&#xD;
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";&#xD;
+declare  namespace svg = 'quodatum:xqdoca.generator.svg';&#xD;
+declare  namespace dotml = 'http://www.martin-loetzsch.de/DOTML';&#xD;
+declare namespace xqdoc="http://www.xqdoc.org/1.0";&#xD;
+&#xD;
+&#xD;
+declare &#xD;
+%xqdoca:global("imports.svg","Project all module imports as svg")&#xD;
+%xqdoca:output("imports.svg","xml") &#xD;
+function _:calls(        &#xD;
+                 $model as map(*),&#xD;
+                 $opts as map(*)&#xD;
+                 )                         &#xD;
+{&#xD;
+	  _:build( $model?files, $model, map{"base":""})&#xD;
+};&#xD;
+&#xD;
+declare &#xD;
+%xqdoca:module("imports.svg","imports for this module as svg")&#xD;
+%xqdoca:output("imports.svg","xml") &#xD;
+function _:module($file as map(*),         &#xD;
+               $model as map(*),&#xD;
+               $opts as map(*)&#xD;
+              )&#xD;
+{&#xD;
+   _:build( $file, $model, map{"base":"../../"})      &#xD;
+};&#xD;
+ &#xD;
+ (:~ import svg for set of files :)&#xD;
+ declare function _:build($files as map(*)*,         &#xD;
+                         $_model as map(*),&#xD;
+                         $opts as map(*) )&#xD;
+as document-node(){                   &#xD;
+   let $nodes:=$files!_:node(.,$opts) &#xD;
+                &#xD;
+	let $edges := for $f  in  $files &#xD;
+                return _:edge($f,$f)&#xD;
+	let $dot:=_:graph(($nodes,$edges),$opts)&#xD;
+           &#xD;
+	let $svg:=gxq:dotml2($dot)&#xD;
+	return $svg&#xD;
+};&#xD;
+&#xD;
+(:~ import svg for set of files :)&#xD;
+ declare function _:build-old($files as map(*)*,         &#xD;
+                         $model as map(*),&#xD;
+                         $opts as map(*) )&#xD;
+ {&#xD;
+    let $imports:= xqd:imports($model)&#xD;
+  let $defs:=xqd:defs($model)                        &#xD;
+    let $op:=for $f in  ($files[ ?xqdoc//xqdoc:import[@type="library"]]&#xD;
+                        ,$model?files[map:contains($imports,?namespace)]&#xD;
+                      )&#xD;
+	          let $n:= _:node($f,$opts) &#xD;
+	          let $ins:=$f?xqdoc//xqdoc:import[@type="library"]/xqdoc:uri/string()        &#xD;
+	          let $e:=$ins! $defs(.)!_:edge(.,$f)&#xD;
+	          return ($n,$e)&#xD;
+	 &#xD;
+	let $dot:=&lt;dotml:graph rankdir = "LR"&gt;	&#xD;
+             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{ $op }&#xD;
+            &lt;/dotml:graph&gt;&#xD;
+	(: let $svg:=_:dotml2($dot) :)&#xD;
+	return $dot&#xD;
+};&#xD;
+	                 &#xD;
+&#xD;
+&#xD;
+(:~ create node&#xD;
+ :)&#xD;
+ declare function _:node($f as map(*), $opts as map(*))&#xD;
+as element(dotml:record)&#xD;
+{&#xD;
+  &lt;dotml:record  URL="{ $opts?base }{ $f?href }imports.svg"&gt;&#xD;
+    &lt;dotml:node id="N{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"  fillcolor="#FFFFFF"/&gt;&#xD;
+    &lt;dotml:node id="X{ $f?index}" label="{ $f?path }" URL="http://nowhere.com" /&gt;&#xD;
+  &lt;/dotml:record&gt;&#xD;
+};&#xD;
+&#xD;
+(:~ create edge :)&#xD;
+declare function _:edge($to as map(*),$from as map(*)){&#xD;
+  &lt;dotml:edge from="N{ $from?index}"  to="N{ $to?index}"/&gt;&#xD;
+};&#xD;
+&#xD;
+(:~ create dotml graph :)&#xD;
+declare function _:graph($nodes,$opts){&#xD;
+ &lt;dotml:graph  rankdir="LR" bgcolor="silver"&gt;	&#xD;
+             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{  &#xD;
+             $nodes&#xD;
+}&lt;/dotml:graph&gt;  &#xD;
+};</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:35:19.705+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>XQDocA - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">xqdoca-cmd.xq</span> 
+                    <small>main module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html">XQDocA</a>
+                / Module
+       </h2><h3><a id="contents"></a><span class="">xqdoca-cmd.xq</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$args"><span class="secno">3.1</span><span class="content">$args</span><div style="float:right"></div></a></li><li><a href="#$expkg"><span class="secno">3.2</span><span class="content">$expkg</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#local:resolve"><span class="secno">4.1</span><span class="content" title="">resolve<div style="float:right"></div></span></a></li><li><a href="#local:xqDoc-main"><span class="secno">4.2</span><span class="content" title="The query body.">xqDoc-main<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+Process xqdoca command line options and execution&#xD;
+</div><dl><dt title="1">See also</dt><dd><ul><li><span>xqdoc.xq</span></li></ul></dd></dl><dl><dt title="1">Authors</dt><dd><ul><li><span>Andy Bunce (Quodatum)</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+    This module is imported by
+    <span class="badge badge-info">0</span> modules. It imports
+    <span class="badge badge-info">1</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">xqdoca-cmd.xq</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000018/index.html" title="lib/commandline.xqm">quodatum:tools:commandline</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$args"></a><a id="{http://www.w3.org/2005/xpath-functions}$args"></a><a href="#$args">3.1 </a>$args<div style="float:right" class="badge badge-info">EXTERNAL</div></h3><dl><dt class="label">Summary</dt><dd>&#xD;
+command line args</dd><dt class="label">Type</dt><dd>xs:string</dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $args as xs:string  external</code></pre></details></div><div class="div3"><h3><a id="$expkg"></a><a id="{http://www.w3.org/2005/xpath-functions}$expkg"></a><a href="#$expkg">3.2 </a>$expkg</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+expath metadata from expath-pkg.xml</dd><dt class="label">Type</dt><dd>element(pkg:package)</dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $expkg as element(pkg:package):= doc("expath-pkg.xml")/*</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="local:resolve"></a><a id="{http://www.w3.org/2005/xquery-local-functions}resolve#1"></a><a href="#local:resolve">4.1 </a>local:resolve</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://www.w3.org/2005/xquery-local-functions}resolve#1">#1</a></span></p><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">local:resolve</code>
+		  ( 
+			<code class="arg">$path</code> )<code class="as"> as </code><code class="type">xs:string</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>path<code class="as"> as </code><code class="return-type"></code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function local:resolve($path) as xs:string{&#xD;
+  file:resolve-path($path,file:current-dir())&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="local:xqDoc-main"></a><a id="{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0"></a><a href="#local:xqDoc-main">4.2 </a>local:xqDoc-main</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0">#0</a></span></p><dt class="label">Summary</dt><dd>The query body.</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">local:xqDoc-main</code>
+		  ( 
+			)</div></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code></li></ul></dd><dl><dt title="1">Tags</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@note</span>:
+                <span>pseudo main function as per http//xqdoc.org</span></span></li></ul></dd></dl><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 45 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">let $args:=cmd:parse-args($args)&#xD;
+let $args:=if(exists($args)) &#xD;
+           then $args &#xD;
+           else local:resolve(".xqdoca")!(if(doc-available(.))&#xD;
+                                          then .&#xD;
+                                          else "-h")&#xD;
+let  $action :=head($args)&#xD;
+&#xD;
+return  &#xD;
+    switch($action)&#xD;
+    case "-h" return &#xD;
+              update:output(unparsed-text("xqdoca.txt"))&#xD;
+&#xD;
+    case "-v" return&#xD;
+              let $xqd:= $expkg/@version/string()&#xD;
+              let $java:= proc:property('java.runtime.version')&#xD;
+              let $basex:= db:system()/generalinformation/version/string()&#xD;
+              return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)&#xD;
+&#xD;
+    case "-install" &#xD;
+    case "-update" return (cmd:install-dependencies($expkg)&#xD;
+                          ,update:output("All dependancies installed."))&#xD;
+&#xD;
+    case "-pull"  return update:output("Pull: " || $args) &#xD;
+          &#xD;
+    case "-init" return&#xD;
+                let $file:=local:resolve(".xqdoca") &#xD;
+                return if(not(file:exists($file)))&#xD;
+                       then&#xD;
+                        let $xml:=&lt;xqdoca xmlns="urn:quodatum:xqdoca" version="1.0"&gt;&#xD;
+                              &lt;source&gt;.&lt;/source&gt;&#xD;
+                              &lt;target&gt;xqdoca/&lt;/target&gt;&#xD;
+                              &lt;/xqdoca&gt;&#xD;
+                        return (file:write($file,$xml),update:output("file created"))     &#xD;
+                       else update:output("xqdoca file already exists")&#xD;
+&#xD;
+    default return (&#xD;
+           cmd:check-dependencies($expkg)&#xD;
+            ,for $href in $args &#xD;
+            let $src:=local:resolve($href)=&gt;trace("Processing: ")&#xD;
+            return xquery:eval-update(xs:anyURI("xqdoca.xq"),&#xD;
+                                      map{"config-path": $src, &#xD;
+                                          "pass":true()}&#xD;
+                                    )&#xD;
+                  )</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>cmd</td><td><span><a href="../../modules/F000018/index.html" title="lib/commandline.xqm">quodatum:tools:commandline</a></span></td></tr><tr><td>db</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/db</span></td></tr><tr><td>file</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/file</span></td></tr><tr><td>local</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xquery-local-functions</span></td></tr><tr><td>pkg</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/pkg</span></td></tr><tr><td>proc</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/proc</span></td></tr><tr><td>update</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/update</span></td></tr><tr><td>xquery</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/xquery</span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";&#xD;
+(:~  &#xD;
+ Process xqdoca command line options and execution&#xD;
+ @see xqdoc.xq &#xD;
+ @author Andy Bunce (Quodatum)&#xD;
+ :)&#xD;
+&#xD;
+import module namespace cmd = 'quodatum:tools:commandline' at "lib/commandline.xqm";&#xD;
+declare namespace pkg="http://expath.org/ns/pkg";&#xD;
+&#xD;
+(:~ command line args :)&#xD;
+declare variable $args as xs:string  external;&#xD;
+&#xD;
+(:~ expath metadata from expath-pkg.xml :)&#xD;
+declare variable $expkg as element(pkg:package):= doc("expath-pkg.xml")/*;&#xD;
+&#xD;
+declare function local:resolve($path) as xs:string{&#xD;
+  file:resolve-path($path,file:current-dir())&#xD;
+};&#xD;
+&#xD;
+let $args:=cmd:parse-args($args)&#xD;
+let $args:=if(exists($args)) &#xD;
+           then $args &#xD;
+           else local:resolve(".xqdoca")!(if(doc-available(.))&#xD;
+                                          then .&#xD;
+                                          else "-h")&#xD;
+let  $action :=head($args)&#xD;
+&#xD;
+return  &#xD;
+    switch($action)&#xD;
+    case "-h" return &#xD;
+              update:output(unparsed-text("xqdoca.txt"))&#xD;
+&#xD;
+    case "-v" return&#xD;
+              let $xqd:= $expkg/@version/string()&#xD;
+              let $java:= proc:property('java.runtime.version')&#xD;
+              let $basex:= db:system()/generalinformation/version/string()&#xD;
+              return update:output(``[xqdoca=`{$xqd}`, basex=`{$basex}`, java=`{$java}`]``)&#xD;
+&#xD;
+    case "-install" &#xD;
+    case "-update" return (cmd:install-dependencies($expkg)&#xD;
+                          ,update:output("All dependancies installed."))&#xD;
+&#xD;
+    case "-pull"  return update:output("Pull: " || $args) &#xD;
+          &#xD;
+    case "-init" return&#xD;
+                let $file:=local:resolve(".xqdoca") &#xD;
+                return if(not(file:exists($file)))&#xD;
+                       then&#xD;
+                        let $xml:=&lt;xqdoca xmlns="urn:quodatum:xqdoca" version="1.0"&gt;&#xD;
+                              &lt;source&gt;.&lt;/source&gt;&#xD;
+                              &lt;target&gt;xqdoca/&lt;/target&gt;&#xD;
+                              &lt;/xqdoca&gt;&#xD;
+                        return (file:write($file,$xml),update:output("file created"))     &#xD;
+                       else update:output("xqdoca file already exists")&#xD;
+&#xD;
+    default return (&#xD;
+           cmd:check-dependencies($expkg)&#xD;
+            ,for $href in $args &#xD;
+            let $src:=local:resolve($href)=&gt;trace("Processing: ")&#xD;
+            return xquery:eval-update(xs:anyURI("xqdoca.xq"),&#xD;
+                                      map{"config-path": $src, &#xD;
+                                          "pass":true()}&#xD;
+                                    )&#xD;
+                  )&#xD;
+&#xD;
+</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:35:19.705+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

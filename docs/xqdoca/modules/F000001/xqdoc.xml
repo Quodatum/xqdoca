@@ -1,161 +1,88 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>import-graph.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>import diagrams using svg, requires   access to a graphxq server</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/demo/import-graph.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:~
- : import diagrams using svg, requires   access to a graphxq server
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-module namespace _ = 'quodatum:xqdoca.generator.calls';
-
-import module namespace xqd = 'quodatum:xqdoca.model' at "../../model.xqm";
-import module namespace gxq = 'quodatum:serice.graphxq' at "../../graphxq.xqm";
-
-
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-declare  namespace svg = 'quodatum:xqdoca.generator.svg';
-declare  namespace dotml = 'http://www.martin-loetzsch.de/DOTML';
-declare namespace xqdoc="http://www.xqdoc.org/1.0";
-
-
-declare 
-%xqdoca:global("imports.svg","Project all module imports as svg")
-%xqdoca:output("imports.svg","xml") 
-function _:calls(        
-                 $model as map(*),
-                 $opts as map(*)
-                 )                         
-{
-	  _:build( $model?files, $model, map{"base":""})
-};
-
-declare 
-%xqdoca:module("imports.svg","imports for this module as svg")
-%xqdoca:output("imports.svg","xml") 
-function _:module($file as map(*),         
-               $model as map(*),
-               $opts as map(*)
-              )
-{
-   _:build( $file, $model, map{"base":"../../"})      
-};
- 
- (:~ import svg for set of files :)
- declare function _:build($files as map(*)*,         
-                         $model as map(*),
-                         $opts as map(*) )
- {                   
-   let $nodes:=$files!_:node(.,$opts) 
-                
-	let $edges := for $f at $pos in  $files 
-                return _:edge($f,$f)
-	let $dot:=_:graph(($nodes,$edges),$opts)
-           
-	let $svg:=gxq:dotml2($dot)
-	return $svg
-};
-
-(:~ import svg for set of files :)
- declare function _:build-old($files as map(*)*,         
-                         $model as map(*),
-                         $opts as map(*) )
- {
-    let $imports:= xqd:imports($model)
-  let $defs:=xqd:defs($model)                        
-    let $op:=for $f in  ($files[ ?xqdoc//xqdoc:import[@type="library"]]
-                        ,$model?files[map:contains($imports,?namespace)]
-                      )
-	          let $n:= _:node($f,$opts) 
-	          let $ins:=$f?xqdoc//xqdoc:import[@type="library"]/xqdoc:uri/string()        
-	          let $e:=$ins! $defs(.)!_:edge(.,$f)
-	          return ($n,$e)
-	 
-	let $dot:=&lt;dotml:graph rankdir = "LR"&gt;	
-             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{ $op }
-            &lt;/dotml:graph&gt;
-	(: let $svg:=_:dotml2($dot) :)
-	return $dot
-};
-	                 
-
-
-(:~ create node
- :)
- declare function _:node($f as map(*), $opts as map(*))
-as element(dotml:record)
-{
-  &lt;dotml:record  URL="{ $opts?base }{ $f?href }imports.svg"&gt;
-    &lt;dotml:node id="N{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"  fillcolor="#FFFFFF"/&gt;
-    &lt;dotml:node id="X{ $f?index}" label="{ $f?path }" URL="http://nowhere.com" /&gt;
-  &lt;/dotml:record&gt;
-};
-
-(:~ create edge :)
-declare function _:edge($to as map(*),$from as map(*)){
-  &lt;dotml:edge from="N{ $from?index}"  to="N{ $to?index}"/&gt;
-};
-
-(:~ create dotml graph :)
-declare function _:graph($nodes,$opts){
- &lt;dotml:graph  rankdir="LR" bgcolor="silver"&gt;	
-             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{  
-             $nodes
-}&lt;/dotml:graph&gt;  
-};</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.calls"/><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="gxq" uri="quodatum:serice.graphxq"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="svg" uri="quodatum:xqdoca.generator.svg"/><xqdoc:namespace prefix="dotml" uri="http://www.martin-loetzsch.de/DOTML"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:calls</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">imports.svg</xqdoc:literal><xqdoc:literal type="xs:string">Project all module imports as svg</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">imports.svg</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("imports.svg", "Project all module imports as svg") %Q{https://github.com/Quodatum/xqdoca}output("imports.svg", "xml") function _:calls($model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>build</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:calls(        
-                 $model as map(*),
-                 $opts as map(*)
-                 )                         
-{
-	  _:build( $model?files, $model, map{"base":""})
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>_:module</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">imports.svg</xqdoc:literal><xqdoc:literal type="xs:string">imports for this module as svg</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">imports.svg</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}module("imports.svg", "imports for this module as svg") %Q{https://github.com/Quodatum/xqdoca}output("imports.svg", "xml") function _:module($file as map(*) , $model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>build</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:module($file as map(*),         
-               $model as map(*),
-               $opts as map(*)
-              )
-{
-   _:build( $file, $model, map{"base":"../../"})      
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>import svg for set of files</xqdoc:description></xqdoc:comment><xqdoc:name>_:build</xqdoc:name><xqdoc:signature>declare function _:build($files as (map(*))* , $model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>node</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>edge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>graph</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri><xqdoc:name>dotml2</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>nodes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>edges</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>svg</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:build($files as map(*)*,         
-                         $model as map(*),
-                         $opts as map(*) )
- {                   
-   let $nodes:=$files!_:node(.,$opts) 
-                
-	let $edges := for $f at $pos in  $files 
-                return _:edge($f,$f)
-	let $dot:=_:graph(($nodes,$edges),$opts)
-           
-	let $svg:=gxq:dotml2($dot)
-	return $svg
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>import svg for set of files</xqdoc:description></xqdoc:comment><xqdoc:name>_:build-old</xqdoc:name><xqdoc:signature>declare function _:build-old($files as (map(*))* , $model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>defs</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>node</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.generator.calls</xqdoc:uri><xqdoc:name>edge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ins</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>defs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>n</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>e</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>op</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dot</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:build-old($files as map(*)*,         
-                         $model as map(*),
-                         $opts as map(*) )
- {
-    let $imports:= xqd:imports($model)
-  let $defs:=xqd:defs($model)                        
-    let $op:=for $f in  ($files[ ?xqdoc//xqdoc:import[@type="library"]]
-                        ,$model?files[map:contains($imports,?namespace)]
-                      )
-	          let $n:= _:node($f,$opts) 
-	          let $ins:=$f?xqdoc//xqdoc:import[@type="library"]/xqdoc:uri/string()        
-	          let $e:=$ins! $defs(.)!_:edge(.,$f)
-	          return ($n,$e)
-	 
-	let $dot:=&lt;dotml:graph rankdir = "LR"&gt;	
-             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{ $op }
-            &lt;/dotml:graph&gt;
-	(: let $svg:=_:dotml2($dot) :)
-	return $dot
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create node</xqdoc:description></xqdoc:comment><xqdoc:name>_:node</xqdoc:name><xqdoc:signature>declare function _:node($f as map(*) , $opts as map(*)) as element(dotml:record)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>f</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(dotml:record)</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:node($f as map(*), $opts as map(*))
-as element(dotml:record)
-{
-  &lt;dotml:record  URL="{ $opts?base }{ $f?href }imports.svg"&gt;
-    &lt;dotml:node id="N{ $f?index}" label="{ $f?namespace }"  URL="{ $f?href }"  fillcolor="#FFFFFF"/&gt;
-    &lt;dotml:node id="X{ $f?index}" label="{ $f?path }" URL="http://nowhere.com" /&gt;
-  &lt;/dotml:record&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create edge</xqdoc:description></xqdoc:comment><xqdoc:name>_:edge</xqdoc:name><xqdoc:signature>declare function _:edge($to as map(*) , $from as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>to</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>from</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>from</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:edge($to as map(*),$from as map(*)){
-  &lt;dotml:edge from="N{ $from?index}"  to="N{ $to?index}"/&gt;
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>create dotml graph</xqdoc:description></xqdoc:comment><xqdoc:name>_:graph</xqdoc:name><xqdoc:signature>declare function _:graph($nodes as item()* , $opts as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>nodes</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>nodes</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:graph($nodes,$opts){
- &lt;dotml:graph  rankdir="LR" bgcolor="silver"&gt;	
-             &lt;dotml:node 	id="a" label="Home" URL="{ $opts?base}."  color="#FFFFDD" style="filled" shape="house"/&gt;{  
-             $nodes
-}&lt;/dotml:graph&gt;  
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:service.graphxq</xqdoc:uri><xqdoc:name>gxq</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+talk to graphxq server.&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="copyright">Copyright (c) 2019-2026 Quodatum Ltd</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+talk to graphxq server.&#xD;
+@copyright Copyright (c) 2019-2026 Quodatum Ltd&#xD;
+@author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+:)&#xD;
+module namespace gxq = 'quodatum:service.graphxq';&#xD;
+import module namespace http="http://expath.org/ns/http-client";&#xD;
+&#xD;
+(:~ graphxq server url :)&#xD;
+declare variable $gxq:server:= "http://localhost:8984/graphxq/";&#xD;
+&#xD;
+(:~ test server available :)&#xD;
+declare variable $gxq:server-ok as xs:boolean:= 200=http:send-request(&lt;http:request method='get' status-only='true'/&gt;, $gxq:server)/@status;&#xD;
+&#xD;
+(:~&#xD;
+ : convert dotml to svg &#xD;
+ : @parm $data is dotml as XML&#xD;
+ :)&#xD;
+declare function gxq:dotml2($data as element(*)) &#xD;
+as document-node()&#xD;
+{&#xD;
+let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &#xD;
+                   &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   &#xD;
+                   &lt;body media-type="text/xml"/&gt;&#xD;
+            &lt;/multipart&gt;&#xD;
+return gxq:post('/api/dotml', $form, $data)&#xD;
+};&#xD;
+&#xD;
+(:~&#xD;
+ : convert dot to svg &#xD;
+ : @parm $data is dot as text&#xD;
+ :)&#xD;
+declare function gxq:dot($data as xs:string) &#xD;
+as document-node()&#xD;
+{&#xD;
+ let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &#xD;
+                     &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   &#xD;
+                     &lt;body media-type="text/plain"/&gt;&#xD;
+              &lt;/multipart&gt;&#xD;
+return gxq:post('/api/dotml', $form, $data)&#xD;
+};&#xD;
+&#xD;
+(:~ graphxq request :)&#xD;
+declare function gxq:post($url as xs:string, $form as element(http:multipart),$data )&#xD;
+{&#xD;
+  let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;&#xD;
+              { $form}&#xD;
+            &lt;/http:request&gt;&#xD;
+  let $res:= http:send-request($req,$gxq:server || $url ,($data))&#xD;
+return if($res[1]/@status="200") then $res[2] else error()&#xD;
+};&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://expath.org/ns/http-client</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="gxq" uri="quodatum:service.graphxq"/><xqdoc:namespace prefix="http" uri="http://expath.org/ns/http-client"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>gxq:server</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+graphxq server url</xqdoc:description></xqdoc:comment><xqdoc:body>variable $gxq:server:= "http://localhost:8984/graphxq/"</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>gxq:server-ok</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+test server available</xqdoc:description></xqdoc:comment><xqdoc:type>xs:boolean</xqdoc:type><xqdoc:body>variable $gxq:server-ok as xs:boolean:= 200=http:send-request(&lt;http:request method='get' status-only='true'/&gt;, $gxq:server)/@status</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+convert dotml to svg&#xD;
+</xqdoc:description><xqdoc:custom tag="parm">$data is dotml as XML</xqdoc:custom></xqdoc:comment><xqdoc:name>gxq:dotml2</xqdoc:name><xqdoc:signature>function gxq:dotml2 ( $data as element(*) ) as document-node() { let $form:= &lt;multipart xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt; &lt;body media-type="text/xml"/&gt; &lt;/multipart&gt; return gxq:post('/api/dotml', $form, $data) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type>element(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:body>function gxq:dotml2($data as element(*)) &#xD;
+as document-node()&#xD;
+{&#xD;
+let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &#xD;
+                   &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   &#xD;
+                   &lt;body media-type="text/xml"/&gt;&#xD;
+            &lt;/multipart&gt;&#xD;
+return gxq:post('/api/dotml', $form, $data)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+convert dot to svg&#xD;
+</xqdoc:description><xqdoc:custom tag="parm">$data is dot as text</xqdoc:custom></xqdoc:comment><xqdoc:name>gxq:dot</xqdoc:name><xqdoc:signature>function gxq:dot ( $data as xs:string ) as document-node() { let $form:= &lt;multipart xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt; &lt;body media-type="text/plain"/&gt; &lt;/multipart&gt; return gxq:post('/api/dotml', $form, $data) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:body>function gxq:dot($data as xs:string) &#xD;
+as document-node()&#xD;
+{&#xD;
+ let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; &#xD;
+                     &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   &#xD;
+                     &lt;body media-type="text/plain"/&gt;&#xD;
+              &lt;/multipart&gt;&#xD;
+return gxq:post('/api/dotml', $form, $data)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+graphxq request</xqdoc:description></xqdoc:comment><xqdoc:name>gxq:post</xqdoc:name><xqdoc:signature>function gxq:post ( $url as xs:string, $form as element(http:multipart),$data ) { let $req:= &lt;http:request method="POST" xmlns="http://expath.org/ns/http-client"&gt; { $form} &lt;/http:request&gt; let $res:= http:send-request($req,$gxq:server || $url ,($data)) return if($res[1]/@status="200") then $res[2] else error() }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>form</xqdoc:name><xqdoc:type>element(http:multipart)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>data</xqdoc:name></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function gxq:post($url as xs:string, $form as element(http:multipart),$data )&#xD;
+{&#xD;
+  let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;&#xD;
+              { $form}&#xD;
+            &lt;/http:request&gt;&#xD;
+  let $res:= http:send-request($req,$gxq:server || $url ,($data))&#xD;
+return if($res[1]/@status="200") then $res[2] else error()&#xD;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

@@ -1,243 +1,54 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/databases</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>dba - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">dba/databases</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></h1><nav id="toc"><h2><a href="../../index.html">dba</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">dba/databases</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span><div style="float:right"></div></a></li><li><a href="#$dba:SUB"><span class="secno">3.2</span><span class="content">$dba:SUB</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:db-add"><span class="secno">4.1</span><span class="content" title="">dba:db-add<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li><li><a href="#dba:db-add-post"><span class="secno">4.2</span><span class="content" title="">dba:db-add-post<div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>Add resources.</div><dl><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-21, BSD License</p><p>__source : databases/resources/db-add.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">dba/databases</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:backup-download"><span class="secno">4.1</span><span class="content" title="">backup-download<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+Download resources.&#xD;
+&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Christian Grün, BaseX Team 2005-23, BSD License</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">0</span> modules. It imports
-    <span class="badge badge-info">2</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style="">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:CAT"></a><a id="{dba/databases}$CAT"></a>3.1 $dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$dba:SUB"></a><a id="{dba/databases}$SUB"></a>3.2 $dba:SUB</h3><dl><dt class="label">Summary</dt><dd>Sub category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:db-add"></a><a id="{dba/databases}db-add#5"></a>4.1 dba:db-add<div style="float:right"><a href="#dba:db-add">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/databases}db-add#5">dba:db-add#5</a><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Form for adding a new resource.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:db-add</code>
+    <span class="badge badge-info">0</span> modules.
+    </p></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:backup-download"></a><a id="{dba/databases}backup-download#1"></a><a href="#dba:backup-download">4.1 </a>dba:backup-download</h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/databases}backup-download#1">#1</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">dba:backup-download</code>
 		  ( 
-			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">xs:string*</code>, <code class="arg">$path</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$binary</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$error</code><code class="as"> as </code><code class="type">xs:string?</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> entered name</li><li>opts<code class="as"> as </code><code class="return-type">xs:string*</code> chosen parsing options</li><li>path<code class="as"> as </code><code class="return-type">xs:string?</code> database path</li><li>binary<code class="as"> as </code><code class="return-type">xs:string?</code> store as binary</li><li>error<code class="as"> as </code><code class="return-type">xs:string?</code> error string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(html)</code>page</li></ul></dd><details><summary>Invokes 7 functions from 1 modules </summary><ul><li><span><a href="../../modules/F000029/index.html#{dba/html}button#2" title="lib/html.xqm">html:button#2</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}checkbox#4" title="lib/html.xqm">html:checkbox#4</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}focus#1" title="lib/html.xqm">html:focus#1</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}link#2" title="lib/html.xqm">html:link#2</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}link#3" title="lib/html.xqm">html:link#3</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}option#3" title="lib/html.xqm">html:option#3</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}wrap#2" title="lib/html.xqm">html:wrap#2</a></span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/db-add')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('opts','{$opts}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('path','{$path}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('binary','{$binary}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('error','{$error}')</code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg">('html')</code></td></tr></tbody></table></details><details><summary>Source ( 54 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:db-add(
-  $name    as xs:string,
-  $opts    as xs:string*,
-  $path    as xs:string?,
-  $binary  as xs:string?,
-  $error   as xs:string?
-) as element(html) {
-  let $opts := if($opts = 'x') then $opts else 'chop'
-  return html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
-    &lt;tr&gt;
-      &lt;td&gt;
-        &lt;form action='db-add' method='post' enctype='multipart/form-data' autocomplete='off'&gt;
-          &lt;h2&gt;{
-            html:link('Databases', $dba:CAT), ' » ',
-            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
-            html:button('db-add', 'Add')
-          }&lt;/h2&gt;
-          &lt;!-- dummy value; prevents reset of options when nothing is selected --&gt;
-          &lt;input type='hidden' name='opts' value='x'/&gt;
-          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
-          &lt;table&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Input:&lt;/td&gt;
-              &lt;td&gt;{
-                &lt;input type='file' name='file' id='file'/&gt;,
-                html:focus('file')
-              }&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Database Path:&lt;/td&gt;
-              &lt;td&gt;
-                &lt;input type='text' name='path' value='{ $path }'/&gt;
-              &lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Binary Storage:&lt;/td&gt;
-              &lt;td&gt;{ html:checkbox('binary', 'true', $binary = 'true', '') }&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td colspan='2'&gt;{
-                &lt;h3&gt;Parsing Options&lt;/h3&gt;,
-                html:option('intparse', 'Use internal XML parser', $opts),
-                html:option('dtd', 'Parse DTDs and entities', $opts),
-                html:option('stripns', 'Strip namespaces', $opts),
-                html:option('chop', 'Chop whitespaces', $opts),
-                html:option('xinclude', 'Use XInclude', $opts)
-              }&lt;/td&gt;
-            &lt;/tr&gt;
-          &lt;/table&gt;
-        &lt;/form&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
+			<code class="arg">$backup</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">item()+</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>backup<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() +</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (2)</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/backup/{$backup}')</code></td></tr></tbody></table></details><details><summary>Source ( 12 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:backup-download(
+  $backup  as xs:string
+) as item()+ {
+  let $path := db:option('dbpath') || '/' || $backup
+  return (
+    web:response-header(
+      map { 'media-type': 'application/octet-stream' },
+      map { 'Content-Length': file:size($path) }
+    ),
+    file:read-binary($path)
   )
-}</code></pre></details></div><div class="div3"><h3><a id="dba:db-add-post"></a><a id="{dba/databases}db-add-post#5"></a>4.2 dba:db-add-post<div style="float:right"><a href="#dba:db-add-post">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/databases}db-add-post#5">dba:db-add-post#5</a><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>Adds a resource.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:db-add-post</code>
-		  ( 
-			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">xs:string*</code>, <code class="arg">$path</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$file</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$binary</code><code class="as"> as </code><code class="type">xs:string?</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> database</li><li>opts<code class="as"> as </code><code class="return-type">xs:string*</code> chosen parsing options</li><li>path<code class="as"> as </code><code class="return-type">xs:string</code> database path</li><li>file<code class="as"> as </code><code class="return-type">map(*)</code> uploaded file</li><li>binary<code class="as"> as </code><code class="return-type">xs:string?</code> store as binary file</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code>redirection</li></ul></dd><details><summary>Invokes 11 functions from 5 modules </summary><ul><li><span><a href="../../modules/F000031/index.html#{dba/util}redirect#2" title="lib/util.xqm">util:redirect#2</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}add#4</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}exists#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}store#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/fetch}xml-binary#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}keys#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}ends-with#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:POST</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/db-add')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('name','{$name}')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('opts','{$opts}')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('path','{$path}')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('file','{$file}')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('binary','{$binary}')</code></td></tr></tbody></table></details><details><summary>Source ( 33 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:db-add-post(
-  $name    as xs:string,
-  $opts    as xs:string*,
-  $path    as xs:string,
-  $file    as map(*),
-  $binary  as xs:string?
-) as empty-sequence() {
-  try {
-    let $key := map:keys($file)
-    let $path := if(not($path) or ends-with($path, '/')) then ($path || $key) else $path
-    return if($key = '') then (
-      error((), 'No input specified.')
-    ) else if(db:exists($name, $path)) then (
-      error((), 'Resource already exists: ' || $path)
-    ) else (
-      let $input := $file($key)
-      return if($binary) then (
-        db:store($name, $path, $input)
-      ) else (
-        db:add($name, fetch:xml-binary($input), $path, map:merge(
-          ('intparse', 'dtd', 'stripns', 'chop', 'xinclude') ! map:entry(., $opts = .))
-        )
-      ),
-      util:redirect($dba:SUB,
-        map { 'name': $name, 'path': $path, 'info': 'Resource was added.' }
-      )
-    )
-  } catch * {
-    util:redirect('db-add', map {
-      'name': $name, 'opts': $opts, 'path': $path, 'binary': $binary, 'error': $err:description
-    })
-  }
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000001/index.html" title="databases/resources/backup-download.xqm">dba/databases</a> <a href="../../modules/F000002/index.html" title="databases/resources/db-add.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000003/index.html" title="databases/resources/db-delete.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000004/index.html" title="databases/resources/db-download.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000005/index.html" title="databases/resources/db-query.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000006/index.html" title="databases/resources/db-rename.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000007/index.html" title="databases/resources/db-replace.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000008/index.html" title="databases/resources/resource.xqm"><span class="badge badge-info">8</span></a> <a href="../../modules/F000009/index.html" title="databases/backups.xqm"><span class="badge badge-info">9</span></a> <a href="../../modules/F000010/index.html" title="databases/database.xqm"><span class="badge badge-info">10</span></a> <a href="../../modules/F000011/index.html" title="databases/databases.xqm"><span class="badge badge-info">11</span></a> <a href="../../modules/F000012/index.html" title="databases/db-alter.xqm"><span class="badge badge-info">12</span></a> <a href="../../modules/F000013/index.html" title="databases/db-copy.xqm"><span class="badge badge-info">13</span></a> <a href="../../modules/F000014/index.html" title="databases/db-create.xqm"><span class="badge badge-info">14</span></a> <a href="../../modules/F000015/index.html" title="databases/db-drop.xqm"><span class="badge badge-info">15</span></a> <a href="../../modules/F000016/index.html" title="databases/db-optimize.xqm"><span class="badge badge-info">16</span></a> <a href="../../modules/F000050/index.html" title="users/users-info.xqm"><span class="badge badge-info">17</span></a></span></td></tr><tr><td>html</td><td><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></td></tr><tr><td>output</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2010/xslt-xquery-serialization</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>util</td><td><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 2.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/db-add</td><td><span><a href="../../restxq.html#/dba/db-add#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000002/index.html#{dba/databases}db-add#5" title="databases/resources/db-add.xqm">dba:db-add#5</a></span></td></tr><tr><td>/dba/db-add</td><td><span><a href="../../restxq.html#/dba/db-add#POST"><span class="badge op-post">POST</span></a></span></td><td><span><a href="../../modules/F000002/index.html#{dba/databases}db-add-post#5" title="databases/resources/db-add.xqm">dba:db-add-post#5</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
- : Add resources.
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>db</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/db</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000001/index.html" title="databases/backups/backup-create.xqm">dba/databases</a> <a href="../../modules/F000002/index.html" title="databases/backups/backup-download.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000006/index.html" title="databases/resources/db-delete.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000007/index.html" title="databases/resources/db-download.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000008/index.html" title="databases/resources/db-put.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000009/index.html" title="databases/resources/db-query.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000010/index.html" title="databases/resources/db-rename.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000011/index.html" title="databases/resources/db-replace.xqm"><span class="badge badge-info">8</span></a> <a href="../../modules/F000012/index.html" title="databases/resources/resource.xqm"><span class="badge badge-info">9</span></a> <a href="../../modules/F000013/index.html" title="databases/database.xqm"><span class="badge badge-info">10</span></a> <a href="../../modules/F000014/index.html" title="databases/databases.xqm"><span class="badge badge-info">11</span></a> <a href="../../modules/F000015/index.html" title="databases/db-alter.xqm"><span class="badge badge-info">12</span></a> <a href="../../modules/F000016/index.html" title="databases/db-copy.xqm"><span class="badge badge-info">13</span></a> <a href="../../modules/F000017/index.html" title="databases/db-create.xqm"><span class="badge badge-info">14</span></a> <a href="../../modules/F000018/index.html" title="databases/db-drop.xqm"><span class="badge badge-info">15</span></a> <a href="../../modules/F000019/index.html" title="databases/db-optimize.xqm"><span class="badge badge-info">16</span></a></span></td></tr><tr><td>file</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/file</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>web</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/web</span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 1.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/backup/{$backup}</td><td><span><a href="../../restxq.html#/dba/backup/{$backup}#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000002/index.html#{dba/databases}backup-download#1" title="databases/backups/backup-download.xqm">dba:backup-download#1</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
+ : Download resources.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/databases';
 
-import module namespace html = 'dba/html' at '../../lib/html.xqm';
-import module namespace util = 'dba/util' at '../../lib/util.xqm';
-
-(:~ Top category :)
-declare variable $dba:CAT := 'databases';
-(:~ Sub category :)
-declare variable $dba:SUB := 'database';
-
 (:~
- : Form for adding a new resource.
- : @param  $name    entered name
- : @param  $opts    chosen parsing options
- : @param  $path    database path
- : @param  $binary  store as binary
- : @param  $error   error string
- : @return page
+ : Downloads a database backup.
+ : @param  $backup  name of backup file (ignored by the server)
+ : @return binary data
  :)
 declare
   %rest:GET
-  %rest:path('/dba/db-add')
-  %rest:query-param('name',   '{$name}')
-  %rest:query-param('opts',   '{$opts}')
-  %rest:query-param('path',   '{$path}')
-  %rest:query-param('binary', '{$binary}')
-  %rest:query-param('error',  '{$error}')
-  %output:method('html')
-function dba:db-add(
-  $name    as xs:string,
-  $opts    as xs:string*,
-  $path    as xs:string?,
-  $binary  as xs:string?,
-  $error   as xs:string?
-) as element(html) {
-  let $opts := if($opts = 'x') then $opts else 'chop'
-  return html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
-    &lt;tr&gt;
-      &lt;td&gt;
-        &lt;form action='db-add' method='post' enctype='multipart/form-data' autocomplete='off'&gt;
-          &lt;h2&gt;{
-            html:link('Databases', $dba:CAT), ' » ',
-            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
-            html:button('db-add', 'Add')
-          }&lt;/h2&gt;
-          &lt;!-- dummy value; prevents reset of options when nothing is selected --&gt;
-          &lt;input type='hidden' name='opts' value='x'/&gt;
-          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
-          &lt;table&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Input:&lt;/td&gt;
-              &lt;td&gt;{
-                &lt;input type='file' name='file' id='file'/&gt;,
-                html:focus('file')
-              }&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Database Path:&lt;/td&gt;
-              &lt;td&gt;
-                &lt;input type='text' name='path' value='{ $path }'/&gt;
-              &lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td&gt;Binary Storage:&lt;/td&gt;
-              &lt;td&gt;{ html:checkbox('binary', 'true', $binary = 'true', '') }&lt;/td&gt;
-            &lt;/tr&gt;
-            &lt;tr&gt;
-              &lt;td colspan='2'&gt;{
-                &lt;h3&gt;Parsing Options&lt;/h3&gt;,
-                html:option('intparse', 'Use internal XML parser', $opts),
-                html:option('dtd', 'Parse DTDs and entities', $opts),
-                html:option('stripns', 'Strip namespaces', $opts),
-                html:option('chop', 'Chop whitespaces', $opts),
-                html:option('xinclude', 'Use XInclude', $opts)
-              }&lt;/td&gt;
-            &lt;/tr&gt;
-          &lt;/table&gt;
-        &lt;/form&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
+  %rest:path('/dba/backup/{$backup}')
+function dba:backup-download(
+  $backup  as xs:string
+) as item()+ {
+  let $path := db:option('dbpath') || '/' || $backup
+  return (
+    web:response-header(
+      map { 'media-type': 'application/octet-stream' },
+      map { 'Content-Length': file:size($path) }
+    ),
+    file:read-binary($path)
   )
 };
-
-(:~
- : Adds a resource.
- : @param  $name    database
- : @param  $opts    chosen parsing options
- : @param  $path    database path
- : @param  $file    uploaded file
- : @param  $binary  store as binary file
- : @return redirection
- :)
-declare
-  %updating
-  %rest:POST
-  %rest:path('/dba/db-add')
-  %rest:form-param('name',   '{$name}')
-  %rest:form-param('opts',   '{$opts}')
-  %rest:form-param('path',   '{$path}')
-  %rest:form-param('file',   '{$file}')
-  %rest:form-param('binary', '{$binary}')
-function dba:db-add-post(
-  $name    as xs:string,
-  $opts    as xs:string*,
-  $path    as xs:string,
-  $file    as map(*),
-  $binary  as xs:string?
-) as empty-sequence() {
-  try {
-    let $key := map:keys($file)
-    let $path := if(not($path) or ends-with($path, '/')) then ($path || $key) else $path
-    return if($key = '') then (
-      error((), 'No input specified.')
-    ) else if(db:exists($name, $path)) then (
-      error((), 'Resource already exists: ' || $path)
-    ) else (
-      let $input := $file($key)
-      return if($binary) then (
-        db:store($name, $path, $input)
-      ) else (
-        db:add($name, fetch:xml-binary($input), $path, map:merge(
-          ('intparse', 'dtd', 'stripns', 'chop', 'xinclude') ! map:entry(., $opts = .))
-        )
-      ),
-      util:redirect($dba:SUB,
-        map { 'name': $name, 'path': $path, 'info': 'Resource was added.' }
-      )
-    )
-  } catch * {
-    util:redirect('db-add', map {
-      'name': $name, 'opts': $opts, 'path': $path, 'binary': $binary, 'error': $err:description
-    })
-  }
-};
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T10:44:32.101+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:53:12.962+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

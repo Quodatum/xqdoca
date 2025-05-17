@@ -1,569 +1,325 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>model.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-proj.xqm</h1>
-<p>Analyse XQuery source</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/model.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;xqdoc-proj.xqm&lt;/h1&gt;
- : &lt;p&gt;Analyse XQuery source&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-(:~
- : Generate XQuery  documentation in html
- : using file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models
- : $efolder:="file:///C:/Users/andy/workspace/app-doc/src/doc/data/doc/models"
- : $target:="file:///C:/Users/andy/workspace/app-doc/src/doc/generated/models.xqm"
- :)
-module namespace xqd = 'quodatum:xqdoca.model';
-
-import module namespace xqp = 'quodatum:xqdoca.parser' at "parser.xqm";
-import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
-import module namespace xqa = 'quodatum:xqdoca.model.annotations' at "xqdoc-anno.xqm";
-declare namespace xqdoc="http://www.xqdoc.org/1.0";
-
-
-(:~ restxq namespace :)
-declare variable $xqd:nsRESTXQ:= 'http://exquery.org/ns/restxq';
-declare variable $xqd:nsANN:='http://www.w3.org/2012/xquery';
-(:~ regex for unnecessary RESTXQ path segment annotation :)
-declare %private variable $xqd:path-seq-default:=xqd:escape-for-regex("=[^/]+");
-
-(:~ 
- : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods 
- :)
-declare variable $xqd:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");
-
-
-(:~  files to process from extensions :)
-declare function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
-as xs:string*
-{
-  file:list($efolder,true(),$extensions)
-};
-
-(:~
- : load and parse source xquery files
- : @param $efolder root path for source files
- : @param $files files to process as relative paths
- : @param $platform target XQuery engine e.g "basex"
- : @return state map
- :)
-declare function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
-as map(*)
-{
-let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
-let $folder:= translate($efolder,"\","/")
-let $_:=trace(count($files),"files :")
-return map{ 
-             "base-uri": $folder,
-             "platform": $platform,
-             "project": trace(tokenize($folder,"/")[last()-1],"project"),
-             "files": for $file at $pos in $files
-                      let $id:= "F" || format-integer($pos,"000000")
-                      let $full:= concat($efolder || "/", $file=&gt;trace(``[FILE `{ $pos }` :]``))
-                      let $spath:= translate($file,"\","/")
-                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
-                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
-                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
-                      let $base:=map{
-                              "index": $pos,
-                              "path": translate($file,"\","/"),
-                              "href": ``[modules/`{ $id }`/]``,
-                              "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
-                              "prefixes": $prefixes,
-                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
-                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
-                           }
-                      return map:merge(($base,$analysis))  
-           }
-
-};
-
-declare function xqd:snap($efolder as xs:string, $platform as xs:string)
-as map(*)
-{
- xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
-};
-
-(:~ generate xqdoc
- : result is &lt;XQuery&gt; or &lt;ERROR&gt;
- :)
-declare function xqd:xqdoc($url as xs:string)
-as element(xqdoc:xqdoc)
-{  
- try{
-   inspect:xqdoc($url)
- } catch * { 
-   &lt;xqdoc:xqdoc&gt;{$err:code } - { $err:description }&lt;/xqdoc:xqdoc&gt;
-}
-};
-
-(:~ 
- : Generate xqdoc adding custom opts 
- : @param $url xquery source
- : @param platform xquery platform id
- : @param $opts custom tags to add
- : @result map keys of {xqdoc: &lt;xqdoc:xqdoc/&gt;, xqparse: &lt;XQuery/&gt; ,annotations:{}*}
- :)
-declare function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
-as map(*)
-{  
-  let $xqd:=xqd:xqdoc($url)
-  (: add custom tags :)
-  let $enh:=$xqd 
-            transform with {
-                  for $tag in map:keys($opts)
-                  where xqdoc:module[@type="library"]/xqdoc:comment
-                  
-                  return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
-                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
-            }
-  (: insert full source into module :)
-  let $src:=unparsed-text($url)  
-  let $enh:=$enh transform with {
-    if(xqdoc:module) then 
-          insert node &lt;xqdoc:body&gt;{$src}&lt;/xqdoc:body&gt; into xqdoc:module
-    else
-        ()
-  }
-  (: add enrichments from parse tree :)
-  let $parse:=xqp:parse($src,$platform)
-  
-  let $prefixes:=map:merge((
-                 xqd:namespaces($enh),
-                 xqn:static-prefix-map($platform)
-               ))
-  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
-                   
-  return map{"xqdoc": $enh, 
-             "xqparse": $parse
-              }
-};
-
-(:~ 
- : all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}
- :)
-declare function xqd:anno($xqdoc as element(xqdoc:xqdoc))
-as map(*)*
-{
-  let $ns:= xqd:namespaces($xqdoc)
- for $a in $xqdoc//xqdoc:annotation
- let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
- return map{"annotation":$name, "xqdoc": $a} 
-};
-
-(:~ return 'library','main','#ERROR' 
-:)
-declare function xqd:file-parsed-type($file as map(*))
-as xs:string{
-   if($file?xqparse/name()="ERROR") then 
-      "#ERROR"
-   else
-       $file?xqdoc/xqdoc:module/@type/string() 
-};
-        
-(:~ return sequence of maps describing restxq ordered by rest:path
- : {uri:.., 
- : methods : {METHODS: {id:.., uri:.. ,function:}}
- : }
- :)
-declare function xqd:rxq-paths($model)
-as map(*)* 
-{
-let $reports:= xqd:annots-rxq($model)
-(: map keyed on uris -ensure starts with / :)
-let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
-let $data:=map:merge(for $report in $reports
-          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
-          let $methods:= map:merge(
-                         for $annot in $report
-                         let $hits:=for $method in $xqd:methods
-                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
-                                     where $hit
-                                     return map{$method: $annot}
-                         return if(exists($hits))then $hits else map{"ALL":$annot}
-                       )
-          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
-        ) 
-let $uris:=sort(map:keys($data))        
-return $data?($uris)        
-};
-
-(:~ tidy up restxq path annotations
- ensure leading slash, remove unnecesary {$xxxx=[^/]+}
- :)
-declare %private function xqd:rxq-path-normalize($path as xs:string)
-as xs:string{
-let $path:=replace($path,$xqd:path-seq-default,"")
-return if(starts-with($path,"/")) then $path else "/" || $path
-};
-
-(:~ 
- : map for each restxq:path annotation
- :  "file": $f,
- :  "annot": $annot,
- :  "description": $function/xqdoc:comment/xqdoc:description/node()
- :  "given": $name/string(),
- :  "uri": $qmap?uri, 
- :  "name": $lname, 
- :   "xqdoc": $e }
- :)
-declare function xqd:annots-rxq($model as map(*))
-as map(*)*
-{
-  for $f  in $model?files
-  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
-  let $function:= $annot/../..
-  let $a:=((xqa:name-detail($function,$f),
-            map{
-                "file": $f,
-                "annot": $annot,
-                "description": $function/xqdoc:comment/xqdoc:description/node() 
-                 }
-               ))
-   return map:merge($a)
-};
-
-(:~ 
- : return all matching annotations in xqdoc
- :)
-declare function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
-                                 $annotns as xs:string,
-                                 $aname as xs:string) 
-as element(xqdoc:annotation)*
-{
- let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
- return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
-
-};
-
-(:~ 
- : return annotations with namespace and name
-  :)
-declare function xqd:methods($annots  as element(xqdoc:annotations)?,
-                                 $annotns as xs:string,
-                                 $aname as xs:string) 
-as element(xqdoc:annotation)*
-{
-   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
-   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
-  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
-
-};
-
-(:~ 
- : all namespaces in xqdoc as map{prefix.. uri}
-  :)
-declare 
-%private 
-function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
-as map(*)
-{
-  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
-  !map:entry(string(@prefix),string(@uri))
-  =&gt;map:merge()
-};
-
-(:~ files that import given namespace :)
-declare function xqd:where-imported($uri as xs:string,$model as map(*))
-{
-  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
-};
-
-(: return  map{   imported-ns:(files that import...) }  :)
-declare function xqd:imports($model)
-as map(*)
-{
-map:merge(  
-for $f in $model?files
- for $in in $f?xqdoc//xqdoc:import[@type="library"]
-group by $ns:=$in/xqdoc:uri
-return map:entry( $ns,  $f)
-)
-};
-
-(: return  map, keys are imported ns, values are sequence of files where imported:)
-declare function xqd:defs($model as map(*))
-as map(*)
-{ 
-(
-  for $f in $model?files
-  group by $ns:=$f?namespace
-  return map:entry( $ns,  $f)
-)
-=&gt;map:merge(map { 'duplicates': 'combine' })
-};
-
-
-(:~ expand specials in target url, i.e. {project\} and {webpath\}
- :)
-declare function xqd:target($target as xs:string,$opts as map(*))
-as xs:string
-{
- let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
- let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
-return $target
-=&gt;replace("\{project\}",string($opts?project))
-=&gt;replace("\{webpath\}",translate($webpath,"\","/"))
-}; 
-
-(:~
- @return map listing imports and usage
-:)
-declare function xqd:import-count($xqd as element(xqdoc:xqdoc),$model as map(*))
-as map(*)
-{
-  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
-  let $importing:=xqd:imports($model)?($uri)
-  let $imports:=$xqd/xqdoc:imports
-  return map{
-     "uri": $uri,    
-     "imports": $imports/xqdoc:import,
-     "importedby":  $importing
-  }
-};
-
-(:~ the prefix for this module :)
-declare function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
-as xs:string*{
-map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
-};
-
-(:~ from functx = "http://www.functx.com"; :)
-declare %private 
-function xqd:escape-for-regex( $arg as xs:string? ) 
-as xs:string {
-   replace($arg,
-           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
- } ;</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqd" uri="quodatum:xqdoca.model"/><xqdoc:namespace prefix="xqp" uri="quodatum:xqdoca.parser"/><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>xqd:nsRESTXQ</xqdoc:name><xqdoc:comment><xqdoc:description>restxq namespace</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqd:nsANN</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqd:path-seq-default</xqdoc:name><xqdoc:comment><xqdoc:description>regex for unnecessary RESTXQ path segment annotation</xqdoc:description></xqdoc:comment><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqd:methods</xqdoc:name><xqdoc:comment><xqdoc:description></xqdoc:description><xqdoc:see>https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods</xqdoc:see></xqdoc:comment><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>files to process from extensions</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:find-sources</xqdoc:name><xqdoc:signature>declare function xqd:find-sources($efolder as xs:string , $extensions as xs:string) as xs:string*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>efolder</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>extensions</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>extensions</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:find-sources($efolder as xs:string, $extensions as xs:string)
-as xs:string*
-{
-  file:list($efolder,true(),$extensions)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>load and parse source xquery files</xqdoc:description><xqdoc:param>$efolder root path for source files</xqdoc:param><xqdoc:param>$files files to process as relative paths</xqdoc:param><xqdoc:param>$platform target XQuery engine e.g "basex"</xqdoc:param><xqdoc:return>state map</xqdoc:return></xqdoc:comment><xqdoc:name>xqd:snap</xqdoc:name><xqdoc:signature>declare function xqd:snap($efolder as xs:string , $files as xs:string* , $platform as xs:string) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>efolder</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>platform</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>count</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>last</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>format-integer</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>analyse</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>prefix-for-ns</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>anno</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>default-fn-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>xparse_opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>folder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>folder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>full</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>spath</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pos</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>isParsed</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analysis</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:snap($efolder as xs:string, $files as xs:string*,$platform as xs:string)
-as map(*)
-{
-let $_:=if(map:contains($xqp:xparse_opts,$platform)) then () else error(xs:QName('xqd:platform'),"Unknown platform: " || $platform) 
-let $folder:= translate($efolder,"\","/")
-let $_:=trace(count($files),"files :")
-return map{ 
-             "base-uri": $folder,
-             "platform": $platform,
-             "project": trace(tokenize($folder,"/")[last()-1],"project"),
-             "files": for $file at $pos in $files
-                      let $id:= "F" || format-integer($pos,"000000")
-                      let $full:= concat($efolder || "/", $file=&gt;trace(``[FILE `{ $pos }` :]``))
-                      let $spath:= translate($file,"\","/")
-                      let $analysis:= xqd:analyse($full, $platform, map{"_source": $spath})
-                      let $isParsed:=$analysis?xqparse instance of element(XQuery)
-                      let $prefixes:=xqd:namespaces( $analysis?xqdoc)
-                      let $base:=map{
-                              "index": $pos,
-                              "path": translate($file,"\","/"),
-                              "href": ``[modules/`{ $id }`/]``,
-                              "parsed": $isParsed,
-                              "prefix": xqd:prefix-for-ns($analysis?xqdoc/xqdoc:module/xqdoc:uri,$prefixes),
-                              "prefixes": $prefixes,
-                              "annotations": xqd:anno($analysis?xqdoc), (: sequence map{annotation:, xqdoc: } :)
-                              "namespace":$analysis?xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                              "default-fn-uri": xqp:default-fn-uri($analysis?xqparse) 
-                           }
-                      return map:merge(($base,$analysis))  
-           }
-
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:name>xqd:snap</xqdoc:name><xqdoc:signature>declare function xqd:snap($efolder as xs:string , $platform as xs:string) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>efolder</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>platform</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>snap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>efolder</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:snap($efolder as xs:string, $platform as xs:string)
-as map(*)
-{
- xqd:snap($efolder , $platform ,"*.xqm,*.xq,*.xquery,*.xqy")
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>generate xqdoc
-result is &lt;XQuery&gt; or &lt;ERROR&gt;</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:xqdoc</xqdoc:name><xqdoc:signature>declare function xqd:xqdoc($url as xs:string) as element(xqdoc:xqdoc)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>code</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:xqdoc($url as xs:string)
-as element(xqdoc:xqdoc)
-{  
- try{
-   inspect:xqdoc($url)
- } catch * { 
-   &lt;xqdoc:xqdoc&gt;{$err:code } - { $err:description }&lt;/xqdoc:xqdoc&gt;
-}
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Generate xqdoc adding custom opts</xqdoc:description><xqdoc:param>$url xquery source</xqdoc:param><xqdoc:param>platform xquery platform id</xqdoc:param><xqdoc:param>$opts custom tags to add</xqdoc:param><xqdoc:custom tag="result">map keys of {xqdoc: &lt;xqdoc:xqdoc/&gt;, xqparse: &lt;XQuery/&gt; ,annotations:{}*}</xqdoc:custom></xqdoc:comment><xqdoc:name>xqd:analyse</xqdoc:name><xqdoc:signature>declare function xqd:analyse($url as xs:string , $platform as xs:string , $opts as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>platform</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>unparsed-text</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>static-prefix-map</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.parser</xqdoc:uri><xqdoc:name>enrich-catch</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tag</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>enh</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>src</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>src</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>enh</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>platform</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>enh</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>enh</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:analyse($url as xs:string,$platform as xs:string,$opts as map(*))
-as map(*)
-{  
-  let $xqd:=xqd:xqdoc($url)
-  (: add custom tags :)
-  let $enh:=$xqd 
-            transform with {
-                  for $tag in map:keys($opts)
-                  where xqdoc:module[@type="library"]/xqdoc:comment
-                  
-                  return insert node &lt;xqdoc:custom tag="_{ $tag }"&gt;{ $opts?($tag) }&lt;/xqdoc:custom&gt; 
-                  into xqdoc:module[@type="library"]/xqdoc:comment (: TODO fails if no comment:)
-            }
-  (: insert full source into module :)
-  let $src:=unparsed-text($url)  
-  let $enh:=$enh transform with {
-    if(xqdoc:module) then 
-          insert node &lt;xqdoc:body&gt;{$src}&lt;/xqdoc:body&gt; into xqdoc:module
-    else
-        ()
-  }
-  (: add enrichments from parse tree :)
-  let $parse:=xqp:parse($src,$platform)
-  
-  let $prefixes:=map:merge((
-                 xqd:namespaces($enh),
-                 xqn:static-prefix-map($platform)
-               ))
-  let $enh:= xqp:enrich-catch($enh,$parse,$prefixes) 
-                   
-  return map{"xqdoc": $enh, 
-             "xqparse": $parse
-              }
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>all annotations in xqdoc as { annotation:{{name: uri:},xqdoc:}}</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:anno</xqdoc:name><xqdoc:signature>declare function xqd:anno($xqdoc as element(xqdoc:xqdoc)) as (map(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqdoc</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>namespaces</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:name>qmap</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>nsANN</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:anno($xqdoc as element(xqdoc:xqdoc))
-as map(*)*
-{
-  let $ns:= xqd:namespaces($xqdoc)
- for $a in $xqdoc//xqdoc:annotation
- let $name:=xqn:qmap($a/@name,$ns,$xqd:nsANN)
- return map{"annotation":$name, "xqdoc": $a} 
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>return 'library','main','#ERROR'</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:file-parsed-type</xqdoc:name><xqdoc:signature>declare function xqd:file-parsed-type($file as map(*)) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:file-parsed-type($file as map(*))
-as xs:string{
-   if($file?xqparse/name()="ERROR") then 
-      "#ERROR"
-   else
-       $file?xqdoc/xqdoc:module/@type/string() 
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>return sequence of maps describing restxq ordered by rest:path
-{uri:.., 
-methods : {METHODS: {id:.., uri:.. ,function:}}
-}</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:rxq-paths</xqdoc:name><xqdoc:signature>declare function xqd:rxq-paths($model as item()*) as (map(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>annots-rxq</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>rxq-path-normalize</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>methods</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>sort</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>keys</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>reports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>report</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>methods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>nsRESTXQ</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>method</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>hit</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>method</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>hits</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>hits</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>methods</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uris</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:rxq-paths($model)
-as map(*)* 
-{
-let $reports:= xqd:annots-rxq($model)
-(: map keyed on uris -ensure starts with / :)
-let $fix:=function($a) as xs:string{if(starts-with($a,"/")) then $a else "/" || $a}
-let $data:=map:merge(for $report in $reports
-          group by $uri:=xqd:rxq-path-normalize($report?annot/xqdoc:literal)
-          let $methods:= map:merge(
-                         for $annot in $report
-                         let $hits:=for $method in $xqd:methods
-                                     let $hit:=  xqd:methods($annot?annot/.., $xqd:nsRESTXQ, $method)
-                                     where $hit
-                                     return map{$method: $annot}
-                         return if(exists($hits))then $hits else map{"ALL":$annot}
-                       )
-          return map:entry($uri,map{ "uri": $uri, "methods": $methods})
-        ) 
-let $uris:=sort(map:keys($data))        
-return $data?($uris)        
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>tidy up restxq path annotations
-ensure leading slash, remove unnecesary {$xxxx=[^/]+}</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:rxq-path-normalize</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function xqd:rxq-path-normalize($path as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>starts-with</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>path-seq-default</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:rxq-path-normalize($path as xs:string)
-as xs:string{
-let $path:=replace($path,$xqd:path-seq-default,"")
-return if(starts-with($path,"/")) then $path else "/" || $path
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>map for each restxq:path annotation
-"file": $f,
-"annot": $annot,
-"description": $function/xqdoc:comment/xqdoc:description/node()
-"given": $name/string(),
-"uri": $qmap?uri, 
-"name": $lname, 
-"xqdoc": $e }</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:annots-rxq</xqdoc:name><xqdoc:signature>declare function xqd:annots-rxq($model as map(*)) as (map(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>name-detail</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>nsRESTXQ</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annot</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:annots-rxq($model as map(*))
-as map(*)*
-{
-  for $f  in $model?files
-  for $annot in xqd:annotations($f?xqdoc, $xqd:nsRESTXQ,"path")
-  let $function:= $annot/../..
-  let $a:=((xqa:name-detail($function,$f),
-            map{
-                "file": $f,
-                "annot": $annot,
-                "description": $function/xqdoc:comment/xqdoc:description/node() 
-                 }
-               ))
-   return map:merge($a)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>return all matching annotations in xqdoc</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:annotations</xqdoc:name><xqdoc:signature>declare function xqd:annotations($xqdoc as element(xqdoc:xqdoc) , $annotns as xs:string , $aname as xs:string) as element(xqdoc:annotation)*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqdoc</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>annotns</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>aname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element(xqdoc:annotation)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annotns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>aname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:annotations($xqdoc  as element(xqdoc:xqdoc),
-                                 $annotns as xs:string,
-                                 $aname as xs:string) 
-as element(xqdoc:annotation)*
-{
- let $prefixes:=$xqdoc//xqdoc:namespace[@uri=$annotns]/@prefix/string()
- return $xqdoc//xqdoc:annotations/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
-
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>return annotations with namespace and name</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:methods</xqdoc:name><xqdoc:signature>declare function xqd:methods($annots as element(xqdoc:annotations)? , $annotns as xs:string , $aname as xs:string) as element(xqdoc:annotation)*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>annots</xqdoc:name><xqdoc:type occurrence="?">element(xqdoc:annotations)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>annotns</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>aname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">element(xqdoc:annotation)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annots</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annotns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>annots</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>aname</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:methods($annots  as element(xqdoc:annotations)?,
-                                 $annotns as xs:string,
-                                 $aname as xs:string) 
-as element(xqdoc:annotation)*
-{
-   let $ns:=$annots/ancestor::xqdoc:xqdoc/xqdoc:namespaces
-   let $prefixes:=$ns/xqdoc:namespace[@uri=$annotns]/@prefix/string()
-  return $annots/xqdoc:annotation[@name=(for $p in $prefixes return concat($p,':',$aname))]
-
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>all namespaces in xqdoc as map{prefix.. uri}</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:namespaces</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function xqd:namespaces($xqdoc as element(xqdoc:xqdoc)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqdoc</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqdoc</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:namespaces($xqdoc as element(xqdoc:xqdoc))
-as map(*)
-{
-  $xqdoc/xqdoc:namespaces/xqdoc:namespace[not(@prefix="")] (: basex bug ??:)
-  !map:entry(string(@prefix),string(@uri))
-  =&gt;map:merge()
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>files that import given namespace</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:where-imported</xqdoc:name><xqdoc:signature>declare function xqd:where-imported($uri as xs:string , $model as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:where-imported($uri as xs:string,$model as map(*))
-{
-  $model?files[?xqdoc/xqdoc:imports/xqdoc:import[xqdoc:uri=$uri]]
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqd:imports</xqdoc:name><xqdoc:signature>declare function xqd:imports($model as item()*) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>in</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:imports($model)
-as map(*)
-{
-map:merge(  
-for $f in $model?files
- for $in in $f?xqdoc//xqdoc:import[@type="library"]
-group by $ns:=$in/xqdoc:uri
-return map:entry( $ns,  $f)
-)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:name>xqd:defs</xqdoc:name><xqdoc:signature>declare function xqd:defs($model as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ns</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:defs($model as map(*))
-as map(*)
-{ 
-(
-  for $f in $model?files
-  group by $ns:=$f?namespace
-  return map:entry( $ns,  $f)
-)
-=&gt;map:merge(map { 'duplicates': 'combine' })
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>expand specials in target url, i.e. {project\} and {webpath\}</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:target</xqdoc:name><xqdoc:signature>declare function xqd:target($target as xs:string , $opts as map(*)) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>target</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>function-lookup</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="6"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="6"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>webpath</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:target($target as xs:string,$opts as map(*))
-as xs:string
-{
- let $f:=function-lookup(QName("http://basex.org/modules/db","option"),1)
- let $webpath:= if(exists($f)) then $f("webpath") else "webpath"
-return $target
-=&gt;replace("\{project\}",string($opts?project))
-=&gt;replace("\{webpath\}",translate($webpath,"\","/"))
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description></xqdoc:description><xqdoc:return>map listing imports and usage</xqdoc:return></xqdoc:comment><xqdoc:name>xqd:import-count</xqdoc:name><xqdoc:signature>declare function xqd:import-count($xqd as element(xqdoc:xqdoc) , $model as map(*)) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>xqd</xqdoc:name><xqdoc:type>element(xqdoc:xqdoc)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.model</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xqd</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>imports</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>importing</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:import-count($xqd as element(xqdoc:xqdoc),$model as map(*))
-as map(*)
-{
-  let $uri:=$xqd/xqdoc:module/xqdoc:uri/string()
-  let $importing:=xqd:imports($model)?($uri)
-  let $imports:=$xqd/xqdoc:imports
-  return map{
-     "uri": $uri,    
-     "imports": $imports/xqdoc:import,
-     "importedby":  $importing
-  }
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>the prefix for this module</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:prefix-for-ns</xqdoc:name><xqdoc:signature>declare function xqd:prefix-for-ns($namespace as xs:string , $prefixes as map(*)) as xs:string*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>namespace</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>prefixes</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>for-each</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>prefixes</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>v</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>k</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:prefix-for-ns($namespace as xs:string,$prefixes as map(*))
-as xs:string*{
-map:for-each($prefixes,function($k,$v){if($v eq $namespace) then $k else()})
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>from functx = "http://www.functx.com";</xqdoc:description></xqdoc:comment><xqdoc:name>xqd:escape-for-regex</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function xqd:escape-for-regex($arg as xs:string?) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>arg</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>arg</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqd:escape-for-regex( $arg as xs:string? ) 
-as xs:string {
-   replace($arg,
-           '(\.|\[|\]|\\|\||\-|\^|\$|\?|\*|\+|\{|\}|\(|\))','\\$1')
- }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.model.annotations</xqdoc:uri><xqdoc:name>xqa</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+annotation utils&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="Copyright">(c) 2019-2026 Quodatum Ltd</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+annotation utils&#xD;
+ @Copyright (c) 2019-2026 Quodatum Ltd&#xD;
+ @author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+:)&#xD;
+ &#xD;
+&#xD;
+module namespace xqa = 'quodatum:xqdoca.model.annotations';&#xD;
+&#xD;
+&#xD;
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";&#xD;
+declare namespace xqdoc="http://www.xqdoc.org/1.0";&#xD;
+&#xD;
+declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';&#xD;
+declare variable $xqa:nsUNIT:= 'http://basex.org/modules/unit';&#xD;
+declare variable $xqa:nsXQDOC:='https://github.com/Quodatum/xqdoca';&#xD;
+declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';&#xD;
+declare variable $xqa:nsOUT:='http://www.w3.org/2010/xslt-xquery-serialization';&#xD;
+&#xD;
+(:~ &#xD;
+ : @see https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods &#xD;
+ :)&#xD;
+declare variable $xqa:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH");&#xD;
+&#xD;
+(:~  known annotation details :)&#xD;
+declare variable $xqa:noteworthy:=(&#xD;
+  map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'updating',&#xD;
+    "title":'Updating',&#xD;
+    'icon': 'U',&#xD;
+    "class": 'danger'&#xD;
+  },&#xD;
+ &#xD;
+   map{&#xD;
+    "uri":'http://exquery.org/ns/restxq',&#xD;
+    "name":'path',&#xD;
+    "title":'RESTXQ',&#xD;
+    "icon": 'R',&#xD;
+    "class": 'success',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'http://basex.org/modules/unit',&#xD;
+    "name":'test',&#xD;
+    "title":'UNIT',&#xD;
+    "icon": 'T',&#xD;
+    "class": 'primary',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'https://github.com/Quodatum/xqdoca',&#xD;
+    "name":'output',&#xD;
+    "title":'XQdocA',&#xD;
+    "icon": 'D',&#xD;
+    "class": 'success',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'private',&#xD;
+    "title":'Private',&#xD;
+    'icon': 'P',&#xD;
+    "class": 'dark'&#xD;
+  }&#xD;
+);&#xD;
+&#xD;
+declare variable $xqa:private:=&#xD;
+   map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'private',&#xD;
+    "title":'Private',&#xD;
+    'icon': 'P',&#xD;
+    "class": 'dark'&#xD;
+  };&#xD;
+  &#xD;
+(:~&#xD;
+ : html badges for annotations with known namespaces&#xD;
+ @param  $button-render $badge?icon, $badge?class, $badge?title&#xD;
+ :)&#xD;
+declare function xqa:badges($annos as element(xqdoc:annotation)*,&#xD;
+                            $file as map(*),&#xD;
+                            $button-render as function(*))&#xD;
+{&#xD;
+  let $prefixes:=$file?namespaces&#xD;
+  let $others:= some $a in $annos &#xD;
+                satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)&#xD;
+                          return not($m?uri = $xqa:noteworthy?uri)&#xD;
+  return (&#xD;
+    for $badge in $xqa:noteworthy&#xD;
+    where some $a in $annos &#xD;
+          satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)&#xD;
+    return  $button-render($badge?icon, $badge?class, $badge?title)&#xD;
+    &#xD;
+    ,if($others) then $button-render("A", "info", "Other annotations") else ()&#xD;
+    )&#xD;
+};&#xD;
+&#xD;
+(:~  true if rest:name :)&#xD;
+declare function xqa:is-rest($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)&#xD;
+};&#xD;
+&#xD;
+(:~  true if test:name :)&#xD;
+declare function xqa:is-unit($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsUNIT,$name)&#xD;
+};&#xD;
+&#xD;
+declare function xqa:is-out($a as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsOUT,$name)&#xD;
+};&#xD;
+&#xD;
+&#xD;
+(:~ :)&#xD;
+declare function xqa:methods($annots  as element(xqdoc:annotation)*,$ns as map(*))&#xD;
+as xs:string*&#xD;
+{&#xD;
+ filter($xqa:methods,function($m){&#xD;
+   some $a in $annots &#xD;
+   satisfies  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$m)&#xD;
+ })&#xD;
+};    &#xD;
+&#xD;
+(:~  info about function or variable :)&#xD;
+declare function xqa:name-detail($e as element(*),$file as map(*))&#xD;
+as map(*)&#xD;
+{&#xD;
+  let $name:=$e/xqdoc:name&#xD;
+       let $qmap:=xqn:qmap($name, $file?namespaces, $file?default-fn-uri)&#xD;
+       let $lname:=if($e instance of element(xqdoc:function)) then&#xD;
+                     concat($qmap?name,"#",$e/@arity)&#xD;
+                   else&#xD;
+                    concat("$",$qmap?name)&#xD;
+       return map{"given": $name/string(), &#xD;
+                  "uri": $qmap?uri, &#xD;
+                  "name": $lname, &#xD;
+                  "xqdoc": $e }&#xD;
+};&#xD;
+&#xD;
+(:~ annotations grouped by uri with added file reference &#xD;
+ : &lt;pre&gt;map{uri:map{&#xD;
+ :           "annotation":{"name": ,"uri":}, "xqdoc": &lt;xqdoc:annotation/&gt;, "file":}&#xD;
+ :           }*&#xD;
+ : &lt;/pre&gt;&#xD;
+ :)&#xD;
+declare function xqa:annotations($files as map(*)*)&#xD;
+as map(*)&#xD;
+{ &#xD;
+  map:merge(&#xD;
+          for $f in $files, $a in $f?annotations&#xD;
+          group by $uri:=$a?annotation?uri&#xD;
+           return map:entry($uri,for-each-pair($a,$f,&#xD;
+                   function($a,$f){map:merge(($a,map:entry("file", $f)))}&#xD;
+                 ))&#xD;
+         )&#xD;
+};    &#xD;
+&#xD;
+(:~  annotation literals display :)&#xD;
+declare function xqa:literals($lits as element(xqdoc:literal)*)&#xD;
+as xs:string?&#xD;
+{ &#xD;
+let $t:=$lits!(if(@type="xs:string") then  &#xD;
+               concat("'",string(),"'")&#xD;
+              else&#xD;
+                string()&#xD;
+)&#xD;
+return concat("(",string-join($t,","),")")          &#xD;
+ };&#xD;
+&#xD;
+(:~  extract names from url may include = regex :) &#xD;
+declare function xqa:extract-restxq($url as xs:string)&#xD;
+as xs:string*&#xD;
+{&#xD;
+  tokenize($url,"/\{")&#xD;
+  !replace(.,"\s*(\$\w*).*","$1")&#xD;
+  !(if (starts-with(.,"$")) then .)&#xD;
+};    </xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>quodatum:xqdoca.namespaces</xqdoc:uri><xqdoc:at>xqdoc-namespace.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="xqa" uri="quodatum:xqdoca.model.annotations"/><xqdoc:namespace prefix="xqn" uri="quodatum:xqdoca.namespaces"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>xqa:nsRESTXQ</xqdoc:name><xqdoc:body>variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:nsUNIT</xqdoc:name><xqdoc:body>variable $xqa:nsUNIT:= 'http://basex.org/modules/unit'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:nsXQDOC</xqdoc:name><xqdoc:body>variable $xqa:nsXQDOC:='https://github.com/Quodatum/xqdoca'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:nsANN</xqdoc:name><xqdoc:body>variable $xqa:nsANN:='http://www.w3.org/2012/xquery'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:nsOUT</xqdoc:name><xqdoc:body>variable $xqa:nsOUT:='http://www.w3.org/2010/xslt-xquery-serialization'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:methods</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+</xqdoc:description><xqdoc:see>https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods</xqdoc:see></xqdoc:comment><xqdoc:body>variable $xqa:methods:=("GET","HEAD","POST","PUT","DELETE","PATCH")</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:noteworthy</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+known annotation details</xqdoc:description></xqdoc:comment><xqdoc:body>variable $xqa:noteworthy:=(&#xD;
+  map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'updating',&#xD;
+    "title":'Updating',&#xD;
+    'icon': 'U',&#xD;
+    "class": 'danger'&#xD;
+  },&#xD;
+ &#xD;
+   map{&#xD;
+    "uri":'http://exquery.org/ns/restxq',&#xD;
+    "name":'path',&#xD;
+    "title":'RESTXQ',&#xD;
+    "icon": 'R',&#xD;
+    "class": 'success',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'http://basex.org/modules/unit',&#xD;
+    "name":'test',&#xD;
+    "title":'UNIT',&#xD;
+    "icon": 'T',&#xD;
+    "class": 'primary',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'https://github.com/Quodatum/xqdoca',&#xD;
+    "name":'output',&#xD;
+    "title":'XQdocA',&#xD;
+    "icon": 'D',&#xD;
+    "class": 'success',&#xD;
+    "callable": true()&#xD;
+  },&#xD;
+   map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'private',&#xD;
+    "title":'Private',&#xD;
+    'icon': 'P',&#xD;
+    "class": 'dark'&#xD;
+  }&#xD;
+)</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>xqa:private</xqdoc:name><xqdoc:body>variable $xqa:private:=&#xD;
+   map{&#xD;
+    "uri":'http://www.w3.org/2012/xquery',&#xD;
+    "name":'private',&#xD;
+    "title":'Private',&#xD;
+    'icon': 'P',&#xD;
+    "class": 'dark'&#xD;
+  }</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+html badges for annotations with known namespaces&#xD;
+</xqdoc:description><xqdoc:param>$button-render $badge?icon, $badge?class, $badge?title</xqdoc:param></xqdoc:comment><xqdoc:name>xqa:badges</xqdoc:name><xqdoc:signature>function xqa:badges ( $annos as element(xqdoc:annotation)*, $file as map(*), $button-render as function(*) ) { let $prefixes:=$file?namespaces let $others:= some $a in $annos satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN) return not($m?uri = $xqa:noteworthy?uri) return ( for $badge in $xqa:noteworthy where some $a in $annos satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name) return $button-render($badge?icon, $badge?class, $badge?title) ,if($others) then $button-render("A", "info", "Other annotations") else () ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>annos</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:annotation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>button-render</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function xqa:badges($annos as element(xqdoc:annotation)*,&#xD;
+                            $file as map(*),&#xD;
+                            $button-render as function(*))&#xD;
+{&#xD;
+  let $prefixes:=$file?namespaces&#xD;
+  let $others:= some $a in $annos &#xD;
+                satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)&#xD;
+                          return not($m?uri = $xqa:noteworthy?uri)&#xD;
+  return (&#xD;
+    for $badge in $xqa:noteworthy&#xD;
+    where some $a in $annos &#xD;
+          satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)&#xD;
+    return  $button-render($badge?icon, $badge?class, $badge?title)&#xD;
+    &#xD;
+    ,if($others) then $button-render("A", "info", "Other annotations") else ()&#xD;
+    )&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+true if rest:name</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:is-rest</xqdoc:name><xqdoc:signature>function xqa:is-rest ( $a as element(xqdoc:annotation),$name as xs:string,$ns as map(*) ) as xs:boolean { xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type>element(xqdoc:annotation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:is-rest($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+true if test:name</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:is-unit</xqdoc:name><xqdoc:signature>function xqa:is-unit ( $a as element(xqdoc:annotation),$name as xs:string,$ns as map(*) ) as xs:boolean { xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsUNIT,$name) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type>element(xqdoc:annotation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:is-unit($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsUNIT,$name)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>xqa:is-out</xqdoc:name><xqdoc:signature>function xqa:is-out ( $a as element(xqdoc:annotation),$name as xs:string,$ns as map(*) ) as xs:boolean { xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsOUT,$name) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>a</xqdoc:name><xqdoc:type>element(xqdoc:annotation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:is-out($a as element(xqdoc:annotation),$name as xs:string,$ns as map(*))&#xD;
+as xs:boolean&#xD;
+{&#xD;
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsOUT,$name)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:methods</xqdoc:name><xqdoc:signature>function xqa:methods ( $annots as element(xqdoc:annotation)*,$ns as map(*) ) as xs:string* { filter($xqa:methods,function($m){ some $a in $annots satisfies xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$m) }) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>annots</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:annotation)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ns</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:methods($annots  as element(xqdoc:annotation)*,$ns as map(*))&#xD;
+as xs:string*&#xD;
+{&#xD;
+ filter($xqa:methods,function($m){&#xD;
+   some $a in $annots &#xD;
+   satisfies  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$m)&#xD;
+ })&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+info about function or variable</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:name-detail</xqdoc:name><xqdoc:signature>function xqa:name-detail ( $e as element(*),$file as map(*) ) as map(*) { let $name:=$e/xqdoc:name let $qmap:=xqn:qmap($name, $file?namespaces, $file?default-fn-uri) let $lname:=if($e instance of element(xqdoc:function)) then concat($qmap?name,"#",$e/@arity) else concat("$",$qmap?name) return map{"given": $name/string(), "uri": $qmap?uri, "name": $lname, "xqdoc": $e } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>e</xqdoc:name><xqdoc:type>element(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:name-detail($e as element(*),$file as map(*))&#xD;
+as map(*)&#xD;
+{&#xD;
+  let $name:=$e/xqdoc:name&#xD;
+       let $qmap:=xqn:qmap($name, $file?namespaces, $file?default-fn-uri)&#xD;
+       let $lname:=if($e instance of element(xqdoc:function)) then&#xD;
+                     concat($qmap?name,"#",$e/@arity)&#xD;
+                   else&#xD;
+                    concat("$",$qmap?name)&#xD;
+       return map{"given": $name/string(), &#xD;
+                  "uri": $qmap?uri, &#xD;
+                  "name": $lname, &#xD;
+                  "xqdoc": $e }&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+annotations grouped by uri with added file reference&#xD;
+&lt;pre&gt;map{uri:map{&#xD;
+"annotation":{"name": ,"uri":}, "xqdoc": &lt;xqdoc:annotation/&gt;, "file":}&#xD;
+}*&#xD;
+&lt;/pre&gt;&#xD;
+</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:annotations</xqdoc:name><xqdoc:signature>function xqa:annotations ( $files as map(*)* ) as map(*) { map:merge( for $f in $files, $a in $f?annotations group by $uri:=$a?annotation?uri return map:entry($uri,for-each-pair($a,$f, function($a,$f){map:merge(($a,map:entry("file", $f)))} )) ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:annotations($files as map(*)*)&#xD;
+as map(*)&#xD;
+{ &#xD;
+  map:merge(&#xD;
+          for $f in $files, $a in $f?annotations&#xD;
+          group by $uri:=$a?annotation?uri&#xD;
+           return map:entry($uri,for-each-pair($a,$f,&#xD;
+                   function($a,$f){map:merge(($a,map:entry("file", $f)))}&#xD;
+                 ))&#xD;
+         )&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+annotation literals display</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:literals</xqdoc:name><xqdoc:signature>function xqa:literals ( $lits as element(xqdoc:literal)* ) as xs:string? { let $t:=$lits!(if(@type="xs:string") then concat("'",string(),"'") else string() ) return concat("(",string-join($t,","),")") }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>lits</xqdoc:name><xqdoc:type occurrence="*">element(xqdoc:literal)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:literals($lits as element(xqdoc:literal)*)&#xD;
+as xs:string?&#xD;
+{ &#xD;
+let $t:=$lits!(if(@type="xs:string") then  &#xD;
+               concat("'",string(),"'")&#xD;
+              else&#xD;
+                string()&#xD;
+)&#xD;
+return concat("(",string-join($t,","),")")          &#xD;
+ }</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+extract names from url may include = regex</xqdoc:description></xqdoc:comment><xqdoc:name>xqa:extract-restxq</xqdoc:name><xqdoc:signature>function xqa:extract-restxq ( $url as xs:string ) as xs:string* { tokenize($url,"/\{") !replace(.,"\s*(\$\w*).*","$1") !(if (starts-with(.,"$")) then .) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function xqa:extract-restxq($url as xs:string)&#xD;
+as xs:string*&#xD;
+{&#xD;
+  tokenize($url,"/\{")&#xD;
+  !replace(.,"\s*(\$\w*).*","$1")&#xD;
+  !(if (starts-with(.,"$")) then .)&#xD;
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

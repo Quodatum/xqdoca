@@ -1,0 +1,31 @@
+%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+classDiagram
+direction TB
+
+class RESTXQ:::cssrest  
+class INVOKE:::cssmain  
+class TEST:::cssunit
+
+class chat_util { << chat-util.xqm >>}
+ class chat_ws { << chat-ws.xqm >>}
+ class chat:::cssrest { << Rest chat.xqm>> 
+
+chat()
+login-check()
+logout()
+}
+RESTXQ..>chat
+
+chat_ws ..>chat_util 
+ chat ..>chat_util 
+
+
+classDef cssrest fill:palegreen
+classDef cssmain fill:powderblue
+classDef cssunit fill:yellow
+
+link chat_util "modules/F000001/index.html" "This is a tooltip for chat/util"
+ link chat_ws "modules/F000002/index.html" "This is a tooltip for chat-ws"
+ link chat "modules/F000003/index.html" "This is a tooltip for chat"
+
+

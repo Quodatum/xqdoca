@@ -1,37 +1,81 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>db-query.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Query resources.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/resources/db-query.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Query resources.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Upload backups.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Upload backups.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/databases';
+module namespace dba = 'dba/files';
 
 import module namespace util = 'dba/util' at '../../lib/util.xqm';
 
+(:~ Top category :)
+declare variable $dba:CAT := 'databases';
+
 (:~
- : Runs a query on a document and returns the result as string.
- : @param  $name      name of database
- : @param  $resource  resource
- : @param  $query     query
- : @return result string
+ : Uploads backups.
+ : @param  $files  map with uploaded files
+ : @return redirection
  :)
 declare
-  %rest:POST('{$query}')
-  %rest:path('/dba/db-query')
-  %rest:query-param('name',     '{$name}')
-  %rest:query-param('resource', '{$resource}')
-  %rest:single
-  %output:method('text')
-function dba:db-query(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $query     as xs:string
-) as xs:string {
-  util:query(if($query) then $query else '.', db:open($name, $resource))
+  %rest:POST
+  %rest:path('/dba/backup-upload')
+  %rest:form-param('files', '{$files}')
+function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := db:option('dbpath') || '/'
+  return try {
+    (: reject backups with invalid content :)
+    map:for-each($files, function($file, $content) {
+      let $name := replace($file, $util:BACKUP-ZIP-REGEX, '$1')
+      let $entries := archive:entries($content) ! data()
+      where not(if($name) then (
+        every $entry in $entries satisfies starts-with($entry, $name || '/') and
+        $entries = $name || '/inf.basex'
+      ) else (
+        every $entry in $entries satisfies matches($entry, '\.(xml|basex)')
+      ))
+      return error((), 'Invalid backup file: ' || $file)
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'backup', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/databases"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Runs a query on a document and returns the result as string.</xqdoc:description><xqdoc:param>$name      name of database</xqdoc:param><xqdoc:param>$resource  resource</xqdoc:param><xqdoc:param>$query     query</xqdoc:param><xqdoc:return>result string</xqdoc:return></xqdoc:comment><xqdoc:name>dba:db-query</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"><xqdoc:literal type="xs:string">{$query}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/db-query</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">resource</xqdoc:literal><xqdoc:literal type="xs:string">{$resource}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:single"/><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST("{$query}") %rest:path("/dba/db-query") %rest:query-param("name", "{$name}") %rest:query-param("resource", "{$resource}") %rest:single %output:method("text") function dba:db-query($name as xs:string , $resource as xs:string , $query as xs:string) as xs:string</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>resource</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>open</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resource</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:db-query(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $query     as xs:string
-) as xs:string {
-  util:query(if($query) then $query else '.', db:open($name, $resource))
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="db" uri="http://basex.org/modules/db"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/><xqdoc:namespace prefix="archive" uri="http://basex.org/modules/archive"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'databases'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Uploads backups.&#xD;
+</xqdoc:description><xqdoc:param>$files  map with uploaded files</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:file-upload</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/backup-upload</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">files</xqdoc:literal><xqdoc:literal type="xs:string">{$files}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:file-upload ( $files as map(xs:string, xs:base64Binary) ) as element(rest:response) { (: save files :) let $dir := db:option('dbpath') || '/' return try { (: reject backups with invalid content :) map:for-each($files, function($file, $content) { let $name := replace($file, $util:BACKUP-ZIP-REGEX, '$1') let $entries := archive:entries($content) ! data() where not(if($name) then ( every $entry in $entries satisfies starts-with($entry, $name || '/') and $entries = $name || '/inf.basex' ) else ( every $entry in $entries satisfies matches($entry, '\.(xml|basex)') )) return error((), 'Invalid backup file: ' || $file) }), map:for-each($files, function($file, $content) { file:write-binary($dir || $file, $content) }), web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'backup', 'uploaded') }) } catch * { web:redirect($dba:CAT, map { 'error': $err:description }) } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type>map(xs:string, xs:base64Binary)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := db:option('dbpath') || '/'
+  return try {
+    (: reject backups with invalid content :)
+    map:for-each($files, function($file, $content) {
+      let $name := replace($file, $util:BACKUP-ZIP-REGEX, '$1')
+      let $entries := archive:entries($content) ! data()
+      where not(if($name) then (
+        every $entry in $entries satisfies starts-with($entry, $name || '/') and
+        $entries = $name || '/inf.basex'
+      ) else (
+        every $entry in $entries satisfies matches($entry, '\.(xml|basex)')
+      ))
+      return error((), 'Invalid backup file: ' || $file)
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'backup', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

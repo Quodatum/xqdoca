@@ -1,106 +1,87 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/jobs</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-success" title="RESTXQ">R</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>dba - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">dba/files</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></h1><nav id="toc"><h2><a href="../../index.html">dba</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">dba/jobs</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:job-result"><span class="secno">4.1</span><span class="content" title="">dba:job-result<div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>Downloads a job result.</div><dl><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-21, BSD License</p><p>__source : jobs/job-result.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">dba/files</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:file-upload"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;&#xD;&#xA;Uploads files.&#xD;&#xA;">file-upload<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+Upload files.&#xD;
+&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Christian Grün, BaseX Team 2005-23, BSD License</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">0</span> modules. It imports
-    <span class="badge badge-info">0</span> modules.
-    </p></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:CAT"></a><a id="{dba/jobs}$CAT"></a>3.1 $dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:job-result"></a><a id="{dba/jobs}job-result#1"></a><a id="{dba/jobs}job-result#3"></a>4.1 dba:job-result<div style="float:right"><a href="#dba:job-result">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/jobs}job-result#1">dba:job-result#1</a><span class="badge badge-success" title="RESTXQ">R</span></span><span style="margin-left:1em"><a href="#{dba/jobs}job-result#3">dba:job-result#3</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>Downloads the result of a job.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:job-result</code>
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">dba/files</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000030/index.html" title="lib/config.xqm">dba/config</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000033/index.html" title="lib/util.xqm">dba/util</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:CAT"></a><a id="{dba/files}$CAT"></a><a href="#$dba:CAT">3.1 </a>$dba:CAT</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Top category</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $dba:CAT := 'files'</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:file-upload"></a><a id="{dba/files}file-upload#1"></a><a href="#dba:file-upload">4.1 </a>dba:file-upload</h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/files}file-upload#1">#1</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+&#xD;
+Uploads files.&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">dba:file-upload</code>
 		  ( 
-			<code class="arg">$id</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="+">item()</xqdoc:type>+</code></div><div class="proto"><code class="function">dba:job-result</code>
-		  ( 
-			<code class="arg">$id</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$ok</code><code class="as"> as </code><code class="type">xs:boolean</code>, <code class="arg">$result</code><code class="as"> as </code><code class="type">item()*</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="+">item()</xqdoc:type>+</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>id<code class="as"> as </code><code class="return-type">xs:string</code> job id</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() +</code>rest response and file content</li></ul></dd><details><summary>Invokes 8 functions from 5 modules </summary><ul><li><span><a href="../../modules/F000025/index.html#{dba/jobs}job-result#3" title="jobs/job-result.xqm">dba:job-result#3</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/jobs}list-details#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/jobs}result#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/out}nl#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}response-header#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}false#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000025/index.html#{dba/jobs}job-result#1" title="jobs/job-result.xqm">dba:job-result#1</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/job-result')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('id','{$id}','')</code></td></tr></tbody></table></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 31 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:job-result(
-  $id  as xs:string
-) as item()+ {
-  let $details := jobs:list-details($id)
-  return if(empty($details)) then (
-    dba:job-result($id, false(), 'Job is defunct.')
-  ) else if($details/@state != 'cached') then (
-    dba:job-result($id, false(), 'Result is not available yet.')
-  ) else (
-    try {
-      dba:job-result($id, true(), jobs:result($id))
-    } catch * {
-      dba:job-result($id, false(),
-        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
-          $err:column-number || ':' || out:nl() || $err:description
-      )
-    }
-  )
-}</code></pre><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:job-result(
-  $id      as xs:string,
-  $ok      as xs:boolean,
-  $result  as item()*
-) as item()+ {
-  let $name := $id || (if($ok) then '.txt' else '.log')
-  return web:response-header(
-    map { 'media-type': 'application/octet-stream' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name }
-  ),
-  $result
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000025/index.html" title="jobs/job-result.xqm">dba/jobs</a> <a href="../../modules/F000026/index.html" title="jobs/job-stop.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000027/index.html" title="jobs/jobs.xqm"><span class="badge badge-info">3</span></a></span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 1.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/job-result</td><td><span><a href="../../restxq.html#/dba/job-result#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000025/index.html#{dba/jobs}job-result#1" title="jobs/job-result.xqm">dba:job-result#1</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
- : Downloads a job result.
+			<code class="arg">$files</code><code class="as"> as </code><code class="type">map(xs:string, xs:base64Binary)</code> )<code class="as"> as </code><code class="type">element(rest:response)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>files<code class="as"> as </code><code class="return-type">map(xs:string, xs:base64Binary)</code> map with uploaded files</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code> redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (3)</summary><table class="data"><tbody><tr><td><code class="function">%rest:POST</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/file-upload')</code></td></tr><tr><td><code class="function">%rest:form-param</code></td><td><code class="arg">('files','{$files}')</code></td></tr></tbody></table></details><details><summary>Source ( 23 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := config:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>config</td><td><span><a href="../../modules/F000030/index.html" title="lib/config.xqm">dba/config</a></span></td></tr><tr><td>convert</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/convert</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000005/index.html" title="databases/backups/backup-upload.xqm">dba/files</a> <a href="../../modules/F000020/index.html" title="files/dir-change.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000021/index.html" title="files/dir-create.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000022/index.html" title="files/file-delete.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000023/index.html" title="files/file-download.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000024/index.html" title="files/file-start.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000025/index.html" title="files/file-upload.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000026/index.html" title="files/files.xqm"><span class="badge badge-info">8</span></a></span></td></tr><tr><td>err</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xqt-errors</span></td></tr><tr><td>file</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/file</span></td></tr><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>prof</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/prof</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>util</td><td><span><a href="../../modules/F000033/index.html" title="lib/util.xqm">dba/util</a></span></td></tr><tr><td>web</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/web</span></td></tr><tr><td>xquery</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/xquery</span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 1.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/file-upload</td><td><span><a href="../../restxq.html#/dba/file-upload#POST"><span class="badge op-post">POST</span></a></span></td><td><span><a href="../../modules/F000025/index.html#{dba/files}file-upload#1" title="files/file-upload.xqm">dba:file-upload#1</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
+ : Upload files.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/jobs';
+module namespace dba = 'dba/files';
+
+import module namespace config = 'dba/config' at '../lib/config.xqm';
+import module namespace util = 'dba/util' at '../lib/util.xqm';
 
 (:~ Top category :)
-declare variable $dba:CAT := 'jobs';
+declare variable $dba:CAT := 'files';
 
 (:~
- : Downloads the result of a job.
- : @param  $id  job id
- : @return rest response and file content
+ : Uploads files.
+ : @param  $files  map with uploaded files
+ : @return redirection
  :)
 declare
-  %rest:GET
-  %rest:path('/dba/job-result')
-  %rest:query-param('id', '{$id}', '')
-function dba:job-result(
-  $id  as xs:string
-) as item()+ {
-  let $details := jobs:list-details($id)
-  return if(empty($details)) then (
-    dba:job-result($id, false(), 'Job is defunct.')
-  ) else if($details/@state != 'cached') then (
-    dba:job-result($id, false(), 'Result is not available yet.')
-  ) else (
-    try {
-      dba:job-result($id, true(), jobs:result($id))
-    } catch * {
-      dba:job-result($id, false(),
-        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
-          $err:column-number || ':' || out:nl() || $err:description
-      )
-    }
-  )
-};
-
-(:~
- : Returns a job result.
- : @param $id      job id
- : @param $ok      ok flag
- : @param $result  job result
- : @return rest response and file content
- :)
-declare %private function dba:job-result(
-  $id      as xs:string,
-  $ok      as xs:boolean,
-  $result  as item()*
-) as item()+ {
-  let $name := $id || (if($ok) then '.txt' else '.log')
-  return web:response-header(
-    map { 'media-type': 'application/octet-stream' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name }
-  ),
-  $result
+  %rest:POST
+  %rest:path('/dba/file-upload')
+  %rest:form-param('files', '{$files}')
+function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := config:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
 };
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T10:44:32.101+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:53:12.962+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

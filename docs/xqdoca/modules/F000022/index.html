@@ -1,233 +1,272 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.namespaces</span> 
-			<small>library module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>XQDocA - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">quodatum:xqdoca.parser</span> 
+                    <small>library module</small><div style="float:right"></div></h1><nav id="toc"><h2><a href="../../index.html">XQDocA</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.namespaces</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqn:clark-name"><span class="secno">4.1</span><span class="content" title="">xqn:clark-name<div style="float:right"></div></span></a></li><li><a href="#xqn:eq"><span class="secno">4.2</span><span class="content" title="">xqn:eq<div style="float:right"></div></span></a></li><li><a href="#xqn:map-prefix"><span class="secno">4.3</span><span class="content" title="">xqn:map-prefix<div style="float:right"></div></span></a></li><li><a href="#xqn:prefixed-name"><span class="secno">4.4</span><span class="content" title="">xqn:prefixed-name<div style="float:right"></div></span></a></li><li><a href="#xqn:qmap"><span class="secno">4.5</span><span class="content" title="">xqn:qmap<div style="float:right"></div></span></a></li><li><a href="#xqn:static-prefix-map"><span class="secno">4.6</span><span class="content" title="">xqn:static-prefix-map<div style="float:right"></div></span></a></li><li><a href="#xqn:uriqname"><span class="secno">4.7</span><span class="content" title="">xqn:uriqname<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-namespaces.xqm</h1>
-<p xmlns:xqdoc="http://www.xqdoc.org/1.0">namespace and qname utils</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>__source : lib/xqdoc-namespace.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.parser</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqp:trace"><span class="secno">3.1</span><span class="content">$xqp:trace</span><div style="float:right"></div></a></li><li><a href="#$xqp:xparse_opts"><span class="secno">3.2</span><span class="content">$xqp:xparse_opts</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqp:default-fn-uri"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;default function namespace&#xD;&#xA;NOTE if parse failed will return &quot;http://www.w3.org/2005/xpath-functions&quot;&#xD;&#xA;">default-fn-uri<div style="float:right"></div></span></a></li><li><a href="#xqp:funmap"><span class="secno">4.2</span><span class="content" title="&#xD;&#xA;map of function declarations&#xD;&#xA;">funmap<div style="float:right"></div></span></a></li><li><a href="#xqp:invoke-arrow"><span class="secno">4.3</span><span class="content" title="&#xD;&#xA;build invoked nodes for arrow expression&#xD;&#xA;">invoke-arrow<div style="float:right"></div></span></a></li><li><a href="#xqp:invoke-fn"><span class="secno">4.4</span><span class="content" title="&#xD;&#xA;build invoked nodes for function call&#xD;&#xA;">invoke-fn<div style="float:right"></div></span></a></li><li><a href="#xqp:parse"><span class="secno">4.5</span><span class="content" title="&#xD;&#xA;parse XQuery&#xD;&#xA;result is &lt;XQuery&gt; or &lt;ERROR&gt;&#xD;&#xA;">parse<div style="float:right"></div></span></a></li><li><a href="#xqp:ref-variable"><span class="secno">4.6</span><span class="content" title="&#xD;&#xA;build invoked nodes for function call&#xD;&#xA;">ref-variable<div style="float:right"></div></span></a></li><li><a href="#xqp:references"><span class="secno">4.7</span><span class="content" title="&#xD;&#xA;scan tree below $e for references&#xD;&#xA;">references<div style="float:right"></div></span></a></li><li><a href="#xqp:trace"><span class="secno">4.8</span><span class="content" title="">trace<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><p>generate and Analyse XQuery parse tree</p></div><dl><dt title="1">Authors</dt><dd><ul><li><span>Andy Bunce, Quodatum, License: Apache-2.0</span></li></ul></dd></dl><dl><dt title="1">Custom</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@copyright</span>:
+                <span>(c) 2019-2026 Quodatum Ltd</span></span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
-    <span class="badge badge-info">5</span> modules. It imports
-    <span class="badge badge-info">0</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000009/index.html" title="lib/generators/module.xqm">quodatum:xqdoca.mod-html</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000016/index.html" title="lib/model.xqm">quodatum:xqdoca.model</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000018/index.html" title="lib/parser.xqm">quodatum:xqdoca.parser</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000021/index.html" title="lib/xqdoc-anno.xqm">quodatum:xqdoca.model.annotations</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000024/index.html" title="lib/xqdoc-page.xqm">quodatum:xqdoca.page</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="xqn:clark-name"></a><a id="{quodatum:xqdoca.namespaces}clark-name#2"></a>4.1 xqn:clark-name<div style="float:right"><a href="#xqn:clark-name">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}clark-name#2">xqn:clark-name#2</a></span></p><dt class="label">Summary</dt><dd>return clark-notation '{uri}name'</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:clark-name</code>
+    <span class="badge badge-info">1</span> modules. It imports
+    <span class="badge badge-info">2</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;"><div style="text-align: right;"><span><a href="../../modules/F000020/index.html" title="lib/model.xqm">quodatum:xqdoca.model</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">quodatum:xqdoca.parser</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span class="badge badge-warning" title="Externally defined">expkg-zone58:text.parse</span></div><div style="text-align: left;"><span><a href="../../modules/F000026/index.html" title="lib/xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$xqp:trace"></a><a id="{quodatum:xqdoca.parser}$trace"></a><a href="#$xqp:trace">3.1 </a>$xqp:trace</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd>xs:boolean</dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $xqp:trace as xs:boolean:=false()</code></pre></details></div><div class="div3"><h3><a id="$xqp:xparse_opts"></a><a id="{quodatum:xqdoca.parser}$xparse_opts"></a><a href="#$xqp:xparse_opts">3.2 </a>$xqp:xparse_opts</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+xparser defaults</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $xqp:xparse_opts:=map{&#xD;
+  "basex":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }&#xD;
+  , "fat":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }&#xD;
+&#xD;
+}</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="xqp:default-fn-uri"></a><a id="{quodatum:xqdoca.parser}default-fn-uri#1"></a><a href="#xqp:default-fn-uri">4.1 </a>xqp:default-fn-uri</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}default-fn-uri#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+default function namespace&#xD;
+NOTE if parse failed will return "http://www.w3.org/2005/xpath-functions"&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:default-fn-uri</code>
 		  ( 
-			<code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invoked by 5 functions from 3 modules</summary><ul><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}variable#3" title="lib/generators/module.xqm">xqh:variable#3</a></span></li><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}function#4" title="lib/generators/module.xqm">xqh:function#4</a></span></li><li><span><a href="../../modules/F000022/index.html#{quodatum:xqdoca.namespaces}prefixed-name#3" title="lib/xqdoc-namespace.xqm">xqn:prefixed-name#3</a></span></li><li><span><a href="../../modules/F000024/index.html#{quodatum:xqdoca.page}link-function#4" title="lib/xqdoc-page.xqm">page:link-function#4</a></span></li><li><span><a href="../../modules/F000024/index.html#{quodatum:xqdoca.page}link-function2#4" title="lib/xqdoc-page.xqm">page:link-function2#4</a></span></li></ul></details><details><summary>Source ( 6 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:clark-name($uri as xs:string, 
-                                $name as xs:string)
-as xs:string
-{
-  ``[{`{ $uri }`}`{ $name }`]``
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:eq"></a><a id="{quodatum:xqdoca.namespaces}eq#3"></a>4.2 xqn:eq<div style="float:right"><a href="#xqn:eq">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}eq#3">xqn:eq#3</a></span></p><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:eq</code>
+			<code class="arg">$xqparse</code><code class="as"> as </code><code class="type">element(XQuery)</code> )<code class="as"> as </code><code class="type">xs:string</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xqparse<code class="as"> as </code><code class="return-type">element(XQuery)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 8 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:default-fn-uri($xqparse as element(XQuery))&#xD;
+as xs:string&#xD;
+{&#xD;
+  let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl&#xD;
+  return if( empty($def-fn) ) &#xD;
+         then "http://www.w3.org/2005/xpath-functions"&#xD;
+         else $def-fn/URILiteral!substring(.,2,string-length(.)-2)&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:funmap"></a><a id="{quodatum:xqdoca.parser}funmap#3"></a><a href="#xqp:funmap">4.2 </a>xqp:funmap</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}funmap#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+map of function declarations&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:funmap</code>
 		  ( 
-			<code class="arg">$a</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:boolean</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>a<code class="as"> as </code><code class="return-type">map(*)</code></li><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code></li></ul></dd><details><summary>Invoked by 4 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}badges#2" title="lib/xqdoc-anno.xqm">xqa:badges#2</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}is-out#3" title="lib/xqdoc-anno.xqm">xqa:is-out#3</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}methods#2" title="lib/xqdoc-anno.xqm">xqa:methods#2</a></span></li></ul></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
-as xs:boolean
-{
-  $a?name=$name and $a?uri=$uri
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:map-prefix"></a><a id="{quodatum:xqdoca.namespaces}map-prefix#3"></a>4.3 xqn:map-prefix<div style="float:right"><a href="#xqn:map-prefix">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}map-prefix#3">xqn:map-prefix#3</a></span></p><dt class="label">Summary</dt><dd>namespace for prefix</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:map-prefix</code>
+			<code class="arg">$e</code><code class="as"> as </code><code class="type">element(XQuery)</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$def-fn</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element(XQuery)</code></li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li><li>def-fn<code class="as"> as </code><code class="return-type">xs:string</code> default function namespace</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><dl><dt title="1">Tags</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@result</span>:
+                <span>map where keys are Qname with # arity items are xqParse trees</span></span></li></ul></dd></dl><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 17 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:funmap($e as element(XQuery),$prefixes as map(*),$def-fn as xs:string)&#xD;
+as map(*)&#xD;
+{&#xD;
+ let $items:=for $f in $e//FunctionDecl&#xD;
+             let $name:=$f/*[2]&#xD;
+             let $name:=if($name instance of element(QName)&#xD;
+                        or $name instance of element(TOKEN)) then&#xD;
+                              xqn:qmap($name,$prefixes,$def-fn)&#xD;
+                        else if($name instance of element(URIQualifiedName)) then&#xD;
+                                xqn:uriqname($name)&#xD;
+                        else &#xD;
+                             error(xs:QName("xqp:funmap"), "bad name: ", $name)&#xD;
+             let $arity:=count($f/(Param|ParamList/Param))&#xD;
+             let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)&#xD;
+             return map:entry($key,$f)&#xD;
+ return map:merge($items)&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:invoke-arrow"></a><a id="{quodatum:xqdoca.parser}invoke-arrow#3"></a><a href="#xqp:invoke-arrow">4.3 </a>xqp:invoke-arrow</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}invoke-arrow#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+build invoked nodes for arrow expression&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:invoke-arrow</code>
 		  ( 
-			<code class="arg">$prefix</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$default</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$map</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>prefix<code class="as"> as </code><code class="return-type">xs:string?</code> prefix to lookup</li><li>default<code class="as"> as </code><code class="return-type">xs:string</code> namespace to use if prefix empty</li><li>map<code class="as"> as </code><code class="return-type">map(*)</code> keys are prefixes items are namespaces</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code>namespace for prefix</li></ul></dd><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 11 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
-as xs:string{
-  if(empty($prefix)) then
-    $default
-  else if(map:contains($map, $prefix))then 
-   $map?($prefix)
-   else
-   let $_:=trace($map,"prefixes")
-   return "*** " || trace($prefix,"**prefix not found:" ),
-   error()
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:prefixed-name"></a><a id="{quodatum:xqdoca.namespaces}prefixed-name#3"></a>4.4 xqn:prefixed-name<div style="float:right"><a href="#xqn:prefixed-name">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}prefixed-name#3">xqn:prefixed-name#3</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:prefixed-name</code>
+			<code class="arg">$e</code><code class="as"> as </code><code class="type">element(ArrowExpr)</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">function(*)</code>, <code class="arg">$def-fn</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">element(xqdoc:invoked)*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element(ArrowExpr)</code> is FunctionCall or ArrowExpr</li><li>prefixes<code class="as"> as </code><code class="return-type">function(*)</code></li><li>def-fn<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:invoked) *</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 15 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:invoke-arrow($e as element(ArrowExpr),&#xD;
+                                  $prefixes as function(*),&#xD;
+                                  $def-fn as xs:string)&#xD;
+as element(xqdoc:invoked)*&#xD;
+{&#xD;
+for $arrow in $e/TOKEN[. = "=&amp;gt;"]&#xD;
+let $fname:=$arrow/(following-sibling::QName|following-sibling::TOKEN)&#xD;
+let $arglist:=$arrow/following-sibling::ArgumentList&#xD;
+let $arity:=1+count($arglist/*[not(self::TOKEN)])&#xD;
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:invoked arity="{ $arity }"&gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:invoked&gt; &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:invoke-fn"></a><a id="{quodatum:xqdoca.parser}invoke-fn#3"></a><a href="#xqp:invoke-fn">4.4 </a>xqp:invoke-fn</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}invoke-fn#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+build invoked nodes for function call&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:invoke-fn</code>
 		  ( 
-			<code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">xs:string</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code>prefix:name if available or clark-notation</li></ul></dd><details><summary>Invokes 5 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}for-each#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}head#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}head#3</span></li><li><span><a href="../../modules/F000022/index.html#{quodatum:xqdoca.namespaces}clark-name#2" title="lib/xqdoc-namespace.xqm">xqn:clark-name#2</a></span></li></ul></details><details><summary>Invoked by 2 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000024/index.html#{quodatum:xqdoca.page}link-function#4" title="lib/xqdoc-page.xqm">page:link-function#4</a></span></li><li><span><a href="../../modules/F000024/index.html#{quodatum:xqdoca.page}link-function2#4" title="lib/xqdoc-page.xqm">page:link-function2#4</a></span></li></ul></details><details><summary>Source ( 11 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:prefixed-name($uri as xs:string, 
-                                $name as xs:string,
-                                $prefixes as map(*))
-as xs:string
-{
-  let $prefix:= map:for-each($prefixes,function($k,$v){ if($v=$uri)then $k else () })=&gt;head() 
-  return if($prefix) then
-           concat(head($prefix),":",$name)
-         else
-           xqn:clark-name( $uri, $name )
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:qmap"></a><a id="{quodatum:xqdoca.namespaces}qmap#3"></a>4.5 xqn:qmap<div style="float:right"><a href="#xqn:qmap">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}qmap#3">xqn:qmap#3</a></span></p><dt class="label">Summary</dt><dd>parse qname into parts</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:qmap</code>
+			<code class="arg">$e</code><code class="as"> as </code><code class="type">element( (:  FunctionCall :) )</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$def-fn</code> )<code class="as"> as </code><code class="type">element(xqdoc:invoked)*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element( (:  FunctionCall :) )</code> is FunctionCall or ArrowExpr</li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li><li>def-fn<code class="as"> as </code><code class="return-type"></code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:invoked) *</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 19 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:invoke-fn(&#xD;
+                 $e as element( (:  FunctionCall :) ),&#xD;
+                 $prefixes as map(*),&#xD;
+                 $def-fn)&#xD;
+as element(xqdoc:invoked)*&#xD;
+{&#xD;
+&#xD;
+let $commas:=count($e/ArgumentList/TOKEN[.=","])&#xD;
+let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])&#xD;
+let $arity:= if($hasarg) then 1+$commas else 0&#xD;
+let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity&#xD;
+let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            &#xD;
+let $_:= if(empty($fname)) then trace($e,"??????") &#xD;
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:invoked arity="{ $arity }"&gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:invoked&gt;   &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:parse"></a><a id="{quodatum:xqdoca.parser}parse#2"></a><a href="#xqp:parse">4.5 </a>xqp:parse</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}parse#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+parse XQuery&#xD;
+result is &lt;XQuery&gt; or &lt;ERROR&gt;&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:parse</code>
 		  ( 
-			<code class="arg">$token</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$defaultns</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>token<code class="as"> as </code><code class="return-type">xs:string?</code></li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code> map of namespaces</li><li>defaultns<code class="as"> as </code><code class="return-type">xs:string</code> namespace for no prefix</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code><pre xmlns:xqdoc="http://www.xqdoc.org/1.0">
-map{
-"uri": ..,
-"name": ..} 
-}
-</pre></li></ul></dd><details><summary>Invokes 9 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/util}if#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}count#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}empty#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li></ul></details><details><summary>Invoked by 14 functions from 4 modules</summary><ul><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}variable#3" title="lib/generators/module.xqm">xqh:variable#3</a></span></li><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}function#4" title="lib/generators/module.xqm">xqh:function#4</a></span></li><li><span><a href="../../modules/F000009/index.html#{quodatum:xqdoca.mod-html}invoked-by#3" title="lib/generators/module.xqm">xqh:invoked-by#3</a></span></li><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}anno#1" title="lib/model.xqm">xqd:anno#1</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}enrich#3" title="lib/parser.xqm">xqp:enrich#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}invoke-fn#3" title="lib/parser.xqm">xqp:invoke-fn#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}invoke-arrow#3" title="lib/parser.xqm">xqp:invoke-arrow#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}ref-variable#3" title="lib/parser.xqm">xqp:ref-variable#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}funmap#3" title="lib/parser.xqm">xqp:funmap#3</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}badges#2" title="lib/xqdoc-anno.xqm">xqa:badges#2</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}is-rest#3" title="lib/xqdoc-anno.xqm">xqa:is-rest#3</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}is-out#3" title="lib/xqdoc-anno.xqm">xqa:is-out#3</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}methods#2" title="lib/xqdoc-anno.xqm">xqa:methods#2</a></span></li><li><span><a href="../../modules/F000021/index.html#{quodatum:xqdoca.model.annotations}name-detail#2" title="lib/xqdoc-anno.xqm">xqa:name-detail#2</a></span></li></ul></details><details><summary>Source ( 19 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:string)
-as map(*)
-{
- let $_:=util:if(empty($token),error("NO TOK"))
- let $n:=tokenize($token,":")
-let $prefix:=if(count($n)=2)then $n[1] else ()
-let $name:=if(count($n)=2)then  $n[2] else $n[1]
-let $uri:=if(empty($prefix)) 
-          then  $defaultns
-          else if( map:contains($prefixes,$prefix)) 
-               then $prefixes?($prefix)
-               else 
-                    let $_:= trace($prefixes,"prefix: ")
-                    return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
-             
-return map{
-           "uri": $uri,
-           "name": $name} 
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:static-prefix-map"></a><a id="{quodatum:xqdoca.namespaces}static-prefix-map#1"></a>4.6 xqn:static-prefix-map<div style="float:right"><a href="#xqn:static-prefix-map">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}static-prefix-map#1">xqn:static-prefix-map#1</a></span></p><dt class="label">Summary</dt><dd>map of static namespaces</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:static-prefix-map</code>
+			<code class="arg">$xq</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$platform</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">element(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>xq<code class="as"> as </code><code class="return-type">xs:string</code></li><li>platform<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(*)</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 5 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:parse($xq as xs:string,$platform as xs:string)&#xD;
+as element(*)&#xD;
+{ &#xD;
+  xp:parse($xq ,$xqp:xparse_opts($platform)) &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:ref-variable"></a><a id="{quodatum:xqdoca.parser}ref-variable#3"></a><a href="#xqp:ref-variable">4.6 </a>xqp:ref-variable</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}ref-variable#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+build invoked nodes for function call&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:ref-variable</code>
 		  ( 
-			<code class="arg">$platform</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>platform<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 4 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/fetch}text#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}parse-json#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}static-base-uri#0</span></li></ul></details><details><summary>Invoked by 2 functions from 2 modules</summary><ul><li><span><a href="../../modules/F000016/index.html#{quodatum:xqdoca.model}analyse#3" title="lib/model.xqm">xqd:analyse#3</a></span></li><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}prefixes#2" title="lib/parser.xqm">xqp:prefixes#2</a></span></li></ul></details><details><summary>Source ( 6 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:static-prefix-map($platform as xs:string)
-as map(*)
-{
- fetch:text(resolve-uri(``[../etc/models/`{ $platform }`.json]``,static-base-uri()))
- =&gt;parse-json() 
-}</code></pre></details></div><div class="div3"><h3><a id="xqn:uriqname"></a><a id="{quodatum:xqdoca.namespaces}uriqname#1"></a>4.7 xqn:uriqname<div style="float:right"><a href="#xqn:uriqname">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.namespaces}uriqname#1">xqn:uriqname#1</a></span></p><dt class="label">Summary</dt><dd>parse URIQualifiedName into parts</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqn:uriqname</code>
+			<code class="arg">$e</code><code class="as"> as </code><code class="type">element(*)</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$def-fn</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">element(xqdoc:ref-variable)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element(*)</code> is variable reference @@TODO</li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li><li>def-fn<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:ref-variable)</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 11 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:ref-variable($e as element(*),$prefixes as map(*), $def-fn as xs:string)&#xD;
+as element(xqdoc:ref-variable)&#xD;
+{&#xD;
+&#xD;
+let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() &#xD;
+let $qname:=xqn:qmap($fname, $prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:ref-variable &gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:ref-variable&gt;   &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:references"></a><a id="{quodatum:xqdoca.parser}references#3"></a><a href="#xqp:references">4.7 </a>xqp:references</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}references#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+scan tree below $e for references&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:references</code>
 		  ( 
-			<code class="arg">$e</code><code class="as"> as </code><code class="type">element(URIQualifiedName)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element(URIQualifiedName)</code> is URIQualifiedName</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><p>todo : use regx</p><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000018/index.html#{quodatum:xqdoca.parser}funmap#3" title="lib/parser.xqm">xqp:funmap#3</a></span></li></ul></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqn:uriqname($e as element(URIQualifiedName))
-as map(*)
-{
-let $n:=tokenize($e,"}")
-return map{"uri": substring($n[1],3),
-           "name": $n[2]} 
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>xqn</td><td><span><a href="../../modules/F000022/index.html" title="lib/xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;xqdoc-namespaces.xqm&lt;/h1&gt;
- : &lt;p&gt;namespace and qname utils&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-
-module namespace xqn = 'quodatum:xqdoca.namespaces';
-
-(:~  parse qname into parts
- : @param $e is from QName or TOKEN in some cases e.g "count"
- : @param $prefixes map of namespaces
- : @param $defaultns namespace for no prefix
- : @return &lt;pre&gt;
- map{
-    "uri": ..,
-     "name": ..} 
- }
- :&lt;/pre&gt;
- :)
-declare 
-function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:string)
-as map(*)
-{
- let $_:=util:if(empty($token),error("NO TOK"))
- let $n:=tokenize($token,":")
-let $prefix:=if(count($n)=2)then $n[1] else ()
-let $name:=if(count($n)=2)then  $n[2] else $n[1]
-let $uri:=if(empty($prefix)) 
-          then  $defaultns
-          else if( map:contains($prefixes,$prefix)) 
-               then $prefixes?($prefix)
-               else 
-                    let $_:= trace($prefixes,"prefix: ")
-                    return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
-             
-return map{
-           "uri": $uri,
-           "name": $name} 
-};
-
-declare function xqn:eq($a as map(*),$uri as xs:string, $name as xs:string) 
-as xs:boolean
-{
-  $a?name=$name and $a?uri=$uri
-};
-
-
-(:~ 
- : return clark-notation '{uri}name'
-  :)
-declare function xqn:clark-name($uri as xs:string, 
-                                $name as xs:string)
-as xs:string
-{
-  ``[{`{ $uri }`}`{ $name }`]``
-};
-
-(:~ 
- : @return prefix:name if available or clark-notation
-  :)
-declare function xqn:prefixed-name($uri as xs:string, 
-                                $name as xs:string,
-                                $prefixes as map(*))
-as xs:string
-{
-  let $prefix:= map:for-each($prefixes,function($k,$v){ if($v=$uri)then $k else () })=&gt;head() 
-  return if($prefix) then
-           concat(head($prefix),":",$name)
-         else
-           xqn:clark-name( $uri, $name )
-};
-
-(:~ namespace for prefix
- : @param $prefix prefix to lookup
- : @param $default namespace to use if prefix empty
- : @param $map keys are prefixes items are namespaces
- : @return namespace for prefix
-  :)
-declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $map as map(*))
-as xs:string{
-  if(empty($prefix)) then
-    $default
-  else if(map:contains($map, $prefix))then 
-   $map?($prefix)
-   else
-   let $_:=trace($map,"prefixes")
-   return "*** " || trace($prefix,"**prefix not found:" ),
-   error()
-};
-
-(:~  parse URIQualifiedName into parts
- : @param $e is URIQualifiedName
- : @todo use regx
- :)
-declare function xqn:uriqname($e as element(URIQualifiedName))
-as map(*)
-{
-let $n:=tokenize($e,"}")
-return map{"uri": substring($n[1],3),
-           "name": $n[2]} 
-};
-
-(:~  map of static namespaces :)
-declare function xqn:static-prefix-map($platform as xs:string)
-as map(*)
-{
- fetch:text(resolve-uri(``[../etc/models/`{ $platform }`.json]``,static-base-uri()))
- =&gt;parse-json() 
-};
-
+			<code class="arg">$e</code><code class="as"> as </code><code class="type">element(*)</code>, <code class="arg">$prefixes</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$def-fn</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">element(*)*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>e<code class="as"> as </code><code class="return-type">element(*)</code>xpand function to map prefixes to namespaces</li><li>prefixes<code class="as"> as </code><code class="return-type">map(*)</code></li><li>def-fn<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(*) *</code> sequence of xqdoc:invoked and xqdoc:var-refences elements</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 7 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)&#xD;
+as element(*)*&#xD;
+{&#xD;
+  $e//FunctionCall!xqp:invoke-fn(.,$prefixes, $def-fn),&#xD;
+  $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes, $def-fn),&#xD;
+  $e//VarRef!xqp:ref-variable(.,$prefixes, $def-fn) &#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqp:trace"></a><a id="{quodatum:xqdoca.parser}trace#2"></a><a href="#xqp:trace">4.8 </a>xqp:trace</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.parser}trace#2">#2</a></span></p><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqp:trace</code>
+		  ( 
+			<code class="arg">$items</code><code class="as"> as </code><code class="type">item()*</code>, <code class="arg">$label</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">item()*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as"> as </code><code class="return-type">item()*</code></li><li>label<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 5 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqp:trace($items as item()*,$label as xs:string)&#xD;
+as item()*&#xD;
+{  &#xD;
+  if($xqp:trace) then trace($items,$label)&#xD;
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>xp</td><td><span class="badge badge-warning" title="Externally defined">expkg-zone58:text.parse</span></td></tr><tr><td>xqdoc</td><td><span class="badge badge-warning" title="Externally defined">http://www.xqdoc.org/1.0</span></td></tr><tr><td>xqn</td><td><span><a href="../../modules/F000026/index.html" title="lib/xqdoc-namespace.xqm">quodatum:xqdoca.namespaces</a></span></td></tr><tr><td>xqp</td><td><span><a href="../../modules/F000022/index.html" title="lib/parser.xqm">quodatum:xqdoca.parser</a></span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";&#xD;
+(:~&#xD;
+&lt;p&gt;generate and Analyse XQuery parse tree&lt;/p&gt;&#xD;
+@copyright (c) 2019-2026 Quodatum Ltd&#xD;
+@author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+:)&#xD;
+&#xD;
+module namespace xqp = 'quodatum:xqdoca.parser';&#xD;
+&#xD;
+import module namespace xp="expkg-zone58:text.parse";&#xD;
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";&#xD;
+&#xD;
+declare namespace xqdoc="http://www.xqdoc.org/1.0";&#xD;
+&#xD;
+&#xD;
+&#xD;
+(:~ xparser defaults :)&#xD;
+declare variable $xqp:xparse_opts:=map{&#xD;
+  "basex":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }&#xD;
+  , "fat":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }&#xD;
+&#xD;
+};&#xD;
+&#xD;
+declare variable $xqp:trace as xs:boolean:=false();&#xD;
+&#xD;
+ &#xD;
+(:~ default function namespace&#xD;
+ : NOTE if parse failed will return "http://www.w3.org/2005/xpath-functions"&#xD;
+ :)&#xD;
+declare function xqp:default-fn-uri($xqparse as element(XQuery))&#xD;
+as xs:string&#xD;
+{&#xD;
+  let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl&#xD;
+  return if( empty($def-fn) ) &#xD;
+         then "http://www.w3.org/2005/xpath-functions"&#xD;
+         else $def-fn/URILiteral!substring(.,2,string-length(.)-2)&#xD;
+};&#xD;
+&#xD;
+(:~ scan tree below $e for references&#xD;
+ : @param $expand function to map prefixes to namespaces&#xD;
+ : @return sequence of xqdoc:invoked and xqdoc:var-refences elements&#xD;
+ :)&#xD;
+declare  function xqp:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)&#xD;
+as element(*)*&#xD;
+{&#xD;
+  $e//FunctionCall!xqp:invoke-fn(.,$prefixes, $def-fn),&#xD;
+  $e//ArrowExpr!xqp:invoke-arrow(.,$prefixes, $def-fn),&#xD;
+  $e//VarRef!xqp:ref-variable(.,$prefixes, $def-fn) &#xD;
+};&#xD;
+&#xD;
+&#xD;
+&#xD;
+(:~  build invoked nodes for function call&#xD;
+ : @param $e is FunctionCall or ArrowExpr &#xD;
+ :)&#xD;
+declare function xqp:invoke-fn(&#xD;
+                 $e as element( (:  FunctionCall :) ),&#xD;
+                 $prefixes as map(*),&#xD;
+                 $def-fn)&#xD;
+as element(xqdoc:invoked)*&#xD;
+{&#xD;
+&#xD;
+let $commas:=count($e/ArgumentList/TOKEN[.=","])&#xD;
+let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])&#xD;
+let $arity:= if($hasarg) then 1+$commas else 0&#xD;
+let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity&#xD;
+let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            &#xD;
+let $_:= if(empty($fname)) then trace($e,"??????") &#xD;
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:invoked arity="{ $arity }"&gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:invoked&gt;   &#xD;
+};&#xD;
+(:~  build invoked nodes for arrow expression&#xD;
+ : @param $e is FunctionCall or ArrowExpr &#xD;
+ :)&#xD;
+declare function xqp:invoke-arrow($e as element(ArrowExpr),&#xD;
+                                  $prefixes as function(*),&#xD;
+                                  $def-fn as xs:string)&#xD;
+as element(xqdoc:invoked)*&#xD;
+{&#xD;
+for $arrow in $e/TOKEN[. = "=&amp;gt;"]&#xD;
+let $fname:=$arrow/(following-sibling::QName|following-sibling::TOKEN)&#xD;
+let $arglist:=$arrow/following-sibling::ArgumentList&#xD;
+let $arity:=1+count($arglist/*[not(self::TOKEN)])&#xD;
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:invoked arity="{ $arity }"&gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:invoked&gt; &#xD;
+};&#xD;
+&#xD;
+(:~  build invoked nodes for function call&#xD;
+ : @param $e is variable reference @@TODO&#xD;
+ :)&#xD;
+declare function xqp:ref-variable($e as element(*),$prefixes as map(*), $def-fn as xs:string)&#xD;
+as element(xqdoc:ref-variable)&#xD;
+{&#xD;
+&#xD;
+let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() &#xD;
+let $qname:=xqn:qmap($fname, $prefixes, $def-fn)&#xD;
+ return &lt;xqdoc:ref-variable &gt;&#xD;
+         &lt;xqdoc:uri&gt;{ $qname?uri }&lt;/xqdoc:uri&gt;&#xD;
+         &lt;xqdoc:name&gt;{ $qname?name }&lt;/xqdoc:name&gt;&#xD;
+        &lt;/xqdoc:ref-variable&gt;   &#xD;
+};&#xD;
+&#xD;
+(:~  map of function declarations&#xD;
+ : @result map where keys are Qname with # arity items are xqParse trees&#xD;
+ : @param $def-fn default function namespace&#xD;
+ :)&#xD;
+declare function xqp:funmap($e as element(XQuery),$prefixes as map(*),$def-fn as xs:string)&#xD;
+as map(*)&#xD;
+{&#xD;
+ let $items:=for $f in $e//FunctionDecl&#xD;
+             let $name:=$f/*[2]&#xD;
+             let $name:=if($name instance of element(QName)&#xD;
+                        or $name instance of element(TOKEN)) then&#xD;
+                              xqn:qmap($name,$prefixes,$def-fn)&#xD;
+                        else if($name instance of element(URIQualifiedName)) then&#xD;
+                                xqn:uriqname($name)&#xD;
+                        else &#xD;
+                             error(xs:QName("xqp:funmap"), "bad name: ", $name)&#xD;
+             let $arity:=count($f/(Param|ParamList/Param))&#xD;
+             let $key:=concat("Q{",$name?uri,"}",$name?name,"#",$arity)&#xD;
+             return map:entry($key,$f)&#xD;
+ return map:merge($items)&#xD;
+};&#xD;
+&#xD;
+(:~ parse XQuery &#xD;
+ : result is &lt;XQuery&gt; or &lt;ERROR&gt;&#xD;
+ :)&#xD;
+declare function xqp:parse($xq as xs:string,$platform as xs:string)&#xD;
+as element(*)&#xD;
+{ &#xD;
+  xp:parse($xq ,$xqp:xparse_opts($platform)) &#xD;
+};&#xD;
+&#xD;
+declare function xqp:trace($items as item()*,$label as xs:string)&#xD;
+as item()*&#xD;
+{  &#xD;
+  if($xqp:trace) then trace($items,$label)&#xD;
+};&#xD;
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:35:19.705+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

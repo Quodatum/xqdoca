@@ -1,46 +1,213 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>dir-change.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Change directory.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">files/dir-change.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Change directory.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Create new database.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Create new database.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/files';
+module namespace dba = 'dba/databases';
 
-import module namespace config = 'dba/config' at '../lib/config.xqm';
+import module namespace html = 'dba/html' at '../lib/html.xqm';
+import module namespace util = 'dba/util' at '../lib/util.xqm';
 
 (:~ Top category :)
-declare variable $dba:CAT := 'files';
+declare variable $dba:CAT := 'databases';
+(:~ Sub category :)
+declare variable $dba:SUB := 'database';
 
 (:~
- : Changes the directory.
- : @param  $dir  directory
+ : Form for creating a new database.
+ : @param  $name   entered name
+ : @param  $opts   chosen database options
+ : @param  $lang   entered language
+ : @param  $error  error string
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/db-create')
+  %rest:query-param('name',  '{$name}')
+  %rest:query-param('opts',  '{$opts}')
+  %rest:query-param('lang',  '{$lang}', 'en')
+  %rest:query-param('error', '{$error}')
+  %output:method('html')
+function dba:db-create(
+  $name   as xs:string?,
+  $opts   as xs:string*,
+  $lang   as xs:string?,
+  $error  as xs:string?
+) as element(html) {
+  let $opts := if($opts = 'x') then $opts else ('textindex', 'attrindex')
+  return html:wrap(map { 'header': $dba:CAT, 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='db-create' method='post' autocomplete='off'&gt;
+          &lt;h2&gt;{
+            html:link('Databases', $dba:CAT), ' » ',
+            html:button('create', 'Create')
+          }&lt;/h2&gt;
+          &lt;!-- dummy value; prevents reset of options when nothing is selected --&gt;
+          &lt;input type='hidden' name='opts' value='x'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Name:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input type='hidden' name='opts' value='x'/&gt;
+                &lt;input type='text' name='name' value='{ $name }' id='name'/&gt;
+                { html:focus('name') }
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;{
+                &lt;h3&gt;{ html:option('textindex', 'Text Index', $opts) }&lt;/h3&gt;,
+                &lt;h3&gt;{ html:option('attrindex', 'Attribute Index', $opts) }&lt;/h3&gt;,
+                &lt;h3&gt;{ html:option('tokenindex', 'Token Index', $opts) }&lt;/h3&gt;,
+                html:option('updindex', 'Incremental Indexing', $opts),
+                &lt;div class='small'/&gt;,
+                &lt;h3&gt;{ html:option('ftindex', 'Fulltext Indexing', $opts) }&lt;/h3&gt;
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;{
+                html:option('stemming', 'Stemming', $opts),
+                html:option('casesens', 'Case Sensitivity', $opts),
+                html:option('diacritics', 'Diacritics', $opts)
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Language:&lt;/td&gt;
+              &lt;td&gt;&lt;input type='text' name='language' value='{ $lang }'/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Creates a database.
+ : @param  $name  database
+ : @param  $opts  database options
+ : @param  $lang  language
  : @return redirection
  :)
 declare
-  %rest:path('/dba/dir-change')
-  %rest:query-param('dir', '{$dir}')
-function dba:dir-change(
-  $dir  as xs:string
-) as element(rest:response) {
-  config:directory(
-    if(contains($dir, file:dir-separator())) then (
-      $dir
+  %updating
+  %rest:POST
+  %rest:path('/dba/db-create')
+  %rest:query-param('name', '{$name}')
+  %rest:query-param('opts', '{$opts}')
+  %rest:query-param('lang', '{$lang}')
+function dba:db-create(
+  $name  as xs:string,
+  $opts  as xs:string*,
+  $lang  as xs:string?
+) as empty-sequence() {
+  try {
+    if(db:exists($name)) then (
+      error((), 'Database already exists.')
     ) else (
-      file:path-to-native(config:directory() || $dir || '/')
+      db:create($name, (), (), map:merge((
+        for $option in ('textindex', 'attrindex', 'tokenindex', 'ftindex',
+          'stemming', 'casesens', 'diacritics', 'updindex')
+        return map:entry($option, $opts = $option),
+        $lang ! map:entry('language', .)))
+      ),
+      util:redirect($dba:SUB, map { 'name': $name,
+        'info': 'Database "' || $name || '" was created.' })
     )
-  ),
-  config:query(''),
-  web:redirect($dba:CAT)
+  } catch * {
+    util:redirect('db-create', map {
+      'name': $name, 'opts': $opts, 'lang': $lang, 'error': $err:description
+    })
+  }
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Changes the directory.</xqdoc:description><xqdoc:param>$dir  directory</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:dir-change</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/dir-change</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">dir</xqdoc:literal><xqdoc:literal type="xs:string">{$dir}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:path("/dba/dir-change") %rest:query-param("dir", "{$dir}") function dba:dir-change($dir as xs:string) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>dir</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>dir-separator</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>path-to-native</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>query</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:dir-change(
-  $dir  as xs:string
-) as element(rest:response) {
-  config:directory(
-    if(contains($dir, file:dir-separator())) then (
-      $dir
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:at>../lib/html.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/databases"/><xqdoc:namespace prefix="html" uri="dba/html"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="db" uri="http://basex.org/modules/db"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'databases'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>dba:SUB</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Sub category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:SUB := 'database'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Form for creating a new database.&#xD;
+</xqdoc:description><xqdoc:param>$name   entered name</xqdoc:param><xqdoc:param>$opts   chosen database options</xqdoc:param><xqdoc:param>$lang   entered language</xqdoc:param><xqdoc:param>$error  error string</xqdoc:param><xqdoc:return>page</xqdoc:return></xqdoc:comment><xqdoc:name>dba:db-create</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/db-create</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">opts</xqdoc:literal><xqdoc:literal type="xs:string">{$opts}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">lang</xqdoc:literal><xqdoc:literal type="xs:string">{$lang}</xqdoc:literal><xqdoc:literal type="xs:string">en</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">error</xqdoc:literal><xqdoc:literal type="xs:string">{$error}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:db-create ( $name as xs:string?, $opts as xs:string*, $lang as xs:string?, $error as xs:string? ) as element(html) { let $opts := if($opts = 'x') then $opts else ('textindex', 'attrindex') return html:wrap(map { 'header': $dba:CAT, 'error': $error }, &lt;tr&gt; &lt;td&gt; &lt;form action='db-create' method='post' autocomplete='off'&gt; &lt;h2&gt;{ html:link('Databases', $dba:CAT), ' » ', html:button('create', 'Create') }&lt;/h2&gt; &lt;!-- dummy value; prevents reset of options when nothing is selected --&gt; &lt;input type='hidden' name='opts' value='x'/&gt; &lt;table&gt; &lt;tr&gt; &lt;td&gt;Name:&lt;/td&gt; &lt;td&gt; &lt;input type='hidden' name='opts' value='x'/&gt; &lt;input type='text' name='name' value='{ $name }' id='name'/&gt; { html:focus('name') } &lt;div class='small'/&gt; &lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td colspan='2'&gt;{ &lt;h3&gt;{ html:option('textindex', 'Text Index', $opts) }&lt;/h3&gt;, &lt;h3&gt;{ html:option('attrindex', 'Attribute Index', $opts) }&lt;/h3&gt;, &lt;h3&gt;{ html:option('tokenindex', 'Token Index', $opts) }&lt;/h3&gt;, html:option('updindex', 'Incremental Indexing', $opts), &lt;div class='small'/&gt;, &lt;h3&gt;{ html:option('ftindex', 'Fulltext Indexing', $opts) }&lt;/h3&gt; }&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td colspan='2'&gt;{ html:option('stemming', 'Stemming', $opts), html:option('casesens', 'Case Sensitivity', $opts), html:option('diacritics', 'Diacritics', $opts) }&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Language:&lt;/td&gt; &lt;td&gt;&lt;input type='text' name='language' value='{ $lang }'/&gt;&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/form&gt; &lt;/td&gt; &lt;/tr&gt; ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>lang</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>error</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:db-create(
+  $name   as xs:string?,
+  $opts   as xs:string*,
+  $lang   as xs:string?,
+  $error  as xs:string?
+) as element(html) {
+  let $opts := if($opts = 'x') then $opts else ('textindex', 'attrindex')
+  return html:wrap(map { 'header': $dba:CAT, 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='db-create' method='post' autocomplete='off'&gt;
+          &lt;h2&gt;{
+            html:link('Databases', $dba:CAT), ' » ',
+            html:button('create', 'Create')
+          }&lt;/h2&gt;
+          &lt;!-- dummy value; prevents reset of options when nothing is selected --&gt;
+          &lt;input type='hidden' name='opts' value='x'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Name:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input type='hidden' name='opts' value='x'/&gt;
+                &lt;input type='text' name='name' value='{ $name }' id='name'/&gt;
+                { html:focus('name') }
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;{
+                &lt;h3&gt;{ html:option('textindex', 'Text Index', $opts) }&lt;/h3&gt;,
+                &lt;h3&gt;{ html:option('attrindex', 'Attribute Index', $opts) }&lt;/h3&gt;,
+                &lt;h3&gt;{ html:option('tokenindex', 'Token Index', $opts) }&lt;/h3&gt;,
+                html:option('updindex', 'Incremental Indexing', $opts),
+                &lt;div class='small'/&gt;,
+                &lt;h3&gt;{ html:option('ftindex', 'Fulltext Indexing', $opts) }&lt;/h3&gt;
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan='2'&gt;{
+                html:option('stemming', 'Stemming', $opts),
+                html:option('casesens', 'Case Sensitivity', $opts),
+                html:option('diacritics', 'Diacritics', $opts)
+              }&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Language:&lt;/td&gt;
+              &lt;td&gt;&lt;input type='text' name='language' value='{ $lang }'/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Creates a database.&#xD;
+</xqdoc:description><xqdoc:param>$name  database</xqdoc:param><xqdoc:param>$opts  database options</xqdoc:param><xqdoc:param>$lang  language</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:db-create</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/db-create</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">opts</xqdoc:literal><xqdoc:literal type="xs:string">{$opts}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">lang</xqdoc:literal><xqdoc:literal type="xs:string">{$lang}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:db-create ( $name as xs:string, $opts as xs:string*, $lang as xs:string? ) as empty-sequence() { try { if(db:exists($name)) then ( error((), 'Database already exists.') ) else ( db:create($name, (), (), map:merge(( for $option in ('textindex', 'attrindex', 'tokenindex', 'ftindex', 'stemming', 'casesens', 'diacritics', 'updindex') return map:entry($option, $opts = $option), $lang ! map:entry('language', .))) ), util:redirect($dba:SUB, map { 'name': $name, 'info': 'Database "' || $name || '" was created.' }) ) } catch * { util:redirect('db-create', map { 'name': $name, 'opts': $opts, 'lang': $lang, 'error': $err:description }) } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>lang</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence</xqdoc:type></xqdoc:return><xqdoc:body>function dba:db-create(
+  $name  as xs:string,
+  $opts  as xs:string*,
+  $lang  as xs:string?
+) as empty-sequence() {
+  try {
+    if(db:exists($name)) then (
+      error((), 'Database already exists.')
     ) else (
-      file:path-to-native(config:directory() || $dir || '/')
+      db:create($name, (), (), map:merge((
+        for $option in ('textindex', 'attrindex', 'tokenindex', 'ftindex',
+          'stemming', 'casesens', 'diacritics', 'updindex')
+        return map:entry($option, $opts = $option),
+        $lang ! map:entry('language', .)))
+      ),
+      util:redirect($dba:SUB, map { 'name': $name,
+        'info': 'Database "' || $name || '" was created.' })
     )
-  ),
-  config:query(''),
-  web:redirect($dba:CAT)
+  } catch * {
+    util:redirect('db-create', map {
+      'name': $name, 'opts': $opts, 'lang': $lang, 'error': $err:description
+    })
+  }
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

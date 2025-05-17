@@ -1,306 +1,1447 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca.outputs</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>XQDocA - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">http://exist-db.org/xquery/semver</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html">XQDocA</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.outputs</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqo:ann-output"><span class="secno">3.1</span><span class="content">$xqo:ann-output</span><div style="float:right"></div></a></li><li><a href="#$xqo:global"><span class="secno">3.2</span><span class="content">$xqo:global</span><div style="float:right"></div></a></li><li><a href="#$xqo:module"><span class="secno">3.3</span><span class="content">$xqo:module</span><div style="float:right"></div></a></li><li><a href="#$xqo:outputs"><span class="secno">3.4</span><span class="content">$xqo:outputs</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqo:export-resources"><span class="secno">4.1</span><span class="content" title="">xqo:export-resources<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#xqo:load-generators"><span class="secno">4.2</span><span class="content" title="">xqo:load-generators<div style="float:right"></div></span></a></li><li><a href="#xqo:render"><span class="secno">4.3</span><span class="content" title="">xqo:render<div style="float:right"></div></span></a></li><li><a href="#xqo:render-map"><span class="secno">4.4</span><span class="content" title="">xqo:render-map<div style="float:right"></div></span></a></li><li><a href="#xqo:renderers"><span class="secno">4.5</span><span class="content" title="">xqo:renderers<div style="float:right"></div></span></a></li><li><a href="#xqo:tokens"><span class="secno">4.6</span><span class="content" title="">xqo:tokens<div style="float:right"></div></span></a></li><li><a href="#xqo:zip"><span class="secno">4.7</span><span class="content" title="">xqo:zip<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">xqdoc-outputs.xqm</h1>
-<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Load and run a set of generators</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>__source : lib/xqdoc-outputs.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">http://exist-db.org/xquery/semver</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$semver:coerce-regex"><span class="secno">3.1</span><span class="content">$semver:coerce-regex</span><div style="float:right"></div></a></li><li><a href="#$semver:expath-package-semver-template-regex"><span class="secno">3.2</span><span class="content">$semver:expath-package-semver-template-regex</span><div style="float:right"></div></a></li><li><a href="#$semver:regex"><span class="secno">3.3</span><span class="content">$semver:regex</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#semver:cast-identifier"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;A utility function for casting identifiers to the appropriate types&#xD;&#xA;&#xD;&#xA;return The identifier unchanged or cast as an integer&#xD;&#xA;">cast-identifier<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:coerce"><span class="secno">4.2</span><span class="content" title="&#xD;&#xA;Coerce a non-SemVer version string into a SemVer string and parse it as such&#xD;&#xA;&#xD;&#xA;">coerce<div style="float:right"></div></span></a></li><li><a href="#semver:compare"><span class="secno">4.3</span><span class="content" title="&#xD;&#xA;Compare two versions (strictly)&#xD;&#xA;&#xD;&#xA;">compare<div style="float:right"></div></span></a></li><li><a href="#semver:compare-parsed"><span class="secno">4.4</span><span class="content" title="&#xD;&#xA;Compare two parsed SemVer versions&#xD;&#xA;&#xD;&#xA;">compare-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:compare-pre-release"><span class="secno">4.5</span><span class="content" title="&#xD;&#xA;Compare pre-release identifiers&#xD;&#xA;&#xD;&#xA;">compare-pre-release<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:compare-release"><span class="secno">4.6</span><span class="content" title="&#xD;&#xA;Compare release identifiers&#xD;&#xA;&#xD;&#xA;">compare-release<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:eq"><span class="secno">4.7</span><span class="content" title="&#xD;&#xA;Test if v1 is equal to v2 (strictly)&#xD;&#xA;&#xD;&#xA;">eq<div style="float:right"></div></span></a></li><li><a href="#semver:eq-parsed"><span class="secno">4.8</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is equal to a parsed v2&#xD;&#xA;&#xD;&#xA;">eq-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:error"><span class="secno">4.9</span><span class="content" title="&#xD;&#xA;Raise a descriptive error&#xD;&#xA;&#xD;&#xA;">error<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:ge"><span class="secno">4.10</span><span class="content" title="&#xD;&#xA;Test if v1 is the same or higher version than v2 (strictly)&#xD;&#xA;&#xD;&#xA;">ge<div style="float:right"></div></span></a></li><li><a href="#semver:ge-parsed"><span class="secno">4.11</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is the same or higher version than a parsed v2&#xD;&#xA;&#xD;&#xA;">ge-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:gt"><span class="secno">4.12</span><span class="content" title="&#xD;&#xA;Test if v1 is a higher version than v2 (strictly)&#xD;&#xA;">gt<div style="float:right"></div></span></a></li><li><a href="#semver:gt-parsed"><span class="secno">4.13</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is a higher version than a parsed v2&#xD;&#xA;&#xD;&#xA;">gt-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:le"><span class="secno">4.14</span><span class="content" title="&#xD;&#xA;Test if v1 is a lower version or the same version as v2 (strictly)&#xD;&#xA;&#xD;&#xA;">le<div style="float:right"></div></span></a></li><li><a href="#semver:le-parsed"><span class="secno">4.15</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is a lower version or the same version as a parsed v2&#xD;&#xA;&#xD;&#xA;">le-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:lt"><span class="secno">4.16</span><span class="content" title="&#xD;&#xA;Test if v1 is a lower version than v2 (strictly)&#xD;&#xA;&#xD;&#xA;">lt<div style="float:right"></div></span></a></li><li><a href="#semver:lt-parsed"><span class="secno">4.17</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is a lower version than a parsed v2&#xD;&#xA;&#xD;&#xA;">lt-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:ne"><span class="secno">4.18</span><span class="content" title="&#xD;&#xA;Test if v1 is not equal to v2 (strictly)&#xD;&#xA;&#xD;&#xA;">ne<div style="float:right"></div></span></a></li><li><a href="#semver:ne-parsed"><span class="secno">4.19</span><span class="content" title="&#xD;&#xA;Test if a parsed v1 is not equal to a parsed v2&#xD;&#xA;&#xD;&#xA;">ne-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:parse"><span class="secno">4.20</span><span class="content" title="&#xD;&#xA;Parse a SemVer string (strictly)&#xD;&#xA;&#xD;&#xA;">parse<div style="float:right"></div></span></a></li><li><a href="#semver:populate-identifiers"><span class="secno">4.21</span><span class="content" title="&#xD;&#xA;A utility function for populating the identifiers entry in a parsed version&#xD;&#xA;&#xD;&#xA;return The map with an identifiers entry&#xD;&#xA;">populate-identifiers<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:resolve-expath-package-semver-template"><span class="secno">4.22</span><span class="content" title="&#xD;&#xA;Resolve an EXPath SemVer Package Template&#xD;&#xA;&#xD;&#xA;">resolve-expath-package-semver-template<div style="float:right"></div></span></a></li><li><a href="#semver:resolve-expath-package-semver-template-max"><span class="secno">4.23</span><span class="content" title="&#xD;&#xA;Resolve an EXPath Package SemVer Template as maximum (ceiling)&#xD;&#xA;&#xD;&#xA;">resolve-expath-package-semver-template-max<div style="float:right"></div></span></a></li><li><a href="#semver:resolve-expath-package-semver-template-min"><span class="secno">4.24</span><span class="content" title="&#xD;&#xA;Resolve an EXPath Package SemVer Template as minimum (floor)&#xD;&#xA;&#xD;&#xA;">resolve-expath-package-semver-template-min<div style="float:right"></div></span></a></li><li><a href="#semver:satisfies-expath-package-dependency-versioning-attributes"><span class="secno">4.25</span><span class="content" title="&#xD;&#xA;Check if a version satisfies EXPath Package dependency versioning attributes.&#xD;&#xA;&#xD;&#xA;">satisfies-expath-package-dependency-versioning-attributes<div style="float:right"></div></span></a></li><li><a href="#semver:serialize"><span class="secno">4.26</span><span class="content" title="&#xD;&#xA;Serialize a SemVer string&#xD;&#xA;&#xD;&#xA;">serialize<div style="float:right"></div></span></a></li><li><a href="#semver:serialize-parsed"><span class="secno">4.27</span><span class="content" title="&#xD;&#xA;Serialize a parsed SemVer version&#xD;&#xA;&#xD;&#xA;">serialize-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:sort"><span class="secno">4.28</span><span class="content" title="&#xD;&#xA;Sort SemVer strings (strictly)&#xD;&#xA;&#xD;&#xA;">sort<div style="float:right"></div></span></a></li><li><a href="#semver:sort-parsed"><span class="secno">4.29</span><span class="content" title="&#xD;&#xA;Sort SemVer maps&#xD;&#xA;">sort-parsed<div style="float:right"></div></span></a></li><li><a href="#semver:sort-pre-release"><span class="secno">4.30</span><span class="content" title="&#xD;&#xA;Sort pre-release fields&#xD;&#xA;&#xD;&#xA;">sort-pre-release<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#semver:validate"><span class="secno">4.31</span><span class="content" title="&#xD;&#xA;Validate whether a SemVer string conforms to the spec&#xD;&#xA;&#xD;&#xA;">validate<div style="float:right"></div></span></a></li><li><a href="#semver:validate-expath-package-semver-template"><span class="secno">4.32</span><span class="content" title="&#xD;&#xA;Validate whether a version string conforms to the rules for SemVer templates as defined in the EXPath Package spec&#xD;&#xA;&#xD;&#xA;">validate-expath-package-semver-template<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+Validate, compare, sort, parse, and serialize Semantic Versioning (SemVer)&#xD;
+2.0.0 version strings, using XQuery.&#xD;
+&#xD;
+SemVer rules are applied strictly, raising errors when version strings do&#xD;
+not conform to the spec.&#xD;
+&#xD;
+Additional functions are supplied for handling SemVer templates, as defined&#xD;
+in the EXPath Package spec.&#xD;
+&#xD;
+</div><dl><dt title="2">See also</dt><dd><ul><li><span><a href="https://semver.org/spec/v2.0.0.html">https://semver.org/spec/v2.0.0.html</a></span></li><li><span><a href="http://expath.org/spec/pkg#pkgdep">http://expath.org/spec/pkg#pkgdep</a></span></li></ul></dd></dl><dl><dt title="1">Authors</dt><dd><ul><li><span>Joe Wicentowski</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">1</span> modules. It imports
     <span class="badge badge-info">0</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000026/index.html" title="xqdoca.xq">xqdoca.xq</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$xqo:ann-output"></a><a id="{quodatum:xqdoca.outputs}$ann-output"></a>3.1 $xqo:ann-output</h3><dl><dt class="label">Summary</dt><dd>annotation used to indicate serialization options</dd><dt class="label">Type</dt><dd>xs:QName</dd></dl></div><div class="div3"><h3><a id="$xqo:global"></a><a id="{quodatum:xqdoca.outputs}$global"></a>3.2 $xqo:global</h3><dl><dt class="label">Summary</dt><dd>annotation for global derived output</dd><dt class="label">Type</dt><dd>xs:QName</dd></dl></div><div class="div3"><h3><a id="$xqo:module"></a><a id="{quodatum:xqdoca.outputs}$module"></a>3.3 $xqo:module</h3><dl><dt class="label">Summary</dt><dd>annotation for module derived output</dd><dt class="label">Type</dt><dd>xs:QName</dd></dl></div><div class="div3"><h3><a id="$xqo:outputs"></a><a id="{quodatum:xqdoca.outputs}$outputs"></a>3.4 $xqo:outputs</h3><dl><dt class="label">Summary</dt><dd>defined serialization options</dd><dt class="label">Type</dt><dd>map(*)</dd></dl></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="xqo:export-resources"></a><a id="{quodatum:xqdoca.outputs}export-resources#1"></a>4.1 xqo:export-resources<div style="float:right"><a href="#xqo:export-resources">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}export-resources#1">xqo:export-resources#1</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>save runtime support files to output</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:export-resources</code>
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;"><div style="text-align: right;"><span><a href="../../modules/F000018/index.html" title="lib/commandline.xqm">quodatum:tools:commandline</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">http://exist-db.org/xquery/semver</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$semver:coerce-regex"></a><a id="{http://exist-db.org/xquery/semver}$coerce-regex"></a><a href="#$semver:coerce-regex">3.1 </a>$semver:coerce-regex</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+A forgiving regular expression for capturing groups needed to coerce a non-SemVer string into SemVer components</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $semver:coerce-regex := &#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "([^-+.]+?)"&#xD;
+    (: `.` + Minor version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `.` + Patch version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `-` + Pre-release metadata (optional): One or more characters that are not `+` :)&#xD;
+    || "(?:-([^+]+?))?"&#xD;
+    (: `+` + Build metadata (optional): One or more characters :)&#xD;
+    || "(?:\+(.+))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</code></pre></details></div><div class="div3"><h3><a id="$semver:expath-package-semver-template-regex"></a><a id="{http://exist-db.org/xquery/semver}$expath-package-semver-template-regex"></a><a href="#$semver:expath-package-semver-template-regex">3.2 </a>$semver:expath-package-semver-template-regex</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+A regular expression for validating SemVer templates as defined in the EXPath Package spec&#xD;
+&#xD;
+</dd><dt class="label">Type</dt><dd></dd></dl><dl><dt title="1">Tags</dt><dd><ul><li><span><a href="http://expath.org/spec/pkg#pkgdep">http://expath.org/spec/pkg#pkgdep</a></span></li></ul></dd></dl><details open="open"><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $semver:expath-package-semver-template-regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: Empty for a major version template, or a zero or a non-negative integer without leading zeros for a minor version template :)&#xD;
+    || "(?:\.(0|[1-9]\d*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</code></pre></details></div><div class="div3"><h3><a id="$semver:regex"></a><a id="{http://exist-db.org/xquery/semver}$regex"></a><a href="#$semver:regex">3.3 </a>$semver:regex</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+A regular expression for validating SemVer strings and parsing valid SemVer strings&#xD;
+&#xD;
+</dd><dt class="label">Type</dt><dd></dd></dl><dl><dt title="1">Tags</dt><dd><ul><li><span><a href="https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string">https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string</a></span></li></ul></dd></dl><details open="open"><summary>Source ( 15 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $semver:regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `.` + Patch version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `-` + Pre-release metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"&#xD;
+    (: `+` + Build metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="semver:cast-identifier"></a><a id="{http://exist-db.org/xquery/semver}cast-identifier#1"></a><a href="#semver:cast-identifier">4.1 </a>semver:cast-identifier</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}cast-identifier#1">#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+A utility function for casting identifiers to the appropriate types&#xD;
+&#xD;
+return The identifier unchanged or cast as an integer&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:cast-identifier</code>
 		  ( 
-			<code class="arg">$target</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as"> as </code><code class="return-type">xs:string</code> destination folder</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Invokes 6 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}copy#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}delete#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}exists#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:export-resources($target as xs:string)                       
-as empty-sequence(){
-  let $res:=$target || "resources"
-  let $_:=trace($target,"target:")
-  let $_:=trace(resolve-uri('resources'),"src:")   
-return  (
-  if(file:exists($res)) then file:delete($res,true()) else (),
-  file:copy(resolve-uri('resources'),$target)
-      )
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:load-generators"></a><a id="{quodatum:xqdoca.outputs}load-generators#1"></a>4.2 xqo:load-generators<div style="float:right"><a href="#xqo:load-generators">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}load-generators#1">xqo:load-generators#1</a></span></p><dt class="label">Summary</dt><dd>dynamically load functions from *.xqm modules from generators directory into static context</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:load-generators</code>
+			<code class="arg">$identifier</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:anyAtomicType</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>identifier<code class="as"> as </code><code class="return-type">xs:string</code> An identifier</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:anyAtomicType</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:cast-identifier($identifier as xs:string) as xs:anyAtomicType {&#xD;
+    if ($identifier castable as xs:integer) then&#xD;
+        $identifier cast as xs:integer&#xD;
+    else&#xD;
+        $identifier&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:coerce"></a><a id="{http://exist-db.org/xquery/semver}coerce#1"></a><a href="#semver:coerce">4.2 </a>semver:coerce</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}coerce#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Coerce a non-SemVer version string into a SemVer string and parse it as such&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:coerce</code>
 		  ( 
-			<code class="arg">$path</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">function(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>path<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">function(*) *</code></li></ul></dd><details><summary>Invokes 6 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}functions#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}list#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}static-base-uri#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}translate#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#0</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}render#2" title="lib/xqdoc-outputs.xqm">xqo:render#2</a></span></li></ul></details><details><summary>Source ( 8 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:load-generators($path as xs:string)
-as function(*)*
-{
-  let $base:=resolve-uri($path,static-base-uri())
-  return file:list($base,true(),"*.xqm")
-       !translate(.,"\","/")
-       ! inspect:functions(resolve-uri(.,$base))
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:render"></a><a id="{quodatum:xqdoca.outputs}render#2"></a>4.3 xqo:render<div style="float:right"><a href="#xqo:render">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}render#2">xqo:render#2</a></span></p><dt class="label">Summary</dt><dd>render $outputs defined in $opts against state</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:render</code>
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> A version string which will be coerced into a parsed SemVer version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code> A map containing analysis of the coerced version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array. Fallback for invalid version strings: 0.0.0.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 16 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:coerce($version as xs:string) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:coerce-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "") ! semver:cast-identifier(.)&#xD;
+    let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    return&#xD;
+        map {&#xD;
+            "major": if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0,&#xD;
+            "minor": if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0,&#xD;
+            "patch": if ($release-identifiers[3] instance of xs:integer) then $release-identifiers[3] else 0,&#xD;
+            "pre-release": $pre-release-identifiers,&#xD;
+            "build-metadata": $build-metadata-identifiers&#xD;
+        }&#xD;
+        =&gt; semver:populate-identifiers()&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:compare"></a><a id="{http://exist-db.org/xquery/semver}compare#2"></a><a id="{http://exist-db.org/xquery/semver}compare#3"></a><a href="#semver:compare">4.3 </a>semver:compare</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}compare#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}compare#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Compare two versions (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:compare</code>
 		  ( 
-			<code class="arg">$model</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$opts</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">map(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>model<code class="as"> as </code><code class="return-type">map(*)</code></li><li>opts<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code>seq of outputs generated suitable for"storing"</li></ul></dd><details><summary>Invokes 8 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}entry#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}merge#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}apply#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}concat#3</span></li><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}load-generators#1" title="lib/xqdoc-outputs.xqm">xqo:load-generators#1</a></span></li><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}render-map#0" title="lib/xqdoc-outputs.xqm">xqo:render-map#0</a></span></li><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}renderers#2" title="lib/xqdoc-outputs.xqm">xqo:renderers#2</a></span></li><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}tokens#1" title="lib/xqdoc-outputs.xqm">xqo:tokens#1</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Source ( 35 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:render( $model as map(*),$opts as map(*))
-as map(*)*
-{ 
-  let $funs:=xqo:load-generators("generators/")
-  
-  let $globals:=xqo:tokens($opts?outputs?global)
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
-  
-  let $modules:=xqo:tokens($opts?outputs?module)
-  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]
-  
-  (: add found renderers info to opts :)
-  let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
-  return (
-      for $render in $global
-      let $doc:= apply($render?function,[$model,$opts])
-      return map{"document": $doc, 
-                 "uri": $render?uri, 
-                 "output":$xqo:outputs?($render?output)
-               },
-               
-      for $render in $module, $file at $pos in $model?files
-      (: override opts for destination path :)
-      let $opts:=map:merge((
-            map{
-              "root": "../../",
-              "resources": "../../resources/"
-            }, $opts))
-      let $doc:= apply($render?function,[$file,$model,$opts])       
-      return map{"document": $doc, 
-                 "uri": concat($file?href,"/",$render?uri),  
-                 "output": $xqo:outputs?($render?output)
-                }
-              )                                      
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:render-map"></a><a id="{quodatum:xqdoca.outputs}render-map#1"></a>4.4 xqo:render-map<div style="float:right"><a href="#xqo:render-map">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}render-map#1">xqo:render-map#1</a></span></p><dt class="label">Summary</dt><dd>info about a render function</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:render-map</code>
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:integer</code></div><div class="proto"><code class="function">semver:compare</code>
 		  ( 
-			<code class="arg">$function</code><code class="as"> as </code><code class="type">function(*)?</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">map(*)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>function<code class="as"> as </code><code class="return-type">function(*)?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invokes 4 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}function-annotations#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2001/XMLSchema}QName#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 18 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:render-map( $function as function(*)?)
-as map(*){
-  let $ann:= inspect:function-annotations($function)
-  let $key:=if(map:contains($ann,$xqo:module)) then
-                $xqo:module
-            else if(map:contains($ann,$xqo:global)) then
-                $xqo:global
-            else
-               error(xs:QName("xqo:anno-map"))
-   return map{
-    "name": $ann?($key)[1],
-     "description": $ann?($key)[2],
-     "function": $function,
-     "type": $key,
-     "uri": $ann?($xqo:ann-output)[1],
-     "output": $ann?($xqo:ann-output)[2]
-} 
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:renderers"></a><a id="{quodatum:xqdoca.outputs}renderers#2"></a>4.5 xqo:renderers<div style="float:right"><a href="#xqo:renderers">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}renderers#2">xqo:renderers#2</a></span></p><dt class="label">Summary</dt><dd>list xqdoca render functions found in the static context</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:renderers</code>
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:integer</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code> -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 12 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:compare($v1 as xs:string, $v2 as xs:string) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1)&#xD;
+    let $parsed-v2 := semver:parse($v2)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:compare($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1, $coerce)&#xD;
+    let $parsed-v2 := semver:parse($v2, $coerce)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:compare-parsed"></a><a id="{http://exist-db.org/xquery/semver}compare-parsed#2"></a><a href="#semver:compare-parsed">4.4 </a>semver:compare-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}compare-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Compare two parsed SemVer versions&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:compare-parsed</code>
 		  ( 
-			<code class="arg">$funs</code><code class="as"> as </code><code class="type">function(*)*</code>, <code class="arg">$qname</code><code class="as"> as </code><code class="type">xs:QName</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">function(*)</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>funs<code class="as"> as </code><code class="return-type">function(*)*</code></li><li>qname<code class="as"> as </code><code class="return-type">xs:QName</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">function(*) *</code></li></ul></dd><details><summary>Invokes 2 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/inspect}function-annotations#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}render#2" title="lib/xqdoc-outputs.xqm">xqo:render#2</a></span></li></ul></details><details><summary>Source ( 8 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:renderers($funs as function(*)*, $qname as xs:QName)
-as function(*)*
-{
-  for $f in  $funs
-  let $ann:=inspect:function-annotations($f) 
-  where map:contains($ann,$qname) and map:contains($ann,$xqo:ann-output)
-  return $f
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:tokens"></a><a id="{quodatum:xqdoca.outputs}tokens#1"></a>4.6 xqo:tokens<div style="float:right"><a href="#xqo:tokens">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}tokens#1">xqo:tokens#1</a></span></p><dt class="label">Summary</dt><dd>parse tokens</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:tokens</code>
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:integer</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A map containing analysis of a version string</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A map containing analysis of a second version string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:integer</code> -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 25 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:compare-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:integer {&#xD;
+    (: Compare major, minor, and patch identifiers :)&#xD;
+    let $release-comparison :=&#xD;
+        semver:compare-release(&#xD;
+            array:subarray($parsed-v1?identifiers, 1, 3),&#xD;
+            array:subarray($parsed-v2?identifiers, 1, 3)&#xD;
+        )&#xD;
+    return&#xD;
+        switch ($release-comparison)&#xD;
+            case 0 return&#xD;
+                (: When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version. :)&#xD;
+                if (array:size($parsed-v1?pre-release) eq 0 and array:size($parsed-v2?pre-release) gt 0) then&#xD;
+                    1&#xD;
+                else if (array:size($parsed-v1?pre-release) gt 0 and array:size($parsed-v2?pre-release) eq 0) then&#xD;
+                    -1&#xD;
+                else&#xD;
+                    (: When major, minor, and patch are equal, compare pre-release :)&#xD;
+                    (: Build metadata SHOULD be ignored when determining version precedence. :)&#xD;
+                    semver:compare-pre-release(&#xD;
+                        $parsed-v1?pre-release,&#xD;
+                        $parsed-v2?pre-release&#xD;
+                    )&#xD;
+            default return&#xD;
+                $release-comparison&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:compare-pre-release"></a><a id="{http://exist-db.org/xquery/semver}compare-pre-release#2"></a><a href="#semver:compare-pre-release">4.5 </a>semver:compare-pre-release</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}compare-pre-release#2">#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+Compare pre-release identifiers&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:compare-pre-release</code>
 		  ( 
-			<code class="arg">$s</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">xs:string</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>s<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string *</code></li></ul></dd><details><summary>Invokes 2 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}normalize-space#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}tokenize#4</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000023/index.html#{quodatum:xqdoca.outputs}render#2" title="lib/xqdoc-outputs.xqm">xqo:render#2</a></span></li></ul></details><details><summary>Source ( 5 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:tokens($s as xs:string)
- as xs:string*
- {
- $s=&gt;normalize-space()=&gt;tokenize("[\s,]+") 
-}</code></pre></details></div><div class="div3"><h3><a id="xqo:zip"></a><a id="{quodatum:xqdoca.outputs}zip#2"></a>4.7 xqo:zip<div style="float:right"><a href="#xqo:zip">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.outputs}zip#2">xqo:zip#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>zip all</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">xqo:zip</code>
+			<code class="arg">$v1-pre-release-ids</code><code class="as"> as </code><code class="type">array(*)</code>, <code class="arg">$v2-pre-release-ids</code><code class="as"> as </code><code class="type">array(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>v1-pre-release-ids<code class="as"> as </code><code class="return-type">array(*)</code></li><li>v2-pre-release-ids<code class="as"> as </code><code class="return-type">array(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 23 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:compare-pre-release($v1-pre-release-ids as array(*), $v2-pre-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-pre-release-ids) eq 0 and array:size($v2-pre-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: A larger set of pre-release fields has a higher precedence than a smaller set, if all of the preceding identifiers are equal. :)&#xD;
+    else if (array:size($v1-pre-release-ids) eq 0) then&#xD;
+        -1&#xD;
+    else if (array:size($v2-pre-release-ids) eq 0) then&#xD;
+        1&#xD;
+    (: Numeric identifiers always have lower precedence than non-numeric identifiers. :)&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:string and array:head($v2-pre-release-ids) instance of xs:integer) then&#xD;
+        1&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:integer and array:head($v2-pre-release-ids) instance of xs:string) then&#xD;
+        -1&#xD;
+    (: Compare values using comparison operators :)&#xD;
+    else if (array:head($v1-pre-release-ids) lt array:head($v2-pre-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-pre-release-ids) gt array:head($v2-pre-release-ids)) then&#xD;
+        1&#xD;
+    (: These identifiers are equal, so recurse to the next pair of identifiers :)&#xD;
+    else&#xD;
+        semver:compare-pre-release(array:tail($v1-pre-release-ids), array:tail($v2-pre-release-ids))&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:compare-release"></a><a id="{http://exist-db.org/xquery/semver}compare-release#2"></a><a href="#semver:compare-release">4.6 </a>semver:compare-release</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}compare-release#2">#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+Compare release identifiers&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:compare-release</code>
 		  ( 
-			<code class="arg">$target</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>target<code class="as"> as </code><code class="return-type">xs:string</code> destination folder using file protocoleg file:///</li><li>name<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code></li></ul></dd><details><summary>Invokes 11 functions from 4 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/archive}create#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/util}if#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}dir-separator#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}list#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}read-binary#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}write-binary#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}ends-with#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}not#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}trace#4</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}translate#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}true#0</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqo:zip($target as xs:string,$name as xs:string)
- as empty-sequence()
- {
-  let $files := file:list($target=&gt;trace("Creating zip: "), true())!util:if(not(ends-with(.,file:dir-separator() )),.)
-let $zip   := archive:create(
-                   $files,
-                   $files!file:read-binary($target || translate(.,"\","/"))
-               )
-return file:write-binary($target || $name ||".zip", $zip)
- }</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>xqdoca</td><td><span class="badge badge-warning" title="Externally defined">https://github.com/Quodatum/xqdoca</span></td></tr><tr><td>xqo</td><td><span><a href="../../modules/F000023/index.html" title="lib/xqdoc-outputs.xqm">quodatum:xqdoca.outputs</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;xqdoc-outputs.xqm&lt;/h1&gt;
- : &lt;p&gt;Load and run a set of generators&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-
-module namespace xqo = 'quodatum:xqdoca.outputs';
-
-
-
-(:~ xqdoca annotation namespace :)
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-
-(:~ annotation for module derived output :)
-declare variable $xqo:module:=QName("https://github.com/Quodatum/xqdoca","module");
-
-(:~ annotation for global derived output :)
-declare variable $xqo:global:=QName("https://github.com/Quodatum/xqdoca","global");
-
-(:~ annotation used to indicate serialization options :)
-declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","output");
-
-(:~ defined serialization options :)
-declare variable $xqo:outputs:=map{
-                                    
-                                     "html5": map{"method": "html", "version":"5.0", "indent": "no"},
-                                     "xhtml": map{"method": "xhtml", "version":"1.1","indent": "no"},
-                                     "xml": map{"indent": "no"},
-                                     "json": map{"method": "json"},
-                                     "text": map{"method": "text"}
-                                   };
-
-
-
-
-(:~ save runtime support files to output
- : @param $target destination folder
- :)
-declare %updating
-function xqo:export-resources($target as xs:string)                       
-as empty-sequence(){
-  let $res:=$target || "resources"
-  let $_:=trace($target,"target:")
-  let $_:=trace(resolve-uri('resources'),"src:")   
-return  (
-  if(file:exists($res)) then file:delete($res,true()) else (),
-  file:copy(resolve-uri('resources'),$target)
-      )
-};
-
-(:~ 
- : list xqdoca render functions found in the static context
-:)
-declare function xqo:renderers($funs as function(*)*, $qname as xs:QName)
-as function(*)*
-{
-  for $f in  $funs
-  let $ann:=inspect:function-annotations($f) 
-  where map:contains($ann,$qname) and map:contains($ann,$xqo:ann-output)
-  return $f
-};
-
-(:~
- :  info about a render function
-:)
-declare function xqo:render-map( $function as function(*)?)
-as map(*){
-  let $ann:= inspect:function-annotations($function)
-  let $key:=if(map:contains($ann,$xqo:module)) then
-                $xqo:module
-            else if(map:contains($ann,$xqo:global)) then
-                $xqo:global
-            else
-               error(xs:QName("xqo:anno-map"))
-   return map{
-    "name": $ann?($key)[1],
-     "description": $ann?($key)[2],
-     "function": $function,
-     "type": $key,
-     "uri": $ann?($xqo:ann-output)[1],
-     "output": $ann?($xqo:ann-output)[2]
-} 
-};
-
-(:~
- :  render $outputs defined in $opts against state
- : @return seq of outputs generated suitable for"storing"
-:)
-declare function xqo:render( $model as map(*),$opts as map(*))
-as map(*)*
-{ 
-  let $funs:=xqo:load-generators("generators/")
-  
-  let $globals:=xqo:tokens($opts?outputs?global)
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
-  
-  let $modules:=xqo:tokens($opts?outputs?module)
-  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]
-  
-  (: add found renderers info to opts :)
-  let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
-  return (
-      for $render in $global
-      let $doc:= apply($render?function,[$model,$opts])
-      return map{"document": $doc, 
-                 "uri": $render?uri, 
-                 "output":$xqo:outputs?($render?output)
-               },
-               
-      for $render in $module, $file at $pos in $model?files
-      (: override opts for destination path :)
-      let $opts:=map:merge((
-            map{
-              "root": "../../",
-              "resources": "../../resources/"
-            }, $opts))
-      let $doc:= apply($render?function,[$file,$model,$opts])       
-      return map{"document": $doc, 
-                 "uri": concat($file?href,"/",$render?uri),  
-                 "output": $xqo:outputs?($render?output)
-                }
-              )                                      
-};
-
-(:~
- : dynamically load functions from *.xqm modules from generators directory into static context
- :)
-declare function xqo:load-generators($path as xs:string)
-as function(*)*
-{
-  let $base:=resolve-uri($path,static-base-uri())
-  return file:list($base,true(),"*.xqm")
-       !translate(.,"\","/")
-       ! inspect:functions(resolve-uri(.,$base))
-};
-
-(:~ 
- : parse tokens
- :)
- declare function xqo:tokens($s as xs:string)
- as xs:string*
- {
- $s=&gt;normalize-space()=&gt;tokenize("[\s,]+") 
-};
-
-(:~ 
- : zip all 
- : @param $target destination folder using file protocoleg file:///
- :)
- declare %updating
- function xqo:zip($target as xs:string,$name as xs:string)
- as empty-sequence()
- {
-  let $files := file:list($target=&gt;trace("Creating zip: "), true())!util:if(not(ends-with(.,file:dir-separator() )),.)
-let $zip   := archive:create(
-                   $files,
-                   $files!file:read-binary($target || translate(.,"\","/"))
-               )
-return file:write-binary($target || $name ||".zip", $zip)
- };</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+			<code class="arg">$v1-release-ids</code><code class="as"> as </code><code class="type">array(*)</code>, <code class="arg">$v2-release-ids</code><code class="as"> as </code><code class="type">array(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>v1-release-ids<code class="as"> as </code><code class="return-type">array(*)</code></li><li>v2-release-ids<code class="as"> as </code><code class="return-type">array(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 12 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:compare-release($v1-release-ids as array(*), $v2-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the release portions of the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-release-ids) eq 0 and array:size($v2-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: Compare members using numeric operators :)&#xD;
+    else if (array:head($v1-release-ids) lt array:head($v2-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-release-ids) gt array:head($v2-release-ids)) then&#xD;
+        1&#xD;
+    else&#xD;
+        semver:compare-release(array:tail($v1-release-ids), array:tail($v2-release-ids))&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:eq"></a><a id="{http://exist-db.org/xquery/semver}eq#2"></a><a id="{http://exist-db.org/xquery/semver}eq#3"></a><a href="#semver:eq">4.7 </a>semver:eq</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}eq#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}eq#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is equal to v2 (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:eq</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:eq</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:eq($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:eq($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:eq-parsed"></a><a id="{http://exist-db.org/xquery/semver}eq-parsed#2"></a><a href="#semver:eq-parsed">4.8 </a>semver:eq-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}eq-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is equal to a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:eq-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:eq-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:error"></a><a id="{http://exist-db.org/xquery/semver}error#2"></a><a href="#semver:error">4.9 </a>semver:error</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}error#2">#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+Raise a descriptive error&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:error</code>
+		  ( 
+			<code class="arg">$code</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>code<code class="as"> as </code><code class="return-type">xs:string</code> An error code</li><li>version<code class="as"> as </code><code class="return-type">xs:string</code> The version or identifier that triggered the error</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> The error.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 23 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:error($code as xs:string, $version as xs:string) {&#xD;
+    let $errors :=&#xD;
+        map {&#xD;
+            "regex-error":&#xD;
+                map {&#xD;
+                    "description": "Version did not match the regular expression for valid SemVer",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "regex-error")&#xD;
+                },&#xD;
+            "identifier-error":&#xD;
+                map {&#xD;
+                    "description": "Version identifiers did not conform to SemVer spec",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "identifier-error")&#xD;
+                },&#xD;
+            "template-error":&#xD;
+                map {&#xD;
+                    "description": "Template did not conform to the EXPath Package spec for SemVer templates",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "template-error")&#xD;
+                }&#xD;
+        }&#xD;
+    let $error := $errors?($code)&#xD;
+    return&#xD;
+        error($error?qname, $error?description || ": '" || $version || "'")&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:ge"></a><a id="{http://exist-db.org/xquery/semver}ge#2"></a><a id="{http://exist-db.org/xquery/semver}ge#3"></a><a href="#semver:ge">4.10 </a>semver:ge</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ge#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ge#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is the same or higher version than v2 (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:ge</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:ge</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is greater than or equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ge($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ge($v1, $v2, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ge($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ge 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:ge-parsed"></a><a id="{http://exist-db.org/xquery/semver}ge-parsed#2"></a><a href="#semver:ge-parsed">4.11 </a>semver:ge-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ge-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is the same or higher version than a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:ge-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is greater than or equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ge-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ge 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:gt"></a><a id="{http://exist-db.org/xquery/semver}gt#2"></a><a id="{http://exist-db.org/xquery/semver}gt#3"></a><a href="#semver:gt">4.12 </a>semver:gt</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}gt#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}gt#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is a higher version than v2 (strictly)&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:gt</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:gt</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is greater than v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:gt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:gt($v1, $v2, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:gt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq 1&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:gt-parsed"></a><a id="{http://exist-db.org/xquery/semver}gt-parsed#2"></a><a href="#semver:gt-parsed">4.13 </a>semver:gt-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}gt-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is a higher version than a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:gt-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is greater than v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:gt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 1&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:le"></a><a id="{http://exist-db.org/xquery/semver}le#2"></a><a id="{http://exist-db.org/xquery/semver}le#3"></a><a href="#semver:le">4.14 </a>semver:le</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}le#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}le#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is a lower version or the same version as v2 (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:le</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:le</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is less than or equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:le($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:le($v1, $v2, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:le($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) le 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:le-parsed"></a><a id="{http://exist-db.org/xquery/semver}le-parsed#2"></a><a href="#semver:le-parsed">4.15 </a>semver:le-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}le-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is a lower version or the same version as a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:le-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is less than or equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:le-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) le 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:lt"></a><a id="{http://exist-db.org/xquery/semver}lt#2"></a><a id="{http://exist-db.org/xquery/semver}lt#3"></a><a href="#semver:lt">4.16 </a>semver:lt</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}lt#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}lt#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is a lower version than v2 (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:lt</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:lt</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is less than v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:lt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:lt($v1, $v2, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:lt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq -1&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:lt-parsed"></a><a id="{http://exist-db.org/xquery/semver}lt-parsed#2"></a><a href="#semver:lt-parsed">4.17 </a>semver:lt-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}lt-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is a lower version than a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:lt-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is less than v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:lt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq -1&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:ne"></a><a id="{http://exist-db.org/xquery/semver}ne#2"></a><a id="{http://exist-db.org/xquery/semver}ne#3"></a><a href="#semver:ne">4.18 </a>semver:ne</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ne#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ne#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if v1 is not equal to v2 (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:ne</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div><div class="proto"><code class="function">semver:ne</code>
+		  ( 
+			<code class="arg">$v1</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$v2</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>v1<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>v2<code class="as"> as </code><code class="return-type">xs:string</code> A second version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is not equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 6 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ne($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ne($v1, $v2, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ne($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ne 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:ne-parsed"></a><a id="{http://exist-db.org/xquery/semver}ne-parsed#2"></a><a href="#semver:ne-parsed">4.19 </a>semver:ne-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}ne-parsed#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Test if a parsed v1 is not equal to a parsed v2&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:ne-parsed</code>
+		  ( 
+			<code class="arg">$parsed-v1</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$parsed-v2</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-v1<code class="as"> as </code><code class="return-type">map(*)</code> A parsed Semver version</li><li>parsed-v2<code class="as"> as </code><code class="return-type">map(*)</code> A second parsed Semver version</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> true if v1 is not equal to v2</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:ne-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ne 0&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:parse"></a><a id="{http://exist-db.org/xquery/semver}parse#1"></a><a id="{http://exist-db.org/xquery/semver}parse#2"></a><a href="#semver:parse">4.20 </a>semver:parse</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}parse#1">#1</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}parse#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Parse a SemVer string (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:parse</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div><div class="proto"><code class="function">semver:parse</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code> A map containing analysis of the parsed SemVer versions, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</li></ul></dd><dt class="label">Error</dt><dd>regex-error</dd><dt class="label">Error</dt><dd>identifier-error</dd><dl><dt title="4">Tags</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@error</span>:
+                <span>regex-error</span></span></li><li><span><span class="badge badge-pill badge-light">@error</span>:
+                <span>identifier-error</span></span></li><li><span><span class="badge badge-pill badge-light">@error</span>:
+                <span>regex-error</span></span></li><li><span><span class="badge badge-pill badge-light">@error</span>:
+                <span>identifier-error</span></span></li></ul></dd></dl><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 27 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:parse($version as xs:string) as map(*) {&#xD;
+    semver:parse($version, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:parse($version as xs:string, $coerce as xs:boolean) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then&#xD;
+            if ($coerce) then &#xD;
+                semver:coerce($version)&#xD;
+            else&#xD;
+                semver:error("identifier-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := subsequence($groups, 1, 3) ! semver:cast-identifier(.)&#xD;
+            (: Groups 4 and 5 are optional and so must be selected by @nr rather than position :)&#xD;
+            let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            return&#xD;
+                map {&#xD;
+                    "major": $release-identifiers[1],&#xD;
+                    "minor": $release-identifiers[2],&#xD;
+                    "patch": $release-identifiers[3],&#xD;
+                    "pre-release": $pre-release-identifiers,&#xD;
+                    "build-metadata": $build-metadata-identifiers&#xD;
+                }&#xD;
+                =&gt; semver:populate-identifiers()&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:populate-identifiers"></a><a id="{http://exist-db.org/xquery/semver}populate-identifiers#1"></a><a href="#semver:populate-identifiers">4.21 </a>semver:populate-identifiers</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}populate-identifiers#1">#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+A utility function for populating the identifiers entry in a parsed version&#xD;
+&#xD;
+return The map with an identifiers entry&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:populate-identifiers</code>
+		  ( 
+			<code class="arg">$parsed-version</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-version<code class="as"> as </code><code class="return-type">map(*)</code> A map containing analysis of a version string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 4 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:populate-identifiers($parsed-version as map(*)) as map(*) {&#xD;
+    $parsed-version&#xD;
+    =&gt; map:put("identifiers", [ $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ])&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:resolve-expath-package-semver-template"></a><a id="{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template#2"></a><a href="#semver:resolve-expath-package-semver-template">4.22 </a>semver:resolve-expath-package-semver-template</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template#2">#2</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Resolve an EXPath SemVer Package Template&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:resolve-expath-package-semver-template</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$mode</code><code class="as"> as </code><code class="type">xs:string</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> An EXPath Package SemVer Template</li><li>mode<code class="as"> as </code><code class="return-type">xs:string</code> Mode for resolving the template: "min" (floor) or "max" (ceiling)</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 31 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:resolve-expath-package-semver-template($version as xs:string, $mode as xs:string) {&#xD;
+    let $analysis := analyze-string($version, $semver:expath-package-semver-template-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then &#xD;
+            semver:error("template-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "")[. ne ""] ! semver:cast-identifier(.)&#xD;
+            let $major := if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0&#xD;
+            let $minor := if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0&#xD;
+            let $is-major-version-template := empty($release-identifiers[2])&#xD;
+            return&#xD;
+                if ($is-major-version-template) then&#xD;
+                    map {&#xD;
+                        "major": if ($mode eq "min") then $major else $major + 1,&#xD;
+                        "minor": 0,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+                else (: if ($is-minor-version-template) then :)&#xD;
+                    map {&#xD;
+                        "major": $major,&#xD;
+                        "minor": if ($mode eq "min") then $minor else $minor + 1,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:resolve-expath-package-semver-template-max"></a><a id="{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template-max#1"></a><a href="#semver:resolve-expath-package-semver-template-max">4.23 </a>semver:resolve-expath-package-semver-template-max</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template-max#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Resolve an EXPath Package SemVer Template as maximum (ceiling)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:resolve-expath-package-semver-template-max</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> An EXPath SemVer Template</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code> A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:resolve-expath-package-semver-template-max($version as xs:string) as map(*)  {&#xD;
+    semver:resolve-expath-package-semver-template($version, "max")&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:resolve-expath-package-semver-template-min"></a><a id="{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template-min#1"></a><a href="#semver:resolve-expath-package-semver-template-min">4.24 </a>semver:resolve-expath-package-semver-template-min</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}resolve-expath-package-semver-template-min#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Resolve an EXPath Package SemVer Template as minimum (floor)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:resolve-expath-package-semver-template-min</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> An EXPath SemVer Template</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code> A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:resolve-expath-package-semver-template-min($version as xs:string) as map(*) {&#xD;
+    semver:resolve-expath-package-semver-template($version, "min")&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:satisfies-expath-package-dependency-versioning-attributes"></a><a id="{http://exist-db.org/xquery/semver}satisfies-expath-package-dependency-versioning-attributes#5"></a><a href="#semver:satisfies-expath-package-dependency-versioning-attributes">4.25 </a>semver:satisfies-expath-package-dependency-versioning-attributes</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}satisfies-expath-package-dependency-versioning-attributes#5">#5</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Check if a version satisfies EXPath Package dependency versioning attributes.&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:satisfies-expath-package-dependency-versioning-attributes</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$versions</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$semver</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$semver-min</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$semver-max</code><code class="as"> as </code><code class="type">xs:string?</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> A version string s An EXPath Package "versions" versioning attribute</li><li>versions<code class="as"> as </code><code class="return-type">xs:string?</code> An EXPath Package "versions" versioning attribute</li><li>semver<code class="as"> as </code><code class="return-type">xs:string?</code> An EXPath Package "semver" versioning attribute -min An EXPath Package "semver-min" versioning attribute -min An EXPath Package "semver-max" versioning attribute</li><li>semver-min<code class="as"> as </code><code class="return-type">xs:string?</code> An EXPath Package "semver-min" versioning attribute  An EXPath Package "semver-max" versioning attribute</li><li>semver-max<code class="as"> as </code><code class="return-type">xs:string?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> True if the version satisfies the attributes, or false if not</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 77 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:satisfies-expath-package-dependency-versioning-attributes(&#xD;
+    $version as xs:string, &#xD;
+    $versions as xs:string?, &#xD;
+    $semver as xs:string?, &#xD;
+    $semver-min as xs:string?, &#xD;
+    $semver-max as xs:string?&#xD;
+) as xs:boolean {&#xD;
+    (: "If the versions attribute is used, it defines the exact set of acceptable versions &#xD;
+     : for the secondary package, separated by spaces." :)&#xD;
+    let $satisfies-versions :=&#xD;
+        if (empty($versions)) then&#xD;
+            false()&#xD;
+        else&#xD;
+            $version = tokenize($versions)&#xD;
+    (: Parse the version and evaluate the remaining versioning attributes, accounting for the possibility &#xD;
+     : that they may be EXPath Package SemVer templates. :)&#xD;
+    let $version-parsed := semver:parse($version, true())&#xD;
+    let $satisfies-semver := &#xD;
+        if (empty($semver)) then&#xD;
+            false()&#xD;
+        (: If semver is a template, resolve it into max and min versions :)&#xD;
+        else if (semver:validate-expath-package-semver-template($semver)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-min($semver)&#xD;
+            )&#xD;
+            and&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:eq($version, $semver, true())&#xD;
+    let $satisfies-semver-min :=&#xD;
+        if (empty($semver-min)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-min)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed, &#xD;
+                semver:resolve-expath-package-semver-template-min($semver-min)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:ge($version, $semver-min, true())&#xD;
+    let $satisfies-semver-max := &#xD;
+        if (empty($semver-max)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-max)) then&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver-max)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:lt($version, $semver-max, true())&#xD;
+    return&#xD;
+        $satisfies-versions &#xD;
+        or $satisfies-semver &#xD;
+        or (&#xD;
+            if (exists($semver-min) and exists($semver-max)) then&#xD;
+                $satisfies-semver-min and $satisfies-semver-max&#xD;
+            else if (exists($semver-min)) then&#xD;
+                $satisfies-semver-min&#xD;
+            else if (exists($semver-max)) then&#xD;
+                $satisfies-semver-max&#xD;
+            else&#xD;
+                false()&#xD;
+        )&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:serialize"></a><a id="{http://exist-db.org/xquery/semver}serialize#1"></a><a id="{http://exist-db.org/xquery/semver}serialize#5"></a><a href="#semver:serialize">4.26 </a>semver:serialize</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}serialize#1">#1</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}serialize#5">#5</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Serialize a SemVer string&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:serialize</code>
+		  ( 
+			<code class="arg">$parsed-version</code><code class="as"> as </code><code class="type">map(*)</code> )</div><div class="proto"><code class="function">semver:serialize</code>
+		  ( 
+			<code class="arg">$major</code><code class="as"> as </code><code class="type">xs:integer</code>, <code class="arg">$minor</code><code class="as"> as </code><code class="type">xs:integer</code>, <code class="arg">$patch</code><code class="as"> as </code><code class="type">xs:integer</code>, <code class="arg">$pre-release</code><code class="as"> as </code><code class="type">xs:anyAtomicType*</code>, <code class="arg">$build-metadata</code><code class="as"> as </code><code class="type">xs:anyAtomicType*</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>major<code class="as"> as </code><code class="return-type">xs:integer</code> The major version</li><li>minor<code class="as"> as </code><code class="return-type">xs:integer</code> The minor version</li><li>patch<code class="as"> as </code><code class="return-type">xs:integer</code> The patch version</li><li>pre-release<code class="as"> as </code><code class="return-type">xs:anyAtomicType*</code> Pre-release identifiers</li><li>build-metadata<code class="as"> as </code><code class="return-type">xs:anyAtomicType*</code> Build identifiers</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> A SemVer string</li></ul></dd><dl><dt title="1">Tags</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@deprecated</span>:
+                <span>As of 2.4.0 replace with serialize-parsed</span></span></li></ul></dd></dl><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 22 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:serialize($parsed-version as map(*)) {&#xD;
+    semver:serialize-parsed($parsed-version)&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:serialize(&#xD;
+    $major as xs:integer, &#xD;
+    $minor as xs:integer, &#xD;
+    $patch as xs:integer, &#xD;
+    $pre-release as xs:anyAtomicType*, &#xD;
+    $build-metadata as xs:anyAtomicType*&#xD;
+) {&#xD;
+    let $release := string-join(($major, $minor, $patch), ".")&#xD;
+    let $pre-release := string-join($pre-release ! string(.), ".")&#xD;
+    let $build-metadata := string-join($build-metadata ! string(.), ".")&#xD;
+    let $candidate :=&#xD;
+        $release&#xD;
+        || (if ($pre-release) then "-" || $pre-release else ())&#xD;
+        || (if ($build-metadata) then "+" || $build-metadata else ())&#xD;
+    (: Raise an error if the candidate is invalid :)&#xD;
+    let $check := semver:parse($candidate)&#xD;
+    return&#xD;
+        $candidate&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:serialize-parsed"></a><a id="{http://exist-db.org/xquery/semver}serialize-parsed#1"></a><a href="#semver:serialize-parsed">4.27 </a>semver:serialize-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}serialize-parsed#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Serialize a parsed SemVer version&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:serialize-parsed</code>
+		  ( 
+			<code class="arg">$parsed-version</code><code class="as"> as </code><code class="type">map(*)</code> )</div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-version<code class="as"> as </code><code class="return-type">map(*)</code> A map containing the components of the SemVer string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type"></code> A SemVer string</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 9 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:serialize-parsed($parsed-version as map(*)) {&#xD;
+    semver:serialize(&#xD;
+        $parsed-version?major, &#xD;
+        $parsed-version?minor, &#xD;
+        $parsed-version?patch, &#xD;
+        $parsed-version?pre-release, &#xD;
+        $parsed-version?build-metadata&#xD;
+    )&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:sort"></a><a id="{http://exist-db.org/xquery/semver}sort#1"></a><a id="{http://exist-db.org/xquery/semver}sort#2"></a><a id="{http://exist-db.org/xquery/semver}sort#3"></a><a href="#semver:sort">4.28 </a>semver:sort</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}sort#1">#1</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}sort#2">#2</a></span><span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}sort#3">#3</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Sort SemVer strings (strictly)&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:sort</code>
+		  ( 
+			<code class="arg">$versions</code><code class="as"> as </code><code class="type">xs:string+</code> )<code class="as"> as </code><code class="type">xs:string+</code></div><div class="proto"><code class="function">semver:sort</code>
+		  ( 
+			<code class="arg">$versions</code><code class="as"> as </code><code class="type">xs:string*</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">xs:string*</code></div><div class="proto"><code class="function">semver:sort</code>
+		  ( 
+			<code class="arg">$items</code><code class="as"> as </code><code class="type">item()*</code>, <code class="arg">$function</code><code class="as"> as </code><code class="type">function(*)</code>, <code class="arg">$coerce</code><code class="as"> as </code><code class="type">xs:boolean</code> )<code class="as"> as </code><code class="type">item()*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>items<code class="as"> as </code><code class="return-type">item()*</code> A sequence of items to sort</li><li>function<code class="as"> as </code><code class="return-type">function(*)</code> A function taking a single parameter used to derive a SemVer string from the item</li><li>coerce<code class="as"> as </code><code class="return-type">xs:boolean</code> An option for coercing non-SemVer version strings into parsable form</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code> The sequence of items in SemVer order</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 28 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:sort($versions as xs:string+) as xs:string+ {&#xD;
+    semver:sort($versions, false())&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:sort($versions as xs:string*, $coerce as xs:boolean) as xs:string* {&#xD;
+    let $parsed := $versions ! semver:parse(., $coerce)&#xD;
+    let $sorted := semver:sort-parsed($parsed)&#xD;
+    for $s in $sorted&#xD;
+    return&#xD;
+        semver:serialize($s)&#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:sort($items as item()*, $function as function(*), $coerce as xs:boolean) as item()* {&#xD;
+    let $items-with-version :=&#xD;
+        for $item in $items&#xD;
+        let $version-string := $function($item)&#xD;
+        let $parsed-version := semver:parse($version-string, $coerce)&#xD;
+        return&#xD;
+            map {&#xD;
+                "item": $item,&#xD;
+                "version-string": $version-string,&#xD;
+                "parsed-version": $parsed-version&#xD;
+            }&#xD;
+    let $sorted-versions := semver:sort-parsed($items-with-version?parsed-version)&#xD;
+    for $sorted-version in $sorted-versions&#xD;
+    for $item-with-version in $items-with-version&#xD;
+    where semver:eq-parsed($item-with-version?parsed-version, $sorted-version)&#xD;
+    return&#xD;
+        $item-with-version?item&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:sort-parsed"></a><a id="{http://exist-db.org/xquery/semver}sort-parsed#1"></a><a href="#semver:sort-parsed">4.29 </a>semver:sort-parsed</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}sort-parsed#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Sort SemVer maps&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:sort-parsed</code>
+		  ( 
+			<code class="arg">$parsed-versions</code><code class="as"> as </code><code class="type">map(*)*</code> )<code class="as"> as </code><code class="type">map(*)*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-versions<code class="as"> as </code><code class="return-type">map(*)*</code> A sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code> A sorted sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 26 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:sort-parsed($parsed-versions as map(*)*) as map(*)* {&#xD;
+    (: First, sort versions by major, minor, and patch (using fast standard sort) :)&#xD;
+    let $release-sorted := fn:sort($parsed-versions, (), function($p) { $p?major, $p?minor, $p?patch } )&#xD;
+    return&#xD;
+        (: Second, sort any versions with pre-release fields,&#xD;
+           then group by major, minor, and patch to limit sorting to like versions :)&#xD;
+        for $p1 in $release-sorted&#xD;
+        group by $major := $p1?major&#xD;
+        order by $major&#xD;
+        return&#xD;
+            for $p2 in $p1&#xD;
+            group by $minor := $p2?minor&#xD;
+            order by $minor&#xD;
+            return&#xD;
+                for $p3 in $p2&#xD;
+                group by $patch := $p3?patch&#xD;
+                let $releases := $p3[?pre-release =&gt; array:size() eq 0]&#xD;
+                let $pre-releases := $p3[?pre-release =&gt; array:size() gt 0]&#xD;
+                order by $patch&#xD;
+                return&#xD;
+                    (&#xD;
+                        semver:sort-pre-release($pre-releases, ()),&#xD;
+                        (: Versions without pre-release metadata take precedence :)&#xD;
+                        $releases&#xD;
+                    )&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:sort-pre-release"></a><a id="{http://exist-db.org/xquery/semver}sort-pre-release#2"></a><a href="#semver:sort-pre-release">4.30 </a>semver:sort-pre-release</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}sort-pre-release#2">#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+Sort pre-release fields&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:sort-pre-release</code>
+		  ( 
+			<code class="arg">$parsed-versions</code><code class="as"> as </code><code class="type">map(*)*</code>, <code class="arg">$sorted-versions</code><code class="as"> as </code><code class="type">map(*)*</code> )<code class="as"> as </code><code class="type">map(*)*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>parsed-versions<code class="as"> as </code><code class="return-type">map(*)*</code> The versions to sort</li><li>sorted-versions<code class="as"> as </code><code class="return-type">map(*)*</code> An accumulator for sorted versions</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*) *</code> Sorted versions</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 13 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:sort-pre-release($parsed-versions as map(*)*, $sorted-versions as map(*)*) as map(*)* {&#xD;
+    if (exists($parsed-versions)) then&#xD;
+        let $head := head($parsed-versions)&#xD;
+        let $rest := tail($parsed-versions)&#xD;
+        let $is-largest-pre-release := every $item in $rest?pre-release satisfies semver:compare-pre-release($head?pre-release, $item) = (1, 0)&#xD;
+        return&#xD;
+            if ($is-largest-pre-release) then&#xD;
+                semver:sort-pre-release(tail($parsed-versions), ($head, $sorted-versions))&#xD;
+            else&#xD;
+                semver:sort-pre-release(($rest, $head), $sorted-versions)&#xD;
+    else&#xD;
+        $sorted-versions&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:validate"></a><a id="{http://exist-db.org/xquery/semver}validate#1"></a><a href="#semver:validate">4.31 </a>semver:validate</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}validate#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Validate whether a SemVer string conforms to the spec&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:validate</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> True if the version is valid, false if not</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:validate($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:regex)&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="semver:validate-expath-package-semver-template"></a><a id="{http://exist-db.org/xquery/semver}validate-expath-package-semver-template#1"></a><a href="#semver:validate-expath-package-semver-template">4.32 </a>semver:validate-expath-package-semver-template</h3><p>Arities: <span style="margin-left:1em"><a href="#{http://exist-db.org/xquery/semver}validate-expath-package-semver-template#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+Validate whether a version string conforms to the rules for SemVer templates as defined in the EXPath Package spec&#xD;
+&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">semver:validate-expath-package-semver-template</code>
+		  ( 
+			<code class="arg">$version</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:boolean</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>version<code class="as"> as </code><code class="return-type">xs:string</code> A version string</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:boolean</code> True if the version is an SemVer template, false if not</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 3 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function semver:validate-expath-package-semver-template($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:expath-package-semver-template-regex)&#xD;
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>array</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/array</span></td></tr><tr><td>fn</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions</span></td></tr><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>semver</td><td><span><a href="../../modules/F000023/index.html" title="lib/semver.xqm">http://exist-db.org/xquery/semver</a></span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:&#xD;
+ : Copyright © 2019, Joe Wicentowski&#xD;
+ : All rights reserved.&#xD;
+ :&#xD;
+ : Redistribution and use in source and binary forms, with or without&#xD;
+ : modification, are permitted provided that the following conditions are met:&#xD;
+ :     * Redistributions of source code must retain the above copyright&#xD;
+ :       notice, this list of conditions and the following disclaimer.&#xD;
+ :     * Redistributions in binary form must reproduce the above copyright&#xD;
+ :       notice, this list of conditions and the following disclaimer in the&#xD;
+ :       documentation and/or other materials provided with the distribution.&#xD;
+ :     * Neither the name of the &lt;organization&gt; nor the&#xD;
+ :       names of its contributors may be used to endorse or promote products&#xD;
+ :       derived from this software without specific prior written permission.&#xD;
+ :&#xD;
+ : THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND&#xD;
+ : ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED&#xD;
+ : WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#xD;
+ : DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY&#xD;
+ : DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES&#xD;
+ : (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;&#xD;
+ : LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND&#xD;
+ : ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT&#xD;
+ : (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS&#xD;
+ : SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&#xD;
+ :)&#xD;
+xquery version "3.1";&#xD;
+&#xD;
+(:~ Validate, compare, sort, parse, and serialize Semantic Versioning (SemVer)&#xD;
+ :  2.0.0 version strings, using XQuery.&#xD;
+ :&#xD;
+ :  SemVer rules are applied strictly, raising errors when version strings do&#xD;
+ :  not conform to the spec.&#xD;
+ : &#xD;
+ :  Additional functions are supplied for handling SemVer templates, as defined &#xD;
+ :  in the EXPath Package spec.&#xD;
+ :&#xD;
+ :  @author Joe Wicentowski&#xD;
+ :  @see https://semver.org/spec/v2.0.0.html&#xD;
+ :  @see http://expath.org/spec/pkg#pkgdep&#xD;
+ :)&#xD;
+&#xD;
+module namespace semver = "http://exist-db.org/xquery/semver";&#xD;
+&#xD;
+declare namespace array="http://www.w3.org/2005/xpath-functions/array";&#xD;
+declare namespace map="http://www.w3.org/2005/xpath-functions/map";&#xD;
+&#xD;
+(:~ A regular expression for validating SemVer strings and parsing valid SemVer strings&#xD;
+ :  &#xD;
+ :  @see https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string&#xD;
+ :)&#xD;
+declare variable $semver:regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `.` + Patch version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `-` + Pre-release metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"&#xD;
+    (: `+` + Build metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"&#xD;
+;&#xD;
+&#xD;
+(:~ A forgiving regular expression for capturing groups needed to coerce a non-SemVer string into SemVer components :)&#xD;
+declare variable $semver:coerce-regex := &#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "([^-+.]+?)"&#xD;
+    (: `.` + Minor version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `.` + Patch version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `-` + Pre-release metadata (optional): One or more characters that are not `+` :)&#xD;
+    || "(?:-([^+]+?))?"&#xD;
+    (: `+` + Build metadata (optional): One or more characters :)&#xD;
+    || "(?:\+(.+))?"&#xD;
+    (: End of string :)&#xD;
+    || "$";&#xD;
+&#xD;
+(:~ A regular expression for validating SemVer templates as defined in the EXPath Package spec&#xD;
+ :  &#xD;
+ :  @see http://expath.org/spec/pkg#pkgdep&#xD;
+ :)&#xD;
+declare variable $semver:expath-package-semver-template-regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: Empty for a major version template, or a zero or a non-negative integer without leading zeros for a minor version template :)&#xD;
+    || "(?:\.(0|[1-9]\d*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$";&#xD;
+&#xD;
+(:~ Validate whether a SemVer string conforms to the spec&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return True if the version is valid, false if not&#xD;
+ :)&#xD;
+declare function semver:validate($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:regex)&#xD;
+};&#xD;
+&#xD;
+(:~ Validate whether a version string conforms to the rules for SemVer templates as defined in the EXPath Package spec&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return True if the version is an SemVer template, false if not&#xD;
+ :)&#xD;
+declare function semver:validate-expath-package-semver-template($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:expath-package-semver-template-regex)&#xD;
+};&#xD;
+&#xD;
+(:~ Parse a SemVer string (strictly)&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return A map containing analysis of the parsed version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :  @error regex-error&#xD;
+ :  @error identifier-error&#xD;
+ :)&#xD;
+declare function semver:parse($version as xs:string) as map(*) {&#xD;
+    semver:parse($version, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Parse a SemVer string (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return A map containing analysis of the parsed SemVer versions, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :  @error regex-error&#xD;
+ :  @error identifier-error&#xD;
+ :)&#xD;
+declare function semver:parse($version as xs:string, $coerce as xs:boolean) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then&#xD;
+            if ($coerce) then &#xD;
+                semver:coerce($version)&#xD;
+            else&#xD;
+                semver:error("identifier-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := subsequence($groups, 1, 3) ! semver:cast-identifier(.)&#xD;
+            (: Groups 4 and 5 are optional and so must be selected by @nr rather than position :)&#xD;
+            let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            return&#xD;
+                map {&#xD;
+                    "major": $release-identifiers[1],&#xD;
+                    "minor": $release-identifiers[2],&#xD;
+                    "patch": $release-identifiers[3],&#xD;
+                    "pre-release": $pre-release-identifiers,&#xD;
+                    "build-metadata": $build-metadata-identifiers&#xD;
+                }&#xD;
+                =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Coerce a non-SemVer version string into a SemVer string and parse it as such&#xD;
+ :  &#xD;
+ :  @param $version A version string which will be coerced into a parsed SemVer version&#xD;
+ :  @return A map containing analysis of the coerced version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array. Fallback for invalid version strings: 0.0.0.&#xD;
+ :)&#xD;
+declare function semver:coerce($version as xs:string) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:coerce-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "") ! semver:cast-identifier(.)&#xD;
+    let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    return&#xD;
+        map {&#xD;
+            "major": if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0,&#xD;
+            "minor": if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0,&#xD;
+            "patch": if ($release-identifiers[3] instance of xs:integer) then $release-identifiers[3] else 0,&#xD;
+            "pre-release": $pre-release-identifiers,&#xD;
+            "build-metadata": $build-metadata-identifiers&#xD;
+        }&#xD;
+        =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath Package SemVer Template as minimum (floor)&#xD;
+ :  &#xD;
+ :  @param $version An EXPath SemVer Template&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template-min($version as xs:string) as map(*) {&#xD;
+    semver:resolve-expath-package-semver-template($version, "min")&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath Package SemVer Template as maximum (ceiling)&#xD;
+ :  &#xD;
+ :  @param $version An EXPath SemVer Template&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template-max($version as xs:string) as map(*)  {&#xD;
+    semver:resolve-expath-package-semver-template($version, "max")&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath SemVer Package Template&#xD;
+ :  &#xD;
+ :  @param $version An EXPath Package SemVer Template&#xD;
+ :  @param $mode Mode for resolving the template: "min" (floor) or "max" (ceiling)&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template($version as xs:string, $mode as xs:string) {&#xD;
+    let $analysis := analyze-string($version, $semver:expath-package-semver-template-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then &#xD;
+            semver:error("template-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "")[. ne ""] ! semver:cast-identifier(.)&#xD;
+            let $major := if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0&#xD;
+            let $minor := if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0&#xD;
+            let $is-major-version-template := empty($release-identifiers[2])&#xD;
+            return&#xD;
+                if ($is-major-version-template) then&#xD;
+                    map {&#xD;
+                        "major": if ($mode eq "min") then $major else $major + 1,&#xD;
+                        "minor": 0,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+                else (: if ($is-minor-version-template) then :)&#xD;
+                    map {&#xD;
+                        "major": $major,&#xD;
+                        "minor": if ($mode eq "min") then $minor else $minor + 1,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Check if a version satisfies EXPath Package dependency versioning attributes.&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @param $versions An EXPath Package "versions" versioning attribute&#xD;
+ :  @param $semver An EXPath Package "semver" versioning attribute&#xD;
+ :  @param $semver-min An EXPath Package "semver-min" versioning attribute&#xD;
+ :  @param $semver-min An EXPath Package "semver-max" versioning attribute&#xD;
+ :  @return True if the version satisfies the attributes, or false if not&#xD;
+ :)&#xD;
+declare function semver:satisfies-expath-package-dependency-versioning-attributes(&#xD;
+    $version as xs:string, &#xD;
+    $versions as xs:string?, &#xD;
+    $semver as xs:string?, &#xD;
+    $semver-min as xs:string?, &#xD;
+    $semver-max as xs:string?&#xD;
+) as xs:boolean {&#xD;
+    (: "If the versions attribute is used, it defines the exact set of acceptable versions &#xD;
+     : for the secondary package, separated by spaces." :)&#xD;
+    let $satisfies-versions :=&#xD;
+        if (empty($versions)) then&#xD;
+            false()&#xD;
+        else&#xD;
+            $version = tokenize($versions)&#xD;
+    (: Parse the version and evaluate the remaining versioning attributes, accounting for the possibility &#xD;
+     : that they may be EXPath Package SemVer templates. :)&#xD;
+    let $version-parsed := semver:parse($version, true())&#xD;
+    let $satisfies-semver := &#xD;
+        if (empty($semver)) then&#xD;
+            false()&#xD;
+        (: If semver is a template, resolve it into max and min versions :)&#xD;
+        else if (semver:validate-expath-package-semver-template($semver)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-min($semver)&#xD;
+            )&#xD;
+            and&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:eq($version, $semver, true())&#xD;
+    let $satisfies-semver-min :=&#xD;
+        if (empty($semver-min)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-min)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed, &#xD;
+                semver:resolve-expath-package-semver-template-min($semver-min)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:ge($version, $semver-min, true())&#xD;
+    let $satisfies-semver-max := &#xD;
+        if (empty($semver-max)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-max)) then&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver-max)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:lt($version, $semver-max, true())&#xD;
+    return&#xD;
+        $satisfies-versions &#xD;
+        or $satisfies-semver &#xD;
+        or (&#xD;
+            if (exists($semver-min) and exists($semver-max)) then&#xD;
+                $satisfies-semver-min and $satisfies-semver-max&#xD;
+            else if (exists($semver-min)) then&#xD;
+                $satisfies-semver-min&#xD;
+            else if (exists($semver-max)) then&#xD;
+                $satisfies-semver-max&#xD;
+            else&#xD;
+                false()&#xD;
+        )&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a SemVer string&#xD;
+ :  &#xD;
+ :  @param $major The major version&#xD;
+ :  @param $minor The minor version&#xD;
+ :  @param $patch The patch version&#xD;
+ :  @param $pre-release Pre-release identifiers&#xD;
+ :  @param $build-metadata Build identifiers&#xD;
+ :  @return A SemVer string&#xD;
+ :)&#xD;
+declare function semver:serialize(&#xD;
+    $major as xs:integer, &#xD;
+    $minor as xs:integer, &#xD;
+    $patch as xs:integer, &#xD;
+    $pre-release as xs:anyAtomicType*, &#xD;
+    $build-metadata as xs:anyAtomicType*&#xD;
+) {&#xD;
+    let $release := string-join(($major, $minor, $patch), ".")&#xD;
+    let $pre-release := string-join($pre-release ! string(.), ".")&#xD;
+    let $build-metadata := string-join($build-metadata ! string(.), ".")&#xD;
+    let $candidate :=&#xD;
+        $release&#xD;
+        || (if ($pre-release) then "-" || $pre-release else ())&#xD;
+        || (if ($build-metadata) then "+" || $build-metadata else ())&#xD;
+    (: Raise an error if the candidate is invalid :)&#xD;
+    let $check := semver:parse($candidate)&#xD;
+    return&#xD;
+        $candidate&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a parsed SemVer version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing the components of the SemVer string&#xD;
+ :  @return A SemVer string&#xD;
+ :  @deprecated As of 2.4.0 replace with serialize-parsed&#xD;
+ :)&#xD;
+declare function semver:serialize($parsed-version as map(*)) {&#xD;
+    semver:serialize-parsed($parsed-version)&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a parsed SemVer version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing the components of the SemVer string&#xD;
+ :  @return A SemVer string&#xD;
+ :)&#xD;
+declare function semver:serialize-parsed($parsed-version as map(*)) {&#xD;
+    semver:serialize(&#xD;
+        $parsed-version?major, &#xD;
+        $parsed-version?minor, &#xD;
+        $parsed-version?patch, &#xD;
+        $parsed-version?pre-release, &#xD;
+        $parsed-version?build-metadata&#xD;
+    )&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two versions (strictly)&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A version string&#xD;
+ :  @param $parsed-v2 A second version string&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare($v1 as xs:string, $v2 as xs:string) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1)&#xD;
+    let $parsed-v2 := semver:parse($v2)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two versions (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1, $coerce)&#xD;
+    let $parsed-v2 := semver:parse($v2, $coerce)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two parsed SemVer versions&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A map containing analysis of a version string&#xD;
+ :  @param $parsed-v2 A map containing analysis of a second version string&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:integer {&#xD;
+    (: Compare major, minor, and patch identifiers :)&#xD;
+    let $release-comparison :=&#xD;
+        semver:compare-release(&#xD;
+            array:subarray($parsed-v1?identifiers, 1, 3),&#xD;
+            array:subarray($parsed-v2?identifiers, 1, 3)&#xD;
+        )&#xD;
+    return&#xD;
+        switch ($release-comparison)&#xD;
+            case 0 return&#xD;
+                (: When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version. :)&#xD;
+                if (array:size($parsed-v1?pre-release) eq 0 and array:size($parsed-v2?pre-release) gt 0) then&#xD;
+                    1&#xD;
+                else if (array:size($parsed-v1?pre-release) gt 0 and array:size($parsed-v2?pre-release) eq 0) then&#xD;
+                    -1&#xD;
+                else&#xD;
+                    (: When major, minor, and patch are equal, compare pre-release :)&#xD;
+                    (: Build metadata SHOULD be ignored when determining version precedence. :)&#xD;
+                    semver:compare-pre-release(&#xD;
+                        $parsed-v1?pre-release,&#xD;
+                        $parsed-v2?pre-release&#xD;
+                    )&#xD;
+            default return&#xD;
+                $release-comparison&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version than v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:lt($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq -1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a lower version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq -1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version or the same version as v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:le($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version or the same version as v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) le 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a lower version or the same version as a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) le 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a higher version than v2 (strictly)&#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:gt($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq 1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a higher version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is the same or higher version than v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ge($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is the same or higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ge 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is the same or higher version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ge 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is equal to v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is equal to a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is not equal to v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ne($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is not equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ne 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is not equal to a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ne 0&#xD;
+};&#xD;
+&#xD;
+(:~ Compare release identifiers&#xD;
+ :  &#xD;
+ :  @param $v1 An array of release identifiers&#xD;
+ :  @param $v2 A second array of release identifiers&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare %private function semver:compare-release($v1-release-ids as array(*), $v2-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the release portions of the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-release-ids) eq 0 and array:size($v2-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: Compare members using numeric operators :)&#xD;
+    else if (array:head($v1-release-ids) lt array:head($v2-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-release-ids) gt array:head($v2-release-ids)) then&#xD;
+        1&#xD;
+    else&#xD;
+        semver:compare-release(array:tail($v1-release-ids), array:tail($v2-release-ids))&#xD;
+};&#xD;
+&#xD;
+(:~ Compare pre-release identifiers&#xD;
+ :  &#xD;
+ :  @param $v1 An array of pre-release identifiers&#xD;
+ :  @param $v2 A second array of pre-release identifiers&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare %private function semver:compare-pre-release($v1-pre-release-ids as array(*), $v2-pre-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-pre-release-ids) eq 0 and array:size($v2-pre-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: A larger set of pre-release fields has a higher precedence than a smaller set, if all of the preceding identifiers are equal. :)&#xD;
+    else if (array:size($v1-pre-release-ids) eq 0) then&#xD;
+        -1&#xD;
+    else if (array:size($v2-pre-release-ids) eq 0) then&#xD;
+        1&#xD;
+    (: Numeric identifiers always have lower precedence than non-numeric identifiers. :)&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:string and array:head($v2-pre-release-ids) instance of xs:integer) then&#xD;
+        1&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:integer and array:head($v2-pre-release-ids) instance of xs:string) then&#xD;
+        -1&#xD;
+    (: Compare values using comparison operators :)&#xD;
+    else if (array:head($v1-pre-release-ids) lt array:head($v2-pre-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-pre-release-ids) gt array:head($v2-pre-release-ids)) then&#xD;
+        1&#xD;
+    (: These identifiers are equal, so recurse to the next pair of identifiers :)&#xD;
+    else&#xD;
+        semver:compare-pre-release(array:tail($v1-pre-release-ids), array:tail($v2-pre-release-ids))&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer strings (strictly)&#xD;
+ :  &#xD;
+ :  @param $versions A sequence of version strings&#xD;
+ :  @return A sequence of sorted version strings&#xD;
+ :)&#xD;
+declare function semver:sort($versions as xs:string+) as xs:string+ {&#xD;
+    semver:sort($versions, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $versions A sequence of version strings&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return A sequence of sorted version strings&#xD;
+ :)&#xD;
+declare function semver:sort($versions as xs:string*, $coerce as xs:boolean) as xs:string* {&#xD;
+    let $parsed := $versions ! semver:parse(., $coerce)&#xD;
+    let $sorted := semver:sort-parsed($parsed)&#xD;
+    for $s in $sorted&#xD;
+    return&#xD;
+        semver:serialize($s)&#xD;
+};&#xD;
+&#xD;
+(:~ Sort arbitrary items by their SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+ :  @param $items A sequence of items to sort&#xD;
+ :  @param $function A function taking a single parameter used to derive a SemVer string from the item&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return The sequence of items in SemVer order&#xD;
+ :)&#xD;
+declare function semver:sort($items as item()*, $function as function(*), $coerce as xs:boolean) as item()* {&#xD;
+    let $items-with-version :=&#xD;
+        for $item in $items&#xD;
+        let $version-string := $function($item)&#xD;
+        let $parsed-version := semver:parse($version-string, $coerce)&#xD;
+        return&#xD;
+            map {&#xD;
+                "item": $item,&#xD;
+                "version-string": $version-string,&#xD;
+                "parsed-version": $parsed-version&#xD;
+            }&#xD;
+    let $sorted-versions := semver:sort-parsed($items-with-version?parsed-version)&#xD;
+    for $sorted-version in $sorted-versions&#xD;
+    for $item-with-version in $items-with-version&#xD;
+    where semver:eq-parsed($item-with-version?parsed-version, $sorted-version)&#xD;
+    return&#xD;
+        $item-with-version?item&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer maps&#xD;
+ :  @param $parsed-versions A sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array&#xD;
+ :  @return A sorted sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array&#xD;
+ :)&#xD;
+declare function semver:sort-parsed($parsed-versions as map(*)*) as map(*)* {&#xD;
+    (: First, sort versions by major, minor, and patch (using fast standard sort) :)&#xD;
+    let $release-sorted := fn:sort($parsed-versions, (), function($p) { $p?major, $p?minor, $p?patch } )&#xD;
+    return&#xD;
+        (: Second, sort any versions with pre-release fields,&#xD;
+           then group by major, minor, and patch to limit sorting to like versions :)&#xD;
+        for $p1 in $release-sorted&#xD;
+        group by $major := $p1?major&#xD;
+        order by $major&#xD;
+        return&#xD;
+            for $p2 in $p1&#xD;
+            group by $minor := $p2?minor&#xD;
+            order by $minor&#xD;
+            return&#xD;
+                for $p3 in $p2&#xD;
+                group by $patch := $p3?patch&#xD;
+                let $releases := $p3[?pre-release =&gt; array:size() eq 0]&#xD;
+                let $pre-releases := $p3[?pre-release =&gt; array:size() gt 0]&#xD;
+                order by $patch&#xD;
+                return&#xD;
+                    (&#xD;
+                        semver:sort-pre-release($pre-releases, ()),&#xD;
+                        (: Versions without pre-release metadata take precedence :)&#xD;
+                        $releases&#xD;
+                    )&#xD;
+};&#xD;
+&#xD;
+(:~ Sort pre-release fields&#xD;
+ :  &#xD;
+ :  @param $parsed-versions The versions to sort&#xD;
+ :  @param $sorted-versions An accumulator for sorted versions&#xD;
+ :  @return Sorted versions&#xD;
+ :)&#xD;
+declare %private function semver:sort-pre-release($parsed-versions as map(*)*, $sorted-versions as map(*)*) as map(*)* {&#xD;
+    if (exists($parsed-versions)) then&#xD;
+        let $head := head($parsed-versions)&#xD;
+        let $rest := tail($parsed-versions)&#xD;
+        let $is-largest-pre-release := every $item in $rest?pre-release satisfies semver:compare-pre-release($head?pre-release, $item) = (1, 0)&#xD;
+        return&#xD;
+            if ($is-largest-pre-release) then&#xD;
+                semver:sort-pre-release(tail($parsed-versions), ($head, $sorted-versions))&#xD;
+            else&#xD;
+                semver:sort-pre-release(($rest, $head), $sorted-versions)&#xD;
+    else&#xD;
+        $sorted-versions&#xD;
+};&#xD;
+&#xD;
+(:~ Raise a descriptive error&#xD;
+ :  &#xD;
+ :  @param $code An error code&#xD;
+ :  @param $version The version or identifier that triggered the error&#xD;
+ :  @return The error.&#xD;
+ :)&#xD;
+declare %private function semver:error($code as xs:string, $version as xs:string) {&#xD;
+    let $errors :=&#xD;
+        map {&#xD;
+            "regex-error":&#xD;
+                map {&#xD;
+                    "description": "Version did not match the regular expression for valid SemVer",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "regex-error")&#xD;
+                },&#xD;
+            "identifier-error":&#xD;
+                map {&#xD;
+                    "description": "Version identifiers did not conform to SemVer spec",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "identifier-error")&#xD;
+                },&#xD;
+            "template-error":&#xD;
+                map {&#xD;
+                    "description": "Template did not conform to the EXPath Package spec for SemVer templates",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "template-error")&#xD;
+                }&#xD;
+        }&#xD;
+    let $error := $errors?($code)&#xD;
+    return&#xD;
+        error($error?qname, $error?description || ": '" || $version || "'")&#xD;
+};&#xD;
+&#xD;
+(:~ A utility function for casting identifiers to the appropriate types&#xD;
+ :  &#xD;
+ :  @param $identifier An identifier&#xD;
+ :  return The identifier unchanged or cast as an integer&#xD;
+ :)&#xD;
+declare %private function semver:cast-identifier($identifier as xs:string) as xs:anyAtomicType {&#xD;
+    if ($identifier castable as xs:integer) then&#xD;
+        $identifier cast as xs:integer&#xD;
+    else&#xD;
+        $identifier&#xD;
+};&#xD;
+&#xD;
+(:~ A utility function for populating the identifiers entry in a parsed version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing analysis of a version string&#xD;
+ :  return The map with an identifiers entry&#xD;
+ :)&#xD;
+declare %private function semver:populate-identifiers($parsed-version as map(*)) as map(*) {&#xD;
+    $parsed-version&#xD;
+    =&gt; map:put("identifiers", [ $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ])&#xD;
+};&#xD;
+</code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:35:19.705+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

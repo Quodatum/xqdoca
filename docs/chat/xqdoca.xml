@@ -1,1 +1,13 @@
-<xqdoca created="2022-09-07T10:37:45.23+01:00"><target>file:///tmp/chat/</target><outputs><global>index.html imports  annotations restxq mermaid xqdoca.xml</global><module>module xqdoc xqparse</module></outputs><platform>basex</platform><extensions>*.xqm,*.xq,*.xquery</extensions><source>C:\Users\andy\basex.home\basex.951\webapp\chat</source></xqdoca>
+<xqdoca created="2025-05-17T18:39:54.262+01:00"><xqdoca>0.9.0</xqdoca><target>c:/tmp/xqdoca/chat/</target><outputs><global>
+            report
+            restxq
+            imports
+            imports-diag imports-diag.mmd 
+            annotations 
+            xqdoca.xml
+            xqdoc-validate
+        </global><module>
+            module 
+            xqdoc 
+            xqparse
+        </module></outputs><platform>basex</platform><extensions>*.xqm,*.xq,*.xquery</extensions><project>chat</project><source>C:\Users\mrwhe\Desktop\basex.home\basex.107\webapp\chat\</source><xqdoc><refs>true</refs><body-items>true</body-items><version>1.1</version><body-full>true</body-full></xqdoc></xqdoca>

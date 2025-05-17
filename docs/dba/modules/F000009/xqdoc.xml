@@ -1,92 +1,64 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>backups.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Backup operations.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">databases/backups.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Backup operations.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/databases</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Query resources.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Query resources.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/databases';
 
-import module namespace util = 'dba/util' at '../lib/util.xqm';
-
-(:~ Sub category :)
-declare variable $dba:SUB := 'database';
+import module namespace util = 'dba/util' at '../../lib/util.xqm';
 
 (:~
- : Creates a database backup.
- : @param  $name  name of database
- : @return redirection
+ : Runs a query on a document and returns the result as string.
+ : @param  $name      name of database
+ : @param  $resource  resource
+ : @param  $query     query
+ : @return result string
  :)
 declare
-  %updating
-  %rest:GET
-  %rest:path('/dba/backup-create')
-  %rest:query-param('name', '{$name}')
-function dba:backup-create(
-  $name  as xs:string
-) as empty-sequence() {
-  dba:action($name, 'Backup was created.', function() {
-    db:create-backup($name)
-  })
+  %rest:POST('{$query}')
+  %rest:path('/dba/db-query')
+  %rest:query-param('name',     '{$name}')
+  %rest:query-param('resource', '{$resource}')
+  %rest:single
+  %output:method('text')
+function dba:db-query(
+  $name      as xs:string,
+  $resource  as xs:string,
+  $query     as xs:string?
+) as xs:string {
+  util:query(
+    if($query) then $query else '.',
+    let $type := db:type($name, $resource)
+    return head(if($type = 'xml') then (
+      db:get($name, $resource)
+    ) else if($type = 'binary') then (
+      db:get-binary($name, $resource)
+    ) else (
+      db:get-value($name, $resource)
+    ))
+  )
 };
-
-(:~
- : Drops a database backup.
- : @param  $name     name of database
- : @param  $backups  backup files
- : @return redirection
- :)
-declare
-  %updating
-  %rest:GET
-  %rest:path('/dba/backup-drop')
-  %rest:query-param('name',   '{$name}')
-  %rest:query-param('backup', '{$backups}')
-function dba:backup-drop(
-  $name     as xs:string,
-  $backups  as xs:string*
-) as empty-sequence() {
-  dba:action($name, util:info($backups, 'backup', 'dropped'), function() {
-    $backups ! db:drop-backup(.)
-  })
-};
-
-(:~
- : Restores a database backup.
- : @param  $name    database
- : @param  $backup  backup file
- : @return redirection
- :)
-declare
-  %updating
-  %rest:GET
-  %rest:path('/dba/backup-restore')
-  %rest:query-param('name',   '{$name}')
-  %rest:query-param('backup', '{$backup}')
-function dba:backup-restore(
-  $name    as xs:string,
-  $backup  as xs:string
-) as empty-sequence() {
-  dba:action($name, 'Database was restored.', function() {
-    db:restore($backup)
-  })
-};
-
-(:~
- : Performs a backup operation.
- : @param  $name    database
- : @param  $info    info string
- : @param  $action  updating function
- : @return redirection
- :)
-declare %private %updating function dba:action(
-  $name    as xs:string,
-  $info    as xs:string,
-  $action  as %updating function(*)
-) as empty-sequence() {
-  try {
-    updating $action(),
-    util:redirect($dba:SUB, map { 'name': $name, 'info': $info })
-  } catch * {
-    util:redirect($dba:SUB, map { 'name': $name, 'error': $err:description })
-  }
-};
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/databases"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:SUB</xqdoc:name><xqdoc:comment><xqdoc:description>Sub category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Creates a database backup.</xqdoc:description><xqdoc:param>$name  name of database</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:backup-create</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/backup-create</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:GET %rest:path("/dba/backup-create") %rest:query-param("name", "{$name}") function dba:backup-create($name as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Drops a database backup.</xqdoc:description><xqdoc:param>$name     name of database</xqdoc:param><xqdoc:param>$backups  backup files</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:backup-drop</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/backup-drop</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">backup</xqdoc:literal><xqdoc:literal type="xs:string">{$backups}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:GET %rest:path("/dba/backup-drop") %rest:query-param("name", "{$name}") %rest:query-param("backup", "{$backups}") function dba:backup-drop($name as xs:string , $backups as xs:string*) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>backups</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>Restores a database backup.</xqdoc:description><xqdoc:param>$name    database</xqdoc:param><xqdoc:param>$backup  backup file</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:backup-restore</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/backup-restore</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">backup</xqdoc:literal><xqdoc:literal type="xs:string">{$backup}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:GET %rest:path("/dba/backup-restore") %rest:query-param("name", "{$name}") %rest:query-param("backup", "{$backup}") function dba:backup-restore($name as xs:string , $backup as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>backup</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Performs a backup operation.</xqdoc:description><xqdoc:param>$name    database</xqdoc:param><xqdoc:param>$info    info string</xqdoc:param><xqdoc:param>$action  updating function</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:action</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %private %updating function dba:action($name as xs:string , $info as xs:string , $action as function(*)) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>info</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>action</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/databases"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="db" uri="http://basex.org/modules/db"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Runs a query on a document and returns the result as string.&#xD;
+</xqdoc:description><xqdoc:param>$name      name of database</xqdoc:param><xqdoc:param>$resource  resource</xqdoc:param><xqdoc:param>$query     query</xqdoc:param><xqdoc:return>result string</xqdoc:return></xqdoc:comment><xqdoc:name>dba:db-query</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"><xqdoc:literal type="xs:string">{$query}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/db-query</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">resource</xqdoc:literal><xqdoc:literal type="xs:string">{$resource}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:single"/><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:db-query ( $name as xs:string, $resource as xs:string, $query as xs:string? ) as xs:string { util:query( if($query) then $query else '.', let $type := db:type($name, $resource) return head(if($type = 'xml') then ( db:get($name, $resource) ) else if($type = 'binary') then ( db:get-binary($name, $resource) ) else ( db:get-value($name, $resource) )) ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>resource</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function dba:db-query(
+  $name      as xs:string,
+  $resource  as xs:string,
+  $query     as xs:string?
+) as xs:string {
+  util:query(
+    if($query) then $query else '.',
+    let $type := db:type($name, $resource)
+    return head(if($type = 'xml') then (
+      db:get($name, $resource)
+    ) else if($type = 'binary') then (
+      db:get-binary($name, $resource)
+    ) else (
+      db:get-value($name, $resource)
+    ))
+  )
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

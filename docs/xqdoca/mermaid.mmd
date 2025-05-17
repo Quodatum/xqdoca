@@ -1,0 +1,123 @@
+%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+classDiagram
+direction TB
+
+class RESTXQ:::cssrest  
+class INVOKE:::cssmain  
+class TEST:::cssunit
+
+class gxq { << graphxq.xqm >>}
+ class _ { << import-graph.xqm >>}
+ class _Δ2 { << refactor.xqm >>}
+ class _Δ3 { << swagger1.xqm >>}
+ class _Δ4 { << wadl.xqm >>}
+ class _Δ5 { << annotations.xqm >>}
+ class _Δ6 { << imports.xqm >>}
+ class xqhtml { << index-html.xqm >>}
+ class _Δ7 { << lint.xqm >>}
+ class _Δ8 { << mermaid.xqm >>}
+ class xqh { << module.xqm >>}
+ class _Δ9 { << rest.xqm >>}
+ class _Δ10 { << simple.xqm >>}
+ class _Δ11 { << xqdoc-meta.xqm >>}
+ class _Δ12 { << xqdoc-validate.xqm >>}
+ class xqa { << annotations.xqm >>}
+ class xqdc { << ast-to-xqdoc.xqm >>}
+ class cmd { << commandline.xqm >>}
+ class xqcom { << comment-to-xqdoc.xqm >>}
+ class xqd { << model.xqm >>}
+ class opts { << options.xqm >>}
+ class xqp { << parser.xqm >>}
+ class semver { << semver.xqm >>}
+ class store { << store.xqm >>}
+ class tree { << tree.xqm >>}
+ class xqn { << xqdoc-namespace.xqm >>}
+ class xqo { << xqdoc-outputs.xqm >>}
+ class page { << xqdoc-page.xqm >>}
+ class local:::cssmain{ << xqdoca-cmd.xq >>
+
+args
+expkg
+}
+INVOKE..>local
+ class localΔ2:::cssmain{ << xqdoca.xq >>
+
+config-path
+}
+INVOKE..>localΔ2
+
+_ ..>gxq 
+ _Δ5 ..>xqa 
+ xqhtml ..>xqa 
+ _Δ8 ..>xqa 
+ xqh ..>xqa 
+ _Δ9 ..>xqa 
+ xqd ..>xqa 
+ xqd ..>xqdc 
+ local ..>cmd 
+ xqdc ..>xqcom 
+ _ ..>xqd 
+ _Δ6 ..>xqd 
+ xqhtml ..>xqd 
+ _Δ7 ..>xqd 
+ _Δ8 ..>xqd 
+ xqh ..>xqd 
+ _Δ9 ..>xqd 
+ localΔ2 ..>xqd 
+ localΔ2 ..>opts 
+ xqd ..>xqp 
+ cmd ..>semver 
+ localΔ2 ..>store 
+ xqhtml ..>tree 
+ _Δ9 ..>tree 
+ xqh ..>xqn 
+ xqa ..>xqn 
+ xqd ..>xqn 
+ xqp ..>xqn 
+ page ..>xqn 
+ localΔ2 ..>xqo 
+ _Δ5 ..>page 
+ _Δ6 ..>page 
+ xqhtml ..>page 
+ _Δ7 ..>page 
+ _Δ8 ..>page 
+ xqh ..>page 
+ _Δ9 ..>page 
+
+
+classDef cssrest fill:palegreen
+classDef cssmain fill:powderblue
+classDef cssunit fill:yellow
+
+link gxq "modules/F000001/index.html" "This is a tooltip for quodatum:service.graphxq"
+ link _ "modules/F000002/index.html" "This is a tooltip for quodatum:xqdoca.generator.calls"
+ link _Δ2 "modules/F000003/index.html" "This is a tooltip for quodatum:xqdoca.generator.rename"
+ link _Δ3 "modules/F000004/index.html" "This is a tooltip for quodatum:xqdoca.generator.swagger"
+ link _Δ4 "modules/F000005/index.html" "This is a tooltip for quodatum:xqdoca.generator.wadl"
+ link _Δ5 "modules/F000006/index.html" "This is a tooltip for quodatum:xqdoca.generator.annotations"
+ link _Δ6 "modules/F000007/index.html" "This is a tooltip for quodatum:xqdoca.generator.imports"
+ link xqhtml "modules/F000008/index.html" "This is a tooltip for quodatum:xqdoca.generator.index"
+ link _Δ7 "modules/F000009/index.html" "This is a tooltip for quodatum:xqdoca.generator.lint"
+ link _Δ8 "modules/F000010/index.html" "This is a tooltip for quodatum:xqdoca.generator.mermaid"
+ link xqh "modules/F000011/index.html" "This is a tooltip for quodatum:xqdoca.mod-html"
+ link _Δ9 "modules/F000012/index.html" "This is a tooltip for quodatum:xqdoca.generator.rest"
+ link _Δ10 "modules/F000013/index.html" "This is a tooltip for quodatum:xqdoca.generator.simple"
+ link _Δ11 "modules/F000014/index.html" "This is a tooltip for quodatum:xqdoca.generator.meta"
+ link _Δ12 "modules/F000015/index.html" "This is a tooltip for quodatum:xqdoca.generator.validate-xqdoc"
+ link xqa "modules/F000016/index.html" "This is a tooltip for quodatum:xqdoca.model.annotations"
+ link xqdc "modules/F000017/index.html" "This is a tooltip for quodatum:xqdoca.model.xqdoc"
+ link cmd "modules/F000018/index.html" "This is a tooltip for quodatum:tools:commandline"
+ link xqcom "modules/F000019/index.html" "This is a tooltip for quodatum:xqdoca.model.comment"
+ link xqd "modules/F000020/index.html" "This is a tooltip for quodatum:xqdoca.model"
+ link opts "modules/F000021/index.html" "This is a tooltip for quodatum:xqdoca:options"
+ link xqp "modules/F000022/index.html" "This is a tooltip for quodatum:xqdoca.parser"
+ link semver "modules/F000023/index.html" "This is a tooltip for http://exist-db.org/xquery/semver"
+ link store "modules/F000024/index.html" "This is a tooltip for quodatum:xqdoca:store"
+ link tree "modules/F000025/index.html" "This is a tooltip for quodatum:data.tree"
+ link xqn "modules/F000026/index.html" "This is a tooltip for quodatum:xqdoca.namespaces"
+ link xqo "modules/F000027/index.html" "This is a tooltip for quodatum:xqdoca.outputs"
+ link page "modules/F000028/index.html" "This is a tooltip for quodatum:xqdoca.page"
+ link local "modules/F000029/index.html" "This is a tooltip for xqdoca-cmd.xq"
+ link localΔ2 "modules/F000030/index.html" "This is a tooltip for xqdoca.xq"
+
+

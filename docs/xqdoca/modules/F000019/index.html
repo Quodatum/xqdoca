@@ -1,117 +1,213 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">quodatum:xqdoca:store</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>XQDocA - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">quodatum:xqdoca.model.comment</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></h1><nav id="toc"><h2><a href="../../index.html">XQDocA</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca:store</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#store:file"><span class="secno">4.1</span><span class="content" title="">store:file<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#store:store"><span class="secno">4.2</span><span class="content" title="">store:store<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li><li><a href="#store:xmldb"><span class="secno">4.3</span><span class="content" title="">store:xmldb<div style="float:right"><span class="badge badge-danger" title="Updating">U</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div><h1 xmlns:xqdoc="http://www.xqdoc.org/1.0">store.xqm</h1>
-<p xmlns:xqdoc="http://www.xqdoc.org/1.0">Save documents to file system or database. Data is supplied as a map which 
-includes serialization options</p></div><dl><dt>Tags</dt><dd><p>Author: Andy Bunce</p><p>Version: 0.2</p><p>__source : lib/store.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">quodatum:xqdoca.model.comment</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$xqcom:TAGS"><span class="secno">3.1</span><span class="content">$xqcom:TAGS</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#xqcom:comment"><span class="secno">4.1</span><span class="content" title="">comment<div style="float:right"></div></span></a></li><li><a href="#xqcom:comment-parse"><span class="secno">4.2</span><span class="content" title="&#xD;&#xA;parse xqdoc comment to map">comment-parse<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqcom:comment-xml"><span class="secno">4.3</span><span class="content" title="&#xD;&#xA;&#xD;&#xA;xqdoc:comment from state or empty if none , items ordered as schema&#xD;&#xA;">comment-xml<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqcom:text"><span class="secno">4.4</span><span class="content" title="&#xD;&#xA;text treat as html if valid">text<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li><li><a href="#xqcom:trim"><span class="secno">4.5</span><span class="content" title="&#xD;&#xA;remove leading/trailing whitespace">trim<div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+create xqdoc comment from xquery parse comment&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Andy Bunce, Quodatum, License: Apache-2.0</span></li></ul></dd></dl><dl><dt title="1">Custom</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@Copyright</span>:
+                <span>(c) 2026 Quodatum Ltd</span></span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">1</span> modules. It imports
     <span class="badge badge-info">0</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style=""><div style="text-align: right;"><span><a href="../../modules/F000026/index.html" title="xqdoca.xq">xqdoca.xq</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><p>None</p></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="store:file"></a><a id="{quodatum:xqdoca:store}file#3"></a>4.1 store:file<div style="float:right"><a href="#store:file">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca:store}file#3">store:file#3</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>save $data to file system $url , create folder tree if required</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">store:file</code>
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;"><div style="text-align: right;"><span><a href="../../modules/F000017/index.html" title="lib/ast-to-xqdoc.xqm">quodatum:xqdoca.model.xqdoc</a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">quodatum:xqdoca.model.comment</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$xqcom:TAGS"></a><a id="{quodatum:xqdoca.model.comment}$TAGS"></a><a href="#$xqcom:TAGS">3.1 </a>$xqcom:TAGS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+xqdoc tags - order is significant</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 2 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'&#xD;
+                              =&gt;tokenize(',')</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="xqcom:comment"></a><a id="{quodatum:xqdoca.model.comment}comment#1"></a><a href="#xqcom:comment">4.1 </a>xqcom:comment</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}comment#1">#1</a></span></p><dt class="label">Summary</dt><dd></dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqcom:comment</code>
 		  ( 
-			<code class="arg">$data</code><code class="as"> as </code><code class="type">item()*</code>, <code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>data<code class="as"> as </code><code class="return-type">item()*</code></li><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>params<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invokes 4 functions from 1 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}create-dir#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}is-dir#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}parent#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://expath.org/ns/file}write#3</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000019/index.html#{quodatum:xqdoca:store}store#2" title="lib/store.xqm">store:store#2</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 8 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function store:file($data,$uri as xs:string,$params as map(*))
-{  
-   let $p:=file:parent($uri)
-   return (
-           if(file:is-dir($p)) then () else file:create-dir($p),
-           file:write($uri,$data,$params)
-           )
-}</code></pre></details></div><div class="div3"><h3><a id="store:store"></a><a id="{quodatum:xqdoca:store}store#2"></a>4.2 store:store<div style="float:right"><a href="#store:store">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca:store}store#2">store:store#2</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>store a set of  o/ps below $base</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">store:store</code>
+			<code class="arg">$node</code><code class="as"> as </code><code class="type">element(*)</code> )<code class="as"> as </code><code class="type">element(xqdoc:comment)?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>node<code class="as"> as </code><code class="return-type">element(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:comment) ?</code> xqdoc:comment if xqdoc comments in closest direct preceding-sibling of $node</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 9 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:comment($node as element(*))&#xD;
+as element(xqdoc:comment)?{&#xD;
+  let $comment:= ($node/preceding-sibling::node())[last()][self::text()]&#xD;
+                 (: =&gt;trace(name($node)|| ": ") :)&#xD;
+  return if(exists($comment)) &#xD;
+         then $comment&#xD;
+              =&gt;xqcom:comment-parse()&#xD;
+              =&gt;xqcom:comment-xml()&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqcom:comment-parse"></a><a id="{quodatum:xqdoca.model.comment}comment-parse#1"></a><a id="{quodatum:xqdoca.model.comment}comment-parse#2"></a><a href="#xqcom:comment-parse">4.2 </a>xqcom:comment-parse</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}comment-parse#1">#1</a><span class="badge badge-dark" title="Private">P</span></span><span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}comment-parse#2">#2</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+parse xqdoc comment to map</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqcom:comment-parse</code>
 		  ( 
-			<code class="arg">$docs</code><code class="as"> as </code><code class="type">map(*)*</code>, <code class="arg">$base</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>docs<code class="as"> as </code><code class="return-type">map(*)*</code> sequence of maps</li><li>base<code class="as"> as </code><code class="return-type">xs:string</code> a uri "file://..", "xmldb:.."</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invokes 7 functions from 3 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions/map}contains#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#1</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}resolve-uri#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring-after#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring-before#2</span></li><li><span><a href="../../modules/F000019/index.html#{quodatum:xqdoca:store}file#3" title="lib/store.xqm">store:file#3</a></span></li><li><span><a href="../../modules/F000019/index.html#{quodatum:xqdoca:store}xmldb#3" title="lib/store.xqm">store:xmldb#3</a></span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000026/index.html#{http://www.w3.org/2005/xquery-local-functions}xqDoc-main#0" title="xqdoca.xq">local:xqDoc-main#0</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function store:store($docs as map(*)*,$base as xs:string)
-{
-for $doc in $docs
-let $uri:=resolve-uri($doc?uri,$base)
-let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
-return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
-          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
-          default return error("unknown protocol:" || $uri)
-}</code></pre></details></div><div class="div3"><h3><a id="store:xmldb"></a><a id="{quodatum:xqdoca:store}xmldb#3"></a>4.3 store:xmldb<div style="float:right"><a href="#store:xmldb">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca:store}xmldb#3">store:xmldb#3</a><span class="badge badge-danger" title="Updating">U</span></span></p><dt class="label">Summary</dt><dd>save $data to $uri  Xml database</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">store:xmldb</code>
+			<code class="arg">$comment</code><code class="as"> as </code><code class="type">xs:string?</code> )<code class="as"> as </code><code class="type">map(*)?</code></div><div class="proto"><code class="function">xqcom:comment-parse</code>
 		  ( 
-			<code class="arg">$data</code><code class="as"> as </code><code class="type">item()*</code>, <code class="arg">$uri</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$params</code><code class="as"> as </code><code class="type">map(*)</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0" occurrence="*">item()</xqdoc:type>*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>data<code class="as"> as </code><code class="return-type">item()*</code></li><li>uri<code class="as"> as </code><code class="return-type">xs:string</code></li><li>params<code class="as"> as </code><code class="return-type">map(*)</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invokes 3 functions from 2 modules </summary><ul><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}replace#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}analyze-string#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}substring-after#2</span></li></ul></details><details><summary>Invoked by 1 functions from 1 modules</summary><ul><li><span><a href="../../modules/F000019/index.html#{quodatum:xqdoca:store}store#2" title="lib/store.xqm">store:store#2</a></span></li></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function store:xmldb($data,$uri as xs:string,$params as map(*))
-{  
-  let $a:=analyze-string(substring-after($uri,":"),"/([^/]*)/(.*)")
-  let $db:=$a//*[@nr="1"]
-  let $path:=$a//*[@nr="2"]
-  return db:replace($db,$path,$data)
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>store</td><td><span><a href="../../modules/F000019/index.html" title="lib/store.xqm">quodatum:xqdoca:store</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;store.xqm&lt;/h1&gt;
- : &lt;p&gt;Save documents to file system or database. Data is supplied as a map which 
- : includes serialization options&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
-module namespace store = 'quodatum:xqdoca:store';
-
-
-(:~
- : store a set of  o/ps below $base
- : @param $docs sequence of maps 
- : @param $base a uri "file://..", "xmldb:.."
- :)
-declare %updating 
-function store:store($docs as map(*)*,$base as xs:string)
-{
-for $doc in $docs
-let $uri:=resolve-uri($doc?uri,$base)
-let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
-return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
-          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
-          default return error("unknown protocol:" || $uri)
-};
-
-(:~ 
- :save $data to file system $url , create folder tree if required
- :)
-declare %updating 
-function store:file($data,$uri as xs:string,$params as map(*))
-{  
-   let $p:=file:parent($uri)
-   return (
-           if(file:is-dir($p)) then () else file:create-dir($p),
-           file:write($uri,$data,$params)
-           )
-};
-
-(:~ 
- :save $data to $uri  Xml database
- :)
-declare %updating 
-function store:xmldb($data,$uri as xs:string,$params as map(*))
-{  
-  let $a:=analyze-string(substring-after($uri,":"),"/([^/]*)/(.*)")
-  let $db:=$a//*[@nr="1"]
-  let $path:=$a//*[@nr="2"]
-  return db:replace($db,$path,$data)
-};
-
+			<code class="arg">$state</code><code class="as"> as </code><code class="type">map(*)</code>, <code class="arg">$line</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">map(*)</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>state<code class="as"> as </code><code class="return-type">map(*)</code></li><li>line<code class="as"> as </code><code class="return-type">xs:string</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">map(*)</code></li></ul></dd><dl><dt title="1">Tags</dt><dd><ul><li><span><span class="badge badge-pill badge-light">@todo</span>:
+                <span>use _tag to track last updated</span></span></li></ul></dd></dl><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 34 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:comment-parse($comment as xs:string?)&#xD;
+as map(*)?{&#xD;
+  let $comment:=xqcom:trim($comment)&#xD;
+  return if(starts-with($comment,'(:~'))&#xD;
+    then  &#xD;
+       let $lines:=$comment&#xD;
+                   =&gt;substring(4,string-length($comment)-5)&#xD;
+                   =&gt;tokenize("\n")&#xD;
+       let $lines:=$lines!xqcom:trim(.)&#xD;
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)&#xD;
+       let $state:= map{&#xD;
+                      'description': '',&#xD;
+                      'params': (),&#xD;
+                      '_tag': 'description'&#xD;
+                        }&#xD;
+       return  fold-left($lines,$state,xqcom:comment-parse#2)&#xD;
+     &#xD;
+}</code></pre><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:comment-parse($state as map(*),$line as xs:string)&#xD;
+as map(*){&#xD;
+&#xD;
+  let $reg:="^\s*@(\w+)\s+(.+)$"&#xD;
+  let $is-tag:=matches($line,$reg)&#xD;
+  return if($is-tag)&#xD;
+         then &#xD;
+         let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()&#xD;
+         let $tag:=map{"tag": $match[1], "txt": $match[2]}&#xD;
+         return &#xD;
+              if($tag?tag =$xqcom:TAGS )&#xD;
+              then  map:put($state,$match[1],($state?($match[1]) ,$tag))&#xD;
+              else  map:put($state,'custom',($state?custom ,$tag))                 &#xD;
+         else &#xD;
+         map:put($state,'description',$state?description || file:line-separator() || $line)&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqcom:comment-xml"></a><a id="{quodatum:xqdoca.model.comment}comment-xml#1"></a><a href="#xqcom:comment-xml">4.3 </a>xqcom:comment-xml</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}comment-xml#1">#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+&#xD;
+xqdoc:comment from state or empty if none , items ordered as schema&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqcom:comment-xml</code>
+		  ( 
+			<code class="arg">$state</code><code class="as"> as </code><code class="type">map(*)?</code> )<code class="as"> as </code><code class="type">element(xqdoc:comment)?</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>state<code class="as"> as </code><code class="return-type">map(*)?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(xqdoc:comment) ?</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 16 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:comment-xml($state as map(*)?)&#xD;
+as element(xqdoc:comment)?{&#xD;
+  if(exists($state)) &#xD;
+  then &lt;xqdoc:comment&gt;{&#xD;
+        for $key in ($xqcom:TAGS)&#xD;
+            ,$tag in $state?($key)&#xD;
+        where map:contains($state,$key)&#xD;
+        (:~ let $_:=trace($key,"^^^") ~:)&#xD;
+        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} &#xD;
+                       {&#xD;
+                        if($key eq "custom") then attribute tag { $tag?tag},&#xD;
+                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)&#xD;
+                        }&#xD;
+      }&lt;/xqdoc:comment&gt;&#xD;
+  else ()&#xD;
+}</code></pre></details></div><div class="div3"><h3><a id="xqcom:text"></a><a id="{quodatum:xqdoca.model.comment}text#1"></a><a href="#xqcom:text">4.4 </a>xqcom:text</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}text#1">#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+text treat as html if valid</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqcom:text</code>
+		  ( 
+			<code class="arg">$txt</code><code class="as"> as </code><code class="type">xs:string?</code> )<code class="as"> as </code><code class="type">item()*</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>txt<code class="as"> as </code><code class="return-type">xs:string?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">item() *</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:text( $txt as xs:string? )  as item()* &#xD;
+{&#xD;
+  try{&#xD;
+   if(every $c in ("&lt;","&gt;","/") satisfies contains($txt,$c))&#xD;
+   then parse-xml-fragment($txt)/*&#xD;
+   else $txt&#xD;
+  }catch *{&#xD;
+    $txt&#xD;
+  }&#xD;
+ }</code></pre></details></div><div class="div3"><h3><a id="xqcom:trim"></a><a id="{quodatum:xqdoca.model.comment}trim#1"></a><a href="#xqcom:trim">4.5 </a>xqcom:trim</h3><p>Arities: <span style="margin-left:1em"><a href="#{quodatum:xqdoca.model.comment}trim#1">#1</a><span class="badge badge-dark" title="Private">P</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+remove leading/trailing whitespace</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">xqcom:trim</code>
+		  ( 
+			<code class="arg">$arg</code><code class="as"> as </code><code class="type">xs:string?</code> )<code class="as"> as </code><code class="type">xs:string</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>arg<code class="as"> as </code><code class="return-type">xs:string?</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:string</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details><summary>Source ( 4 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function xqcom:trim&#xD;
+  ( $arg as xs:string? )  as xs:string {&#xD;
+  replace(replace($arg,'\s+$',''),'^\s+','')&#xD;
+ }</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>file</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/file</span></td></tr><tr><td>fn</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions</span></td></tr><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>xqcom</td><td><span><a href="../../modules/F000019/index.html" title="lib/comment-to-xqdoc.xqm">quodatum:xqdoca.model.comment</a></span></td></tr><tr><td>xqdoc</td><td><span class="badge badge-warning" title="Externally defined">http://www.xqdoc.org/1.0</span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">xquery version "3.1";&#xD;
+(:~&#xD;
+create xqdoc comment from xquery parse comment &#xD;
+ @Copyright (c) 2026 Quodatum Ltd&#xD;
+ @author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+:)&#xD;
+ &#xD;
+&#xD;
+module namespace xqcom = 'quodatum:xqdoca.model.comment';&#xD;
+&#xD;
+declare namespace xqdoc="http://www.xqdoc.org/1.0";&#xD;
+&#xD;
+(:~ xqdoc tags - order is significant :)&#xD;
+declare variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'&#xD;
+                              =&gt;tokenize(',');&#xD;
+&#xD;
+(:~ @return xqdoc:comment if xqdoc comments in closest direct preceding-sibling of $node  :)&#xD;
+declare function xqcom:comment($node as element(*))&#xD;
+as element(xqdoc:comment)?{&#xD;
+  let $comment:= ($node/preceding-sibling::node())[last()][self::text()]&#xD;
+                 (: =&gt;trace(name($node)|| ": ") :)&#xD;
+  return if(exists($comment)) &#xD;
+         then $comment&#xD;
+              =&gt;xqcom:comment-parse()&#xD;
+              =&gt;xqcom:comment-xml()&#xD;
+};&#xD;
+&#xD;
+(:~ parse xqdoc comment to map &#xD;
+@todo use _tag to track last updated :)&#xD;
+declare %private&#xD;
+function xqcom:comment-parse($comment as xs:string?)&#xD;
+as map(*)?{&#xD;
+  let $comment:=xqcom:trim($comment)&#xD;
+  return if(starts-with($comment,'(:~'))&#xD;
+    then  &#xD;
+       let $lines:=$comment&#xD;
+                   =&gt;substring(4,string-length($comment)-5)&#xD;
+                   =&gt;tokenize("\n")&#xD;
+       let $lines:=$lines!xqcom:trim(.)&#xD;
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)&#xD;
+       let $state:= map{&#xD;
+                      'description': '',&#xD;
+                      'params': (),&#xD;
+                      '_tag': 'description'&#xD;
+                        }&#xD;
+       return  fold-left($lines,$state,xqcom:comment-parse#2)&#xD;
+     &#xD;
+};&#xD;
+&#xD;
+(:~ update parse $state from  $line :)&#xD;
+declare %private&#xD;
+function xqcom:comment-parse($state as map(*),$line as xs:string)&#xD;
+as map(*){&#xD;
+&#xD;
+  let $reg:="^\s*@(\w+)\s+(.+)$"&#xD;
+  let $is-tag:=matches($line,$reg)&#xD;
+  return if($is-tag)&#xD;
+         then &#xD;
+         let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()&#xD;
+         let $tag:=map{"tag": $match[1], "txt": $match[2]}&#xD;
+         return &#xD;
+              if($tag?tag =$xqcom:TAGS )&#xD;
+              then  map:put($state,$match[1],($state?($match[1]) ,$tag))&#xD;
+              else  map:put($state,'custom',($state?custom ,$tag))                 &#xD;
+         else &#xD;
+         map:put($state,'description',$state?description || file:line-separator() || $line)&#xD;
+};&#xD;
+&#xD;
+(:~&#xD;
+  xqdoc:comment from state or empty if none , items ordered as schema&#xD;
+:)&#xD;
+declare %private&#xD;
+function xqcom:comment-xml($state as map(*)?)&#xD;
+as element(xqdoc:comment)?{&#xD;
+  if(exists($state)) &#xD;
+  then &lt;xqdoc:comment&gt;{&#xD;
+        for $key in ($xqcom:TAGS)&#xD;
+            ,$tag in $state?($key)&#xD;
+        where map:contains($state,$key)&#xD;
+        (:~ let $_:=trace($key,"^^^") ~:)&#xD;
+        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} &#xD;
+                       {&#xD;
+                        if($key eq "custom") then attribute tag { $tag?tag},&#xD;
+                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)&#xD;
+                        }&#xD;
+      }&lt;/xqdoc:comment&gt;&#xD;
+  else ()&#xD;
+};&#xD;
+&#xD;
+(:~ text treat as html if valid :)&#xD;
+declare %private&#xD;
+function xqcom:text( $txt as xs:string? )  as item()* &#xD;
+{&#xD;
+  try{&#xD;
+   if(every $c in ("&lt;","&gt;","/") satisfies contains($txt,$c))&#xD;
+   then parse-xml-fragment($txt)/*&#xD;
+   else $txt&#xD;
+  }catch *{&#xD;
+    $txt&#xD;
+  }&#xD;
+ };&#xD;
+ &#xD;
+(:~ remove leading/trailing whitespace :)&#xD;
+declare %private&#xD;
+function xqcom:trim&#xD;
+  ( $arg as xs:string? )  as xs:string {&#xD;
+  replace(replace($arg,'\s+$',''),'^\s+','')&#xD;
+ };&#xD;
+ &#xD;
+&#xD;
+&#xD;
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T11:29:31.556+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:35:19.705+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

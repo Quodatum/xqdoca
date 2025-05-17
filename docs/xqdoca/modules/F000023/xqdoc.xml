@@ -1,268 +1,1379 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>xqdoc-outputs.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>xqdoc-outputs.xqm</h1>
-<p>Load and run a set of generators</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/xqdoc-outputs.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;xqdoc-outputs.xqm&lt;/h1&gt;
- : &lt;p&gt;Load and run a set of generators&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-
-module namespace xqo = 'quodatum:xqdoca.outputs';
-
-
-
-(:~ xqdoca annotation namespace :)
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-
-(:~ annotation for module derived output :)
-declare variable $xqo:module:=QName("https://github.com/Quodatum/xqdoca","module");
-
-(:~ annotation for global derived output :)
-declare variable $xqo:global:=QName("https://github.com/Quodatum/xqdoca","global");
-
-(:~ annotation used to indicate serialization options :)
-declare variable $xqo:ann-output:=QName("https://github.com/Quodatum/xqdoca","output");
-
-(:~ defined serialization options :)
-declare variable $xqo:outputs:=map{
-                                    
-                                     "html5": map{"method": "html", "version":"5.0", "indent": "no"},
-                                     "xhtml": map{"method": "xhtml", "version":"1.1","indent": "no"},
-                                     "xml": map{"indent": "no"},
-                                     "json": map{"method": "json"},
-                                     "text": map{"method": "text"}
-                                   };
-
-
-
-
-(:~ save runtime support files to output
- : @param $target destination folder
- :)
-declare %updating
-function xqo:export-resources($target as xs:string)                       
-as empty-sequence(){
-  let $res:=$target || "resources"
-  let $_:=trace($target,"target:")
-  let $_:=trace(resolve-uri('resources'),"src:")   
-return  (
-  if(file:exists($res)) then file:delete($res,true()) else (),
-  file:copy(resolve-uri('resources'),$target)
-      )
-};
-
-(:~ 
- : list xqdoca render functions found in the static context
-:)
-declare function xqo:renderers($funs as function(*)*, $qname as xs:QName)
-as function(*)*
-{
-  for $f in  $funs
-  let $ann:=inspect:function-annotations($f) 
-  where map:contains($ann,$qname) and map:contains($ann,$xqo:ann-output)
-  return $f
-};
-
-(:~
- :  info about a render function
-:)
-declare function xqo:render-map( $function as function(*)?)
-as map(*){
-  let $ann:= inspect:function-annotations($function)
-  let $key:=if(map:contains($ann,$xqo:module)) then
-                $xqo:module
-            else if(map:contains($ann,$xqo:global)) then
-                $xqo:global
-            else
-               error(xs:QName("xqo:anno-map"))
-   return map{
-    "name": $ann?($key)[1],
-     "description": $ann?($key)[2],
-     "function": $function,
-     "type": $key,
-     "uri": $ann?($xqo:ann-output)[1],
-     "output": $ann?($xqo:ann-output)[2]
-} 
-};
-
-(:~
- :  render $outputs defined in $opts against state
- : @return seq of outputs generated suitable for"storing"
-:)
-declare function xqo:render( $model as map(*),$opts as map(*))
-as map(*)*
-{ 
-  let $funs:=xqo:load-generators("generators/")
-  
-  let $globals:=xqo:tokens($opts?outputs?global)
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
-  
-  let $modules:=xqo:tokens($opts?outputs?module)
-  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]
-  
-  (: add found renderers info to opts :)
-  let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
-  return (
-      for $render in $global
-      let $doc:= apply($render?function,[$model,$opts])
-      return map{"document": $doc, 
-                 "uri": $render?uri, 
-                 "output":$xqo:outputs?($render?output)
-               },
-               
-      for $render in $module, $file at $pos in $model?files
-      (: override opts for destination path :)
-      let $opts:=map:merge((
-            map{
-              "root": "../../",
-              "resources": "../../resources/"
-            }, $opts))
-      let $doc:= apply($render?function,[$file,$model,$opts])       
-      return map{"document": $doc, 
-                 "uri": concat($file?href,"/",$render?uri),  
-                 "output": $xqo:outputs?($render?output)
-                }
-              )                                      
-};
-
-(:~
- : dynamically load functions from *.xqm modules from generators directory into static context
- :)
-declare function xqo:load-generators($path as xs:string)
-as function(*)*
-{
-  let $base:=resolve-uri($path,static-base-uri())
-  return file:list($base,true(),"*.xqm")
-       !translate(.,"\","/")
-       ! inspect:functions(resolve-uri(.,$base))
-};
-
-(:~ 
- : parse tokens
- :)
- declare function xqo:tokens($s as xs:string)
- as xs:string*
- {
- $s=&gt;normalize-space()=&gt;tokenize("[\s,]+") 
-};
-
-(:~ 
- : zip all 
- : @param $target destination folder using file protocoleg file:///
- :)
- declare %updating
- function xqo:zip($target as xs:string,$name as xs:string)
- as empty-sequence()
- {
-  let $files := file:list($target=&gt;trace("Creating zip: "), true())!util:if(not(ends-with(.,file:dir-separator() )),.)
-let $zip   := archive:create(
-                   $files,
-                   $files!file:read-binary($target || translate(.,"\","/"))
-               )
-return file:write-binary($target || $name ||".zip", $zip)
- };</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="xqo" uri="quodatum:xqdoca.outputs"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>xqo:module</xqdoc:name><xqdoc:comment><xqdoc:description>annotation for module derived output</xqdoc:description></xqdoc:comment><xqdoc:type>xs:QName</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqo:global</xqdoc:name><xqdoc:comment><xqdoc:description>annotation for global derived output</xqdoc:description></xqdoc:comment><xqdoc:type>xs:QName</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqo:ann-output</xqdoc:name><xqdoc:comment><xqdoc:description>annotation used to indicate serialization options</xqdoc:description></xqdoc:comment><xqdoc:type>xs:QName</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>xqo:outputs</xqdoc:name><xqdoc:comment><xqdoc:description>defined serialization options</xqdoc:description></xqdoc:comment><xqdoc:type>map(*)</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>save runtime support files to output</xqdoc:description><xqdoc:param>$target destination folder</xqdoc:param></xqdoc:comment><xqdoc:name>xqo:export-resources</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function xqo:export-resources($target as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>target</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>delete</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>copy</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>res</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>res</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:export-resources($target as xs:string)                       
-as empty-sequence(){
-  let $res:=$target || "resources"
-  let $_:=trace($target,"target:")
-  let $_:=trace(resolve-uri('resources'),"src:")   
-return  (
-  if(file:exists($res)) then file:delete($res,true()) else (),
-  file:copy(resolve-uri('resources'),$target)
-      )
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>list xqdoca render functions found in the static context</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:renderers</xqdoc:name><xqdoc:signature>declare function xqo:renderers($funs as (function(*))* , $qname as xs:QName) as (function(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>funs</xqdoc:name><xqdoc:type occurrence="*">function(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>qname</xqdoc:name><xqdoc:type>xs:QName</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">function(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>function-annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>qname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>ann-output</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:renderers($funs as function(*)*, $qname as xs:QName)
-as function(*)*
-{
-  for $f in  $funs
-  let $ann:=inspect:function-annotations($f) 
-  where map:contains($ann,$qname) and map:contains($ann,$xqo:ann-output)
-  return $f
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>info about a render function</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:render-map</xqdoc:name><xqdoc:signature>declare function xqo:render-map($function as (function(*))?) as map(*)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>function</xqdoc:name><xqdoc:type occurrence="?">function(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>function-annotations</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>global</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>global</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>key</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>ann-output</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ann</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>ann-output</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:render-map( $function as function(*)?)
-as map(*){
-  let $ann:= inspect:function-annotations($function)
-  let $key:=if(map:contains($ann,$xqo:module)) then
-                $xqo:module
-            else if(map:contains($ann,$xqo:global)) then
-                $xqo:global
-            else
-               error(xs:QName("xqo:anno-map"))
-   return map{
-    "name": $ann?($key)[1],
-     "description": $ann?($key)[2],
-     "function": $function,
-     "type": $key,
-     "uri": $ann?($xqo:ann-output)[1],
-     "output": $ann?($xqo:ann-output)[2]
-} 
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>render $outputs defined in $opts against state</xqdoc:description><xqdoc:return>seq of outputs generated suitable for"storing"</xqdoc:return></xqdoc:comment><xqdoc:name>xqo:render</xqdoc:name><xqdoc:signature>declare function xqo:render($model as map(*) , $opts as map(*)) as (map(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>load-generators</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>tokens</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>renderers</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>render-map</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>tokens</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>renderers</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>render-map</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>entry</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>apply</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>merge</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>apply</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>concat</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>global</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>globals</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>funs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>modules</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>global</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>global</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>outputs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>$</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:xqdoca.outputs</xqdoc:uri><xqdoc:name>outputs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>render</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:render( $model as map(*),$opts as map(*))
-as map(*)*
-{ 
-  let $funs:=xqo:load-generators("generators/")
-  
-  let $globals:=xqo:tokens($opts?outputs?global)
-  let $global:=(xqo:renderers($funs,$xqo:global)!xqo:render-map(.))[?name =$globals]
-  
-  let $modules:=xqo:tokens($opts?outputs?module)
-  let $module:=(xqo:renderers($funs,$xqo:module)!xqo:render-map(.))[?name =$modules]
-  
-  (: add found renderers info to opts :)
-  let $opts:=map:merge((map:entry(".renderers",map{"global":$global,"module":$module}),$opts))
-  return (
-      for $render in $global
-      let $doc:= apply($render?function,[$model,$opts])
-      return map{"document": $doc, 
-                 "uri": $render?uri, 
-                 "output":$xqo:outputs?($render?output)
-               },
-               
-      for $render in $module, $file at $pos in $model?files
-      (: override opts for destination path :)
-      let $opts:=map:merge((
-            map{
-              "root": "../../",
-              "resources": "../../resources/"
-            }, $opts))
-      let $doc:= apply($render?function,[$file,$model,$opts])       
-      return map{"document": $doc, 
-                 "uri": concat($file?href,"/",$render?uri),  
-                 "output": $xqo:outputs?($render?output)
-                }
-              )                                      
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>dynamically load functions from *.xqm modules from generators directory into static context</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:load-generators</xqdoc:name><xqdoc:signature>declare function xqo:load-generators($path as xs:string) as (function(*))*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>path</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">function(*)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>static-base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/inspect</xqdoc:uri><xqdoc:name>functions</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:load-generators($path as xs:string)
-as function(*)*
-{
-  let $base:=resolve-uri($path,static-base-uri())
-  return file:list($base,true(),"*.xqm")
-       !translate(.,"\","/")
-       ! inspect:functions(resolve-uri(.,$base))
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>parse tokens</xqdoc:description></xqdoc:comment><xqdoc:name>xqo:tokens</xqdoc:name><xqdoc:signature>declare function xqo:tokens($s as xs:string) as xs:string*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>s</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>normalize-space</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>tokenize</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>s</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:tokens($s as xs:string)
- as xs:string*
- {
- $s=&gt;normalize-space()=&gt;tokenize("[\s,]+") 
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>zip all</xqdoc:description><xqdoc:param>$target destination folder using file protocoleg file:///</xqdoc:param></xqdoc:comment><xqdoc:name>xqo:zip</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function xqo:zip($target as xs:string , $name as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>target</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/util</xqdoc:uri><xqdoc:name>if</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ends-with</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>dir-separator</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/archive</xqdoc:uri><xqdoc:name>create</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>read-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>translate</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>files</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>target</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>zip</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function xqo:zip($target as xs:string,$name as xs:string)
- as empty-sequence()
- {
-  let $files := file:list($target=&gt;trace("Creating zip: "), true())!util:if(not(ends-with(.,file:dir-separator() )),.)
-let $zip   := archive:create(
-                   $files,
-                   $files!file:read-binary($target || translate(.,"\","/"))
-               )
-return file:write-binary($target || $name ||".zip", $zip)
- }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>http://exist-db.org/xquery/semver</xqdoc:uri><xqdoc:name>semver</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Validate, compare, sort, parse, and serialize Semantic Versioning (SemVer)&#xD;
+2.0.0 version strings, using XQuery.&#xD;
+&#xD;
+SemVer rules are applied strictly, raising errors when version strings do&#xD;
+not conform to the spec.&#xD;
+&#xD;
+Additional functions are supplied for handling SemVer templates, as defined&#xD;
+in the EXPath Package spec.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Joe Wicentowski</xqdoc:author><xqdoc:see>https://semver.org/spec/v2.0.0.html</xqdoc:see><xqdoc:see>http://expath.org/spec/pkg#pkgdep</xqdoc:see></xqdoc:comment><xqdoc:body>(:&#xD;
+ : Copyright © 2019, Joe Wicentowski&#xD;
+ : All rights reserved.&#xD;
+ :&#xD;
+ : Redistribution and use in source and binary forms, with or without&#xD;
+ : modification, are permitted provided that the following conditions are met:&#xD;
+ :     * Redistributions of source code must retain the above copyright&#xD;
+ :       notice, this list of conditions and the following disclaimer.&#xD;
+ :     * Redistributions in binary form must reproduce the above copyright&#xD;
+ :       notice, this list of conditions and the following disclaimer in the&#xD;
+ :       documentation and/or other materials provided with the distribution.&#xD;
+ :     * Neither the name of the &lt;organization&gt; nor the&#xD;
+ :       names of its contributors may be used to endorse or promote products&#xD;
+ :       derived from this software without specific prior written permission.&#xD;
+ :&#xD;
+ : THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND&#xD;
+ : ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED&#xD;
+ : WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE&#xD;
+ : DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY&#xD;
+ : DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES&#xD;
+ : (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;&#xD;
+ : LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND&#xD;
+ : ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT&#xD;
+ : (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS&#xD;
+ : SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.&#xD;
+ :)&#xD;
+xquery version "3.1";&#xD;
+&#xD;
+(:~ Validate, compare, sort, parse, and serialize Semantic Versioning (SemVer)&#xD;
+ :  2.0.0 version strings, using XQuery.&#xD;
+ :&#xD;
+ :  SemVer rules are applied strictly, raising errors when version strings do&#xD;
+ :  not conform to the spec.&#xD;
+ : &#xD;
+ :  Additional functions are supplied for handling SemVer templates, as defined &#xD;
+ :  in the EXPath Package spec.&#xD;
+ :&#xD;
+ :  @author Joe Wicentowski&#xD;
+ :  @see https://semver.org/spec/v2.0.0.html&#xD;
+ :  @see http://expath.org/spec/pkg#pkgdep&#xD;
+ :)&#xD;
+&#xD;
+module namespace semver = "http://exist-db.org/xquery/semver";&#xD;
+&#xD;
+declare namespace array="http://www.w3.org/2005/xpath-functions/array";&#xD;
+declare namespace map="http://www.w3.org/2005/xpath-functions/map";&#xD;
+&#xD;
+(:~ A regular expression for validating SemVer strings and parsing valid SemVer strings&#xD;
+ :  &#xD;
+ :  @see https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string&#xD;
+ :)&#xD;
+declare variable $semver:regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `.` + Patch version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `-` + Pre-release metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"&#xD;
+    (: `+` + Build metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"&#xD;
+;&#xD;
+&#xD;
+(:~ A forgiving regular expression for capturing groups needed to coerce a non-SemVer string into SemVer components :)&#xD;
+declare variable $semver:coerce-regex := &#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "([^-+.]+?)"&#xD;
+    (: `.` + Minor version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `.` + Patch version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `-` + Pre-release metadata (optional): One or more characters that are not `+` :)&#xD;
+    || "(?:-([^+]+?))?"&#xD;
+    (: `+` + Build metadata (optional): One or more characters :)&#xD;
+    || "(?:\+(.+))?"&#xD;
+    (: End of string :)&#xD;
+    || "$";&#xD;
+&#xD;
+(:~ A regular expression for validating SemVer templates as defined in the EXPath Package spec&#xD;
+ :  &#xD;
+ :  @see http://expath.org/spec/pkg#pkgdep&#xD;
+ :)&#xD;
+declare variable $semver:expath-package-semver-template-regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: Empty for a major version template, or a zero or a non-negative integer without leading zeros for a minor version template :)&#xD;
+    || "(?:\.(0|[1-9]\d*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$";&#xD;
+&#xD;
+(:~ Validate whether a SemVer string conforms to the spec&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return True if the version is valid, false if not&#xD;
+ :)&#xD;
+declare function semver:validate($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:regex)&#xD;
+};&#xD;
+&#xD;
+(:~ Validate whether a version string conforms to the rules for SemVer templates as defined in the EXPath Package spec&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return True if the version is an SemVer template, false if not&#xD;
+ :)&#xD;
+declare function semver:validate-expath-package-semver-template($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:expath-package-semver-template-regex)&#xD;
+};&#xD;
+&#xD;
+(:~ Parse a SemVer string (strictly)&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @return A map containing analysis of the parsed version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :  @error regex-error&#xD;
+ :  @error identifier-error&#xD;
+ :)&#xD;
+declare function semver:parse($version as xs:string) as map(*) {&#xD;
+    semver:parse($version, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Parse a SemVer string (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return A map containing analysis of the parsed SemVer versions, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :  @error regex-error&#xD;
+ :  @error identifier-error&#xD;
+ :)&#xD;
+declare function semver:parse($version as xs:string, $coerce as xs:boolean) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then&#xD;
+            if ($coerce) then &#xD;
+                semver:coerce($version)&#xD;
+            else&#xD;
+                semver:error("identifier-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := subsequence($groups, 1, 3) ! semver:cast-identifier(.)&#xD;
+            (: Groups 4 and 5 are optional and so must be selected by @nr rather than position :)&#xD;
+            let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            return&#xD;
+                map {&#xD;
+                    "major": $release-identifiers[1],&#xD;
+                    "minor": $release-identifiers[2],&#xD;
+                    "patch": $release-identifiers[3],&#xD;
+                    "pre-release": $pre-release-identifiers,&#xD;
+                    "build-metadata": $build-metadata-identifiers&#xD;
+                }&#xD;
+                =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Coerce a non-SemVer version string into a SemVer string and parse it as such&#xD;
+ :  &#xD;
+ :  @param $version A version string which will be coerced into a parsed SemVer version&#xD;
+ :  @return A map containing analysis of the coerced version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array. Fallback for invalid version strings: 0.0.0.&#xD;
+ :)&#xD;
+declare function semver:coerce($version as xs:string) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:coerce-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "") ! semver:cast-identifier(.)&#xD;
+    let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    return&#xD;
+        map {&#xD;
+            "major": if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0,&#xD;
+            "minor": if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0,&#xD;
+            "patch": if ($release-identifiers[3] instance of xs:integer) then $release-identifiers[3] else 0,&#xD;
+            "pre-release": $pre-release-identifiers,&#xD;
+            "build-metadata": $build-metadata-identifiers&#xD;
+        }&#xD;
+        =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath Package SemVer Template as minimum (floor)&#xD;
+ :  &#xD;
+ :  @param $version An EXPath SemVer Template&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template-min($version as xs:string) as map(*) {&#xD;
+    semver:resolve-expath-package-semver-template($version, "min")&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath Package SemVer Template as maximum (ceiling)&#xD;
+ :  &#xD;
+ :  @param $version An EXPath SemVer Template&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template-max($version as xs:string) as map(*)  {&#xD;
+    semver:resolve-expath-package-semver-template($version, "max")&#xD;
+};&#xD;
+&#xD;
+(:~ Resolve an EXPath SemVer Package Template&#xD;
+ :  &#xD;
+ :  @param $version An EXPath Package SemVer Template&#xD;
+ :  @param $mode Mode for resolving the template: "min" (floor) or "max" (ceiling)&#xD;
+ :  @return A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.&#xD;
+ :)&#xD;
+declare function semver:resolve-expath-package-semver-template($version as xs:string, $mode as xs:string) {&#xD;
+    let $analysis := analyze-string($version, $semver:expath-package-semver-template-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then &#xD;
+            semver:error("template-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "")[. ne ""] ! semver:cast-identifier(.)&#xD;
+            let $major := if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0&#xD;
+            let $minor := if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0&#xD;
+            let $is-major-version-template := empty($release-identifiers[2])&#xD;
+            return&#xD;
+                if ($is-major-version-template) then&#xD;
+                    map {&#xD;
+                        "major": if ($mode eq "min") then $major else $major + 1,&#xD;
+                        "minor": 0,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+                else (: if ($is-minor-version-template) then :)&#xD;
+                    map {&#xD;
+                        "major": $major,&#xD;
+                        "minor": if ($mode eq "min") then $minor else $minor + 1,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+};&#xD;
+&#xD;
+(:~ Check if a version satisfies EXPath Package dependency versioning attributes.&#xD;
+ :  &#xD;
+ :  @param $version A version string&#xD;
+ :  @param $versions An EXPath Package "versions" versioning attribute&#xD;
+ :  @param $semver An EXPath Package "semver" versioning attribute&#xD;
+ :  @param $semver-min An EXPath Package "semver-min" versioning attribute&#xD;
+ :  @param $semver-min An EXPath Package "semver-max" versioning attribute&#xD;
+ :  @return True if the version satisfies the attributes, or false if not&#xD;
+ :)&#xD;
+declare function semver:satisfies-expath-package-dependency-versioning-attributes(&#xD;
+    $version as xs:string, &#xD;
+    $versions as xs:string?, &#xD;
+    $semver as xs:string?, &#xD;
+    $semver-min as xs:string?, &#xD;
+    $semver-max as xs:string?&#xD;
+) as xs:boolean {&#xD;
+    (: "If the versions attribute is used, it defines the exact set of acceptable versions &#xD;
+     : for the secondary package, separated by spaces." :)&#xD;
+    let $satisfies-versions :=&#xD;
+        if (empty($versions)) then&#xD;
+            false()&#xD;
+        else&#xD;
+            $version = tokenize($versions)&#xD;
+    (: Parse the version and evaluate the remaining versioning attributes, accounting for the possibility &#xD;
+     : that they may be EXPath Package SemVer templates. :)&#xD;
+    let $version-parsed := semver:parse($version, true())&#xD;
+    let $satisfies-semver := &#xD;
+        if (empty($semver)) then&#xD;
+            false()&#xD;
+        (: If semver is a template, resolve it into max and min versions :)&#xD;
+        else if (semver:validate-expath-package-semver-template($semver)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-min($semver)&#xD;
+            )&#xD;
+            and&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:eq($version, $semver, true())&#xD;
+    let $satisfies-semver-min :=&#xD;
+        if (empty($semver-min)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-min)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed, &#xD;
+                semver:resolve-expath-package-semver-template-min($semver-min)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:ge($version, $semver-min, true())&#xD;
+    let $satisfies-semver-max := &#xD;
+        if (empty($semver-max)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-max)) then&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver-max)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:lt($version, $semver-max, true())&#xD;
+    return&#xD;
+        $satisfies-versions &#xD;
+        or $satisfies-semver &#xD;
+        or (&#xD;
+            if (exists($semver-min) and exists($semver-max)) then&#xD;
+                $satisfies-semver-min and $satisfies-semver-max&#xD;
+            else if (exists($semver-min)) then&#xD;
+                $satisfies-semver-min&#xD;
+            else if (exists($semver-max)) then&#xD;
+                $satisfies-semver-max&#xD;
+            else&#xD;
+                false()&#xD;
+        )&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a SemVer string&#xD;
+ :  &#xD;
+ :  @param $major The major version&#xD;
+ :  @param $minor The minor version&#xD;
+ :  @param $patch The patch version&#xD;
+ :  @param $pre-release Pre-release identifiers&#xD;
+ :  @param $build-metadata Build identifiers&#xD;
+ :  @return A SemVer string&#xD;
+ :)&#xD;
+declare function semver:serialize(&#xD;
+    $major as xs:integer, &#xD;
+    $minor as xs:integer, &#xD;
+    $patch as xs:integer, &#xD;
+    $pre-release as xs:anyAtomicType*, &#xD;
+    $build-metadata as xs:anyAtomicType*&#xD;
+) {&#xD;
+    let $release := string-join(($major, $minor, $patch), ".")&#xD;
+    let $pre-release := string-join($pre-release ! string(.), ".")&#xD;
+    let $build-metadata := string-join($build-metadata ! string(.), ".")&#xD;
+    let $candidate :=&#xD;
+        $release&#xD;
+        || (if ($pre-release) then "-" || $pre-release else ())&#xD;
+        || (if ($build-metadata) then "+" || $build-metadata else ())&#xD;
+    (: Raise an error if the candidate is invalid :)&#xD;
+    let $check := semver:parse($candidate)&#xD;
+    return&#xD;
+        $candidate&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a parsed SemVer version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing the components of the SemVer string&#xD;
+ :  @return A SemVer string&#xD;
+ :  @deprecated As of 2.4.0 replace with serialize-parsed&#xD;
+ :)&#xD;
+declare function semver:serialize($parsed-version as map(*)) {&#xD;
+    semver:serialize-parsed($parsed-version)&#xD;
+};&#xD;
+&#xD;
+(:~ Serialize a parsed SemVer version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing the components of the SemVer string&#xD;
+ :  @return A SemVer string&#xD;
+ :)&#xD;
+declare function semver:serialize-parsed($parsed-version as map(*)) {&#xD;
+    semver:serialize(&#xD;
+        $parsed-version?major, &#xD;
+        $parsed-version?minor, &#xD;
+        $parsed-version?patch, &#xD;
+        $parsed-version?pre-release, &#xD;
+        $parsed-version?build-metadata&#xD;
+    )&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two versions (strictly)&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A version string&#xD;
+ :  @param $parsed-v2 A second version string&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare($v1 as xs:string, $v2 as xs:string) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1)&#xD;
+    let $parsed-v2 := semver:parse($v2)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two versions (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1, $coerce)&#xD;
+    let $parsed-v2 := semver:parse($v2, $coerce)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+};&#xD;
+&#xD;
+(:~ Compare two parsed SemVer versions&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A map containing analysis of a version string&#xD;
+ :  @param $parsed-v2 A map containing analysis of a second version string&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare function semver:compare-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:integer {&#xD;
+    (: Compare major, minor, and patch identifiers :)&#xD;
+    let $release-comparison :=&#xD;
+        semver:compare-release(&#xD;
+            array:subarray($parsed-v1?identifiers, 1, 3),&#xD;
+            array:subarray($parsed-v2?identifiers, 1, 3)&#xD;
+        )&#xD;
+    return&#xD;
+        switch ($release-comparison)&#xD;
+            case 0 return&#xD;
+                (: When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version. :)&#xD;
+                if (array:size($parsed-v1?pre-release) eq 0 and array:size($parsed-v2?pre-release) gt 0) then&#xD;
+                    1&#xD;
+                else if (array:size($parsed-v1?pre-release) gt 0 and array:size($parsed-v2?pre-release) eq 0) then&#xD;
+                    -1&#xD;
+                else&#xD;
+                    (: When major, minor, and patch are equal, compare pre-release :)&#xD;
+                    (: Build metadata SHOULD be ignored when determining version precedence. :)&#xD;
+                    semver:compare-pre-release(&#xD;
+                        $parsed-v1?pre-release,&#xD;
+                        $parsed-v2?pre-release&#xD;
+                    )&#xD;
+            default return&#xD;
+                $release-comparison&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version than v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:lt($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq -1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a lower version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is less than v2&#xD;
+ :)&#xD;
+declare function semver:lt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq -1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version or the same version as v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:le($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a lower version or the same version as v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) le 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a lower version or the same version as a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is less than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:le-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) le 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a higher version than v2 (strictly)&#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:gt($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is a higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq 1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is a higher version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is greater than v2&#xD;
+ :)&#xD;
+declare function semver:gt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 1&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is the same or higher version than v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ge($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is the same or higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ge 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is the same or higher version than a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is greater than or equal to v2&#xD;
+ :)&#xD;
+declare function semver:ge-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ge 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is equal to v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is equal to a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is equal to v2&#xD;
+ :)&#xD;
+declare function semver:eq-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is not equal to v2 (strictly)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ne($v1, $v2, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Test if v1 is not equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $v1 A version string&#xD;
+ :  @param $v2 A second version string&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ne 0&#xD;
+};&#xD;
+&#xD;
+(:~ Test if a parsed v1 is not equal to a parsed v2&#xD;
+ :  &#xD;
+ :  @param $parsed-v1 A parsed Semver version&#xD;
+ :  @param $parsed-v2 A second parsed Semver version&#xD;
+ :  @return true if v1 is not equal to v2&#xD;
+ :)&#xD;
+declare function semver:ne-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ne 0&#xD;
+};&#xD;
+&#xD;
+(:~ Compare release identifiers&#xD;
+ :  &#xD;
+ :  @param $v1 An array of release identifiers&#xD;
+ :  @param $v2 A second array of release identifiers&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare %private function semver:compare-release($v1-release-ids as array(*), $v2-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the release portions of the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-release-ids) eq 0 and array:size($v2-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: Compare members using numeric operators :)&#xD;
+    else if (array:head($v1-release-ids) lt array:head($v2-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-release-ids) gt array:head($v2-release-ids)) then&#xD;
+        1&#xD;
+    else&#xD;
+        semver:compare-release(array:tail($v1-release-ids), array:tail($v2-release-ids))&#xD;
+};&#xD;
+&#xD;
+(:~ Compare pre-release identifiers&#xD;
+ :  &#xD;
+ :  @param $v1 An array of pre-release identifiers&#xD;
+ :  @param $v2 A second array of pre-release identifiers&#xD;
+ :  @return -1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.&#xD;
+ :)&#xD;
+declare %private function semver:compare-pre-release($v1-pre-release-ids as array(*), $v2-pre-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-pre-release-ids) eq 0 and array:size($v2-pre-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: A larger set of pre-release fields has a higher precedence than a smaller set, if all of the preceding identifiers are equal. :)&#xD;
+    else if (array:size($v1-pre-release-ids) eq 0) then&#xD;
+        -1&#xD;
+    else if (array:size($v2-pre-release-ids) eq 0) then&#xD;
+        1&#xD;
+    (: Numeric identifiers always have lower precedence than non-numeric identifiers. :)&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:string and array:head($v2-pre-release-ids) instance of xs:integer) then&#xD;
+        1&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:integer and array:head($v2-pre-release-ids) instance of xs:string) then&#xD;
+        -1&#xD;
+    (: Compare values using comparison operators :)&#xD;
+    else if (array:head($v1-pre-release-ids) lt array:head($v2-pre-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-pre-release-ids) gt array:head($v2-pre-release-ids)) then&#xD;
+        1&#xD;
+    (: These identifiers are equal, so recurse to the next pair of identifiers :)&#xD;
+    else&#xD;
+        semver:compare-pre-release(array:tail($v1-pre-release-ids), array:tail($v2-pre-release-ids))&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer strings (strictly)&#xD;
+ :  &#xD;
+ :  @param $versions A sequence of version strings&#xD;
+ :  @return A sequence of sorted version strings&#xD;
+ :)&#xD;
+declare function semver:sort($versions as xs:string+) as xs:string+ {&#xD;
+    semver:sort($versions, false())&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+ :  &#xD;
+ :  @param $versions A sequence of version strings&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return A sequence of sorted version strings&#xD;
+ :)&#xD;
+declare function semver:sort($versions as xs:string*, $coerce as xs:boolean) as xs:string* {&#xD;
+    let $parsed := $versions ! semver:parse(., $coerce)&#xD;
+    let $sorted := semver:sort-parsed($parsed)&#xD;
+    for $s in $sorted&#xD;
+    return&#xD;
+        semver:serialize($s)&#xD;
+};&#xD;
+&#xD;
+(:~ Sort arbitrary items by their SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+ :  @param $items A sequence of items to sort&#xD;
+ :  @param $function A function taking a single parameter used to derive a SemVer string from the item&#xD;
+ :  @param $coerce An option for coercing non-SemVer version strings into parsable form&#xD;
+ :  @return The sequence of items in SemVer order&#xD;
+ :)&#xD;
+declare function semver:sort($items as item()*, $function as function(*), $coerce as xs:boolean) as item()* {&#xD;
+    let $items-with-version :=&#xD;
+        for $item in $items&#xD;
+        let $version-string := $function($item)&#xD;
+        let $parsed-version := semver:parse($version-string, $coerce)&#xD;
+        return&#xD;
+            map {&#xD;
+                "item": $item,&#xD;
+                "version-string": $version-string,&#xD;
+                "parsed-version": $parsed-version&#xD;
+            }&#xD;
+    let $sorted-versions := semver:sort-parsed($items-with-version?parsed-version)&#xD;
+    for $sorted-version in $sorted-versions&#xD;
+    for $item-with-version in $items-with-version&#xD;
+    where semver:eq-parsed($item-with-version?parsed-version, $sorted-version)&#xD;
+    return&#xD;
+        $item-with-version?item&#xD;
+};&#xD;
+&#xD;
+(:~ Sort SemVer maps&#xD;
+ :  @param $parsed-versions A sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array&#xD;
+ :  @return A sorted sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array&#xD;
+ :)&#xD;
+declare function semver:sort-parsed($parsed-versions as map(*)*) as map(*)* {&#xD;
+    (: First, sort versions by major, minor, and patch (using fast standard sort) :)&#xD;
+    let $release-sorted := fn:sort($parsed-versions, (), function($p) { $p?major, $p?minor, $p?patch } )&#xD;
+    return&#xD;
+        (: Second, sort any versions with pre-release fields,&#xD;
+           then group by major, minor, and patch to limit sorting to like versions :)&#xD;
+        for $p1 in $release-sorted&#xD;
+        group by $major := $p1?major&#xD;
+        order by $major&#xD;
+        return&#xD;
+            for $p2 in $p1&#xD;
+            group by $minor := $p2?minor&#xD;
+            order by $minor&#xD;
+            return&#xD;
+                for $p3 in $p2&#xD;
+                group by $patch := $p3?patch&#xD;
+                let $releases := $p3[?pre-release =&gt; array:size() eq 0]&#xD;
+                let $pre-releases := $p3[?pre-release =&gt; array:size() gt 0]&#xD;
+                order by $patch&#xD;
+                return&#xD;
+                    (&#xD;
+                        semver:sort-pre-release($pre-releases, ()),&#xD;
+                        (: Versions without pre-release metadata take precedence :)&#xD;
+                        $releases&#xD;
+                    )&#xD;
+};&#xD;
+&#xD;
+(:~ Sort pre-release fields&#xD;
+ :  &#xD;
+ :  @param $parsed-versions The versions to sort&#xD;
+ :  @param $sorted-versions An accumulator for sorted versions&#xD;
+ :  @return Sorted versions&#xD;
+ :)&#xD;
+declare %private function semver:sort-pre-release($parsed-versions as map(*)*, $sorted-versions as map(*)*) as map(*)* {&#xD;
+    if (exists($parsed-versions)) then&#xD;
+        let $head := head($parsed-versions)&#xD;
+        let $rest := tail($parsed-versions)&#xD;
+        let $is-largest-pre-release := every $item in $rest?pre-release satisfies semver:compare-pre-release($head?pre-release, $item) = (1, 0)&#xD;
+        return&#xD;
+            if ($is-largest-pre-release) then&#xD;
+                semver:sort-pre-release(tail($parsed-versions), ($head, $sorted-versions))&#xD;
+            else&#xD;
+                semver:sort-pre-release(($rest, $head), $sorted-versions)&#xD;
+    else&#xD;
+        $sorted-versions&#xD;
+};&#xD;
+&#xD;
+(:~ Raise a descriptive error&#xD;
+ :  &#xD;
+ :  @param $code An error code&#xD;
+ :  @param $version The version or identifier that triggered the error&#xD;
+ :  @return The error.&#xD;
+ :)&#xD;
+declare %private function semver:error($code as xs:string, $version as xs:string) {&#xD;
+    let $errors :=&#xD;
+        map {&#xD;
+            "regex-error":&#xD;
+                map {&#xD;
+                    "description": "Version did not match the regular expression for valid SemVer",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "regex-error")&#xD;
+                },&#xD;
+            "identifier-error":&#xD;
+                map {&#xD;
+                    "description": "Version identifiers did not conform to SemVer spec",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "identifier-error")&#xD;
+                },&#xD;
+            "template-error":&#xD;
+                map {&#xD;
+                    "description": "Template did not conform to the EXPath Package spec for SemVer templates",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "template-error")&#xD;
+                }&#xD;
+        }&#xD;
+    let $error := $errors?($code)&#xD;
+    return&#xD;
+        error($error?qname, $error?description || ": '" || $version || "'")&#xD;
+};&#xD;
+&#xD;
+(:~ A utility function for casting identifiers to the appropriate types&#xD;
+ :  &#xD;
+ :  @param $identifier An identifier&#xD;
+ :  return The identifier unchanged or cast as an integer&#xD;
+ :)&#xD;
+declare %private function semver:cast-identifier($identifier as xs:string) as xs:anyAtomicType {&#xD;
+    if ($identifier castable as xs:integer) then&#xD;
+        $identifier cast as xs:integer&#xD;
+    else&#xD;
+        $identifier&#xD;
+};&#xD;
+&#xD;
+(:~ A utility function for populating the identifiers entry in a parsed version&#xD;
+ :  &#xD;
+ :  @param $parsed-version A map containing analysis of a version string&#xD;
+ :  return The map with an identifiers entry&#xD;
+ :)&#xD;
+declare %private function semver:populate-identifiers($parsed-version as map(*)) as map(*) {&#xD;
+    $parsed-version&#xD;
+    =&gt; map:put("identifiers", [ $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ])&#xD;
+};&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="semver" uri="http://exist-db.org/xquery/semver"/><xqdoc:namespace prefix="array" uri="http://www.w3.org/2005/xpath-functions/array"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="fn" uri="http://www.w3.org/2005/xpath-functions"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>semver:regex</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+A regular expression for validating SemVer strings and parsing valid SemVer strings&#xD;
+&#xD;
+</xqdoc:description><xqdoc:see>https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string</xqdoc:see></xqdoc:comment><xqdoc:body>variable $semver:regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `.` + Patch version: A zero or a non-negative integer without leading zeros :)&#xD;
+    || "\.(0|[1-9]\d*)"&#xD;
+    (: `-` + Pre-release metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"&#xD;
+    (: `+` + Build metadata (optional): A series of dot separated, non-empty identifiers, comprised only of ASCII alphanumerics and hyphens [0-9A-Za-z-] :)&#xD;
+    || "(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>semver:coerce-regex</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+A forgiving regular expression for capturing groups needed to coerce a non-SemVer string into SemVer components</xqdoc:description></xqdoc:comment><xqdoc:body>variable $semver:coerce-regex := &#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "([^-+.]+?)"&#xD;
+    (: `.` + Minor version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `.` + Patch version: One or more characters that are not `-`, `+`, or `.` :)&#xD;
+    || "(?:\.([^-+.]+?))?"&#xD;
+    (: `-` + Pre-release metadata (optional): One or more characters that are not `+` :)&#xD;
+    || "(?:-([^+]+?))?"&#xD;
+    (: `+` + Build metadata (optional): One or more characters :)&#xD;
+    || "(?:\+(.+))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>semver:expath-package-semver-template-regex</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+A regular expression for validating SemVer templates as defined in the EXPath Package spec&#xD;
+&#xD;
+</xqdoc:description><xqdoc:see>http://expath.org/spec/pkg#pkgdep</xqdoc:see></xqdoc:comment><xqdoc:body>variable $semver:expath-package-semver-template-regex :=&#xD;
+    (: Start of string :)&#xD;
+    "^"&#xD;
+    (: Major version: A zero for initial development or a non-negative integer without leading zeros :)&#xD;
+    || "(0|[1-9]\d*)"&#xD;
+    (: `.` + Minor version: Empty for a major version template, or a zero or a non-negative integer without leading zeros for a minor version template :)&#xD;
+    || "(?:\.(0|[1-9]\d*))?"&#xD;
+    (: End of string :)&#xD;
+    || "$"</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Validate whether a SemVer string conforms to the spec&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string</xqdoc:param><xqdoc:return>True if the version is valid, false if not</xqdoc:return></xqdoc:comment><xqdoc:name>semver:validate</xqdoc:name><xqdoc:signature>function semver:validate ( $version as xs:string ) as xs:boolean { matches($version, $semver:regex) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:validate($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:regex)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Validate whether a version string conforms to the rules for SemVer templates as defined in the EXPath Package spec&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string</xqdoc:param><xqdoc:return>True if the version is an SemVer template, false if not</xqdoc:return></xqdoc:comment><xqdoc:name>semver:validate-expath-package-semver-template</xqdoc:name><xqdoc:signature>function semver:validate-expath-package-semver-template ( $version as xs:string ) as xs:boolean { matches($version, $semver:expath-package-semver-template-regex) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:validate-expath-package-semver-template($version as xs:string) as xs:boolean {&#xD;
+    matches($version, $semver:expath-package-semver-template-regex)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Parse a SemVer string (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string</xqdoc:param><xqdoc:return>A map containing analysis of the parsed version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</xqdoc:return><xqdoc:error>regex-error</xqdoc:error><xqdoc:error>identifier-error</xqdoc:error></xqdoc:comment><xqdoc:name>semver:parse</xqdoc:name><xqdoc:signature>function semver:parse ( $version as xs:string ) as map(*) { semver:parse($version, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:parse($version as xs:string) as map(*) {&#xD;
+    semver:parse($version, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Parse a SemVer string (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>A map containing analysis of the parsed SemVer versions, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</xqdoc:return><xqdoc:error>regex-error</xqdoc:error><xqdoc:error>identifier-error</xqdoc:error></xqdoc:comment><xqdoc:name>semver:parse</xqdoc:name><xqdoc:signature>function semver:parse ( $version as xs:string, $coerce as xs:boolean ) as map(*) { let $analysis := analyze-string($version, $semver:regex) let $groups := $analysis/fn:match/fn:group return if (empty($groups)) then if ($coerce) then semver:coerce($version) else semver:error("identifier-error", $version) else let $release-identifiers := subsequence($groups, 1, 3) ! semver:cast-identifier(.) (: Groups 4 and 5 are optional and so must be selected by @nr rather than position :) let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) } let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) } return map { "major": $release-identifiers[1], "minor": $release-identifiers[2], "patch": $release-identifiers[3], "pre-release": $pre-release-identifiers, "build-metadata": $build-metadata-identifiers } =&gt; semver:populate-identifiers() }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:parse($version as xs:string, $coerce as xs:boolean) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then&#xD;
+            if ($coerce) then &#xD;
+                semver:coerce($version)&#xD;
+            else&#xD;
+                semver:error("identifier-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := subsequence($groups, 1, 3) ! semver:cast-identifier(.)&#xD;
+            (: Groups 4 and 5 are optional and so must be selected by @nr rather than position :)&#xD;
+            let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+            return&#xD;
+                map {&#xD;
+                    "major": $release-identifiers[1],&#xD;
+                    "minor": $release-identifiers[2],&#xD;
+                    "patch": $release-identifiers[3],&#xD;
+                    "pre-release": $pre-release-identifiers,&#xD;
+                    "build-metadata": $build-metadata-identifiers&#xD;
+                }&#xD;
+                =&gt; semver:populate-identifiers()&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Coerce a non-SemVer version string into a SemVer string and parse it as such&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string which will be coerced into a parsed SemVer version</xqdoc:param><xqdoc:return>A map containing analysis of the coerced version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array. Fallback for invalid version strings: 0.0.0.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:coerce</xqdoc:name><xqdoc:signature>function semver:coerce ( $version as xs:string ) as map(*) { let $analysis := analyze-string($version, $semver:coerce-regex) let $groups := $analysis/fn:match/fn:group let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "") ! semver:cast-identifier(.) let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) } let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) } return map { "major": if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0, "minor": if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0, "patch": if ($release-identifiers[3] instance of xs:integer) then $release-identifiers[3] else 0, "pre-release": $pre-release-identifiers, "build-metadata": $build-metadata-identifiers } =&gt; semver:populate-identifiers() }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:coerce($version as xs:string) as map(*) {&#xD;
+    let $analysis := analyze-string($version, $semver:coerce-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "") ! semver:cast-identifier(.)&#xD;
+    let $pre-release-identifiers := array { $groups[@nr eq "4"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    let $build-metadata-identifiers := array { $groups[@nr eq "5"] ! tokenize(., "\.") ! semver:cast-identifier(.) }&#xD;
+    return&#xD;
+        map {&#xD;
+            "major": if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0,&#xD;
+            "minor": if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0,&#xD;
+            "patch": if ($release-identifiers[3] instance of xs:integer) then $release-identifiers[3] else 0,&#xD;
+            "pre-release": $pre-release-identifiers,&#xD;
+            "build-metadata": $build-metadata-identifiers&#xD;
+        }&#xD;
+        =&gt; semver:populate-identifiers()&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Resolve an EXPath Package SemVer Template as minimum (floor)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version An EXPath SemVer Template</xqdoc:param><xqdoc:return>A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:resolve-expath-package-semver-template-min</xqdoc:name><xqdoc:signature>function semver:resolve-expath-package-semver-template-min ( $version as xs:string ) as map(*) { semver:resolve-expath-package-semver-template($version, "min") }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:resolve-expath-package-semver-template-min($version as xs:string) as map(*) {&#xD;
+    semver:resolve-expath-package-semver-template($version, "min")&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Resolve an EXPath Package SemVer Template as maximum (ceiling)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version An EXPath SemVer Template</xqdoc:param><xqdoc:return>A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:resolve-expath-package-semver-template-max</xqdoc:name><xqdoc:signature>function semver:resolve-expath-package-semver-template-max ( $version as xs:string ) as map(*) { semver:resolve-expath-package-semver-template($version, "max") }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:resolve-expath-package-semver-template-max($version as xs:string) as map(*)  {&#xD;
+    semver:resolve-expath-package-semver-template($version, "max")&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Resolve an EXPath SemVer Package Template&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version An EXPath Package SemVer Template</xqdoc:param><xqdoc:param>$mode Mode for resolving the template: "min" (floor) or "max" (ceiling)</xqdoc:param><xqdoc:return>A map containing the resolved version, with entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:resolve-expath-package-semver-template</xqdoc:name><xqdoc:signature>function semver:resolve-expath-package-semver-template ( $version as xs:string, $mode as xs:string ) { let $analysis := analyze-string($version, $semver:expath-package-semver-template-regex) let $groups := $analysis/fn:match/fn:group return if (empty($groups)) then semver:error("template-error", $version) else let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "")[. ne ""] ! semver:cast-identifier(.) let $major := if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0 let $minor := if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0 let $is-major-version-template := empty($release-identifiers[2]) return if ($is-major-version-template) then map { "major": if ($mode eq "min") then $major else $major + 1, "minor": 0, "patch": 0, "pre-release": [], "build-metadata": [] } =&gt; semver:populate-identifiers() else (: if ($is-minor-version-template) then :) map { "major": $major, "minor": if ($mode eq "min") then $minor else $minor + 1, "patch": 0, "pre-release": [], "build-metadata": [] } =&gt; semver:populate-identifiers() }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>mode</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:resolve-expath-package-semver-template($version as xs:string, $mode as xs:string) {&#xD;
+    let $analysis := analyze-string($version, $semver:expath-package-semver-template-regex)&#xD;
+    let $groups := $analysis/fn:match/fn:group&#xD;
+    return&#xD;
+        if (empty($groups)) then &#xD;
+            semver:error("template-error", $version)&#xD;
+        else&#xD;
+            let $release-identifiers := $groups[@nr = ("1", "2", "3")] ! replace(., "\D+", "")[. ne ""] ! semver:cast-identifier(.)&#xD;
+            let $major := if ($release-identifiers[1] instance of xs:integer) then $release-identifiers[1] else 0&#xD;
+            let $minor := if ($release-identifiers[2] instance of xs:integer) then $release-identifiers[2] else 0&#xD;
+            let $is-major-version-template := empty($release-identifiers[2])&#xD;
+            return&#xD;
+                if ($is-major-version-template) then&#xD;
+                    map {&#xD;
+                        "major": if ($mode eq "min") then $major else $major + 1,&#xD;
+                        "minor": 0,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+                else (: if ($is-minor-version-template) then :)&#xD;
+                    map {&#xD;
+                        "major": $major,&#xD;
+                        "minor": if ($mode eq "min") then $minor else $minor + 1,&#xD;
+                        "patch": 0,&#xD;
+                        "pre-release": [],&#xD;
+                        "build-metadata": []&#xD;
+                    }&#xD;
+                    =&gt; semver:populate-identifiers()&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="5"><xqdoc:comment><xqdoc:description>&#xD;
+Check if a version satisfies EXPath Package dependency versioning attributes.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$version A version string</xqdoc:param><xqdoc:param>$versions An EXPath Package "versions" versioning attribute</xqdoc:param><xqdoc:param>$semver An EXPath Package "semver" versioning attribute</xqdoc:param><xqdoc:param>$semver-min An EXPath Package "semver-min" versioning attribute</xqdoc:param><xqdoc:param>$semver-min An EXPath Package "semver-max" versioning attribute</xqdoc:param><xqdoc:return>True if the version satisfies the attributes, or false if not</xqdoc:return></xqdoc:comment><xqdoc:name>semver:satisfies-expath-package-dependency-versioning-attributes</xqdoc:name><xqdoc:signature>function semver:satisfies-expath-package-dependency-versioning-attributes ( $version as xs:string, $versions as xs:string?, $semver as xs:string?, $semver-min as xs:string?, $semver-max as xs:string? ) as xs:boolean { (: "If the versions attribute is used, it defines the exact set of acceptable versions : for the secondary package, separated by spaces." :) let $satisfies-versions := if (empty($versions)) then false() else $version = tokenize($versions) (: Parse the version and evaluate the remaining versioning attributes, accounting for the possibility : that they may be EXPath Package SemVer templates. :) let $version-parsed := semver:parse($version, true()) let $satisfies-semver := if (empty($semver)) then false() (: If semver is a template, resolve it into max and min versions :) else if (semver:validate-expath-package-semver-template($semver)) then semver:ge-parsed( $version-parsed, semver:resolve-expath-package-semver-template-min($semver) ) and semver:lt-parsed( (: Disregard the pre-release identifier when comparing against EXPath Package SemVer : templates :) if (array:size($version-parsed?pre-release) gt 0) then map:put($version-parsed, "pre-release", []) else $version-parsed, semver:resolve-expath-package-semver-template-max($semver) ) else semver:eq($version, $semver, true()) let $satisfies-semver-min := if (empty($semver-min)) then false() else if (semver:validate-expath-package-semver-template($semver-min)) then semver:ge-parsed( $version-parsed, semver:resolve-expath-package-semver-template-min($semver-min) ) else semver:ge($version, $semver-min, true()) let $satisfies-semver-max := if (empty($semver-max)) then false() else if (semver:validate-expath-package-semver-template($semver-max)) then semver:lt-parsed( (: Disregard the pre-release identifier when comparing against EXPath Package SemVer : templates :) if (array:size($version-parsed?pre-release) gt 0) then map:put($version-parsed, "pre-release", []) else $version-parsed, semver:resolve-expath-package-semver-template-max($semver-max) ) else semver:lt($version, $semver-max, true()) return $satisfies-versions or $satisfies-semver or ( if (exists($semver-min) and exists($semver-max)) then $satisfies-semver-min and $satisfies-semver-max else if (exists($semver-min)) then $satisfies-semver-min else if (exists($semver-max)) then $satisfies-semver-max else false() ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>versions</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>semver</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>semver-min</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>semver-max</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:satisfies-expath-package-dependency-versioning-attributes(&#xD;
+    $version as xs:string, &#xD;
+    $versions as xs:string?, &#xD;
+    $semver as xs:string?, &#xD;
+    $semver-min as xs:string?, &#xD;
+    $semver-max as xs:string?&#xD;
+) as xs:boolean {&#xD;
+    (: "If the versions attribute is used, it defines the exact set of acceptable versions &#xD;
+     : for the secondary package, separated by spaces." :)&#xD;
+    let $satisfies-versions :=&#xD;
+        if (empty($versions)) then&#xD;
+            false()&#xD;
+        else&#xD;
+            $version = tokenize($versions)&#xD;
+    (: Parse the version and evaluate the remaining versioning attributes, accounting for the possibility &#xD;
+     : that they may be EXPath Package SemVer templates. :)&#xD;
+    let $version-parsed := semver:parse($version, true())&#xD;
+    let $satisfies-semver := &#xD;
+        if (empty($semver)) then&#xD;
+            false()&#xD;
+        (: If semver is a template, resolve it into max and min versions :)&#xD;
+        else if (semver:validate-expath-package-semver-template($semver)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-min($semver)&#xD;
+            )&#xD;
+            and&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:eq($version, $semver, true())&#xD;
+    let $satisfies-semver-min :=&#xD;
+        if (empty($semver-min)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-min)) then&#xD;
+            semver:ge-parsed(&#xD;
+                $version-parsed, &#xD;
+                semver:resolve-expath-package-semver-template-min($semver-min)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:ge($version, $semver-min, true())&#xD;
+    let $satisfies-semver-max := &#xD;
+        if (empty($semver-max)) then&#xD;
+            false()&#xD;
+        else if (semver:validate-expath-package-semver-template($semver-max)) then&#xD;
+            semver:lt-parsed(&#xD;
+                (: Disregard the pre-release identifier when comparing against EXPath Package SemVer &#xD;
+                 : templates :)&#xD;
+                if (array:size($version-parsed?pre-release) gt 0) then&#xD;
+                    map:put($version-parsed, "pre-release", [])&#xD;
+                else&#xD;
+                    $version-parsed,&#xD;
+                semver:resolve-expath-package-semver-template-max($semver-max)&#xD;
+            )&#xD;
+        else&#xD;
+            semver:lt($version, $semver-max, true())&#xD;
+    return&#xD;
+        $satisfies-versions &#xD;
+        or $satisfies-semver &#xD;
+        or (&#xD;
+            if (exists($semver-min) and exists($semver-max)) then&#xD;
+                $satisfies-semver-min and $satisfies-semver-max&#xD;
+            else if (exists($semver-min)) then&#xD;
+                $satisfies-semver-min&#xD;
+            else if (exists($semver-max)) then&#xD;
+                $satisfies-semver-max&#xD;
+            else&#xD;
+                false()&#xD;
+        )&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="5"><xqdoc:comment><xqdoc:description>&#xD;
+Serialize a SemVer string&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$major The major version</xqdoc:param><xqdoc:param>$minor The minor version</xqdoc:param><xqdoc:param>$patch The patch version</xqdoc:param><xqdoc:param>$pre-release Pre-release identifiers</xqdoc:param><xqdoc:param>$build-metadata Build identifiers</xqdoc:param><xqdoc:return>A SemVer string</xqdoc:return></xqdoc:comment><xqdoc:name>semver:serialize</xqdoc:name><xqdoc:signature>function semver:serialize ( $major as xs:integer, $minor as xs:integer, $patch as xs:integer, $pre-release as xs:anyAtomicType*, $build-metadata as xs:anyAtomicType* ) { let $release := string-join(($major, $minor, $patch), ".") let $pre-release := string-join($pre-release ! string(.), ".") let $build-metadata := string-join($build-metadata ! string(.), ".") let $candidate := $release || (if ($pre-release) then "-" || $pre-release else ()) || (if ($build-metadata) then "+" || $build-metadata else ()) (: Raise an error if the candidate is invalid :) let $check := semver:parse($candidate) return $candidate }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>major</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>minor</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>patch</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pre-release</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>build-metadata</xqdoc:name><xqdoc:type occurrence="*">xs:anyAtomicType</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:serialize(&#xD;
+    $major as xs:integer, &#xD;
+    $minor as xs:integer, &#xD;
+    $patch as xs:integer, &#xD;
+    $pre-release as xs:anyAtomicType*, &#xD;
+    $build-metadata as xs:anyAtomicType*&#xD;
+) {&#xD;
+    let $release := string-join(($major, $minor, $patch), ".")&#xD;
+    let $pre-release := string-join($pre-release ! string(.), ".")&#xD;
+    let $build-metadata := string-join($build-metadata ! string(.), ".")&#xD;
+    let $candidate :=&#xD;
+        $release&#xD;
+        || (if ($pre-release) then "-" || $pre-release else ())&#xD;
+        || (if ($build-metadata) then "+" || $build-metadata else ())&#xD;
+    (: Raise an error if the candidate is invalid :)&#xD;
+    let $check := semver:parse($candidate)&#xD;
+    return&#xD;
+        $candidate&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Serialize a parsed SemVer version&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-version A map containing the components of the SemVer string</xqdoc:param><xqdoc:return>A SemVer string</xqdoc:return><xqdoc:deprecated>As of 2.4.0 replace with serialize-parsed</xqdoc:deprecated></xqdoc:comment><xqdoc:name>semver:serialize</xqdoc:name><xqdoc:signature>function semver:serialize ( $parsed-version as map(*) ) { semver:serialize-parsed($parsed-version) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-version</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:serialize($parsed-version as map(*)) {&#xD;
+    semver:serialize-parsed($parsed-version)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Serialize a parsed SemVer version&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-version A map containing the components of the SemVer string</xqdoc:param><xqdoc:return>A SemVer string</xqdoc:return></xqdoc:comment><xqdoc:name>semver:serialize-parsed</xqdoc:name><xqdoc:signature>function semver:serialize-parsed ( $parsed-version as map(*) ) { semver:serialize( $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-version</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:serialize-parsed($parsed-version as map(*)) {&#xD;
+    semver:serialize(&#xD;
+        $parsed-version?major, &#xD;
+        $parsed-version?minor, &#xD;
+        $parsed-version?patch, &#xD;
+        $parsed-version?pre-release, &#xD;
+        $parsed-version?build-metadata&#xD;
+    )&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Compare two versions (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A version string</xqdoc:param><xqdoc:param>$parsed-v2 A second version string</xqdoc:param><xqdoc:return>-1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:compare</xqdoc:name><xqdoc:signature>function semver:compare ( $v1 as xs:string, $v2 as xs:string ) as xs:integer { let $parsed-v1 := semver:parse($v1) let $parsed-v2 := semver:parse($v2) return semver:compare-parsed($parsed-v1, $parsed-v2) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function semver:compare($v1 as xs:string, $v2 as xs:string) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1)&#xD;
+    let $parsed-v2 := semver:parse($v2)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Compare two versions (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>-1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:compare</xqdoc:name><xqdoc:signature>function semver:compare ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:integer { let $parsed-v1 := semver:parse($v1, $coerce) let $parsed-v2 := semver:parse($v2, $coerce) return semver:compare-parsed($parsed-v1, $parsed-v2) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function semver:compare($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:integer {&#xD;
+    let $parsed-v1 := semver:parse($v1, $coerce)&#xD;
+    let $parsed-v2 := semver:parse($v2, $coerce)&#xD;
+    return&#xD;
+        semver:compare-parsed($parsed-v1, $parsed-v2)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Compare two parsed SemVer versions&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A map containing analysis of a version string</xqdoc:param><xqdoc:param>$parsed-v2 A map containing analysis of a second version string</xqdoc:param><xqdoc:return>-1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:compare-parsed</xqdoc:name><xqdoc:signature>function semver:compare-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:integer { (: Compare major, minor, and patch identifiers :) let $release-comparison := semver:compare-release( array:subarray($parsed-v1?identifiers, 1, 3), array:subarray($parsed-v2?identifiers, 1, 3) ) return switch ($release-comparison) case 0 return (: When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version. :) if (array:size($parsed-v1?pre-release) eq 0 and array:size($parsed-v2?pre-release) gt 0) then 1 else if (array:size($parsed-v1?pre-release) gt 0 and array:size($parsed-v2?pre-release) eq 0) then -1 else (: When major, minor, and patch are equal, compare pre-release :) (: Build metadata SHOULD be ignored when determining version precedence. :) semver:compare-pre-release( $parsed-v1?pre-release, $parsed-v2?pre-release ) default return $release-comparison }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function semver:compare-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:integer {&#xD;
+    (: Compare major, minor, and patch identifiers :)&#xD;
+    let $release-comparison :=&#xD;
+        semver:compare-release(&#xD;
+            array:subarray($parsed-v1?identifiers, 1, 3),&#xD;
+            array:subarray($parsed-v2?identifiers, 1, 3)&#xD;
+        )&#xD;
+    return&#xD;
+        switch ($release-comparison)&#xD;
+            case 0 return&#xD;
+                (: When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version. :)&#xD;
+                if (array:size($parsed-v1?pre-release) eq 0 and array:size($parsed-v2?pre-release) gt 0) then&#xD;
+                    1&#xD;
+                else if (array:size($parsed-v1?pre-release) gt 0 and array:size($parsed-v2?pre-release) eq 0) then&#xD;
+                    -1&#xD;
+                else&#xD;
+                    (: When major, minor, and patch are equal, compare pre-release :)&#xD;
+                    (: Build metadata SHOULD be ignored when determining version precedence. :)&#xD;
+                    semver:compare-pre-release(&#xD;
+                        $parsed-v1?pre-release,&#xD;
+                        $parsed-v2?pre-release&#xD;
+                    )&#xD;
+            default return&#xD;
+                $release-comparison&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a lower version than v2 (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is less than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:lt</xqdoc:name><xqdoc:signature>function semver:lt ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:lt($v1, $v2, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:lt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:lt($v1, $v2, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a lower version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>true if v1 is less than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:lt</xqdoc:name><xqdoc:signature>function semver:lt ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2, $coerce) eq -1 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:lt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq -1&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is a lower version than a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is less than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:lt-parsed</xqdoc:name><xqdoc:signature>function semver:lt-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) eq -1 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:lt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq -1&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a lower version or the same version as v2 (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is less than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:le</xqdoc:name><xqdoc:signature>function semver:le ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:le($v1, $v2, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:le($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:le($v1, $v2, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a lower version or the same version as v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>true if v1 is less than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:le</xqdoc:name><xqdoc:signature>function semver:le ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2, $coerce) le 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:le($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) le 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is a lower version or the same version as a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is less than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:le-parsed</xqdoc:name><xqdoc:signature>function semver:le-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) le 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:le-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) le 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a higher version than v2 (strictly)&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is greater than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:gt</xqdoc:name><xqdoc:signature>function semver:gt ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:gt($v1, $v2, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:gt($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:gt($v1, $v2, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is a higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is greater than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:gt</xqdoc:name><xqdoc:signature>function semver:gt ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2, $coerce) eq 1 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:gt($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) eq 1&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is a higher version than a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is greater than v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:gt-parsed</xqdoc:name><xqdoc:signature>function semver:gt-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) eq 1 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:gt-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 1&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is the same or higher version than v2 (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is greater than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ge</xqdoc:name><xqdoc:signature>function semver:ge ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:ge($v1, $v2, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ge($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ge($v1, $v2, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is the same or higher version than v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is greater than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ge</xqdoc:name><xqdoc:signature>function semver:ge ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2, $coerce) ge 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ge($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ge 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is the same or higher version than a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is greater than or equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ge-parsed</xqdoc:name><xqdoc:signature>function semver:ge-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) ge 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ge-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ge 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is equal to v2 (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:eq</xqdoc:name><xqdoc:signature>function semver:eq ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:compare($v1, $v2) eq 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:eq($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:eq</xqdoc:name><xqdoc:signature>function semver:eq ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2) eq 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:eq($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2) eq 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is equal to a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:eq-parsed</xqdoc:name><xqdoc:signature>function semver:eq-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) eq 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:eq-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) eq 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is not equal to v2 (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:return>true if v1 is not equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ne</xqdoc:name><xqdoc:signature>function semver:ne ( $v1 as xs:string, $v2 as xs:string ) as xs:boolean { semver:ne($v1, $v2, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ne($v1 as xs:string, $v2 as xs:string) as xs:boolean {&#xD;
+    semver:ne($v1, $v2, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Test if v1 is not equal to v2 (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 A version string</xqdoc:param><xqdoc:param>$v2 A second version string</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>true if v1 is not equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ne</xqdoc:name><xqdoc:signature>function semver:ne ( $v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean ) as xs:boolean { semver:compare($v1, $v2, $coerce) ne 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ne($v1 as xs:string, $v2 as xs:string, $coerce as xs:boolean) as xs:boolean {&#xD;
+    semver:compare($v1, $v2, $coerce) ne 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Test if a parsed v1 is not equal to a parsed v2&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-v1 A parsed Semver version</xqdoc:param><xqdoc:param>$parsed-v2 A second parsed Semver version</xqdoc:param><xqdoc:return>true if v1 is not equal to v2</xqdoc:return></xqdoc:comment><xqdoc:name>semver:ne-parsed</xqdoc:name><xqdoc:signature>function semver:ne-parsed ( $parsed-v1 as map(*), $parsed-v2 as map(*) ) as xs:boolean { semver:compare-parsed($parsed-v1, $parsed-v2) ne 0 }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-v1</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>parsed-v2</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:return><xqdoc:body>function semver:ne-parsed($parsed-v1 as map(*), $parsed-v2 as map(*)) as xs:boolean {&#xD;
+    semver:compare-parsed($parsed-v1, $parsed-v2) ne 0&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Compare release identifiers&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 An array of release identifiers</xqdoc:param><xqdoc:param>$v2 A second array of release identifiers</xqdoc:param><xqdoc:return>-1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:compare-release</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:compare-release ( $v1-release-ids as array(*), $v2-release-ids as array(*) ) { (: No (more) pairs to compare, so the release portions of the two versions are of equal precedence :) if (array:size($v1-release-ids) eq 0 and array:size($v2-release-ids) eq 0) then 0 (: Compare members using numeric operators :) else if (array:head($v1-release-ids) lt array:head($v2-release-ids)) then -1 else if (array:head($v1-release-ids) gt array:head($v2-release-ids)) then 1 else semver:compare-release(array:tail($v1-release-ids), array:tail($v2-release-ids)) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1-release-ids</xqdoc:name><xqdoc:type>array(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2-release-ids</xqdoc:name><xqdoc:type>array(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:compare-release($v1-release-ids as array(*), $v2-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the release portions of the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-release-ids) eq 0 and array:size($v2-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: Compare members using numeric operators :)&#xD;
+    else if (array:head($v1-release-ids) lt array:head($v2-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-release-ids) gt array:head($v2-release-ids)) then&#xD;
+        1&#xD;
+    else&#xD;
+        semver:compare-release(array:tail($v1-release-ids), array:tail($v2-release-ids))&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Compare pre-release identifiers&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$v1 An array of pre-release identifiers</xqdoc:param><xqdoc:param>$v2 A second array of pre-release identifiers</xqdoc:param><xqdoc:return>-1 if v1 &lt; v2, 0 if v1 = v2, or 1 if v1 &gt; v2.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:compare-pre-release</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:compare-pre-release ( $v1-pre-release-ids as array(*), $v2-pre-release-ids as array(*) ) { (: No (more) pairs to compare, so the two versions are of equal precedence :) if (array:size($v1-pre-release-ids) eq 0 and array:size($v2-pre-release-ids) eq 0) then 0 (: A larger set of pre-release fields has a higher precedence than a smaller set, if all of the preceding identifiers are equal. :) else if (array:size($v1-pre-release-ids) eq 0) then -1 else if (array:size($v2-pre-release-ids) eq 0) then 1 (: Numeric identifiers always have lower precedence than non-numeric identifiers. :) else if (array:head($v1-pre-release-ids) instance of xs:string and array:head($v2-pre-release-ids) instance of xs:integer) then 1 else if (array:head($v1-pre-release-ids) instance of xs:integer and array:head($v2-pre-release-ids) instance of xs:string) then -1 (: Compare values using comparison operators :) else if (array:head($v1-pre-release-ids) lt array:head($v2-pre-release-ids)) then -1 else if (array:head($v1-pre-release-ids) gt array:head($v2-pre-release-ids)) then 1 (: These identifiers are equal, so recurse to the next pair of identifiers :) else semver:compare-pre-release(array:tail($v1-pre-release-ids), array:tail($v2-pre-release-ids)) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>v1-pre-release-ids</xqdoc:name><xqdoc:type>array(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>v2-pre-release-ids</xqdoc:name><xqdoc:type>array(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:compare-pre-release($v1-pre-release-ids as array(*), $v2-pre-release-ids as array(*)) {&#xD;
+    (: No (more) pairs to compare, so the two versions are of equal precedence :)&#xD;
+    if (array:size($v1-pre-release-ids) eq 0 and array:size($v2-pre-release-ids) eq 0) then&#xD;
+        0&#xD;
+    (: A larger set of pre-release fields has a higher precedence than a smaller set, if all of the preceding identifiers are equal. :)&#xD;
+    else if (array:size($v1-pre-release-ids) eq 0) then&#xD;
+        -1&#xD;
+    else if (array:size($v2-pre-release-ids) eq 0) then&#xD;
+        1&#xD;
+    (: Numeric identifiers always have lower precedence than non-numeric identifiers. :)&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:string and array:head($v2-pre-release-ids) instance of xs:integer) then&#xD;
+        1&#xD;
+    else if (array:head($v1-pre-release-ids) instance of xs:integer and array:head($v2-pre-release-ids) instance of xs:string) then&#xD;
+        -1&#xD;
+    (: Compare values using comparison operators :)&#xD;
+    else if (array:head($v1-pre-release-ids) lt array:head($v2-pre-release-ids)) then&#xD;
+        -1&#xD;
+    else if (array:head($v1-pre-release-ids) gt array:head($v2-pre-release-ids)) then&#xD;
+        1&#xD;
+    (: These identifiers are equal, so recurse to the next pair of identifiers :)&#xD;
+    else&#xD;
+        semver:compare-pre-release(array:tail($v1-pre-release-ids), array:tail($v2-pre-release-ids))&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Sort SemVer strings (strictly)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$versions A sequence of version strings</xqdoc:param><xqdoc:return>A sequence of sorted version strings</xqdoc:return></xqdoc:comment><xqdoc:name>semver:sort</xqdoc:name><xqdoc:signature>function semver:sort ( $versions as xs:string+ ) as xs:string+ { semver:sort($versions, false()) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>versions</xqdoc:name><xqdoc:type occurrence="+">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function semver:sort($versions as xs:string+) as xs:string+ {&#xD;
+    semver:sort($versions, false())&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Sort SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$versions A sequence of version strings</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>A sequence of sorted version strings</xqdoc:return></xqdoc:comment><xqdoc:name>semver:sort</xqdoc:name><xqdoc:signature>function semver:sort ( $versions as xs:string*, $coerce as xs:boolean ) as xs:string* { let $parsed := $versions ! semver:parse(., $coerce) let $sorted := semver:sort-parsed($parsed) for $s in $sorted return semver:serialize($s) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>versions</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function semver:sort($versions as xs:string*, $coerce as xs:boolean) as xs:string* {&#xD;
+    let $parsed := $versions ! semver:parse(., $coerce)&#xD;
+    let $sorted := semver:sort-parsed($parsed)&#xD;
+    for $s in $sorted&#xD;
+    return&#xD;
+        semver:serialize($s)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+Sort arbitrary items by their SemVer strings (with an option to coerce invalid SemVer strings)&#xD;
+</xqdoc:description><xqdoc:param>$items A sequence of items to sort</xqdoc:param><xqdoc:param>$function A function taking a single parameter used to derive a SemVer string from the item</xqdoc:param><xqdoc:param>$coerce An option for coercing non-SemVer version strings into parsable form</xqdoc:param><xqdoc:return>The sequence of items in SemVer order</xqdoc:return></xqdoc:comment><xqdoc:name>semver:sort</xqdoc:name><xqdoc:signature>function semver:sort ( $items as item()*, $function as function(*), $coerce as xs:boolean ) as item()* { let $items-with-version := for $item in $items let $version-string := $function($item) let $parsed-version := semver:parse($version-string, $coerce) return map { "item": $item, "version-string": $version-string, "parsed-version": $parsed-version } let $sorted-versions := semver:sort-parsed($items-with-version?parsed-version) for $sorted-version in $sorted-versions for $item-with-version in $items-with-version where semver:eq-parsed($item-with-version?parsed-version, $sorted-version) return $item-with-version?item }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>items</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>function</xqdoc:name><xqdoc:type>function(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>coerce</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function semver:sort($items as item()*, $function as function(*), $coerce as xs:boolean) as item()* {&#xD;
+    let $items-with-version :=&#xD;
+        for $item in $items&#xD;
+        let $version-string := $function($item)&#xD;
+        let $parsed-version := semver:parse($version-string, $coerce)&#xD;
+        return&#xD;
+            map {&#xD;
+                "item": $item,&#xD;
+                "version-string": $version-string,&#xD;
+                "parsed-version": $parsed-version&#xD;
+            }&#xD;
+    let $sorted-versions := semver:sort-parsed($items-with-version?parsed-version)&#xD;
+    for $sorted-version in $sorted-versions&#xD;
+    for $item-with-version in $items-with-version&#xD;
+    where semver:eq-parsed($item-with-version?parsed-version, $sorted-version)&#xD;
+    return&#xD;
+        $item-with-version?item&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+Sort SemVer maps&#xD;
+</xqdoc:description><xqdoc:param>$parsed-versions A sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array</xqdoc:param><xqdoc:return>A sorted sequence of SemVer maps, containing entries for each identifier ("major", "minor", "patch", "pre-release", and "build-metadata"), and an "identifiers" entry with all identifiers in an array</xqdoc:return></xqdoc:comment><xqdoc:name>semver:sort-parsed</xqdoc:name><xqdoc:signature>function semver:sort-parsed ( $parsed-versions as map(*)* ) as map(*)* { (: First, sort versions by major, minor, and patch (using fast standard sort) :) let $release-sorted := fn:sort($parsed-versions, (), function($p) { $p?major, $p?minor, $p?patch } ) return (: Second, sort any versions with pre-release fields, then group by major, minor, and patch to limit sorting to like versions :) for $p1 in $release-sorted group by $major := $p1?major order by $major return for $p2 in $p1 group by $minor := $p2?minor order by $minor return for $p3 in $p2 group by $patch := $p3?patch let $releases := $p3[?pre-release =&gt; array:size() eq 0] let $pre-releases := $p3[?pre-release =&gt; array:size() gt 0] order by $patch return ( semver:sort-pre-release($pre-releases, ()), (: Versions without pre-release metadata take precedence :) $releases ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-versions</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:sort-parsed($parsed-versions as map(*)*) as map(*)* {&#xD;
+    (: First, sort versions by major, minor, and patch (using fast standard sort) :)&#xD;
+    let $release-sorted := fn:sort($parsed-versions, (), function($p) { $p?major, $p?minor, $p?patch } )&#xD;
+    return&#xD;
+        (: Second, sort any versions with pre-release fields,&#xD;
+           then group by major, minor, and patch to limit sorting to like versions :)&#xD;
+        for $p1 in $release-sorted&#xD;
+        group by $major := $p1?major&#xD;
+        order by $major&#xD;
+        return&#xD;
+            for $p2 in $p1&#xD;
+            group by $minor := $p2?minor&#xD;
+            order by $minor&#xD;
+            return&#xD;
+                for $p3 in $p2&#xD;
+                group by $patch := $p3?patch&#xD;
+                let $releases := $p3[?pre-release =&gt; array:size() eq 0]&#xD;
+                let $pre-releases := $p3[?pre-release =&gt; array:size() gt 0]&#xD;
+                order by $patch&#xD;
+                return&#xD;
+                    (&#xD;
+                        semver:sort-pre-release($pre-releases, ()),&#xD;
+                        (: Versions without pre-release metadata take precedence :)&#xD;
+                        $releases&#xD;
+                    )&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Sort pre-release fields&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$parsed-versions The versions to sort</xqdoc:param><xqdoc:param>$sorted-versions An accumulator for sorted versions</xqdoc:param><xqdoc:return>Sorted versions</xqdoc:return></xqdoc:comment><xqdoc:name>semver:sort-pre-release</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:sort-pre-release ( $parsed-versions as map(*)*, $sorted-versions as map(*)* ) as map(*)* { if (exists($parsed-versions)) then let $head := head($parsed-versions) let $rest := tail($parsed-versions) let $is-largest-pre-release := every $item in $rest?pre-release satisfies semver:compare-pre-release($head?pre-release, $item) = (1, 0) return if ($is-largest-pre-release) then semver:sort-pre-release(tail($parsed-versions), ($head, $sorted-versions)) else semver:sort-pre-release(($rest, $head), $sorted-versions) else $sorted-versions }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-versions</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sorted-versions</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:sort-pre-release($parsed-versions as map(*)*, $sorted-versions as map(*)*) as map(*)* {&#xD;
+    if (exists($parsed-versions)) then&#xD;
+        let $head := head($parsed-versions)&#xD;
+        let $rest := tail($parsed-versions)&#xD;
+        let $is-largest-pre-release := every $item in $rest?pre-release satisfies semver:compare-pre-release($head?pre-release, $item) = (1, 0)&#xD;
+        return&#xD;
+            if ($is-largest-pre-release) then&#xD;
+                semver:sort-pre-release(tail($parsed-versions), ($head, $sorted-versions))&#xD;
+            else&#xD;
+                semver:sort-pre-release(($rest, $head), $sorted-versions)&#xD;
+    else&#xD;
+        $sorted-versions&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+Raise a descriptive error&#xD;
+&#xD;
+</xqdoc:description><xqdoc:param>$code An error code</xqdoc:param><xqdoc:param>$version The version or identifier that triggered the error</xqdoc:param><xqdoc:return>The error.</xqdoc:return></xqdoc:comment><xqdoc:name>semver:error</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:error ( $code as xs:string, $version as xs:string ) { let $errors := map { "regex-error": map { "description": "Version did not match the regular expression for valid SemVer", "qname": QName("http://joewiz.org/ns/xquery/semver", "regex-error") }, "identifier-error": map { "description": "Version identifiers did not conform to SemVer spec", "qname": QName("http://joewiz.org/ns/xquery/semver", "identifier-error") }, "template-error": map { "description": "Template did not conform to the EXPath Package spec for SemVer templates", "qname": QName("http://joewiz.org/ns/xquery/semver", "template-error") } } let $error := $errors?($code) return error($error?qname, $error?description || ": '" || $version || "'") }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>code</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>version</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function semver:error($code as xs:string, $version as xs:string) {&#xD;
+    let $errors :=&#xD;
+        map {&#xD;
+            "regex-error":&#xD;
+                map {&#xD;
+                    "description": "Version did not match the regular expression for valid SemVer",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "regex-error")&#xD;
+                },&#xD;
+            "identifier-error":&#xD;
+                map {&#xD;
+                    "description": "Version identifiers did not conform to SemVer spec",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "identifier-error")&#xD;
+                },&#xD;
+            "template-error":&#xD;
+                map {&#xD;
+                    "description": "Template did not conform to the EXPath Package spec for SemVer templates",&#xD;
+                    "qname": QName("http://joewiz.org/ns/xquery/semver", "template-error")&#xD;
+                }&#xD;
+        }&#xD;
+    let $error := $errors?($code)&#xD;
+    return&#xD;
+        error($error?qname, $error?description || ": '" || $version || "'")&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+A utility function for casting identifiers to the appropriate types&#xD;
+&#xD;
+return The identifier unchanged or cast as an integer&#xD;
+</xqdoc:description><xqdoc:param>$identifier An identifier</xqdoc:param></xqdoc:comment><xqdoc:name>semver:cast-identifier</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:cast-identifier ( $identifier as xs:string ) as xs:anyAtomicType { if ($identifier castable as xs:integer) then $identifier cast as xs:integer else $identifier }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>identifier</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:anyAtomicType</xqdoc:type></xqdoc:return><xqdoc:body>function semver:cast-identifier($identifier as xs:string) as xs:anyAtomicType {&#xD;
+    if ($identifier castable as xs:integer) then&#xD;
+        $identifier cast as xs:integer&#xD;
+    else&#xD;
+        $identifier&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+A utility function for populating the identifiers entry in a parsed version&#xD;
+&#xD;
+return The map with an identifiers entry&#xD;
+</xqdoc:description><xqdoc:param>$parsed-version A map containing analysis of a version string</xqdoc:param></xqdoc:comment><xqdoc:name>semver:populate-identifiers</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function semver:populate-identifiers ( $parsed-version as map(*) ) as map(*) { $parsed-version =&gt; map:put("identifiers", [ $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ]) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>parsed-version</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function semver:populate-identifiers($parsed-version as map(*)) as map(*) {&#xD;
+    $parsed-version&#xD;
+    =&gt; map:put("identifiers", [ $parsed-version?major, $parsed-version?minor, $parsed-version?patch, $parsed-version?pre-release, $parsed-version?build-metadata ])&#xD;
+}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

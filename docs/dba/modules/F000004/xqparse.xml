@@ -1,39 +1,6 @@
-<XQuery>(:~
- : Download resources.
- :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
- :)
-<LibraryModule><ModuleDecl><TOKEN>module</TOKEN> <TOKEN>namespace</TOKEN> <NCName>dba</NCName> <TOKEN>=</TOKEN> <StringLiteral>'dba/databases'</StringLiteral><TOKEN>;</TOKEN></ModuleDecl>
-
-(:~
- : Downloads a resource.
- : @param  $name      database
- : @param  $resource  resource
- : @param  $file      file name (ignored)
- : @return rest response and file content
- :)
-<Prolog><AnnotatedDecl><TOKEN>declare</TOKEN>
-  <Annotation><TOKEN>%</TOKEN><QName>rest:path</QName><TOKEN>(</TOKEN><StringLiteral>'/dba/db-download'</StringLiteral><TOKEN>)</TOKEN></Annotation>
-  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'name'</StringLiteral><TOKEN>,</TOKEN>     <StringLiteral>'{$name}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
-  <Annotation><TOKEN>%</TOKEN><QName>rest:query-param</QName><TOKEN>(</TOKEN><StringLiteral>'resource'</StringLiteral><TOKEN>,</TOKEN> <StringLiteral>'{$resource}'</StringLiteral><TOKEN>)</TOKEN></Annotation>
-<FunctionDecl><TOKEN>function</TOKEN> <QName>dba:db-download</QName><TOKEN>(</TOKEN>
-  <ParamList><Param><TOKEN>$</TOKEN><QName>name</QName>      <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param><TOKEN>,</TOKEN>
-  <Param><TOKEN>$</TOKEN><QName>resource</QName>  <TypeDeclaration><TOKEN>as</TOKEN> <QName>xs:string</QName></TypeDeclaration></Param></ParamList>
-<TOKEN>)</TOKEN> <TOKEN>as</TOKEN> <SequenceType><ItemType><TOKEN>item</TOKEN><TOKEN>(</TOKEN><TOKEN>)</TOKEN></ItemType><TOKEN>+</TOKEN></SequenceType> <EnclosedExpr><TOKEN>{</TOKEN>
-  <TryCatchExpr><TryClause><TOKEN>try</TOKEN> <EnclosedExpr><TOKEN>{</TOKEN>
-    <Expr><FunctionCall><QName>web:response-header</QName><ArgumentList><TOKEN>(</TOKEN>
-      <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'media-type'</StringLiteral><TOKEN>:</TOKEN> <FunctionCall><QName>db:content-type</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>resource</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor><TOKEN>,</TOKEN>
-      <MapConstructor><TOKEN>map</TOKEN> <TOKEN>{</TOKEN> <MapConstructorEntry><StringLiteral>'Content-Disposition'</StringLiteral><TOKEN>:</TOKEN> <StringConcatExpr><StringLiteral>'attachment; filename='</StringLiteral> <TOKEN>||</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>resource</QName></VarRef></StringConcatExpr></MapConstructorEntry> <TOKEN>}</TOKEN></MapConstructor>
-    <TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>,</TOKEN>
-    <IfExpr><TOKEN>if</TOKEN><TOKEN>(</TOKEN><FunctionCall><QName>db:is-raw</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>resource</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall><TOKEN>)</TOKEN> <TOKEN>then</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
-      <FunctionCall><QName>db:retrieve</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>resource</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-    <TOKEN>)</TOKEN></ParenthesizedExpr> <TOKEN>else</TOKEN> <ParenthesizedExpr><TOKEN>(</TOKEN>
-      <FunctionCall><QName>db:open</QName><ArgumentList><TOKEN>(</TOKEN><VarRef><TOKEN>$</TOKEN><QName>name</QName></VarRef><TOKEN>,</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>resource</QName></VarRef><TOKEN>)</TOKEN></ArgumentList></FunctionCall>
-    <TOKEN>)</TOKEN></ParenthesizedExpr></IfExpr></Expr>
-  <TOKEN>}</TOKEN></EnclosedExpr></TryClause> <CatchClause><TOKEN>catch</TOKEN> <Wildcard>*</Wildcard> <EnclosedExpr><TOKEN>{</TOKEN>
-    <DirElemConstructor><TOKEN>&lt;</TOKEN><QName>rest:response</QName><DirAttributeList/><TOKEN>&gt;</TOKEN><ElementContentChar>
-</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><DirElemConstructor><TOKEN>&lt;</TOKEN><QName>http:response</QName><DirAttributeList><S> </S><QName>status</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>'</TOKEN><AposAttrContentChar>4</AposAttrContentChar><AposAttrContentChar>0</AposAttrContentChar><AposAttrContentChar>0</AposAttrContentChar><TOKEN>'</TOKEN></DirAttributeValue><S> </S><QName>message</QName><TOKEN>=</TOKEN><DirAttributeValue><TOKEN>'</TOKEN><EnclosedExpr><TOKEN>{</TOKEN> <VarRef><TOKEN>$</TOKEN><QName>err:description</QName></VarRef> <TOKEN>}</TOKEN></EnclosedExpr><TOKEN>'</TOKEN></DirAttributeValue></DirAttributeList><TOKEN>/&gt;</TOKEN></DirElemConstructor><ElementContentChar>
-</ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><ElementContentChar> </ElementContentChar><TOKEN>&lt;/</TOKEN><QName>rest:response</QName><TOKEN>&gt;</TOKEN></DirElemConstructor>
-  <TOKEN>}</TOKEN></EnclosedExpr></CatchClause></TryCatchExpr>
-<TOKEN>}</TOKEN></EnclosedExpr></FunctionDecl></AnnotatedDecl><TOKEN>;</TOKEN></Prolog></LibraryModule>
-<EOF/></XQuery>
+<ERROR b="784" e="784" s="180">lexical analysis failed
+while expecting [IntegerLiteral, NCName, S, '(', '(:', '*', 'and', 'as', 'ascending', 'case', 'cast', 'castable', 'collation', 'count', 'default', 'descending', 'div', 'else', 'empty', 'end', 'eq', 'except', 'for', 'ge', 'group', 'gt', 'idiv', 'instance', 'intersect', 'is', 'le', 'let', 'lt', 'mod', 'ne', 'only', 'or', 'order', 'return', 'satisfies', 'stable', 'start', 'to', 'treat', 'union', 'updating', 'where']
+at line 31, column 25:
+...? $dba:SUB !! $dba:CAT
+  return try {
+    db:restore($name || '-...</ERROR>

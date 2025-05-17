@@ -1,55 +1,193 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/logs</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>dba - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">dba/options</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html">dba</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">dba/logs</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:log-delete"><span class="secno">4.1</span><span class="content" title="">dba:log-delete<div style="float:right"><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>Delete log files.</div><dl><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-21, BSD License</p><p>__source : logs/log-delete.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">dba/options</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$options:DBA-DIRECTORY"><span class="secno">3.1</span><span class="content">$options:DBA-DIRECTORY</span><div style="float:right"></div></a></li><li><a href="#$options:DEFAULTS"><span class="secno">3.2</span><span class="content">$options:DEFAULTS</span><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-info" title="Other annotations">A</span></div></a></li><li><a href="#$options:FILE"><span class="secno">3.3</span><span class="content">$options:FILE</span><div style="float:right"><span class="badge badge-dark" title="Private">P</span></div></a></li><li><a href="#$options:IGNORE-LOGS"><span class="secno">3.4</span><span class="content">$options:IGNORE-LOGS</span><div style="float:right"></div></a></li><li><a href="#$options:INDENT"><span class="secno">3.5</span><span class="content">$options:INDENT</span><div style="float:right"></div></a></li><li><a href="#$options:INDENTS"><span class="secno">3.6</span><span class="content">$options:INDENTS</span><div style="float:right"></div></a></li><li><a href="#$options:MAXCHARS"><span class="secno">3.7</span><span class="content">$options:MAXCHARS</span><div style="float:right"></div></a></li><li><a href="#$options:MAXROWS"><span class="secno">3.8</span><span class="content">$options:MAXROWS</span><div style="float:right"></div></a></li><li><a href="#$options:MEMORY"><span class="secno">3.9</span><span class="content">$options:MEMORY</span><div style="float:right"></div></a></li><li><a href="#$options:OPTIONS"><span class="secno">3.10</span><span class="content">$options:OPTIONS</span><div style="float:right"><span class="badge badge-dark" title="Private">P</span><span class="badge badge-info" title="Other annotations">A</span></div></a></li><li><a href="#$options:PERMISSION"><span class="secno">3.11</span><span class="content">$options:PERMISSION</span><div style="float:right"></div></a></li><li><a href="#$options:PERMISSIONS"><span class="secno">3.12</span><span class="content">$options:PERMISSIONS</span><div style="float:right"></div></a></li><li><a href="#$options:TIMEOUT"><span class="secno">3.13</span><span class="content">$options:TIMEOUT</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#options:get"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;&#xD;&#xA;Returns the value of an option.&#xD;&#xA;">get<div style="float:right"></div></span></a></li><li><a href="#options:save"><span class="secno">4.2</span><span class="content" title="&#xD;&#xA;&#xD;&#xA;Saves options.&#xD;&#xA;">save<div style="float:right"></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+Global options.&#xD;
+&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Christian Grün, BaseX Team 2005-23, BSD License</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
-    <span class="badge badge-info">0</span> modules. It imports
-    <span class="badge badge-info">1</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style="">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:CAT"></a><a id="{dba/logs}$CAT"></a>3.1 $dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:log-delete"></a><a id="{dba/logs}log-delete#1"></a>4.1 dba:log-delete<div style="float:right"><a href="#dba:log-delete">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/logs}log-delete#1">dba:log-delete#1</a><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>Deletes database logs.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:log-delete</code>
+    <span class="badge badge-info">7</span> modules. It imports
+    <span class="badge badge-info">0</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;"><div style="text-align: right;"><span><a href="../../modules/F000005/index.html" title="databases/backups/backup-upload.xqm">dba/files</a> <a href="../../modules/F000020/index.html" title="files/dir-change.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000021/index.html" title="files/dir-create.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000022/index.html" title="files/file-delete.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000023/index.html" title="files/file-download.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000024/index.html" title="files/file-start.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000025/index.html" title="files/file-upload.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000026/index.html" title="files/files.xqm"><span class="badge badge-info">8</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F000030/index.html" title="lib/config.xqm">dba/config</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000033/index.html" title="lib/util.xqm">dba/util</a></span></div><div style="text-align: right;"><span><a href="../../modules/F000044/index.html" title="settings/settings-gc.xqm">dba/settings</a> <a href="../../modules/F000045/index.html" title="settings/settings.xqm"><span class="badge badge-info">2</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F000048/index.html" title="users/pattern-add.xqm">dba/users</a> <a href="../../modules/F000049/index.html" title="users/pattern-drop.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000050/index.html" title="users/user-create.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000051/index.html" title="users/user-drop.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000052/index.html" title="users/user-update.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000053/index.html" title="users/user.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000054/index.html" title="users/users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F000048/index.html" title="users/pattern-add.xqm">dba/users</a> <a href="../../modules/F000049/index.html" title="users/pattern-drop.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000050/index.html" title="users/user-create.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000051/index.html" title="users/user-drop.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000052/index.html" title="users/user-update.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000053/index.html" title="users/user.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000054/index.html" title="users/users.xqm"><span class="badge badge-info">7</span></a></span></div><div style="text-align: right;"><span><a href="../../modules/F000048/index.html" title="users/pattern-add.xqm">dba/users</a> <a href="../../modules/F000049/index.html" title="users/pattern-drop.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000050/index.html" title="users/user-create.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000051/index.html" title="users/user-drop.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000052/index.html" title="users/user-update.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000053/index.html" title="users/user.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000054/index.html" title="users/users.xqm"><span class="badge badge-info">7</span></a></span></div></div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">dba/options</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style="">(None)</div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$options:DBA-DIRECTORY"></a><a id="{dba/options}$DBA-DIRECTORY"></a><a href="#$options:DBA-DIRECTORY">3.1 </a>$options:DBA-DIRECTORY</h3><dl><dt class="label">Summary</dt><dd></dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 7 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:DBA-DIRECTORY := (
+  for $dir in db:option('dbpath') || '/.dba'
+  return (
+    if(file:exists($dir)) then () else file:create-dir($dir),
+    file:path-to-native($dir)
+  )
+)</code></pre></details></div><div class="div3"><h3><a id="$options:DEFAULTS"></a><a id="{dba/options}$DEFAULTS"></a><a href="#$options:DEFAULTS">3.2 </a>$options:DEFAULTS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Default options.</dd><dt class="label">Type</dt><dd></dd></dl><details><summary>Annotations (2)</summary><table class="data"><tbody><tr><td><code class="function">%basex:lazy</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details open="open"><summary>Source ( 9 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:DEFAULTS := map {
+  $options:MAXCHARS   : 200000,
+  $options:MAXROWS    : 200,
+  $options:TIMEOUT    : 30,
+  $options:MEMORY     : 500,
+  $options:PERMISSION : 'admin',
+  $options:IGNORE-LOGS: '',
+  $options:INDENT     : 'no'
+}</code></pre></details></div><div class="div3"><h3><a id="$options:FILE"></a><a id="{dba/options}$FILE"></a><a href="#$options:FILE">3.3 </a>$options:FILE</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Options file.</dd><dt class="label">Type</dt><dd></dd></dl><details><summary>Annotations (1)</summary><table class="data"><tbody><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:FILE := $options:DBA-DIRECTORY || '.dba.xml'</code></pre></details></div><div class="div3"><h3><a id="$options:IGNORE-LOGS"></a><a id="{dba/options}$IGNORE-LOGS"></a><a href="#$options:IGNORE-LOGS">3.4 </a>$options:IGNORE-LOGS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Show DBA log entries.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:IGNORE-LOGS := 'ignore-logs'</code></pre></details></div><div class="div3"><h3><a id="$options:INDENT"></a><a id="{dba/options}$INDENT"></a><a href="#$options:INDENT">3.5 </a>$options:INDENT</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Indent results.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:INDENT := 'indent'</code></pre></details></div><div class="div3"><h3><a id="$options:INDENTS"></a><a id="{dba/options}$INDENTS"></a><a href="#$options:INDENTS">3.6 </a>$options:INDENTS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Indentation values.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:INDENTS := ('no', 'yes')</code></pre></details></div><div class="div3"><h3><a id="$options:MAXCHARS"></a><a id="{dba/options}$MAXCHARS"></a><a href="#$options:MAXCHARS">3.7 </a>$options:MAXCHARS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Maximum length of XML characters.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:MAXCHARS := 'maxchars'</code></pre></details></div><div class="div3"><h3><a id="$options:MAXROWS"></a><a id="{dba/options}$MAXROWS"></a><a href="#$options:MAXROWS">3.8 </a>$options:MAXROWS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Maximum number of table entries.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:MAXROWS := 'maxrows'</code></pre></details></div><div class="div3"><h3><a id="$options:MEMORY"></a><a id="{dba/options}$MEMORY"></a><a href="#$options:MEMORY">3.9 </a>$options:MEMORY</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Maximal memory consumption.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:MEMORY := 'memory'</code></pre></details></div><div class="div3"><h3><a id="$options:OPTIONS"></a><a id="{dba/options}$OPTIONS"></a><a href="#$options:OPTIONS">3.10 </a>$options:OPTIONS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Currently assigned options.</dd><dt class="label">Type</dt><dd></dd></dl><details><summary>Annotations (2)</summary><table class="data"><tbody><tr><td><code class="function">%basex:lazy</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%private</code></td><td><code class="arg">()</code></td></tr></tbody></table></details><details open="open"><summary>Source ( 28 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:OPTIONS := (
+  if(file:exists($options:FILE)) then (
+    try {
+      (: merge defaults with saved options :)
+      let $options := fetch:doc($options:FILE)/options
+      return map:merge(
+        map:for-each($options:DEFAULTS, function($key, $value) {
+          map:entry($key,
+            let $option := $options/*[name() = $key]
+            return if($option) then (
+              typeswitch($value)
+                case xs:numeric  return xs:integer($option)
+                case xs:boolean  return xs:boolean($option)
+                default          return xs:string($option)
+            ) else (
+              $value
+            )
+          )
+        })
+      )
+    } catch * {
+      (: use defaults if an error occurs while parsing the options :)
+      $options:DEFAULTS
+    }
+  ) else (
+    $options:DEFAULTS
+  )
+)</code></pre></details></div><div class="div3"><h3><a id="$options:PERMISSION"></a><a id="{dba/options}$PERMISSION"></a><a href="#$options:PERMISSION">3.11 </a>$options:PERMISSION</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Permission when running queries.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:PERMISSION := 'permission'</code></pre></details></div><div class="div3"><h3><a id="$options:PERMISSIONS"></a><a id="{dba/options}$PERMISSIONS"></a><a href="#$options:PERMISSIONS">3.12 </a>$options:PERMISSIONS</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Permission values.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:PERMISSIONS := ('none', 'read', 'write', 'create', 'admin')</code></pre></details></div><div class="div3"><h3><a id="$options:TIMEOUT"></a><a id="{dba/options}$TIMEOUT"></a><a href="#$options:TIMEOUT">3.13 </a>$options:TIMEOUT</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Query timeout.</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $options:TIMEOUT := 'timeout'</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="options:get"></a><a id="{dba/options}get#1"></a><a href="#options:get">4.1 </a>options:get</h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/options}get#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+&#xD;
+Returns the value of an option.&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">options:get</code>
 		  ( 
-			<code class="arg">$names</code><code class="as"> as </code><code class="type">xs:string*</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(rest:response)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>names<code class="as"> as </code><code class="return-type">xs:string*</code> names of log files</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">element(rest:response)</code>redirection</li></ul></dd><details><summary>Invokes 3 functions from 3 modules </summary><ul><li><span><a href="../../modules/F000031/index.html#{dba/util}info#3" title="lib/util.xqm">util:info#3</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/admin}delete-logs#0</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/web}redirect#2</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/log-delete')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('name','{$names}')</code></td></tr></tbody></table></details><details><summary>Source ( 10 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:log-delete(
-  $names  as xs:string*
-) as element(rest:response) {
-  try {
-    $names ! admin:delete-logs(.),
-    web:redirect($dba:CAT, map { 'info': util:info($names, 'log', 'deleted') })
-  } catch * {
-    web:redirect($dba:CAT, map { 'error': $err:description })
-  }
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>dba</td><td><span><a href="../../modules/F000032/index.html" title="logs/log-delete.xqm">dba/logs</a> <a href="../../modules/F000033/index.html" title="logs/log-download.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000034/index.html" title="logs/logs.xqm"><span class="badge badge-info">3</span></a></span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>util</td><td><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 1.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/log-delete</td><td><span><a href="../../restxq.html#/dba/log-delete#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000032/index.html#{dba/logs}log-delete#1" title="logs/log-delete.xqm">dba:log-delete#1</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
- : Delete log files.
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code> )<code class="as"> as </code><code class="type">xs:anyAtomicType</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> name of option</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">xs:anyAtomicType</code> value</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 5 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function options:get(
+  $name  as xs:string
+) as xs:anyAtomicType {
+  $options:OPTIONS($name)
+}</code></pre></details></div><div class="div3"><h3><a id="options:save"></a><a id="{dba/options}save#1"></a><a href="#options:save">4.2 </a>options:save</h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/options}save#1">#1</a></span></p><dt class="label">Summary</dt><dd>&#xD;
+&#xD;
+Saves options.&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">options:save</code>
+		  ( 
+			<code class="arg">$options</code><code class="as"> as </code><code class="type">map(*)</code> )<code class="as"> as </code><code class="type">empty-sequence</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>options<code class="as"> as </code><code class="return-type">map(*)</code> keys/values that have been changed</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence</code></li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Source ( 9 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function options:save(
+  $options  as map(*)
+) as empty-sequence() {
+  file:write($options:FILE, element options {
+    map:for-each($options:DEFAULTS, function($key, $value) {
+      element { $key } { ($options($key), $value)[1] }
+    })
+  })
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>basex</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org</span></td></tr><tr><td>db</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/db</span></td></tr><tr><td>fetch</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/fetch</span></td></tr><tr><td>file</td><td><span class="badge badge-warning" title="Externally defined">http://expath.org/ns/file</span></td></tr><tr><td>map</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xpath-functions/map</span></td></tr><tr><td>options</td><td><span><a href="../../modules/F000032/index.html" title="lib/options.xqm">dba/options</a></span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>None</p></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
+ : Global options.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/logs';
+module namespace options = 'dba/options';
 
-import module namespace util = 'dba/util' at '../lib/util.xqm';
+(:~ DBA directory. :)
+declare variable $options:DBA-DIRECTORY := (
+  for $dir in db:option('dbpath') || '/.dba'
+  return (
+    if(file:exists($dir)) then () else file:create-dir($dir),
+    file:path-to-native($dir)
+  )
+);
 
-(:~ Top category :)
-declare variable $dba:CAT := 'logs';
+(:~ Permission values. :)
+declare variable $options:PERMISSIONS := ('none', 'read', 'write', 'create', 'admin');
+(:~ Indentation values. :)
+declare variable $options:INDENTS := ('no', 'yes');
+
+(:~ Maximum length of XML characters. :)
+declare variable $options:MAXCHARS := 'maxchars';
+(:~ Maximum number of table entries. :)
+declare variable $options:MAXROWS := 'maxrows';
+(:~ Query timeout. :)
+declare variable $options:TIMEOUT := 'timeout';
+(:~ Maximal memory consumption. :)
+declare variable $options:MEMORY := 'memory';
+(:~ Permission when running queries. :)
+declare variable $options:PERMISSION := 'permission';
+(:~ Show DBA log entries. :)
+declare variable $options:IGNORE-LOGS := 'ignore-logs';
+(:~ Indent results. :)
+declare variable $options:INDENT := 'indent';
+
+(:~ Options file. :)
+declare %private variable $options:FILE := $options:DBA-DIRECTORY || '.dba.xml';
+
+(:~ Default options. :)
+declare %basex:lazy %private variable $options:DEFAULTS := map {
+  $options:MAXCHARS   : 200000,
+  $options:MAXROWS    : 200,
+  $options:TIMEOUT    : 30,
+  $options:MEMORY     : 500,
+  $options:PERMISSION : 'admin',
+  $options:IGNORE-LOGS: '',
+  $options:INDENT     : 'no'
+};
+
+(:~ Currently assigned options. :)
+declare %basex:lazy %private variable $options:OPTIONS := (
+  if(file:exists($options:FILE)) then (
+    try {
+      (: merge defaults with saved options :)
+      let $options := fetch:doc($options:FILE)/options
+      return map:merge(
+        map:for-each($options:DEFAULTS, function($key, $value) {
+          map:entry($key,
+            let $option := $options/*[name() = $key]
+            return if($option) then (
+              typeswitch($value)
+                case xs:numeric  return xs:integer($option)
+                case xs:boolean  return xs:boolean($option)
+                default          return xs:string($option)
+            ) else (
+              $value
+            )
+          )
+        })
+      )
+    } catch * {
+      (: use defaults if an error occurs while parsing the options :)
+      $options:DEFAULTS
+    }
+  ) else (
+    $options:DEFAULTS
+  )
+);
 
 (:~
- : Deletes database logs.
- : @param  $names  names of log files
- : @return redirection
+ : Returns the value of an option.
+ : @param  $name  name of option
+ : @return value
  :)
-declare
-  %rest:GET
-  %rest:path('/dba/log-delete')
-  %rest:query-param('name', '{$names}')
-function dba:log-delete(
-  $names  as xs:string*
-) as element(rest:response) {
-  try {
-    $names ! admin:delete-logs(.),
-    web:redirect($dba:CAT, map { 'info': util:info($names, 'log', 'deleted') })
-  } catch * {
-    web:redirect($dba:CAT, map { 'error': $err:description })
-  }
+declare function options:get(
+  $name  as xs:string
+) as xs:anyAtomicType {
+  $options:OPTIONS($name)
+};
+
+(:~
+ : Saves options.
+ : @param  $options  keys/values that have been changed
+ :)
+declare function options:save(
+  $options  as map(*)
+) as empty-sequence() {
+  file:write($options:FILE, element options {
+    map:for-each($options:DEFAULTS, function($key, $value) {
+      element { $key } { ($options($key), $value)[1] }
+    })
+  })
 };
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T10:44:32.101+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:53:12.962+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

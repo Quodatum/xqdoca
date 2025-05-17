@@ -1,1 +1,13 @@
-<xqdoca created="2022-09-07T10:44:32.101+01:00"><target>file:///tmp/dba/</target><outputs><global>index.html imports  annotations restxq mermaid xqdoca.xml</global><module>module xqdoc xqparse</module></outputs><platform>basex</platform><extensions>*.xqm,*.xq,*.xquery</extensions><source>C:\Users\andy\basex.home\basex.951\webapp\dba</source></xqdoca>
+<xqdoca created="2025-05-17T18:53:12.962+01:00"><xqdoca>0.9.0</xqdoca><target>file:///tmp/xqdoca/dba/</target><outputs><global>
+            report
+            restxq
+            imports
+            imports-diag imports-diag.mmd 
+            annotations 
+            xqdoca.xml
+            xqdoc-validate
+        </global><module>
+            module 
+            xqdoc 
+            xqparse
+        </module></outputs><platform>basex</platform><extensions>*.xqm,*.xq,*.xquery</extensions><project>dba</project><source>C:\Users\mrwhe\Desktop\basex.home\basex.107\webapp\dba\</source><xqdoc><refs>true</refs><body-items>true</body-items><version>1.1</version><body-full>true</body-full></xqdoc></xqdoca>

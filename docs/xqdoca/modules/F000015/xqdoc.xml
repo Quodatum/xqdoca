@@ -1,89 +1,70 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri><xqdoc:name>graphxq.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>graphxq.xqm</h1>
-<p>talk to graphxq server.</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.1</xqdoc:version><xqdoc:custom tag="__source">lib/graphxq.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;graphxq.xqm&lt;/h1&gt;
- : &lt;p&gt;talk to graphxq server.&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.1
- :)
-module namespace gxq = 'quodatum:serice.graphxq';
-import module namespace http="http://expath.org/ns/http-client";
-
-declare variable $gxq:server:= "http://localhost:8984/graphxq/";
-declare variable $gxq:server-ok:= 200=http:send-request(&lt;http:request method='get' status-only='true'/&gt;, $gxq:server)/@status;
-(:~
- : convert dotml to svg 
- : @parm $data is dotml as XML
- :)
-declare function gxq:dotml2($data as element(*)) 
-as document-node()
-{
-let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; 
-                   &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   
-                   &lt;body media-type="text/xml"/&gt;
-            &lt;/multipart&gt;
-return gxq:post('/api/dotml', $form, $data)
-};
-
-(:~
- : convert dot to svg 
- : @parm $data is dot as text
- :)
-declare function gxq:dot($data as xs:string) 
-as document-node()
-{
- let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; 
-                     &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   
-                     &lt;body media-type="text/plain"/&gt;
-              &lt;/multipart&gt;
-return gxq:post('/api/dotml', $form, $data)
-};
-
-(:~ graphxq request :)
-declare function gxq:post($url as xs:string, $form as element(http:multipart),$data ){
-  let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;
-              { $form}
-            &lt;/http:request&gt;
-  let $res:= http:send-request($req,$gxq:server || $url ,($data))
-return if($res[1]/@status="200") then $res[2] else error()
-};
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>http://expath.org/ns/http-client</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="gxq" uri="quodatum:serice.graphxq"/><xqdoc:namespace prefix="http" uri="http://expath.org/ns/http-client"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>gxq:server</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>gxq:server-ok</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>convert dotml to svg</xqdoc:description><xqdoc:custom tag="parm">$data is dotml as XML</xqdoc:custom></xqdoc:comment><xqdoc:name>gxq:dotml2</xqdoc:name><xqdoc:signature>declare function gxq:dotml2($data as element()) as document-node()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type>element()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri><xqdoc:name>post</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>form</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function gxq:dotml2($data as element(*)) 
-as document-node()
-{
-let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; 
-                   &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   
-                   &lt;body media-type="text/xml"/&gt;
-            &lt;/multipart&gt;
-return gxq:post('/api/dotml', $form, $data)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>convert dot to svg</xqdoc:description><xqdoc:custom tag="parm">$data is dot as text</xqdoc:custom></xqdoc:comment><xqdoc:name>gxq:dot</xqdoc:name><xqdoc:signature>declare function gxq:dot($data as xs:string) as document-node()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>document-node()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri><xqdoc:name>post</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>form</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function gxq:dot($data as xs:string) 
-as document-node()
-{
- let $form:= &lt;multipart  xmlns="http://expath.org/ns/http-client" media-type="multipart/form-data"&gt; 
-                     &lt;header name="Content-Disposition" value='form-data; name="data"'/&gt;   
-                     &lt;body media-type="text/plain"/&gt;
-              &lt;/multipart&gt;
-return gxq:post('/api/dotml', $form, $data)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>graphxq request</xqdoc:description></xqdoc:comment><xqdoc:name>gxq:post</xqdoc:name><xqdoc:signature>declare function gxq:post($url as xs:string , $form as element(http:multipart) , $data as item()*) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>form</xqdoc:name><xqdoc:type>element(http:multipart)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/http-client</xqdoc:uri><xqdoc:name>send-request</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>form</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>req</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>quodatum:serice.graphxq</xqdoc:uri><xqdoc:name>server</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>url</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>res</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>res</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function gxq:post($url as xs:string, $form as element(http:multipart),$data ){
-  let $req:= &lt;http:request method="POST"  xmlns="http://expath.org/ns/http-client"&gt;
-              { $form}
-            &lt;/http:request&gt;
-  let $res:= http:send-request($req,$gxq:server || $url ,($data))
-return if($res[1]/@status="200") then $res[2] else error()
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.validate-xqdoc</xqdoc:uri><xqdoc:name>_</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Validate xqdoc o/p against schema&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="Copyright">(c) 2019-2026 Quodatum Ltd</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+ Validate xqdoc o/p against schema&#xD;
+ @Copyright (c) 2019-2026 Quodatum Ltd&#xD;
+ @author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+ :)&#xD;
+&#xD;
+module namespace _ = 'quodatum:xqdoca.generator.validate-xqdoc';&#xD;
+&#xD;
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";&#xD;
+&#xD;
+(:~ xqdoc schema versions:)&#xD;
+declare variable $_:schemas:=map{&#xD;
+                   "1.0": "../etc/models/xqdoc-1.0.01132014.xsd"&#xD;
+                  ,"1.1": "../etc/models/xqdoc-1.1.xsd"&#xD;
+};&#xD;
+&#xD;
+declare &#xD;
+%xqdoca:global("xqdoc-validate","validate generated xqdoc files")&#xD;
+%xqdoca:output("validation-report.xml","xml") &#xD;
+function _:validate(    $model as map(*),&#xD;
+                        $opts as map(*)&#xD;
+                        )                           &#xD;
+as element(errors){&#xD;
+let $xsd:=$_:schemas?($opts?xqdoc?version)&#xD;
+let $schema:=resolve-uri($xsd,static-base-uri())=&gt;trace("xqdoc schema: ")&#xD;
+let $reports:=for $f in $model?files&#xD;
+              return $f?xqdoc!validate:xsd-report(.,$schema) &#xD;
+                      transform with {&#xD;
+                         insert node (attribute source { $f?path },&#xD;
+                                      attribute xqdoc { $f?href }&#xD;
+                         ) into .&#xD;
+                      }&#xD;
+&#xD;
+return &lt;errors&gt;{ &#xD;
+        attribute created { current-dateTime() }&#xD;
+        , attribute schema { $schema }&#xD;
+        , attribute errors { count($reports[status eq 'invalid']) }&#xD;
+        , $reports }&#xD;
+        &lt;/errors&gt;&#xD;
+};&#xD;
+&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.validate-xqdoc"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="validate" uri="http://basex.org/modules/validate"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>_:schemas</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+xqdoc schema versions</xqdoc:description></xqdoc:comment><xqdoc:body>variable $_:schemas:=map{&#xD;
+                   "1.0": "../etc/models/xqdoc-1.0.01132014.xsd"&#xD;
+                  ,"1.1": "../etc/models/xqdoc-1.1.xsd"&#xD;
+}</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:validate</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">xqdoc-validate</xqdoc:literal><xqdoc:literal type="xs:string">validate generated xqdoc files</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">validation-report.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function _:validate ( $model as map(*), $opts as map(*) ) as element(errors) { let $xsd:=$_:schemas?($opts?xqdoc?version) let $schema:=resolve-uri($xsd,static-base-uri())=&gt;trace("xqdoc schema: ") let $reports:=for $f in $model?files return $f?xqdoc!validate:xsd-report(.,$schema) transform with { insert node (attribute source { $f?path }, attribute xqdoc { $f?href } ) into . } return &lt;errors&gt;{ attribute created { current-dateTime() } , attribute schema { $schema } , attribute errors { count($reports[status eq 'invalid']) } , $reports } &lt;/errors&gt; }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(errors)</xqdoc:type></xqdoc:return><xqdoc:body>function _:validate(    $model as map(*),&#xD;
+                        $opts as map(*)&#xD;
+                        )                           &#xD;
+as element(errors){&#xD;
+let $xsd:=$_:schemas?($opts?xqdoc?version)&#xD;
+let $schema:=resolve-uri($xsd,static-base-uri())=&gt;trace("xqdoc schema: ")&#xD;
+let $reports:=for $f in $model?files&#xD;
+              return $f?xqdoc!validate:xsd-report(.,$schema) &#xD;
+                      transform with {&#xD;
+                         insert node (attribute source { $f?path },&#xD;
+                                      attribute xqdoc { $f?href }&#xD;
+                         ) into .&#xD;
+                      }&#xD;
+&#xD;
+return &lt;errors&gt;{ &#xD;
+        attribute created { current-dateTime() }&#xD;
+        , attribute schema { $schema }&#xD;
+        , attribute errors { count($reports[status eq 'invalid']) }&#xD;
+        , $reports }&#xD;
+        &lt;/errors&gt;&#xD;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

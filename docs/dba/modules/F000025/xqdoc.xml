@@ -1,88 +1,76 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>job-result.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Downloads a job result.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">jobs/job-result.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Downloads a job result.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Upload files.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Upload files.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/jobs';
+module namespace dba = 'dba/files';
+
+import module namespace config = 'dba/config' at '../lib/config.xqm';
+import module namespace util = 'dba/util' at '../lib/util.xqm';
 
 (:~ Top category :)
-declare variable $dba:CAT := 'jobs';
+declare variable $dba:CAT := 'files';
 
 (:~
- : Downloads the result of a job.
- : @param  $id  job id
- : @return rest response and file content
+ : Uploads files.
+ : @param  $files  map with uploaded files
+ : @return redirection
  :)
 declare
-  %rest:GET
-  %rest:path('/dba/job-result')
-  %rest:query-param('id', '{$id}', '')
-function dba:job-result(
-  $id  as xs:string
-) as item()+ {
-  let $details := jobs:list-details($id)
-  return if(empty($details)) then (
-    dba:job-result($id, false(), 'Job is defunct.')
-  ) else if($details/@state != 'cached') then (
-    dba:job-result($id, false(), 'Result is not available yet.')
-  ) else (
-    try {
-      dba:job-result($id, true(), jobs:result($id))
-    } catch * {
-      dba:job-result($id, false(),
-        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
-          $err:column-number || ':' || out:nl() || $err:description
-      )
-    }
-  )
+  %rest:POST
+  %rest:path('/dba/file-upload')
+  %rest:form-param('files', '{$files}')
+function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := config:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
 };
-
-(:~
- : Returns a job result.
- : @param $id      job id
- : @param $ok      ok flag
- : @param $result  job result
- : @return rest response and file content
- :)
-declare %private function dba:job-result(
-  $id      as xs:string,
-  $ok      as xs:boolean,
-  $result  as item()*
-) as item()+ {
-  let $name := $id || (if($ok) then '.txt' else '.log')
-  return web:response-header(
-    map { 'media-type': 'application/octet-stream' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name }
-  ),
-  $result
-};
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/jobs"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Downloads the result of a job.</xqdoc:description><xqdoc:param>$id  job id</xqdoc:param><xqdoc:return>rest response and file content</xqdoc:return></xqdoc:comment><xqdoc:name>dba:job-result</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/job-result</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">id</xqdoc:literal><xqdoc:literal type="xs:string">{$id}</xqdoc:literal><xqdoc:literal type="xs:string"/></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/job-result") %rest:query-param("id", "{$id}", "") function dba:job-result($id as xs:string) as item()+</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>empty</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>job-result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>false</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>job-result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>false</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>job-result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>true</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>job-result</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>false</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://basex.org/modules/out</xqdoc:uri><xqdoc:name>nl</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>details</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>details</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>module</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>line-number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>column-number</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:job-result(
-  $id  as xs:string
-) as item()+ {
-  let $details := jobs:list-details($id)
-  return if(empty($details)) then (
-    dba:job-result($id, false(), 'Job is defunct.')
-  ) else if($details/@state != 'cached') then (
-    dba:job-result($id, false(), 'Result is not available yet.')
-  ) else (
-    try {
-      dba:job-result($id, true(), jobs:result($id))
-    } catch * {
-      dba:job-result($id, false(),
-        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
-          $err:column-number || ':' || out:nl() || $err:description
-      )
-    }
-  )
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>Returns a job result.</xqdoc:description><xqdoc:param>$id      job id</xqdoc:param><xqdoc:param>$ok      ok flag</xqdoc:param><xqdoc:param>$result  job result</xqdoc:param><xqdoc:return>rest response and file content</xqdoc:return></xqdoc:comment><xqdoc:name>dba:job-result</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>declare %private function dba:job-result($id as xs:string , $ok as xs:boolean , $result as item()*) as item()+</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ok</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>result</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>response-header</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ok</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>result</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:job-result(
-  $id      as xs:string,
-  $ok      as xs:boolean,
-  $result  as item()*
-) as item()+ {
-  let $name := $id || (if($ok) then '.txt' else '.log')
-  return web:response-header(
-    map { 'media-type': 'application/octet-stream' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name }
-  ),
-  $result
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>../lib/config.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/><xqdoc:namespace prefix="prof" uri="http://basex.org/modules/prof"/><xqdoc:namespace prefix="xquery" uri="http://basex.org/modules/xquery"/><xqdoc:namespace prefix="convert" uri="http://basex.org/modules/convert"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'files'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Uploads files.&#xD;
+</xqdoc:description><xqdoc:param>$files  map with uploaded files</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:file-upload</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/file-upload</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">files</xqdoc:literal><xqdoc:literal type="xs:string">{$files}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:file-upload ( $files as map(xs:string, xs:base64Binary) ) as element(rest:response) { (: save files :) let $dir := config:directory() return try { (: Parse all XQuery files; reject files that cannot be parsed :) map:for-each($files, function($file, $content) { if(matches($file, '\.xqm?$')) then ( prof:void(xquery:parse( convert:binary-to-string($content), map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file } )) ) else () }), map:for-each($files, function($file, $content) { file:write-binary($dir || $file, $content) }), web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') }) } catch * { web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description }) } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>files</xqdoc:name><xqdoc:type>map(xs:string, xs:base64Binary)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:file-upload(
+  $files  as map(xs:string, xs:base64Binary)
+) as element(rest:response) {
+  (: save files :)
+  let $dir := config:directory()
+  return try {
+    (: Parse all XQuery files; reject files that cannot be parsed :)
+    map:for-each($files, function($file, $content) {
+      if(matches($file, '\.xqm?$')) then (
+        prof:void(xquery:parse(
+          convert:binary-to-string($content),
+          map { 'plan': false(), 'pass': true(), 'base-uri': $dir || $file }
+        ))
+      ) else ()
+    }),
+    map:for-each($files, function($file, $content) {
+      file:write-binary($dir || $file, $content)
+    }),
+    web:redirect($dba:CAT, map { 'info': util:info(map:keys($files), 'file', 'uploaded') })
+  } catch * {
+    web:redirect($dba:CAT, map { 'error': 'Upload failed: ' || $err:description })
+  }
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

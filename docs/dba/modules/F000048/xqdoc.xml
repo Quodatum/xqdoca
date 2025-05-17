@@ -1,109 +1,172 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>user-edit.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Edit user.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">users/user-edit.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Edit user.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Add new pattern.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Add new pattern.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/users';
 
+import module namespace html = 'dba/html' at '../lib/html.xqm';
+import module namespace options = 'dba/options' at '../lib/options.xqm';
 import module namespace util = 'dba/util' at '../lib/util.xqm';
 
+(:~ Top category :)
+declare variable $dba:CAT := 'users';
 (:~ Sub category :)
 declare variable $dba:SUB := 'user';
 
 (:~
- : Edits a user.
- : @param  $name     user name
- : @param  $newname  new name
- : @param  $pw       password
+ : Form for adding a new pattern.
+ : @param  $name     username
+ : @param  $pattern  entered pattern
+ : @param  $perm     chosen permission
+ : @param  $error    error string
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/pattern-add')
+  %rest:query-param('name',    '{$name}')
+  %rest:query-param('pattern', '{$pattern}')
+  %rest:query-param('perm',    '{$perm}', 'write')
+  %rest:query-param('error',   '{$error}')
+  %output:method('html')
+function dba:pattern-add(
+  $name     as xs:string,
+  $pattern  as xs:string?,
+  $perm     as xs:string,
+  $error    as xs:string?
+) as element(html) {
+  html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='pattern-add' method='post' autocomplete='off'&gt;
+          &lt;h2&gt;{
+            html:link('Users', $dba:CAT), ' » ',
+            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
+            html:button('create', 'Add Pattern')
+          }&lt;/h2&gt;
+          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Pattern:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input type='text' name='pattern' value='{ $pattern }' id='pattern'/&gt;
+                { html:focus('pattern') } &amp;#xa0;
+                &lt;span class='note'&gt;…support for &lt;a target='_blank'
+                  href='https://docs.basex.org/wiki/Commands#Glob_Syntax'&gt;glob syntax&lt;/a&gt;.&lt;/span&gt;
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Permission:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;select name='perm' size='3'&gt;{
+                  for $p in $options:PERMISSIONS[position() = 1 to 3]
+                  return element option { attribute selected { }[$p = $perm], $p }
+                }&lt;/select&gt;
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Creates a pattern.
+ : @param  $name     username
  : @param  $perm     permission
+ : @param  $pattern  pattern
  : @return redirection
  :)
 declare
   %updating
   %rest:POST
-  %rest:path('/dba/user-edit')
-  %rest:form-param('name',    '{$name}')
-  %rest:form-param('newname', '{$newname}')
-  %rest:form-param('pw',      '{$pw}')
-  %rest:form-param('perm',    '{$perm}')
-  %rest:form-param('info',    '{$info}')
-function dba:user-edit(
+  %rest:path('/dba/pattern-add')
+  %rest:query-param('name',    '{$name}')
+  %rest:query-param('perm',    '{$perm}')
+  %rest:query-param('pattern', '{$pattern}')
+function dba:create(
   $name     as xs:string,
-  $newname  as xs:string,
-  $pw       as xs:string,
   $perm     as xs:string,
-  $info     as xs:string
+  $pattern  as xs:string
 ) as empty-sequence() {
   try {
-    let $old := user:list-details($name)
-    return (
-      (: change name of user :)
-      if($name = $newname) then () else (
-        if(user:exists($newname)) then (
-           error((), 'User already exists.')
-         ) else (
-           user:alter($name, $newname)
-        )
-      ),
-      (: change password :)
-      if($pw = '') then () else user:password($name, $pw),
-      (: change permissions :)
-      if($perm = $old/@permission) then () else user:grant($name, $perm),
-      (: change user info :)
-      let $xml := if($info) then (
-        parse-xml($info)/*[self::info or error(xs:QName(err:FORC0006))]
-      ) else (
-        &lt;info/&gt;
-      )
-      where not(deep-equal(user:info($name), $xml))
-      return user:update-info($xml, $name)
-    ),
-    util:redirect($dba:SUB, map { 'name': $newname, 'info': 'User was saved.' })
+    user:grant($name, $perm, $pattern),
+    util:redirect($dba:SUB, map { 'name': $name, 'info': 'Pattern was created.' })
   } catch * {
-    let $error := if ($err:code != xs:QName('err:FODC0006')) then $err:description else
-      'Information must be XML with an info root element.'
-    return util:redirect($dba:SUB, map {
-      'name': $name, 'newname': $newname, 'pw': $pw, 'perm': $perm, 'error': $error
+    util:redirect('pattern-add', map {
+      'name': $name, 'perm': $perm, 'pattern': $pattern, 'error': $err:description
     })
   }
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/users"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:SUB</xqdoc:name><xqdoc:comment><xqdoc:description>Sub category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="5"><xqdoc:comment><xqdoc:description>Edits a user.</xqdoc:description><xqdoc:param>$name     user name</xqdoc:param><xqdoc:param>$newname  new name</xqdoc:param><xqdoc:param>$pw       password</xqdoc:param><xqdoc:param>$perm     permission</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:user-edit</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/user-edit</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">newname</xqdoc:literal><xqdoc:literal type="xs:string">{$newname}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">pw</xqdoc:literal><xqdoc:literal type="xs:string">{$pw}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">perm</xqdoc:literal><xqdoc:literal type="xs:string">{$perm}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:form-param"><xqdoc:literal type="xs:string">info</xqdoc:literal><xqdoc:literal type="xs:string">{$info}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:POST %rest:path("/dba/user-edit") %rest:form-param("name", "{$name}") %rest:form-param("newname", "{$newname}") %rest:form-param("pw", "{$pw}") %rest:form-param("perm", "{$perm}") %rest:form-param("info", "{$info}") function dba:user-edit($name as xs:string , $newname as xs:string , $pw as xs:string , $perm as xs:string , $info as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>newname</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pw</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>perm</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>info</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>list-details</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>alter</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>password</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>grant</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>parse-xml</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>not</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>deep-equal</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>update-info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2001/XMLSchema</xqdoc:uri><xqdoc:name>QName</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>newname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>newname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>newname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pw</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pw</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>perm</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>old</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>perm</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>xml</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>SUB</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>newname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>code</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>SUB</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>newname</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>pw</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>perm</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:user-edit(
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:at>../lib/html.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:at>../lib/options.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/users"/><xqdoc:namespace prefix="html" uri="dba/html"/><xqdoc:namespace prefix="options" uri="dba/options"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="user" uri="http://basex.org/modules/user"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'users'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>dba:SUB</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Sub category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:SUB := 'user'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="4"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Form for adding a new pattern.&#xD;
+</xqdoc:description><xqdoc:param>$name     username</xqdoc:param><xqdoc:param>$pattern  entered pattern</xqdoc:param><xqdoc:param>$perm     chosen permission</xqdoc:param><xqdoc:param>$error    error string</xqdoc:param><xqdoc:return>page</xqdoc:return></xqdoc:comment><xqdoc:name>dba:pattern-add</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/pattern-add</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">pattern</xqdoc:literal><xqdoc:literal type="xs:string">{$pattern}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">perm</xqdoc:literal><xqdoc:literal type="xs:string">{$perm}</xqdoc:literal><xqdoc:literal type="xs:string">write</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">error</xqdoc:literal><xqdoc:literal type="xs:string">{$error}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:pattern-add ( $name as xs:string, $pattern as xs:string?, $perm as xs:string, $error as xs:string? ) as element(html) { html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error }, &lt;tr&gt; &lt;td&gt; &lt;form action='pattern-add' method='post' autocomplete='off'&gt; &lt;h2&gt;{ html:link('Users', $dba:CAT), ' » ', html:link($name, $dba:SUB, map { 'name': $name }), ' » ', html:button('create', 'Add Pattern') }&lt;/h2&gt; &lt;input type='hidden' name='name' value='{ $name }'/&gt; &lt;table&gt; &lt;tr&gt; &lt;td&gt;Pattern:&lt;/td&gt; &lt;td&gt; &lt;input type='text' name='pattern' value='{ $pattern }' id='pattern'/&gt; { html:focus('pattern') } &amp;#xa0; &lt;span class='note'&gt;…support for &lt;a target='_blank' href='https://docs.basex.org/wiki/Commands#Glob_Syntax'&gt;glob syntax&lt;/a&gt;.&lt;/span&gt; &lt;div class='small'/&gt; &lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Permission:&lt;/td&gt; &lt;td&gt; &lt;select name='perm' size='3'&gt;{ for $p in $options:PERMISSIONS[position() = 1 to 3] return element option { attribute selected { }[$p = $perm], $p } }&lt;/select&gt; &lt;div class='small'/&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/form&gt; &lt;/td&gt; &lt;/tr&gt; ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pattern</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>perm</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>error</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:pattern-add(
   $name     as xs:string,
-  $newname  as xs:string,
-  $pw       as xs:string,
+  $pattern  as xs:string?,
   $perm     as xs:string,
-  $info     as xs:string
+  $error    as xs:string?
+) as element(html) {
+  html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='pattern-add' method='post' autocomplete='off'&gt;
+          &lt;h2&gt;{
+            html:link('Users', $dba:CAT), ' » ',
+            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
+            html:button('create', 'Add Pattern')
+          }&lt;/h2&gt;
+          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Pattern:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;input type='text' name='pattern' value='{ $pattern }' id='pattern'/&gt;
+                { html:focus('pattern') } &amp;#xa0;
+                &lt;span class='note'&gt;…support for &lt;a target='_blank'
+                  href='https://docs.basex.org/wiki/Commands#Glob_Syntax'&gt;glob syntax&lt;/a&gt;.&lt;/span&gt;
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;Permission:&lt;/td&gt;
+              &lt;td&gt;
+                &lt;select name='perm' size='3'&gt;{
+                  for $p in $options:PERMISSIONS[position() = 1 to 3]
+                  return element option { attribute selected { }[$p = $perm], $p }
+                }&lt;/select&gt;
+                &lt;div class='small'/&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/form&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Creates a pattern.&#xD;
+</xqdoc:description><xqdoc:param>$name     username</xqdoc:param><xqdoc:param>$perm     permission</xqdoc:param><xqdoc:param>$pattern  pattern</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:create</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/pattern-add</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">perm</xqdoc:literal><xqdoc:literal type="xs:string">{$perm}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">pattern</xqdoc:literal><xqdoc:literal type="xs:string">{$pattern}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:create ( $name as xs:string, $perm as xs:string, $pattern as xs:string ) as empty-sequence() { try { user:grant($name, $perm, $pattern), util:redirect($dba:SUB, map { 'name': $name, 'info': 'Pattern was created.' }) } catch * { util:redirect('pattern-add', map { 'name': $name, 'perm': $perm, 'pattern': $pattern, 'error': $err:description }) } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>perm</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>pattern</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence</xqdoc:type></xqdoc:return><xqdoc:body>function dba:create(
+  $name     as xs:string,
+  $perm     as xs:string,
+  $pattern  as xs:string
 ) as empty-sequence() {
   try {
-    let $old := user:list-details($name)
-    return (
-      (: change name of user :)
-      if($name = $newname) then () else (
-        if(user:exists($newname)) then (
-           error((), 'User already exists.')
-         ) else (
-           user:alter($name, $newname)
-        )
-      ),
-      (: change password :)
-      if($pw = '') then () else user:password($name, $pw),
-      (: change permissions :)
-      if($perm = $old/@permission) then () else user:grant($name, $perm),
-      (: change user info :)
-      let $xml := if($info) then (
-        parse-xml($info)/*[self::info or error(xs:QName(err:FORC0006))]
-      ) else (
-        &lt;info/&gt;
-      )
-      where not(deep-equal(user:info($name), $xml))
-      return user:update-info($xml, $name)
-    ),
-    util:redirect($dba:SUB, map { 'name': $newname, 'info': 'User was saved.' })
+    user:grant($name, $perm, $pattern),
+    util:redirect($dba:SUB, map { 'name': $name, 'info': 'Pattern was created.' })
   } catch * {
-    let $error := if ($err:code != xs:QName('err:FODC0006')) then $err:description else
-      'Information must be XML with an info root element.'
-    return util:redirect($dba:SUB, map {
-      'name': $name, 'newname': $newname, 'pw': $pw, 'perm': $perm, 'error': $error
+    util:redirect('pattern-add', map {
+      'name': $name, 'perm': $perm, 'pattern': $pattern, 'error': $err:description
     })
   }
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

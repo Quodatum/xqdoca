@@ -1,61 +1,68 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.wadl</xqdoc:uri><xqdoc:name>wadl.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>simple wadl generation</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/demo/wadl.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:~
- : simple wadl generation 
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-module namespace _ = 'quodatum:xqdoca.generator.wadl';
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-(:~ 
- :  This is just shell NO detail provided!!
- :)
-declare 
-%xqdoca:global("wadl1","wadl from restxq annotations.")
-%xqdoca:output("wadl.xml","xml") 
-function _:wadl($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.wadl"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>This is just shell NO detail provided!!</xqdoc:description></xqdoc:comment><xqdoc:name>_:wadl</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">wadl1</xqdoc:literal><xqdoc:literal type="xs:string">wadl from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">wadl.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("wadl1", "wadl from restxq annotations.") %Q{https://github.com/Quodatum/xqdoca}output("wadl.xml", "xml") function _:wadl($model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:wadl($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.swagger</xqdoc:uri><xqdoc:name>_</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+simple swagger generation&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+ : simple swagger generation &#xD;
+ :&#xD;
+ : @author Andy Bunce&#xD;
+ : @version 0.2&#xD;
+ :)&#xD;
+ &#xD;
+module namespace _ = 'quodatum:xqdoca.generator.swagger';&#xD;
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";&#xD;
+(:~ &#xD;
+ :  This is just shell NO detail provided!!&#xD;
+ :)&#xD;
+declare &#xD;
+%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")&#xD;
+%xqdoca:output("swagger.json","json") &#xD;
+function _:swagger($model as map(*),&#xD;
+                            $opts as map(*)&#xD;
+                            )                           &#xD;
+{&#xD;
+&lt;json type="object"&gt;&#xD;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;&#xD;
+   &lt;info type="object"&gt;&#xD;
+    &lt;version&gt;1.0.0&lt;/version&gt;&#xD;
+    &lt;title&gt;Generated from { $opts?project } at { current-dateTime() }&lt;/title&gt;&#xD;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;&#xD;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;&#xD;
+    &lt;contact type="object"&gt;&#xD;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;&#xD;
+    &lt;/contact&gt;&#xD;
+    &lt;license type="object"&gt;&#xD;
+      &lt;name&gt;MIT&lt;/name&gt;&#xD;
+    &lt;/license&gt;&#xD;
+  &lt;/info&gt;&#xD;
+  &lt;host&gt;http://localhost:8984/&lt;/host&gt;&#xD;
+  &lt;basePath&gt;/api&lt;/basePath&gt;&#xD;
+&lt;/json&gt;&#xD;
+};&#xD;
+&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.swagger"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+This is just shell NO detail provided!!&#xD;
+</xqdoc:description></xqdoc:comment><xqdoc:name>_:swagger</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">swagger1</xqdoc:literal><xqdoc:literal type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function _:swagger ( $model as map(*), $opts as map(*) ) { &lt;json type="object"&gt; &lt;swagger&gt;2.0&lt;/swagger&gt; &lt;info type="object"&gt; &lt;version&gt;1.0.0&lt;/version&gt; &lt;title&gt;Generated from { $opts?project } at { current-dateTime() }&lt;/title&gt; &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt; &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt; &lt;contact type="object"&gt; &lt;name&gt;Andy Bunce&lt;/name&gt; &lt;/contact&gt; &lt;license type="object"&gt; &lt;name&gt;MIT&lt;/name&gt; &lt;/license&gt; &lt;/info&gt; &lt;host&gt;http://localhost:8984/&lt;/host&gt; &lt;basePath&gt;/api&lt;/basePath&gt; &lt;/json&gt; }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function _:swagger($model as map(*),&#xD;
+                            $opts as map(*)&#xD;
+                            )                           &#xD;
+{&#xD;
+&lt;json type="object"&gt;&#xD;
+   &lt;swagger&gt;2.0&lt;/swagger&gt;&#xD;
+   &lt;info type="object"&gt;&#xD;
+    &lt;version&gt;1.0.0&lt;/version&gt;&#xD;
+    &lt;title&gt;Generated from { $opts?project } at { current-dateTime() }&lt;/title&gt;&#xD;
+    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;&#xD;
+    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;&#xD;
+    &lt;contact type="object"&gt;&#xD;
+     &lt;name&gt;Andy Bunce&lt;/name&gt;&#xD;
+    &lt;/contact&gt;&#xD;
+    &lt;license type="object"&gt;&#xD;
+      &lt;name&gt;MIT&lt;/name&gt;&#xD;
+    &lt;/license&gt;&#xD;
+  &lt;/info&gt;&#xD;
+  &lt;host&gt;http://localhost:8984/&lt;/host&gt;&#xD;
+  &lt;basePath&gt;/api&lt;/basePath&gt;&#xD;
+&lt;/json&gt;&#xD;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

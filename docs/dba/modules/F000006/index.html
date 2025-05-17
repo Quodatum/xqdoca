@@ -1,171 +1,69 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"></meta><title> - xqDocA
-        </title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"></link><link rel="stylesheet" type="text/css" href="../../resources/prism/1.24.1/prism.css"></link><link rel="stylesheet" type="text/css" href="../../resources/page.css"></link><link rel="stylesheet" type="text/css" href="../../resources/query.css"></link><link rel="stylesheet" type="text/css" href="../../resources/base.css"></link></head><body class="home" id="top"><div id="main"><div><h1><span class="badge badge-info">dba/databases</span> 
-			<small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></h1><nav id="toc"><h2><a href="../../index.html"></a>
+<!DOCTYPE html><html xmlns="http:/www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta http-equiv="Generator" content="xqdoca - https://github.com/quodatum/xqdoca"/><title>dba - xqDocA - xqDocA</title><link rel="shortcut icon" type="image/x-icon" href="../../resources/xqdoc.png"/><link rel="stylesheet" type="text/css" href="../../resources/prism/1.29.0/prism.css"/><link rel="stylesheet" type="text/css" href="../../resources/page.css"/><link rel="stylesheet" type="text/css" href="../../resources/query.css"/><link rel="stylesheet" type="text/css" href="../../resources/base.css"/></head><body class="home" id="top"><div id="main" class="line-numbers"><div><h1><span class="badge badge-info">dba/databases</span> 
+                    <small>library module</small><div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></div></h1><nav id="toc"><h2><a href="../../index.html">dba</a>
                 / Module
-       </h2><h3><a id="contents"></a><span class="">dba/databases</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:CAT"><span class="secno">3.1</span><span class="content">$dba:CAT</span><div style="float:right"></div></a></li><li><a href="#$dba:SUB"><span class="secno">3.2</span><span class="content">$dba:SUB</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:db-rename"><span class="secno">4.1</span><span class="content" title="">dba:db-rename<div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>Rename resource.</div><dl><dt>Tags</dt><dd><p>Author: Christian Grün, BaseX Team 2005-21, BSD License</p><p>__source : databases/resources/db-rename.xqm</p></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
+       </h2><h3><a id="contents"></a><span class="">dba/databases</span></h3><ol class="toc"><li><a href="#summary"><span class="secno">1 </span><span class="content">Summary</span></a></li><li><a href="#imports"><span class="secno">2 </span><span class="content">Imports</span></a></li><li><a href="#variables"><span class="secno">3 </span><span class="content">Variables</span></a><ol class="toc"><li><a href="#$dba:SUB"><span class="secno">3.1</span><span class="content">$dba:SUB</span><div style="float:right"></div></a></li></ol></li><li><a href="#functions"><span class="secno">4 </span><span class="content">Functions</span></a><ol class="toc"><li><a href="#dba:db-delete"><span class="secno">4.1</span><span class="content" title="&#xD;&#xA;&#xD;&#xA;Deletes resources.&#xD;&#xA;">db-delete<div style="float:right"><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></div></span></a></li></ol></li><li><a href="#namespaces"><span class="secno">5 </span><span class="content">Namespaces</span></a></li><li><a href="#restxq"><span class="secno">6 </span><span class="content">RestXQ</span></a></li><li><a href="#source"><span class="secno">7 </span><span class="content">Source</span></a></li></ol></nav><section id="summary"><h2>Summary</h2><div>&#xD;
+&#xD;
+Delete resources.&#xD;
+&#xD;
+</div><dl><dt title="1">Authors</dt><dd><ul><li><span>Christian Grün, BaseX Team 2005-23, BSD License</span></li></ul></dd></dl><details><summary>Related documents</summary><table class="data"><thead><th>View</th><th>Description</th><th>Format</th></thead><tbody><tr><td><a href="xqdoc.xml" title="xqDoc xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqdoc</a></td><td>xqDoc xml file from the source module</td><td>xml</td></tr><tr><td><a href="xqparse.xml" title="xqparse xml file from the source module " class="badge badge-pill badge-light" style="margin-left:1em" target="_blank">xqparse</a></td><td>xqparse xml file from the source module</td><td>xml</td></tr></tbody></table></details></section><section id="imports"><h2>Imports</h2><p>
     This module is imported by
     <span class="badge badge-info">0</span> modules. It imports
-    <span class="badge badge-info">2</span> modules.
-    </p><div style="display: flex; justify-content: space-between; align-items:center;"><div style="">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; margin:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">this</div><div><div>imports</div>→</div></div><div style="display: flex;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></div><div style="text-align: left;"><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:CAT"></a><a id="{dba/databases}$CAT"></a>3.1 $dba:CAT</h3><dl><dt class="label">Summary</dt><dd>Top category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div><div class="div3"><h3><a id="$dba:SUB"></a><a id="{dba/databases}$SUB"></a>3.2 $dba:SUB</h3><dl><dt class="label">Summary</dt><dd>Sub category</dd><dt class="label">Type</dt><dd>xs:string</dd></dl></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:db-rename"></a><a id="{dba/databases}db-rename#3"></a><a id="{dba/databases}db-rename#4"></a>4.1 dba:db-rename<div style="float:right"><a href="#dba:db-rename">#</a></div></h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/databases}db-rename#3">dba:db-rename#3</a><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></span><span style="margin-left:1em"><a href="#{dba/databases}db-rename#4">dba:db-rename#4</a><span class="badge badge-success" title="RESTXQ">R</span><span class="badge badge-info" title="Other annotations">A</span></span></p><dt class="label">Summary</dt><dd>Form for renaming a resource.</dd><dt class="label">Signature</dt><dd><div class="proto"><code class="function">dba:db-rename</code>
+    <span class="badge badge-info">1</span> modules.
+    </p><div style="display: flex; justify-content: space-between; align-items: center;"><div style="flex-grow: 1;padding:10px;">(None)</div><div style="display: flex; flex-direction: column; justify-content: center; padding:10px; background-color:blanchedalmond;"><div><div>imports</div>→</div><div class="badge badge-info">dba/databases</div><div><div>imports</div>→</div></div><div style="flex-grow: 1;padding:10px;justify-content: space-between;align-items:center;"><div style=""><div style="text-align: left;"><span><a href="../../modules/F000033/index.html" title="lib/util.xqm">dba/util</a></span></div></div></div></div></section><section id="variables"><h2>Variables</h2><div class="div3"><h3><a id="$dba:SUB"></a><a id="{dba/databases}$SUB"></a><a href="#$dba:SUB">3.1 </a>$dba:SUB</h3><dl><dt class="label">Summary</dt><dd>&#xD;
+Sub category</dd><dt class="label">Type</dt><dd></dd></dl><details open="open"><summary>Source ( 1 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">variable $dba:SUB := 'database'</code></pre></details></div></section><section id="functions"><h2>Functions</h2><div class="div3"><h3><a id="dba:db-delete"></a><a id="{dba/databases}db-delete#2"></a><a href="#dba:db-delete">4.1 </a>dba:db-delete</h3><p>Arities: <span style="margin-left:1em"><a href="#{dba/databases}db-delete#2">#2</a><span class="badge badge-danger" title="Updating">U</span><span class="badge badge-success" title="RESTXQ">R</span></span></p><dt class="label">Summary</dt><dd>&#xD;
+&#xD;
+Deletes resources.&#xD;
+</dd><dt class="label">Signatures</dt><dd><div class="proto"><code class="function">dba:db-delete</code>
 		  ( 
-			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$resource</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$target</code><code class="as"> as </code><code class="type">xs:string</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">empty-sequence()</xqdoc:type></code></div><div class="proto"><code class="function">dba:db-rename</code>
-		  ( 
-			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$resource</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$target</code><code class="as"> as </code><code class="type">xs:string?</code>, <code class="arg">$error</code><code class="as"> as </code><code class="type">xs:string?</code>
-	 )
-			<code class="as"> as </code><code class="return-type"><xqdoc:type xmlns:xqdoc="http://www.xqdoc.org/1.0">element(html)</xqdoc:type></code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code> database</li><li>resource<code class="as"> as </code><code class="return-type">xs:string</code> resource</li><li>target<code class="as"> as </code><code class="return-type">xs:string</code> new name of resource</li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence()</code>redirection</li></ul></dd><details><summary>Invokes 10 functions from 4 modules </summary><ul><li><span><a href="../../modules/F000029/index.html#{dba/html}button#2" title="lib/html.xqm">html:button#2</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}focus#1" title="lib/html.xqm">html:focus#1</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}link#2" title="lib/html.xqm">html:link#2</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}link#3" title="lib/html.xqm">html:link#3</a></span></li><li><span><a href="../../modules/F000029/index.html#{dba/html}wrap#2" title="lib/html.xqm">html:wrap#2</a></span></li><li><span><a href="../../modules/F000031/index.html#{dba/util}redirect#2" title="lib/util.xqm">util:redirect#2</a></span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}exists#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://basex.org/modules/db}rename#3</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}error#2</span></li><li><span class="badge badge-warning" title="Externally defined">{http://www.w3.org/2005/xpath-functions}head#1</span></li></ul></details><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/db-rename')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('resource','{$resource}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('target','{$target}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('error','{$error}')</code></td></tr><tr><td><code class="function">%output:method</code></td><td><code class="arg">('html')</code></td></tr></tbody></table></details><details><summary>Annotations</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:POST</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/db-rename')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('resource','{$resource}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('target','{$target}')</code></td></tr></tbody></table></details><details><summary>Source ( 54 lines)</summary><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:db-rename(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $target    as xs:string
+			<code class="arg">$name</code><code class="as"> as </code><code class="type">xs:string</code>, <code class="arg">$resources</code><code class="as"> as </code><code class="type">xs:string*</code> )<code class="as"> as </code><code class="type">empty-sequence</code></div></dd><dt class="label">Parameters</dt><dd><ul><li>name<code class="as"> as </code><code class="return-type">xs:string</code>s database</li><li>resources<code class="as"> as </code><code class="return-type">xs:string*</code></li></ul></dd><dt class="label">Return</dt><dd><ul><li><code class="return-type">empty-sequence</code> redirection</li></ul></dd><details><summary>Invoked by 0 functions from 0 modules</summary><ul></ul></details><details><summary>Annotations (5)</summary><table class="data"><tbody><tr><td><code class="function">%updating</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:GET</code></td><td><code class="arg">()</code></td></tr><tr><td><code class="function">%rest:path</code></td><td><code class="arg">('/dba/db-delete')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('name','{$name}')</code></td></tr><tr><td><code class="function">%rest:query-param</code></td><td><code class="arg">('resource','{$resources}')</code></td></tr></tbody></table></details><details><summary>Source ( 13 lines)</summary><pre class="no-line-numbers" style="white-space:pre-wrap;"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:db-delete(
+  $name       as xs:string,
+  $resources  as xs:string*
 ) as empty-sequence() {
   try {
-    if(db:exists($name, $target)) then (
-      error((), 'Resource already exists.')
-    ) else (
-      db:rename($name, $resource, $target),
-      util:redirect($dba:SUB, map {
-        'name': $name, 'resource': $target, 'info': 'Resource was renamed.'
-      })
+    $resources ! db:delete($name, .),
+    util:redirect($dba:SUB,
+      map { 'name': $name, 'info': util:info($resources, 'resource', 'deleted') }
     )
   } catch * {
-    util:redirect('db-rename', map {
-      'name': $name, 'resource': $resource, 'target': $target, 'error': $err:description
-    })
+    util:redirect($dba:SUB, map { 'name': $name, 'error': $err:description })
   }
-}</code></pre><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">function dba:db-rename(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $target    as xs:string?,
-  $error     as xs:string?
-) as element(html) {
-  html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
-    &lt;tr&gt;
-      &lt;td&gt;
-        &lt;form action='db-rename' method='post' autocomplete='off'&gt;
-          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
-          &lt;input type='hidden' name='resource' value='{ $resource }'/&gt;
-          &lt;h2&gt;{
-            html:link('Databases', $dba:CAT), ' » ',
-            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
-            html:link($resource, $dba:SUB, map { 'name': $name, 'resource': $resource }), ' » ',
-            html:button('db-rename', 'Rename')
-          }&lt;/h2&gt;
-          &lt;table&gt;
-            &lt;tr&gt;
-              &lt;td&gt;New path:&lt;/td&gt;
-              &lt;td&gt;
-                &lt;input type='text' name='target' id='target'
-                       value='{ head(($target, $resource)) }'/&gt;
-                { html:focus('target') }
-                &lt;div class='small'/&gt;
-              &lt;/td&gt;
-            &lt;/tr&gt;
-          &lt;/table&gt;
-        &lt;/form&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  )
-}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>ann</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2012/xquery</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000001/index.html" title="databases/resources/backup-download.xqm">dba/databases</a> <a href="../../modules/F000002/index.html" title="databases/resources/db-add.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000003/index.html" title="databases/resources/db-delete.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000004/index.html" title="databases/resources/db-download.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000005/index.html" title="databases/resources/db-query.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000006/index.html" title="databases/resources/db-rename.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000007/index.html" title="databases/resources/db-replace.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000008/index.html" title="databases/resources/resource.xqm"><span class="badge badge-info">8</span></a> <a href="../../modules/F000009/index.html" title="databases/backups.xqm"><span class="badge badge-info">9</span></a> <a href="../../modules/F000010/index.html" title="databases/database.xqm"><span class="badge badge-info">10</span></a> <a href="../../modules/F000011/index.html" title="databases/databases.xqm"><span class="badge badge-info">11</span></a> <a href="../../modules/F000012/index.html" title="databases/db-alter.xqm"><span class="badge badge-info">12</span></a> <a href="../../modules/F000013/index.html" title="databases/db-copy.xqm"><span class="badge badge-info">13</span></a> <a href="../../modules/F000014/index.html" title="databases/db-create.xqm"><span class="badge badge-info">14</span></a> <a href="../../modules/F000015/index.html" title="databases/db-drop.xqm"><span class="badge badge-info">15</span></a> <a href="../../modules/F000016/index.html" title="databases/db-optimize.xqm"><span class="badge badge-info">16</span></a> <a href="../../modules/F000050/index.html" title="users/users-info.xqm"><span class="badge badge-info">17</span></a></span></td></tr><tr><td>html</td><td><span><a href="../../modules/F000029/index.html" title="lib/html.xqm">dba/html</a></span></td></tr><tr><td>output</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2010/xslt-xquery-serialization</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>util</td><td><span><a href="../../modules/F000031/index.html" title="lib/util.xqm">dba/util</a></span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 2.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/db-rename</td><td><span><a href="../../restxq.html#/dba/db-rename#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000006/index.html#{dba/databases}db-rename#4" title="databases/resources/db-rename.xqm">dba:db-rename#4</a></span></td></tr><tr><td>/dba/db-rename</td><td><span><a href="../../restxq.html#/dba/db-rename#POST"><span class="badge op-post">POST</span></a></span></td><td><span><a href="../../modules/F000006/index.html#{dba/databases}db-rename#3" title="databases/resources/db-rename.xqm">dba:db-rename#3</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
- : Rename resource.
+}</code></pre></details></div></section><section id="namespaces"><h2>Namespaces</h2><p>The following namespaces are defined:</p><table class="data" style="float:none"><thead><tr><th>Prefix</th><th>Uri</th></tr></thead><tbody><tr><td>db</td><td><span class="badge badge-warning" title="Externally defined">http://basex.org/modules/db</span></td></tr><tr><td>dba</td><td><span><a href="../../modules/F000001/index.html" title="databases/backups/backup-create.xqm">dba/databases</a> <a href="../../modules/F000002/index.html" title="databases/backups/backup-download.xqm"><span class="badge badge-info">2</span></a> <a href="../../modules/F000006/index.html" title="databases/resources/db-delete.xqm"><span class="badge badge-info">3</span></a> <a href="../../modules/F000007/index.html" title="databases/resources/db-download.xqm"><span class="badge badge-info">4</span></a> <a href="../../modules/F000008/index.html" title="databases/resources/db-put.xqm"><span class="badge badge-info">5</span></a> <a href="../../modules/F000009/index.html" title="databases/resources/db-query.xqm"><span class="badge badge-info">6</span></a> <a href="../../modules/F000010/index.html" title="databases/resources/db-rename.xqm"><span class="badge badge-info">7</span></a> <a href="../../modules/F000011/index.html" title="databases/resources/db-replace.xqm"><span class="badge badge-info">8</span></a> <a href="../../modules/F000012/index.html" title="databases/resources/resource.xqm"><span class="badge badge-info">9</span></a> <a href="../../modules/F000013/index.html" title="databases/database.xqm"><span class="badge badge-info">10</span></a> <a href="../../modules/F000014/index.html" title="databases/databases.xqm"><span class="badge badge-info">11</span></a> <a href="../../modules/F000015/index.html" title="databases/db-alter.xqm"><span class="badge badge-info">12</span></a> <a href="../../modules/F000016/index.html" title="databases/db-copy.xqm"><span class="badge badge-info">13</span></a> <a href="../../modules/F000017/index.html" title="databases/db-create.xqm"><span class="badge badge-info">14</span></a> <a href="../../modules/F000018/index.html" title="databases/db-drop.xqm"><span class="badge badge-info">15</span></a> <a href="../../modules/F000019/index.html" title="databases/db-optimize.xqm"><span class="badge badge-info">16</span></a></span></td></tr><tr><td>err</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2005/xqt-errors</span></td></tr><tr><td>rest</td><td><span class="badge badge-warning" title="Externally defined">http://exquery.org/ns/restxq</span></td></tr><tr><td>util</td><td><span><a href="../../modules/F000033/index.html" title="lib/util.xqm">dba/util</a></span></td></tr><tr><td>xs</td><td><span class="badge badge-warning" title="Externally defined">http://www.w3.org/2001/XMLSchema</span></td></tr></tbody></table></section><div class="div2"><h2><a id="restxq"></a>6 RestXQ</h2><p>Paths defined 1.</p><table class="data"><thead><tr><th>Path</th><th>Method</th><th>Function</th></tr></thead><tbody><tr><td>/dba/db-delete</td><td><span><a href="../../restxq.html#/dba/db-delete#GET"><span class="badge op-get">GET</span></a></span></td><td><span><a href="../../modules/F000006/index.html#{dba/databases}db-delete#2" title="databases/resources/db-delete.xqm">dba:db-delete#2</a></span></td></tr></tbody></table></div><section id="source"><h2>Source Code</h2><pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html"><code class="language-xquery" data-prismjs-copy="Copy to clipboard">(:~
+ : Delete resources.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/databases';
 
-import module namespace html = 'dba/html' at '../../lib/html.xqm';
 import module namespace util = 'dba/util' at '../../lib/util.xqm';
 
-(:~ Top category :)
-declare variable $dba:CAT := 'databases';
 (:~ Sub category :)
 declare variable $dba:SUB := 'database';
 
 (:~
- : Form for renaming a resource.
- : @param  $name      database
- : @param  $resource  resource
- : @param  $target    target path
- : @param  $error     error string
- : @return page
- :)
-declare
-  %rest:GET
-  %rest:path('/dba/db-rename')
-  %rest:query-param('name',     '{$name}')
-  %rest:query-param('resource', '{$resource}')
-  %rest:query-param('target',   '{$target}')
-  %rest:query-param('error',    '{$error}')
-  %output:method('html')
-function dba:db-rename(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $target    as xs:string?,
-  $error     as xs:string?
-) as element(html) {
-  html:wrap(map { 'header': ($dba:CAT, $name), 'error': $error },
-    &lt;tr&gt;
-      &lt;td&gt;
-        &lt;form action='db-rename' method='post' autocomplete='off'&gt;
-          &lt;input type='hidden' name='name' value='{ $name }'/&gt;
-          &lt;input type='hidden' name='resource' value='{ $resource }'/&gt;
-          &lt;h2&gt;{
-            html:link('Databases', $dba:CAT), ' » ',
-            html:link($name, $dba:SUB, map { 'name': $name }), ' » ',
-            html:link($resource, $dba:SUB, map { 'name': $name, 'resource': $resource }), ' » ',
-            html:button('db-rename', 'Rename')
-          }&lt;/h2&gt;
-          &lt;table&gt;
-            &lt;tr&gt;
-              &lt;td&gt;New path:&lt;/td&gt;
-              &lt;td&gt;
-                &lt;input type='text' name='target' id='target'
-                       value='{ head(($target, $resource)) }'/&gt;
-                { html:focus('target') }
-                &lt;div class='small'/&gt;
-              &lt;/td&gt;
-            &lt;/tr&gt;
-          &lt;/table&gt;
-        &lt;/form&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  )
-};
-
-(:~
- : Renames a database resource.
- : @param  $name      database
- : @param  $resource  resource
- : @param  $target    new name of resource
+ : Deletes resources.
+ : @param  $names     database
+ : @param  $resource  resources
  : @return redirection
  :)
 declare
   %updating
-  %rest:POST
-  %rest:path('/dba/db-rename')
+  %rest:GET
+  %rest:path('/dba/db-delete')
   %rest:query-param('name',     '{$name}')
-  %rest:query-param('resource', '{$resource}')
-  %rest:query-param('target',   '{$target}')
-function dba:db-rename(
-  $name      as xs:string,
-  $resource  as xs:string,
-  $target    as xs:string
+  %rest:query-param('resource', '{$resources}')
+function dba:db-delete(
+  $name       as xs:string,
+  $resources  as xs:string*
 ) as empty-sequence() {
   try {
-    if(db:exists($name, $target)) then (
-      error((), 'Resource already exists.')
-    ) else (
-      db:rename($name, $resource, $target),
-      util:redirect($dba:SUB, map {
-        'name': $name, 'resource': $target, 'info': 'Resource was renamed.'
-      })
+    $resources ! db:delete($name, .),
+    util:redirect($dba:SUB,
+      map { 'name': $name, 'info': util:info($resources, 'resource', 'deleted') }
     )
   } catch * {
-    util:redirect('db-rename', map {
-      'name': $name, 'resource': $resource, 'target': $target, 'error': $err:description
-    })
+    util:redirect($dba:SUB, map { 'name': $name, 'error': $err:description })
   }
 };
 </code></pre></section></div></div><div class="footer"><p style="text-align:right">Generated by 
-            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA</a>
-               on <span title="2022-09-07T10:44:32.101+01:00">Wednesday, September 7th 2022</span></p></div><script src="../../resources/prism/1.24.1/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>
+            <a href="https://github.com/Quodatum/xqdoca" target="_blank">xqDocA <span>0.9.0</span></a>
+               on <span title="2025-05-17T18:53:12.962+01:00">Saturday, 17th May 2025</span></p></div><script src="../../resources/prism/1.29.0/prism.js" type="text/javascript"></script><script src="../../resources/xqdoca.js" type="text/javascript"></script></body></html>

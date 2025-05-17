@@ -1,43 +1,37 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/sessions</xqdoc:uri><xqdoc:name>session-kill.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Kill web sessions.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">sessions/session-kill.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Kill web sessions.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/queries</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Open query.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Open query.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/sessions';
+module namespace dba = 'dba/queries';
 
-import module namespace util = 'dba/util' at '../lib/util.xqm';
-
-(:~ Top category :)
-declare variable $dba:CAT := 'sessions';
+import module namespace config = 'dba/config' at '../lib/config.xqm';
 
 (:~
- : Kills web sessions.
- : @param  $ids  session ids (including names)
- : @return redirection
+ : Returns the contents of a query file.
+ : @param  $name  name of query file
+ : @return query string
  :)
 declare
-  %rest:GET
-  %rest:path('/dba/session-kill')
-  %rest:query-param('id', '{$ids}')
-function dba:drop(
-  $ids  as xs:string*
-) as element(rest:response) {
-  try {
-    for $id in $ids
-    return sessions:delete(substring-before($id, '|'), substring-after($id, '|')),
-    web:redirect($dba:CAT, map { 'info': util:info($ids, 'session', 'killed') })
-  } catch * {
-    web:redirect($dba:CAT, map { 'error': $err:description })
-  }
+  %rest:path('/dba/query-open')
+  %rest:query-param('name', '{$name}')
+  %output:method('text')
+function dba:query-open(
+  $name  as xs:string
+) as xs:string {
+  config:query($name),
+  file:read-text(config:directory() || $name)
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/sessions"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Kills web sessions.</xqdoc:description><xqdoc:param>$ids  session ids (including names)</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:drop</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/session-kill</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">id</xqdoc:literal><xqdoc:literal type="xs:string">{$ids}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/session-kill") %rest:query-param("id", "{$ids}") function dba:drop($ids as xs:string*) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>ids</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/sessions</xqdoc:uri><xqdoc:name>delete</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-before</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ids</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/sessions</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>ids</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/sessions</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:drop(
-  $ids  as xs:string*
-) as element(rest:response) {
-  try {
-    for $id in $ids
-    return sessions:delete(substring-before($id, '|'), substring-after($id, '|')),
-    web:redirect($dba:CAT, map { 'info': util:info($ids, 'session', 'killed') })
-  } catch * {
-    web:redirect($dba:CAT, map { 'error': $err:description })
-  }
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>../lib/config.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/queries"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns the contents of a query file.&#xD;
+</xqdoc:description><xqdoc:param>$name  name of query file</xqdoc:param><xqdoc:return>query string</xqdoc:return></xqdoc:comment><xqdoc:name>dba:query-open</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/query-open</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:query-open ( $name as xs:string ) as xs:string { config:query($name), file:read-text(config:directory() || $name) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function dba:query-open(
+  $name  as xs:string
+) as xs:string {
+  config:query($name),
+  file:read-text(config:directory() || $name)
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

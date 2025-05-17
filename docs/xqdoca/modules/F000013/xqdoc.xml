@@ -1,40 +1,43 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.validate-xqdoc</xqdoc:uri><xqdoc:name>xqdoc-validate.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>validate xqdoc o/p against schema</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/xqdoc-validate.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:~
- : validate xqdoc o/p against schema
-
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-
-module namespace _ = 'quodatum:xqdoca.generator.validate-xqdoc';
-
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-
-
-declare 
-%xqdoca:global("xqdoc-validate","validate generated xqdoc files")
-%xqdoca:output("validation-report.xml","xml") 
-function _:validate($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-let $schema:=resolve-uri("../../etc/xqdoc-1.0.01132014.xsd",static-base-uri())=&gt;trace("xqdoc schema: ")
-let $reports:=for $f in $model?files
-              return $f?xqdoc!validate:xsd-report($schema) 
-                      transform with {insert node attribute source { $f?path } into .}
-
-return &lt;errors&gt;{ $reports }&lt;/errors&gt;
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.validate-xqdoc"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:name>_:validate</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">xqdoc-validate</xqdoc:literal><xqdoc:literal type="xs:string">validate generated xqdoc files</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">validation-report.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("xqdoc-validate", "validate generated xqdoc files") %Q{https://github.com/Quodatum/xqdoca}output("validation-report.xml", "xml") function _:validate($model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>static-base-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/validate</xqdoc:uri><xqdoc:name>xsd-report</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="4"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>trace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>schema</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>f</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>reports</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:validate($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-let $schema:=resolve-uri("../../etc/xqdoc-1.0.01132014.xsd",static-base-uri())=&gt;trace("xqdoc schema: ")
-let $reports:=for $f in $model?files
-              return $f?xqdoc!validate:xsd-report($schema) 
-                      transform with {insert node attribute source { $f?path } into .}
-
-return &lt;errors&gt;{ $reports }&lt;/errors&gt;
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.simple</xqdoc:uri><xqdoc:name>_</xqdoc:name><xqdoc:comment><xqdoc:description><p>Render to o/p xqdoc and xqparse XML files</p></xqdoc:description><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="copyright">(c) 2019-2026 Quodatum Ltd</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+ : &lt;p&gt;Render to o/p xqdoc and xqparse XML files&lt;/p&gt;&#xD;
+ : @copyright (c) 2019-2026 Quodatum Ltd&#xD;
+ : @author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+ :)&#xD;
+ &#xD;
+module namespace _ = 'quodatum:xqdoca.generator.simple';&#xD;
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";&#xD;
+&#xD;
+declare&#xD;
+%xqdoca:module("xqdoc","xqDoc xml file from the source module")&#xD;
+%xqdoca:output("xqdoc.xml","xml") &#xD;
+function _:xqdoc($file as map(*), &#xD;
+                 $model as map(*),&#xD;
+                 $opts as map(*)&#xD;
+                 )&#xD;
+{&#xD;
+  $file?xqdoc&#xD;
+};&#xD;
+&#xD;
+declare&#xD;
+%xqdoca:module("xqparse","xqparse xml file from the source module")&#xD;
+%xqdoca:output("xqparse.xml","xml") &#xD;
+function _:xqparse($file as map(*),&#xD;
+                   $model as map(*),&#xD;
+                   $opts as map(*)&#xD;
+                   )&#xD;
+{&#xD;
+  $file?xqparse&#xD;
+};</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.simple"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:name>_:xqdoc</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqdoc</xqdoc:literal><xqdoc:literal type="xs:string">xqDoc xml file from the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqdoc.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function _:xqdoc ( $file as map(*), $model as map(*), $opts as map(*) ) { $file?xqdoc }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function _:xqdoc($file as map(*), &#xD;
+                 $model as map(*),&#xD;
+                 $opts as map(*)&#xD;
+                 )&#xD;
+{&#xD;
+  $file?xqdoc&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:name>_:xqparse</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">xqparse</xqdoc:literal><xqdoc:literal type="xs:string">xqparse xml file from the source module</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">xqparse.xml</xqdoc:literal><xqdoc:literal type="xs:string">xml</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function _:xqparse ( $file as map(*), $model as map(*), $opts as map(*) ) { $file?xqparse }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function _:xqparse($file as map(*),&#xD;
+                   $model as map(*),&#xD;
+                   $opts as map(*)&#xD;
+                   )&#xD;
+{&#xD;
+  $file?xqparse&#xD;
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

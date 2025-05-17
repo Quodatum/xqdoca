@@ -1,37 +1,301 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/logs</xqdoc:uri><xqdoc:name>log-download.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Download log file.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">logs/log-download.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Download log file.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>util</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Utility functions.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Utility functions.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/logs';
+module namespace util = 'dba/util';
 
-(:~ Top category :)
-declare variable $dba:CAT := 'logs';
+import module namespace options = 'dba/options' at 'options.xqm';
+import module namespace config = 'dba/config' at 'config.xqm';
+
+(:~ Regular expression for backups. :)
+declare variable $util:BACKUP-REGEX := '^(.*)-(\d{4}-\d\d-\d\d)-(\d\d)-(\d\d)-(\d\d)$';
+(:~ Regular expression for backups. :)
+declare variable $util:BACKUP-ZIP-REGEX := '^(.*)-(\d{4}-\d\d-\d\d)-(\d\d)-(\d\d)-(\d\d)\.zip$';
 
 (:~
- : Downloads database logs.
- : @param  $name  name (date) of log file
- : @return binary data
+ : Evaluates a query and returns the result.
+ : @param  $query    query string
+ : @param  $context  initial context item (can be empty)
+ : @return serialized result of query
  :)
-declare
-  %rest:POST
-  %rest:path('/dba/log-download')
-  %rest:query-param('name', '{$name}')
-function dba:log-download(
-  $name  as xs:string
-) as item()+ {
-  web:response-header(
-    map { 'media-type': 'text/plain' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name || '.log' }
-  ),
-  file:read-binary(db:option('dbpath') || '/.logs/' || $name || '.log')
+declare function util:query(
+  $query    as xs:string?,
+  $context  as item()?
+) as xs:string {
+  let $bindings := $context ! map { '': $context }
+  let $result := xquery:eval($query, $bindings, util:query-options())
+  return util:serialize($result)
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/logs"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Downloads database logs.</xqdoc:description><xqdoc:param>$name  name (date) of log file</xqdoc:param><xqdoc:return>binary data</xqdoc:return></xqdoc:comment><xqdoc:name>dba:log-download</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/log-download</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:POST %rest:path("/dba/log-download") %rest:query-param("name", "{$name}") function dba:log-download($name as xs:string) as item()+</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>response-header</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>read-binary</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>option</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:log-download(
-  $name  as xs:string
-) as item()+ {
-  web:response-header(
-    map { 'media-type': 'text/plain' },
-    map { 'Content-Disposition': 'attachment; filename=' || $name || '.log' }
-  ),
-  file:read-binary(db:option('dbpath') || '/.logs/' || $name || '.log')
+
+(:~
+ : Runs an updating query.
+ : @param  $query  query string
+ : @return empty sequence
+ :)
+declare %updating function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, (), util:query-options()),
+  
+  let $result := update:cache(true())
+  return update:output(util:serialize($result))
+};
+
+(:~
+ : Finalizes the result of an evaluated query.
+ : @param  $result  query result
+ : @return empty sequence
+ :)
+declare function util:serialize(
+  $result  as item()*
+) as xs:string {
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  let $limit := options:get($options:MAXCHARS)
+  let $indent := options:get($options:INDENT)
+  let $string := serialize($result, map {
+    'limit': $limit * 2 + 1,
+    'method': 'basex',
+    'indent': $indent
+  })
+  return util:chop($string, $limit)
+};
+
+(:~
+ : Returns the options for evaluating a query.
+ : @return options
+ :)
+declare %private function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : config:directory() || '/' || config:query()
+  }
+};
+
+(:~
+ : Returns the index of the first result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+};
+
+(:~
+ : Returns the index of the last result to generate.
+ : @param  $page  current page
+ : @param  $sort  sort key
+ : @return last result
+ :)
+declare function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+};
+
+(:~
+ : Chops a string result to the maximum number of allowed characters.
+ : @param  $string  string
+ : @param  $max     maximum number of characters
+ : @return string
+ :)
+declare function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+};
+
+(:~
+ : Joins sequence entries.
+ : @param  $items  items
+ : @param  $sep    separator
+ : @return result
+ :)
+declare function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+};
+
+(:~
+ : Returns a count info for the specified items.
+ : @param  $items   items
+ : @param  $name    name of item (singular form)
+ : @param  $action  action label (past tense)
+ : @return result
+ :)
+declare function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count != 1) then 's were ' else ' was ') || $action || '.'
+};
+
+(:~
+ : Capitalizes a string.
+ : @param  $string  string
+ : @return capitalized string
+ :)
+declare function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+};
+
+(:~
+ : Convenience function for redirecting to another page from update operations.
+ : @param  $url     URL
+ : @param  $params  query parameters
+ :)
+declare %updating function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
+};
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:at>options.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>config.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="options" uri="dba/options"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="xquery" uri="http://basex.org/modules/xquery"/><xqdoc:namespace prefix="update" uri="http://basex.org/modules/update"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>util:BACKUP-REGEX</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Regular expression for backups.</xqdoc:description></xqdoc:comment><xqdoc:body>variable $util:BACKUP-REGEX := '^(.*)-(\d{4}-\d\d-\d\d)-(\d\d)-(\d\d)-(\d\d)$'</xqdoc:body></xqdoc:variable><xqdoc:variable><xqdoc:name>util:BACKUP-ZIP-REGEX</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Regular expression for backups.</xqdoc:description></xqdoc:comment><xqdoc:body>variable $util:BACKUP-ZIP-REGEX := '^(.*)-(\d{4}-\d\d-\d\d)-(\d\d)-(\d\d)-(\d\d)\.zip$'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Evaluates a query and returns the result.&#xD;
+</xqdoc:description><xqdoc:param>$query    query string</xqdoc:param><xqdoc:param>$context  initial context item (can be empty)</xqdoc:param><xqdoc:return>serialized result of query</xqdoc:return></xqdoc:comment><xqdoc:name>util:query</xqdoc:name><xqdoc:signature>function util:query ( $query as xs:string?, $context as item()? ) as xs:string { let $bindings := $context ! map { '': $context } let $result := xquery:eval($query, $bindings, util:query-options()) return util:serialize($result) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>context</xqdoc:name><xqdoc:type occurrence="?">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:query(
+  $query    as xs:string?,
+  $context  as item()?
+) as xs:string {
+  let $bindings := $context ! map { '': $context }
+  let $result := xquery:eval($query, $bindings, util:query-options())
+  return util:serialize($result)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Runs an updating query.&#xD;
+</xqdoc:description><xqdoc:param>$query  query string</xqdoc:param><xqdoc:return>empty sequence</xqdoc:return></xqdoc:comment><xqdoc:name>util:update-query</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>function util:update-query ( $query as xs:string? ) as empty-sequence() { xquery:eval-update($query, (), util:query-options()), let $result := update:cache(true()) return update:output(util:serialize($result)) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>query</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence</xqdoc:type></xqdoc:return><xqdoc:body>function util:update-query(
+  $query  as xs:string?
+) as empty-sequence() {
+  xquery:eval-update($query, (), util:query-options()),
+  
+  let $result := update:cache(true())
+  return update:output(util:serialize($result))
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Finalizes the result of an evaluated query.&#xD;
+</xqdoc:description><xqdoc:param>$result  query result</xqdoc:param><xqdoc:return>empty sequence</xqdoc:return></xqdoc:comment><xqdoc:name>util:serialize</xqdoc:name><xqdoc:signature>function util:serialize ( $result as item()* ) as xs:string { (: serialize more characters than requested, because limit represents number of bytes :) let $limit := options:get($options:MAXCHARS) let $indent := options:get($options:INDENT) let $string := serialize($result, map { 'limit': $limit * 2 + 1, 'method': 'basex', 'indent': $indent }) return util:chop($string, $limit) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>result</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:serialize(
+  $result  as item()*
+) as xs:string {
+  (: serialize more characters than requested, because limit represents number of bytes :)
+  let $limit := options:get($options:MAXCHARS)
+  let $indent := options:get($options:INDENT)
+  let $string := serialize($result, map {
+    'limit': $limit * 2 + 1,
+    'method': 'basex',
+    'indent': $indent
+  })
+  return util:chop($string, $limit)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns the options for evaluating a query.&#xD;
+</xqdoc:description><xqdoc:return>options</xqdoc:return></xqdoc:comment><xqdoc:name>util:query-options</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function util:query-options ( ) as map(*) { map { 'timeout' : options:get($options:TIMEOUT), 'memory' : options:get($options:MEMORY), 'permission': options:get($options:PERMISSION), 'base-uri' : config:directory() || '/' || config:query() } }</xqdoc:signature><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function util:query-options() as map(*) {
+  map {
+    'timeout'   : options:get($options:TIMEOUT),
+    'memory'    : options:get($options:MEMORY),
+    'permission': options:get($options:PERMISSION),
+    'base-uri'  : config:directory() || '/' || config:query()
+  }
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns the index of the first result to generate.&#xD;
+</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:start</xqdoc:name><xqdoc:signature>function util:start ( $page as xs:integer, $sort as xs:string ) as xs:integer { if($page and not($sort)) then ( ($page - 1) * options:get($options:MAXROWS) + 1 ) else ( 1 ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:start(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    ($page - 1) * options:get($options:MAXROWS) + 1
+  ) else (
+    1
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns the index of the last result to generate.&#xD;
+</xqdoc:description><xqdoc:param>$page  current page</xqdoc:param><xqdoc:param>$sort  sort key</xqdoc:param><xqdoc:return>last result</xqdoc:return></xqdoc:comment><xqdoc:name>util:end</xqdoc:name><xqdoc:signature>function util:end ( $page as xs:integer, $sort as xs:string ) as xs:integer { if($page and not($sort)) then ( $page * options:get($options:MAXROWS) ) else ( 999999999 ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>page</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:integer</xqdoc:type></xqdoc:return><xqdoc:body>function util:end(
+  $page  as xs:integer,
+  $sort  as xs:string
+) as xs:integer {
+  if($page and not($sort)) then (
+    $page * options:get($options:MAXROWS)
+  ) else (
+    999999999
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Chops a string result to the maximum number of allowed characters.&#xD;
+</xqdoc:description><xqdoc:param>$string  string</xqdoc:param><xqdoc:param>$max     maximum number of characters</xqdoc:param><xqdoc:return>string</xqdoc:return></xqdoc:comment><xqdoc:name>util:chop</xqdoc:name><xqdoc:signature>function util:chop ( $string as xs:string, $max as xs:integer ) as xs:string { if(string-length($string) &gt; $max) then ( substring($string, 1, $max) || '...' ) else ( $string ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>string</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>max</xqdoc:name><xqdoc:type>xs:integer</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:chop(
+  $string  as xs:string,
+  $max     as xs:integer
+) as xs:string {
+  if(string-length($string) &gt; $max) then (
+    substring($string, 1, $max) || '...'
+  ) else (
+    $string
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Joins sequence entries.&#xD;
+</xqdoc:description><xqdoc:param>$items  items</xqdoc:param><xqdoc:param>$sep    separator</xqdoc:param><xqdoc:return>result</xqdoc:return></xqdoc:comment><xqdoc:name>util:item-join</xqdoc:name><xqdoc:signature>function util:item-join ( $items as item()*, $sep as item() ) as item()* { for $item at $pos in $items return ($sep[$pos &gt; 1], $item) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>items</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>sep</xqdoc:name><xqdoc:type>item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function util:item-join(
+  $items  as item()*,
+  $sep    as item()
+) as item()* {
+  for $item at $pos in $items
+  return ($sep[$pos &gt; 1], $item)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns a count info for the specified items.&#xD;
+</xqdoc:description><xqdoc:param>$items   items</xqdoc:param><xqdoc:param>$name    name of item (singular form)</xqdoc:param><xqdoc:param>$action  action label (past tense)</xqdoc:param><xqdoc:return>result</xqdoc:return></xqdoc:comment><xqdoc:name>util:info</xqdoc:name><xqdoc:signature>function util:info ( $items as item()*, $name as xs:string, $action as xs:string ) as xs:string { let $count := count($items) return $count || ' ' || $name || (if($count != 1) then 's were ' else ' was ') || $action || '.' }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>items</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>action</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:info(
+  $items   as item()*,
+  $name    as xs:string,
+  $action  as xs:string
+) as xs:string {
+  let $count := count($items)
+  return $count || ' ' || $name || (if($count != 1) then 's were ' else ' was ') || $action || '.'
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Capitalizes a string.&#xD;
+</xqdoc:description><xqdoc:param>$string  string</xqdoc:param><xqdoc:return>capitalized string</xqdoc:return></xqdoc:comment><xqdoc:name>util:capitalize</xqdoc:name><xqdoc:signature>function util:capitalize ( $string as xs:string ) as xs:string { upper-case(substring($string, 1, 1)) || substring($string, 2) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>string</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function util:capitalize(
+  $string  as xs:string
+) as xs:string {
+  upper-case(substring($string, 1, 1)) || substring($string, 2)
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Convenience function for redirecting to another page from update operations.&#xD;
+</xqdoc:description><xqdoc:param>$url     URL</xqdoc:param><xqdoc:param>$params  query parameters</xqdoc:param></xqdoc:comment><xqdoc:name>util:redirect</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>function util:redirect ( $url as xs:string, $params as map(*) ) as empty-sequence() { update:output(web:redirect($url, $params)) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>url</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence</xqdoc:type></xqdoc:return><xqdoc:body>function util:redirect(
+  $url     as xs:string,
+  $params  as map(*)
+) as empty-sequence() {
+  update:output(web:redirect($url, $params))
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

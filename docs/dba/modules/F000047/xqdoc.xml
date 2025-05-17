@@ -1,42 +1,156 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>user-drop.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Drop users.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">users/user-drop.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Drop users.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/stores</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Stores page.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Stores page.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace dba = 'dba/users';
+module namespace dba = 'dba/stores';
 
+import module namespace config = 'dba/config' at '../lib/config.xqm';
+import module namespace html = 'dba/html' at '../lib/html.xqm';
 import module namespace util = 'dba/util' at '../lib/util.xqm';
 
 (:~ Top category :)
-declare variable $dba:CAT := 'users';
+declare variable $dba:CAT := 'sessions';
 
 (:~
- : Drops users.
- : @param  $names  names of users
+ : Stores page.
+ : @param  $sort   table sort key
+ : @param  $error  error message
+ : @param  $info   info message
+ : @return page
+ :)
+declare
+  %rest:GET
+  %rest:path('/dba/stores')
+  %rest:query-param('sort',  '{$sort}', 'access')
+  %rest:query-param('error', '{$error}')
+  %rest:query-param('info',  '{$info}')
+  %output:method('html')
+function dba:sessions(
+  $sort   as xs:string,
+  $error  as xs:string?,
+  $info   as xs:string?
+) as element(html) {
+  html:wrap(map { 'header': $dba:CAT, 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='{ $dba:CAT }' method='post' class='update'&gt;
+        &lt;h2&gt;Store&lt;/h2&gt;
+        {
+          let $headers := (
+            map { 'key': 'id', 'label': 'ID' }
+          
+          )
+          let $entries :=
+            for $id in store:keys()
+            
+            return map {
+              'id': $id 
+            }
+          let $buttons := (
+            html:button('stores-deletekeys', 'Delete', true())
+          )
+          let $options := map { 'sort': $sort }
+          return html:table($headers, $entries, $buttons, map { }, $options)
+        }
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td&gt;
+        &lt;h2&gt;Custom stores&lt;/h2&gt;
+        {
+          let $headers := (
+            map { 'key': 'name', 'label': 'Name' }
+          )
+          let $entries := store:list()! map {
+            'name': .
+          }
+          return html:table($headers, $entries, (), map { }, map { })
+        }
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+};
+
+(:~
+ : Redirects to the specified action.
+ : @param  $action  action to perform
+ : @param  $names   names of users
+ : @param  $ids     ids
  : @return redirection
  :)
 declare
-  %updating
-  %rest:GET
-  %rest:path('/dba/user-drop')
-  %rest:query-param('name', '{$names}')
-function dba:user-drop(
-  $names  as xs:string*
-) as empty-sequence() {
-  try {
-    $names ! user:drop(.),
-    util:redirect($dba:CAT, map { 'info': util:info($names, 'user', 'dropped') })
-  } catch * {
-    util:redirect($dba:CAT, map { 'error': $err:description })
-  }
+  %rest:POST
+  %rest:path('/dba/stores')
+  %rest:query-param('action', '{$action}')
+  %rest:query-param('name',   '{$names}')
+  %rest:query-param('id',     '{$ids}')
+function dba:users-redirect(
+  $action  as xs:string,
+  $names   as xs:string*,
+  $ids     as xs:string*
+) as element(rest:response) {
+  web:redirect($action, map { 'id': $ids })
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/users"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Drops users.</xqdoc:description><xqdoc:param>$names  names of users</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:user-drop</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/user-drop</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$names}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %updating %rest:GET %rest:path("/dba/user-drop") %rest:query-param("name", "{$names}") function dba:user-drop($names as xs:string*) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>names</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://basex.org/modules/user</xqdoc:uri><xqdoc:name>drop</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>info</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>names</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>names</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/users</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:user-drop(
-  $names  as xs:string*
-) as empty-sequence() {
-  try {
-    $names ! user:drop(.),
-    util:redirect($dba:CAT, map { 'info': util:info($names, 'user', 'dropped') })
-  } catch * {
-    util:redirect($dba:CAT, map { 'error': $err:description })
-  }
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>../lib/config.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/html</xqdoc:uri><xqdoc:at>../lib/html.xqm</xqdoc:at></xqdoc:import><xqdoc:import type="library"><xqdoc:uri>dba/util</xqdoc:uri><xqdoc:at>../lib/util.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/stores"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="html" uri="dba/html"/><xqdoc:namespace prefix="util" uri="dba/util"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="output" uri="http://www.w3.org/2010/xslt-xquery-serialization"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'sessions'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Stores page.&#xD;
+</xqdoc:description><xqdoc:param>$sort   table sort key</xqdoc:param><xqdoc:param>$error  error message</xqdoc:param><xqdoc:param>$info   info message</xqdoc:param><xqdoc:return>page</xqdoc:return></xqdoc:comment><xqdoc:name>dba:sessions</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/stores</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">sort</xqdoc:literal><xqdoc:literal type="xs:string">{$sort}</xqdoc:literal><xqdoc:literal type="xs:string">access</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">error</xqdoc:literal><xqdoc:literal type="xs:string">{$error}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">info</xqdoc:literal><xqdoc:literal type="xs:string">{$info}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="output:method"><xqdoc:literal type="xs:string">html</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:sessions ( $sort as xs:string, $error as xs:string?, $info as xs:string? ) as element(html) { html:wrap(map { 'header': $dba:CAT, 'info': $info, 'error': $error }, &lt;tr&gt; &lt;td&gt; &lt;form action='{ $dba:CAT }' method='post' class='update'&gt; &lt;h2&gt;Store&lt;/h2&gt; { let $headers := ( map { 'key': 'id', 'label': 'ID' } ) let $entries := for $id in store:keys() return map { 'id': $id } let $buttons := ( html:button('stores-deletekeys', 'Delete', true()) ) let $options := map { 'sort': $sort } return html:table($headers, $entries, $buttons, map { }, $options) } &lt;/form&gt; &lt;/td&gt; &lt;td class='vertical'/&gt; &lt;td&gt; &lt;h2&gt;Custom stores&lt;/h2&gt; { let $headers := ( map { 'key': 'name', 'label': 'Name' } ) let $entries := store:list()! map { 'name': . } return html:table($headers, $entries, (), map { }, map { }) } &lt;/td&gt; &lt;/tr&gt; ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>sort</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>error</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>info</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(html)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:sessions(
+  $sort   as xs:string,
+  $error  as xs:string?,
+  $info   as xs:string?
+) as element(html) {
+  html:wrap(map { 'header': $dba:CAT, 'info': $info, 'error': $error },
+    &lt;tr&gt;
+      &lt;td&gt;
+        &lt;form action='{ $dba:CAT }' method='post' class='update'&gt;
+        &lt;h2&gt;Store&lt;/h2&gt;
+        {
+          let $headers := (
+            map { 'key': 'id', 'label': 'ID' }
+          
+          )
+          let $entries :=
+            for $id in store:keys()
+            
+            return map {
+              'id': $id 
+            }
+          let $buttons := (
+            html:button('stores-deletekeys', 'Delete', true())
+          )
+          let $options := map { 'sort': $sort }
+          return html:table($headers, $entries, $buttons, map { }, $options)
+        }
+        &lt;/form&gt;
+      &lt;/td&gt;
+      &lt;td class='vertical'/&gt;
+      &lt;td&gt;
+        &lt;h2&gt;Custom stores&lt;/h2&gt;
+        {
+          let $headers := (
+            map { 'key': 'name', 'label': 'Name' }
+          )
+          let $entries := store:list()! map {
+            'name': .
+          }
+          return html:table($headers, $entries, (), map { }, map { })
+        }
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  )
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Redirects to the specified action.&#xD;
+</xqdoc:description><xqdoc:param>$action  action to perform</xqdoc:param><xqdoc:param>$names   names of users</xqdoc:param><xqdoc:param>$ids     ids</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:users-redirect</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/stores</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">action</xqdoc:literal><xqdoc:literal type="xs:string">{$action}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$names}</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">id</xqdoc:literal><xqdoc:literal type="xs:string">{$ids}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:users-redirect ( $action as xs:string, $names as xs:string*, $ids as xs:string* ) as element(rest:response) { web:redirect($action, map { 'id': $ids }) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>action</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>names</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ids</xqdoc:name><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:users-redirect(
+  $action  as xs:string,
+  $names   as xs:string*,
+  $ids     as xs:string*
+) as element(rest:response) {
+  web:redirect($action, map { 'id': $ids })
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

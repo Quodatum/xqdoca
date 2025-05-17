@@ -1,41 +1,72 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>file-download.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Download file.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">files/file-download.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Download file.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Change directory.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Change directory.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/files';
 
 import module namespace config = 'dba/config' at '../lib/config.xqm';
 
+(:~ Top category :)
+declare variable $dba:CAT := 'files';
+
 (:~
- : Downloads a file.
- : @param  $name  name of file
- : @return binary data
+ : Changes the directory.
+ : @param  $dir  directory
+ : @return redirection
  :)
 declare
-  %rest:GET
-  %rest:path('/dba/file/{$name}')
-function dba:file-download(
-  $name  as xs:string
-) as item()+ {
-  let $path := config:directory() || $name
-  return (
-    web:response-header(
-      map { 'media-type': 'application/octet-stream' },
-      map { 'Content-Length': file:size($path) }
+  %rest:path('/dba/dir-change')
+  %rest:query-param('dir', '{$dir}')
+function dba:dir-change(
+  $dir  as xs:string
+) as element(rest:response) {
+  try {
+    let $sep := file:dir-separator()
+    let $path := file:path-to-native(if(contains($dir, $sep)) then (
+      $dir
+    ) else (
+      config:directory() || $dir || $sep)
+    )
+    return (
+      (: ensure that the directory can be accessed :)
+      prof:void(file:list($path)),
+  
+      config:directory($path),
+      config:query('')
     ),
-    file:read-binary($path)
-  )
+    web:redirect($dba:CAT)
+  } catch file:io-error {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Downloads a file.</xqdoc:description><xqdoc:param>$name  name of file</xqdoc:param><xqdoc:return>binary data</xqdoc:return></xqdoc:comment><xqdoc:name>dba:file-download</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/file/{$name}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/file/{$name}") function dba:file-download($name as xs:string) as item()+</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>response-header</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>size</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>read-binary</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>name</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:file-download(
-  $name  as xs:string
-) as item()+ {
-  let $path := config:directory() || $name
-  return (
-    web:response-header(
-      map { 'media-type': 'application/octet-stream' },
-      map { 'Content-Length': file:size($path) }
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>../lib/config.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/><xqdoc:namespace prefix="prof" uri="http://basex.org/modules/prof"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'files'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Changes the directory.&#xD;
+</xqdoc:description><xqdoc:param>$dir  directory</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:dir-change</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/dir-change</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">dir</xqdoc:literal><xqdoc:literal type="xs:string">{$dir}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:dir-change ( $dir as xs:string ) as element(rest:response) { try { let $sep := file:dir-separator() let $path := file:path-to-native(if(contains($dir, $sep)) then ( $dir ) else ( config:directory() || $dir || $sep) ) return ( (: ensure that the directory can be accessed :) prof:void(file:list($path)), config:directory($path), config:query('') ), web:redirect($dba:CAT) } catch file:io-error { web:redirect($dba:CAT, map { 'error': $err:description }) } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>dir</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:dir-change(
+  $dir  as xs:string
+) as element(rest:response) {
+  try {
+    let $sep := file:dir-separator()
+    let $path := file:path-to-native(if(contains($dir, $sep)) then (
+      $dir
+    ) else (
+      config:directory() || $dir || $sep)
+    )
+    return (
+      (: ensure that the directory can be accessed :)
+      prof:void(file:list($path)),
+  
+      config:directory($path),
+      config:query('')
     ),
-    file:read-binary($path)
-  )
+    web:redirect($dba:CAT)
+  } catch file:io-error {
+    web:redirect($dba:CAT, map { 'error': $err:description })
+  }
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

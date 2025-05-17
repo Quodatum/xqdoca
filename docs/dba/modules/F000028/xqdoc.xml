@@ -1,90 +1,98 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>config.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>DBA configuration.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">lib/config.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : DBA configuration.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/jobs</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Downloads a job result.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Downloads a job result.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
-module namespace config = 'dba/config';
+module namespace dba = 'dba/jobs';
 
-import module namespace options = 'dba/options' at 'options.xqm';
-
-(:~ Session key. :)
-declare variable $config:SESSION-KEY := 'dba';
-(:~ Current directory. :)
-declare %private variable $config:DIRECTORY := 'dba-directory';
-(:~ Current query. :)
-declare %private variable $config:QUERY := 'dba-query';
+(:~ Top category :)
+declare variable $dba:CAT := 'jobs';
 
 (:~
- : Returns the current working directory.
- : @return directory
+ : Downloads the result of a job.
+ : @param  $id  job id
+ : @return rest response and file content
  :)
-declare function config:directory() as xs:string {
-  let $dir := session:get($config:DIRECTORY)
-  return if(exists($dir) and file:exists($dir)) then (
-    $dir
+declare
+  %rest:GET
+  %rest:path('/dba/job-result')
+  %rest:query-param('id', '{$id}', '')
+function dba:job-result(
+  $id  as xs:string
+) as item()+ {
+  let $details := job:list-details($id)
+  return if(empty($details)) then (
+    dba:job-result($id, false(), 'Job has expired.')
+  ) else if($details/@state != 'cached') then (
+    dba:job-result($id, false(), 'Result is not available yet.')
   ) else (
-    $options:DBA-DIRECTORY
+    try {
+      dba:job-result($id, true(), job:result($id))
+    } catch * {
+      dba:job-result($id, false(),
+        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
+          $err:column-number || ':' || string:nl() || $err:description
+      )
+    }
   )
 };
 
 (:~
- : Assigns a working directory.
- : @param  $value  value
+ : Returns a job result.
+ : @param $id      job id
+ : @param $ok      ok flag
+ : @param $result  job result
+ : @return rest response and file content
  :)
-declare function config:directory(
-  $value  as xs:string
-) as empty-sequence() {
-  session:set($config:DIRECTORY, $value)
+declare %private function dba:job-result(
+  $id      as xs:string,
+  $ok      as xs:boolean,
+  $result  as item()*
+) as item()+ {
+  let $name := $id || (if($ok) then '.txt' else '.log')
+  return web:response-header(
+    map { 'media-type': 'application/octet-stream' },
+    map { 'Content-Disposition': 'attachment; filename=' || $name }
+  ),
+  $result
 };
-
-(:~
- : Returns the name of the current query.
- : @return current query
- :)
-declare function config:query(
-) as xs:string? {
-  session:get($config:QUERY)
-};
-
-(:~
- : Assigns the name of the current query.
- : @param  $value  value
- :)
-declare function config:query(
-  $value  as xs:string
-) as empty-sequence() {
-  session:set($config:QUERY, $value)
-};
-
-(:~
- : Returns the names of all files.
- : @return list of files
- :)
-declare function config:query-files() as xs:string* {
-  let $dir := config:directory()
-  where file:exists($dir)
-  return file:list($dir)[matches(., '\.xqm?$')]
-};
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/options</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="options" uri="dba/options"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>config:SESSION-KEY</xqdoc:name><xqdoc:comment><xqdoc:description>Session key.</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>config:DIRECTORY</xqdoc:name><xqdoc:comment><xqdoc:description>Current directory.</xqdoc:description></xqdoc:comment><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable><xqdoc:variable><xqdoc:name>config:QUERY</xqdoc:name><xqdoc:comment><xqdoc:description>Current query.</xqdoc:description></xqdoc:comment><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the current working directory.</xqdoc:description><xqdoc:return>directory</xqdoc:return></xqdoc:comment><xqdoc:name>config:directory</xqdoc:name><xqdoc:signature>declare function config:directory() as xs:string</xqdoc:signature><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>DIRECTORY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/options</xqdoc:uri><xqdoc:name>DBA-DIRECTORY</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function config:directory() as xs:string {
-  let $dir := session:get($config:DIRECTORY)
-  return if(exists($dir) and file:exists($dir)) then (
-    $dir
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/jobs"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="err" uri="http://www.w3.org/2005/xqt-errors"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:body>variable $dba:CAT := 'jobs'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Downloads the result of a job.&#xD;
+</xqdoc:description><xqdoc:param>$id  job id</xqdoc:param><xqdoc:return>rest response and file content</xqdoc:return></xqdoc:comment><xqdoc:name>dba:job-result</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/job-result</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">id</xqdoc:literal><xqdoc:literal type="xs:string">{$id}</xqdoc:literal><xqdoc:literal type="xs:string"/></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:job-result ( $id as xs:string ) as item()+ { let $details := job:list-details($id) return if(empty($details)) then ( dba:job-result($id, false(), 'Job has expired.') ) else if($details/@state != 'cached') then ( dba:job-result($id, false(), 'Result is not available yet.') ) else ( try { dba:job-result($id, true(), job:result($id)) } catch * { dba:job-result($id, false(), 'Stopped at ' || $err:module || ', ' || $err:line-number || '/' || $err:column-number || ':' || string:nl() || $err:description ) } ) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:body>function dba:job-result(
+  $id  as xs:string
+) as item()+ {
+  let $details := job:list-details($id)
+  return if(empty($details)) then (
+    dba:job-result($id, false(), 'Job has expired.')
+  ) else if($details/@state != 'cached') then (
+    dba:job-result($id, false(), 'Result is not available yet.')
   ) else (
-    $options:DBA-DIRECTORY
+    try {
+      dba:job-result($id, true(), job:result($id))
+    } catch * {
+      dba:job-result($id, false(),
+        'Stopped at ' || $err:module || ', ' || $err:line-number || '/' ||
+          $err:column-number || ':' || string:nl() || $err:description
+      )
+    }
   )
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Assigns a working directory.</xqdoc:description><xqdoc:param>$value  value</xqdoc:param></xqdoc:comment><xqdoc:name>config:directory</xqdoc:name><xqdoc:signature>declare function config:directory($value as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>value</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>set</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>DIRECTORY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function config:directory(
-  $value  as xs:string
-) as empty-sequence() {
-  session:set($config:DIRECTORY, $value)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the name of the current query.</xqdoc:description><xqdoc:return>current query</xqdoc:return></xqdoc:comment><xqdoc:name>config:query</xqdoc:name><xqdoc:signature>declare function config:query() as xs:string?</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>get</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>QUERY</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function config:query(
-) as xs:string? {
-  session:get($config:QUERY)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Assigns the name of the current query.</xqdoc:description><xqdoc:param>$value  value</xqdoc:param></xqdoc:comment><xqdoc:name>config:query</xqdoc:name><xqdoc:signature>declare function config:query($value as xs:string) as empty-sequence()</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>value</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>empty-sequence()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/session</xqdoc:uri><xqdoc:name>set</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>QUERY</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>value</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function config:query(
-  $value  as xs:string
-) as empty-sequence() {
-  session:set($config:QUERY, $value)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="0"><xqdoc:comment><xqdoc:description>Returns the names of all files.</xqdoc:description><xqdoc:return>list of files</xqdoc:return></xqdoc:comment><xqdoc:name>config:query-files</xqdoc:name><xqdoc:signature>declare function config:query-files() as xs:string*</xqdoc:signature><xqdoc:return><xqdoc:type occurrence="*">xs:string</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>exists</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>list</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>matches</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>dir</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function config:query-files() as xs:string* {
-  let $dir := config:directory()
-  where file:exists($dir)
-  return file:list($dir)[matches(., '\.xqm?$')]
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Returns a job result.&#xD;
+</xqdoc:description><xqdoc:param>$id      job id</xqdoc:param><xqdoc:param>$ok      ok flag</xqdoc:param><xqdoc:param>$result  job result</xqdoc:param><xqdoc:return>rest response and file content</xqdoc:return></xqdoc:comment><xqdoc:name>dba:job-result</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function dba:job-result ( $id as xs:string, $ok as xs:boolean, $result as item()* ) as item()+ { let $name := $id || (if($ok) then '.txt' else '.log') return web:response-header( map { 'media-type': 'application/octet-stream' }, map { 'Content-Disposition': 'attachment; filename=' || $name } ), $result }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>id</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>ok</xqdoc:name><xqdoc:type>xs:boolean</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>result</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="+">item()</xqdoc:type></xqdoc:return><xqdoc:body>function dba:job-result(
+  $id      as xs:string,
+  $ok      as xs:boolean,
+  $result  as item()*
+) as item()+ {
+  let $name := $id || (if($ok) then '.txt' else '.log')
+  return web:response-header(
+    map { 'media-type': 'application/octet-stream' },
+    map { 'Content-Disposition': 'attachment; filename=' || $name }
+  ),
+  $result
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

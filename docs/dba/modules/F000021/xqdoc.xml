@@ -1,7 +1,11 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T10:44:32.101+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>file-start.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>Start job.</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-21, BSD License</xqdoc:author><xqdoc:custom tag="__source">files/file-start.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>(:~
- : Start job.
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:53:12.962+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>dba</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Create directory.&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Christian Grün, BaseX Team 2005-23, BSD License</xqdoc:author></xqdoc:comment><xqdoc:body>(:~
+ : Create directory.
  :
- : @author Christian Grün, BaseX Team 2005-21, BSD License
+ : @author Christian Grün, BaseX Team 2005-23, BSD License
  :)
 module namespace dba = 'dba/files';
 
@@ -11,39 +15,27 @@ import module namespace config = 'dba/config' at '../lib/config.xqm';
 declare variable $dba:CAT := 'files';
 
 (:~
- : Starts a job.
- : @param  $file  file name
+ : Creates a directory.
+ : @param  $name  name of directory to create
  : @return redirection
  :)
 declare
-  %rest:GET
-  %rest:path('/dba/file-start')
-  %rest:query-param('file', '{$file}', '')
-function dba:file-start(
-  $file  as xs:string
+  %rest:POST
+  %rest:path('/dba/dir-create')
+  %rest:query-param('name', '{$name}')
+function dba:dir-create(
+  $name  as xs:string
 ) as element(rest:response) {
-  let $id := replace($file, '\.\.+|/|\\', '')
-  let $params := try {
-    (: stop running job before starting new job :)
-    jobs:stop($id),
-    prof:void(jobs:invoke(config:directory() || $id, (), map { 'cache': 'true', 'id': $file })),
-    map { 'info': 'Job was started.', 'job': $id }
-  } catch * {
-    map { 'error': $err:description }
-  }
-  return web:redirect($dba:CAT, $params)
+  file:create-dir(config:directory() || $name),
+  web:redirect($dba:CAT, map { 'info': 'Directory "' || $name || '" was created.' })
 };
-</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>Top category</xqdoc:description></xqdoc:comment><xqdoc:type>xs:string</xqdoc:type></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>Starts a job.</xqdoc:description><xqdoc:param>$file  file name</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:file-start</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:GET"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/file-start</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">file</xqdoc:literal><xqdoc:literal type="xs:string">{$file}</xqdoc:literal><xqdoc:literal type="xs:string"/></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %rest:GET %rest:path("/dba/file-start") %rest:query-param("file", "{$file}", "") function dba:file-start($file as xs:string) as element(rest:response)</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:invoked arity="3"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>stop</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://basex.org/modules/prof</xqdoc:uri><xqdoc:name>void</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/jobs</xqdoc:uri><xqdoc:name>invoke</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="0"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:name>directory</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://basex.org/modules/web</xqdoc:uri><xqdoc:name>redirect</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>id</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xqt-errors</xqdoc:uri><xqdoc:name>description</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>dba/files</xqdoc:uri><xqdoc:name>CAT</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function dba:file-start(
-  $file  as xs:string
+</xqdoc:body></xqdoc:module><xqdoc:imports><xqdoc:import type="library"><xqdoc:uri>dba/config</xqdoc:uri><xqdoc:at>../lib/config.xqm</xqdoc:at></xqdoc:import></xqdoc:imports><xqdoc:namespaces><xqdoc:namespace prefix="dba" uri="dba/files"/><xqdoc:namespace prefix="config" uri="dba/config"/><xqdoc:namespace prefix="rest" uri="http://exquery.org/ns/restxq"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/><xqdoc:namespace prefix="web" uri="http://basex.org/modules/web"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>dba:CAT</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+Top category</xqdoc:description></xqdoc:comment><xqdoc:body>variable $dba:CAT := 'files'</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+Creates a directory.&#xD;
+</xqdoc:description><xqdoc:param>$name  name of directory to create</xqdoc:param><xqdoc:return>redirection</xqdoc:return></xqdoc:comment><xqdoc:name>dba:dir-create</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="rest:POST"/><xqdoc:annotation name="rest:path"><xqdoc:literal type="xs:string">/dba/dir-create</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="rest:query-param"><xqdoc:literal type="xs:string">name</xqdoc:literal><xqdoc:literal type="xs:string">{$name}</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function dba:dir-create ( $name as xs:string ) as element(rest:response) { file:create-dir(config:directory() || $name), web:redirect($dba:CAT, map { 'info': 'Directory "' || $name || '" was created.' }) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>name</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element(rest:response)</xqdoc:type></xqdoc:return><xqdoc:body>function dba:dir-create(
+  $name  as xs:string
 ) as element(rest:response) {
-  let $id := replace($file, '\.\.+|/|\\', '')
-  let $params := try {
-    (: stop running job before starting new job :)
-    jobs:stop($id),
-    prof:void(jobs:invoke(config:directory() || $id, (), map { 'cache': 'true', 'id': $file })),
-    map { 'info': 'Job was started.', 'job': $id }
-  } catch * {
-    map { 'error': $err:description }
-  }
-  return web:redirect($dba:CAT, $params)
+  file:create-dir(config:directory() || $name),
+  web:redirect($dba:CAT, map { 'info': 'Directory "' || $name || '" was created.' })
 }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

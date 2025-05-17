@@ -1,95 +1,191 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca:store</xqdoc:uri><xqdoc:name>store.xqm</xqdoc:name><xqdoc:comment><xqdoc:description><h1>store.xqm</h1>
-<p>Save documents to file system or database. Data is supplied as a map which 
-includes serialization options</p></xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/store.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:
- : Copyright (c) 2019-2022 Quodatum Ltd
- :
- : Licensed under the Apache License, Version 2.0 (the "License");
- : you may not use this file except in compliance with the License.
- : You may obtain a copy of the License at
- :
- :     http://www.apache.org/licenses/LICENSE-2.0
- :
- : Unless required by applicable law or agreed to in writing, software
- : distributed under the License is distributed on an "AS IS" BASIS,
- : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- : See the License for the specific language governing permissions and
- : limitations under the License.
- :)
- 
- (:~
- : &lt;h1&gt;store.xqm&lt;/h1&gt;
- : &lt;p&gt;Save documents to file system or database. Data is supplied as a map which 
- : includes serialization options&lt;/p&gt;
- :
- : @author Andy Bunce
- : @version 0.2
- :)
-module namespace store = 'quodatum:xqdoca:store';
-
-
-(:~
- : store a set of  o/ps below $base
- : @param $docs sequence of maps 
- : @param $base a uri "file://..", "xmldb:.."
- :)
-declare %updating 
-function store:store($docs as map(*)*,$base as xs:string)
-{
-for $doc in $docs
-let $uri:=resolve-uri($doc?uri,$base)
-let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
-return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
-          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
-          default return error("unknown protocol:" || $uri)
-};
-
-(:~ 
- :save $data to file system $url , create folder tree if required
- :)
-declare %updating 
-function store:file($data,$uri as xs:string,$params as map(*))
-{  
-   let $p:=file:parent($uri)
-   return (
-           if(file:is-dir($p)) then () else file:create-dir($p),
-           file:write($uri,$data,$params)
-           )
-};
-
-(:~ 
- :save $data to $uri  Xml database
- :)
-declare %updating 
-function store:xmldb($data,$uri as xs:string,$params as map(*))
-{  
-  let $a:=analyze-string(substring-after($uri,":"),"/([^/]*)/(.*)")
-  let $db:=$a//*[@nr="1"]
-  let $path:=$a//*[@nr="2"]
-  return db:replace($db,$path,$data)
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="store" uri="quodatum:xqdoca:store"/><xqdoc:namespace prefix="ann" uri="http://www.w3.org/2012/xquery"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>store a set of  o/ps below $base</xqdoc:description><xqdoc:param>$docs sequence of maps</xqdoc:param><xqdoc:param>$base a uri "file://..", "xmldb:.."</xqdoc:param></xqdoc:comment><xqdoc:name>store:store</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function store:store($docs as (map(*))* , $base as xs:string) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>docs</xqdoc:name><xqdoc:type occurrence="*">map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>base</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>resolve-uri</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions/map</xqdoc:uri><xqdoc:name>contains</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-before</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca:store</xqdoc:uri><xqdoc:name>file</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>quodatum:xqdoca:store</xqdoc:uri><xqdoc:name>xmldb</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>error</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>docs</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>base</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>doc</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>opts</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function store:store($docs as map(*)*,$base as xs:string)
-{
-for $doc in $docs
-let $uri:=resolve-uri($doc?uri,$base)
-let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
-return switch (substring-before($uri,":"))
-          case "file" return store:file($doc?document,substring-after($uri,"file://"),$opts)
-          case "xmldb" return store:xmldb($doc?document,$uri,$opts)
-          default return error("unknown protocol:" || $uri)
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>save $data to file system $url , create folder tree if required</xqdoc:description></xqdoc:comment><xqdoc:name>store:file</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function store:file($data as item()* , $uri as xs:string , $params as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>parent</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>is-dir</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="1"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>create-dir</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://expath.org/ns/file</xqdoc:uri><xqdoc:name>write</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>p</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>params</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function store:file($data,$uri as xs:string,$params as map(*))
-{  
-   let $p:=file:parent($uri)
-   return (
-           if(file:is-dir($p)) then () else file:create-dir($p),
-           file:write($uri,$data,$params)
-           )
-}</xqdoc:body></xqdoc:function><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>save $data to $uri  Xml database</xqdoc:description></xqdoc:comment><xqdoc:name>store:xmldb</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="updating"/></xqdoc:annotations><xqdoc:signature>declare %updating function store:xmldb($data as item()* , $uri as xs:string , $params as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>data</xqdoc:name><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>uri</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>params</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>analyze-string</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="2"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>substring-after</xqdoc:name></xqdoc:invoked><xqdoc:invoked arity="3"><xqdoc:uri>http://basex.org/modules/db</xqdoc:uri><xqdoc:name>replace</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>uri</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>a</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>db</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>path</xqdoc:name></xqdoc:ref-variable><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>data</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function store:xmldb($data,$uri as xs:string,$params as map(*))
-{  
-  let $a:=analyze-string(substring-after($uri,":"),"/([^/]*)/(.*)")
-  let $db:=$a//*[@nr="1"]
-  let $path:=$a//*[@nr="2"]
-  return db:replace($db,$path,$data)
-}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.model.comment</xqdoc:uri><xqdoc:name>xqcom</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+create xqdoc comment from xquery parse comment&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce, Quodatum, License: Apache-2.0</xqdoc:author><xqdoc:custom tag="Copyright">(c) 2026 Quodatum Ltd</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+create xqdoc comment from xquery parse comment &#xD;
+ @Copyright (c) 2026 Quodatum Ltd&#xD;
+ @author Andy Bunce, Quodatum, License: Apache-2.0&#xD;
+:)&#xD;
+ &#xD;
+&#xD;
+module namespace xqcom = 'quodatum:xqdoca.model.comment';&#xD;
+&#xD;
+declare namespace xqdoc="http://www.xqdoc.org/1.0";&#xD;
+&#xD;
+(:~ xqdoc tags - order is significant :)&#xD;
+declare variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'&#xD;
+                              =&gt;tokenize(',');&#xD;
+&#xD;
+(:~ @return xqdoc:comment if xqdoc comments in closest direct preceding-sibling of $node  :)&#xD;
+declare function xqcom:comment($node as element(*))&#xD;
+as element(xqdoc:comment)?{&#xD;
+  let $comment:= ($node/preceding-sibling::node())[last()][self::text()]&#xD;
+                 (: =&gt;trace(name($node)|| ": ") :)&#xD;
+  return if(exists($comment)) &#xD;
+         then $comment&#xD;
+              =&gt;xqcom:comment-parse()&#xD;
+              =&gt;xqcom:comment-xml()&#xD;
+};&#xD;
+&#xD;
+(:~ parse xqdoc comment to map &#xD;
+@todo use _tag to track last updated :)&#xD;
+declare %private&#xD;
+function xqcom:comment-parse($comment as xs:string?)&#xD;
+as map(*)?{&#xD;
+  let $comment:=xqcom:trim($comment)&#xD;
+  return if(starts-with($comment,'(:~'))&#xD;
+    then  &#xD;
+       let $lines:=$comment&#xD;
+                   =&gt;substring(4,string-length($comment)-5)&#xD;
+                   =&gt;tokenize("\n")&#xD;
+       let $lines:=$lines!xqcom:trim(.)&#xD;
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)&#xD;
+       let $state:= map{&#xD;
+                      'description': '',&#xD;
+                      'params': (),&#xD;
+                      '_tag': 'description'&#xD;
+                        }&#xD;
+       return  fold-left($lines,$state,xqcom:comment-parse#2)&#xD;
+     &#xD;
+};&#xD;
+&#xD;
+(:~ update parse $state from  $line :)&#xD;
+declare %private&#xD;
+function xqcom:comment-parse($state as map(*),$line as xs:string)&#xD;
+as map(*){&#xD;
+&#xD;
+  let $reg:="^\s*@(\w+)\s+(.+)$"&#xD;
+  let $is-tag:=matches($line,$reg)&#xD;
+  return if($is-tag)&#xD;
+         then &#xD;
+         let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()&#xD;
+         let $tag:=map{"tag": $match[1], "txt": $match[2]}&#xD;
+         return &#xD;
+              if($tag?tag =$xqcom:TAGS )&#xD;
+              then  map:put($state,$match[1],($state?($match[1]) ,$tag))&#xD;
+              else  map:put($state,'custom',($state?custom ,$tag))                 &#xD;
+         else &#xD;
+         map:put($state,'description',$state?description || file:line-separator() || $line)&#xD;
+};&#xD;
+&#xD;
+(:~&#xD;
+  xqdoc:comment from state or empty if none , items ordered as schema&#xD;
+:)&#xD;
+declare %private&#xD;
+function xqcom:comment-xml($state as map(*)?)&#xD;
+as element(xqdoc:comment)?{&#xD;
+  if(exists($state)) &#xD;
+  then &lt;xqdoc:comment&gt;{&#xD;
+        for $key in ($xqcom:TAGS)&#xD;
+            ,$tag in $state?($key)&#xD;
+        where map:contains($state,$key)&#xD;
+        (:~ let $_:=trace($key,"^^^") ~:)&#xD;
+        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} &#xD;
+                       {&#xD;
+                        if($key eq "custom") then attribute tag { $tag?tag},&#xD;
+                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)&#xD;
+                        }&#xD;
+      }&lt;/xqdoc:comment&gt;&#xD;
+  else ()&#xD;
+};&#xD;
+&#xD;
+(:~ text treat as html if valid :)&#xD;
+declare %private&#xD;
+function xqcom:text( $txt as xs:string? )  as item()* &#xD;
+{&#xD;
+  try{&#xD;
+   if(every $c in ("&lt;","&gt;","/") satisfies contains($txt,$c))&#xD;
+   then parse-xml-fragment($txt)/*&#xD;
+   else $txt&#xD;
+  }catch *{&#xD;
+    $txt&#xD;
+  }&#xD;
+ };&#xD;
+ &#xD;
+(:~ remove leading/trailing whitespace :)&#xD;
+declare %private&#xD;
+function xqcom:trim&#xD;
+  ( $arg as xs:string? )  as xs:string {&#xD;
+  replace(replace($arg,'\s+$',''),'^\s+','')&#xD;
+ };&#xD;
+ &#xD;
+&#xD;
+&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="xqcom" uri="quodatum:xqdoca.model.comment"/><xqdoc:namespace prefix="xqdoc" uri="http://www.xqdoc.org/1.0"/><xqdoc:namespace prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/><xqdoc:namespace prefix="fn" uri="http://www.w3.org/2005/xpath-functions"/><xqdoc:namespace prefix="map" uri="http://www.w3.org/2005/xpath-functions/map"/><xqdoc:namespace prefix="file" uri="http://expath.org/ns/file"/></xqdoc:namespaces><xqdoc:variables><xqdoc:variable><xqdoc:name>xqcom:TAGS</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+xqdoc tags - order is significant</xqdoc:description></xqdoc:comment><xqdoc:body>variable $xqcom:TAGS:='description,author,version,param,return,error,deprecated,see,since,custom'&#xD;
+                              =&gt;tokenize(',')</xqdoc:body></xqdoc:variable></xqdoc:variables><xqdoc:functions><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description/><xqdoc:return>xqdoc:comment if xqdoc comments in closest direct preceding-sibling of $node</xqdoc:return></xqdoc:comment><xqdoc:name>xqcom:comment</xqdoc:name><xqdoc:signature>function xqcom:comment ( $node as element(*) ) as element(xqdoc:comment)? { let $comment:= ($node/preceding-sibling::node())[last()][self::text()] (: =&gt;trace(name($node)|| ": ") :) return if(exists($comment)) then $comment =&gt;xqcom:comment-parse() =&gt;xqcom:comment-xml() }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>node</xqdoc:name><xqdoc:type>element(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">element(xqdoc:comment)</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:comment($node as element(*))&#xD;
+as element(xqdoc:comment)?{&#xD;
+  let $comment:= ($node/preceding-sibling::node())[last()][self::text()]&#xD;
+                 (: =&gt;trace(name($node)|| ": ") :)&#xD;
+  return if(exists($comment)) &#xD;
+         then $comment&#xD;
+              =&gt;xqcom:comment-parse()&#xD;
+              =&gt;xqcom:comment-xml()&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+parse xqdoc comment to map</xqdoc:description><xqdoc:custom tag="todo">use _tag to track last updated</xqdoc:custom></xqdoc:comment><xqdoc:name>xqcom:comment-parse</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function xqcom:comment-parse ( $comment as xs:string? ) as map(*)? { let $comment:=xqcom:trim($comment) return if(starts-with($comment,'(:~')) then let $lines:=$comment =&gt;substring(4,string-length($comment)-5) =&gt;tokenize("\n") let $lines:=$lines!xqcom:trim(.) !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .) let $state:= map{ 'description': '', 'params': (), '_tag': 'description' } return fold-left($lines,$state,xqcom:comment-parse#2) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>comment</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:comment-parse($comment as xs:string?)&#xD;
+as map(*)?{&#xD;
+  let $comment:=xqcom:trim($comment)&#xD;
+  return if(starts-with($comment,'(:~'))&#xD;
+    then  &#xD;
+       let $lines:=$comment&#xD;
+                   =&gt;substring(4,string-length($comment)-5)&#xD;
+                   =&gt;tokenize("\n")&#xD;
+       let $lines:=$lines!xqcom:trim(.)&#xD;
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)&#xD;
+       let $state:= map{&#xD;
+                      'description': '',&#xD;
+                      'params': (),&#xD;
+                      '_tag': 'description'&#xD;
+                        }&#xD;
+       return  fold-left($lines,$state,xqcom:comment-parse#2)&#xD;
+     &#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>&#xD;
+update parse $state from  $line</xqdoc:description></xqdoc:comment><xqdoc:name>xqcom:comment-parse</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function xqcom:comment-parse ( $state as map(*),$line as xs:string ) as map(*) { let $reg:="^\s*@(\w+)\s+(.+)$" let $is-tag:=matches($line,$reg) return if($is-tag) then let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text() let $tag:=map{"tag": $match[1], "txt": $match[2]} return if($tag?tag =$xqcom:TAGS ) then map:put($state,$match[1],($state?($match[1]) ,$tag)) else map:put($state,'custom',($state?custom ,$tag)) else map:put($state,'description',$state?description || file:line-separator() || $line) }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>state</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>line</xqdoc:name><xqdoc:type>xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>map(*)</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:comment-parse($state as map(*),$line as xs:string)&#xD;
+as map(*){&#xD;
+&#xD;
+  let $reg:="^\s*@(\w+)\s+(.+)$"&#xD;
+  let $is-tag:=matches($line,$reg)&#xD;
+  return if($is-tag)&#xD;
+         then &#xD;
+         let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()&#xD;
+         let $tag:=map{"tag": $match[1], "txt": $match[2]}&#xD;
+         return &#xD;
+              if($tag?tag =$xqcom:TAGS )&#xD;
+              then  map:put($state,$match[1],($state?($match[1]) ,$tag))&#xD;
+              else  map:put($state,'custom',($state?custom ,$tag))                 &#xD;
+         else &#xD;
+         map:put($state,'description',$state?description || file:line-separator() || $line)&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+xqdoc:comment from state or empty if none , items ordered as schema&#xD;
+</xqdoc:description></xqdoc:comment><xqdoc:name>xqcom:comment-xml</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function xqcom:comment-xml ( $state as map(*)? ) as element(xqdoc:comment)? { if(exists($state)) then &lt;xqdoc:comment&gt;{ for $key in ($xqcom:TAGS) ,$tag in $state?($key) where map:contains($state,$key) (:~ let $_:=trace($key,"^^^") ~:) return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} { if($key eq "custom") then attribute tag { $tag?tag}, if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt) } }&lt;/xqdoc:comment&gt; else () }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>state</xqdoc:name><xqdoc:type occurrence="?">map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="?">element(xqdoc:comment)</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:comment-xml($state as map(*)?)&#xD;
+as element(xqdoc:comment)?{&#xD;
+  if(exists($state)) &#xD;
+  then &lt;xqdoc:comment&gt;{&#xD;
+        for $key in ($xqcom:TAGS)&#xD;
+            ,$tag in $state?($key)&#xD;
+        where map:contains($state,$key)&#xD;
+        (:~ let $_:=trace($key,"^^^") ~:)&#xD;
+        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} &#xD;
+                       {&#xD;
+                        if($key eq "custom") then attribute tag { $tag?tag},&#xD;
+                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)&#xD;
+                        }&#xD;
+      }&lt;/xqdoc:comment&gt;&#xD;
+  else ()&#xD;
+}</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+text treat as html if valid</xqdoc:description></xqdoc:comment><xqdoc:name>xqcom:text</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function xqcom:text ( $txt as xs:string? ) as item()* { try{ if(every $c in ("&lt;","&gt;","/") satisfies contains($txt,$c)) then parse-xml-fragment($txt)/* else $txt }catch *{ $txt } }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>txt</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type occurrence="*">item()</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:text( $txt as xs:string? )  as item()* &#xD;
+{&#xD;
+  try{&#xD;
+   if(every $c in ("&lt;","&gt;","/") satisfies contains($txt,$c))&#xD;
+   then parse-xml-fragment($txt)/*&#xD;
+   else $txt&#xD;
+  }catch *{&#xD;
+    $txt&#xD;
+  }&#xD;
+ }</xqdoc:body></xqdoc:function><xqdoc:function arity="1"><xqdoc:comment><xqdoc:description>&#xD;
+remove leading/trailing whitespace</xqdoc:description></xqdoc:comment><xqdoc:name>xqcom:trim</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="private"/></xqdoc:annotations><xqdoc:signature>function xqcom:trim ( $arg as xs:string? ) as xs:string { replace(replace($arg,'\s+$',''),'^\s+','') }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>arg</xqdoc:name><xqdoc:type occurrence="?">xs:string</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>xs:string</xqdoc:type></xqdoc:return><xqdoc:body>function xqcom:trim&#xD;
+  ( $arg as xs:string? )  as xs:string {&#xD;
+  replace(replace($arg,'\s+$',''),'^\s+','')&#xD;
+ }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>

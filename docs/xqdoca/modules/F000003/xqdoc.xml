@@ -1,61 +1,81 @@
-<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2022-09-07T11:29:31.556+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.swagger</xqdoc:uri><xqdoc:name>swagger1.xqm</xqdoc:name><xqdoc:comment><xqdoc:description>simple swagger generation</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version><xqdoc:custom tag="__source">lib/generators/demo/swagger1.xqm</xqdoc:custom></xqdoc:comment><xqdoc:body>xquery version "3.1";
-(:~
- : simple swagger generation 
- :
- : @author Andy Bunce
- : @version 0.2
- :)
- 
-module namespace _ = 'quodatum:xqdoca.generator.swagger';
-declare namespace xqdoca="https://github.com/Quodatum/xqdoca";
-(:~ 
- :  This is just shell NO detail provided!!
- :)
-declare 
-%xqdoca:global("swagger1","Swagger file (JSON format) from restxq annotations.")
-%xqdoca:output("swagger.json","json") 
-function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
-};
-
-</xqdoc:body></xqdoc:module><xqdoc:imports/><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.swagger"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/><xqdoc:namespace prefix="" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="2"><xqdoc:comment><xqdoc:description>This is just shell NO detail provided!!</xqdoc:description></xqdoc:comment><xqdoc:name>_:swagger</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:global"><xqdoc:literal type="xs:string">swagger1</xqdoc:literal><xqdoc:literal type="xs:string">Swagger file (JSON format) from restxq annotations.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">swagger.json</xqdoc:literal><xqdoc:literal type="xs:string">json</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>declare %Q{https://github.com/Quodatum/xqdoca}global("swagger1", "Swagger file (JSON format) from restxq annotations.") %Q{https://github.com/Quodatum/xqdoca}output("swagger.json", "json") function _:swagger($model as map(*) , $opts as map(*)) as item()*</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:return><xqdoc:type>element()</xqdoc:type></xqdoc:return><xqdoc:invoked arity="0"><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>current-dateTime</xqdoc:name></xqdoc:invoked><xqdoc:ref-variable><xqdoc:uri>http://www.w3.org/2005/xpath-functions</xqdoc:uri><xqdoc:name>model</xqdoc:name></xqdoc:ref-variable><xqdoc:body>function _:swagger($model as map(*),
-                            $opts as map(*)
-                            )                           
-{
-&lt;json type="object"&gt;
-   &lt;swagger&gt;2.0&lt;/swagger&gt;
-   &lt;info type="object"&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
-    &lt;title&gt;Generated from { $model?project } at { current-dateTime() }&lt;/title&gt;
-    &lt;description&gt;Example generation from RESTXQ xquery sources&lt;/description&gt;
-    &lt;termsOfService&gt;http://swagger.io/terms/&lt;/termsOfService&gt;
-    &lt;contact type="object"&gt;
-     &lt;name&gt;Andy Bunce&lt;/name&gt;
-    &lt;/contact&gt;
-    &lt;license type="object"&gt;
-      &lt;name&gt;MIT&lt;/name&gt;
-    &lt;/license&gt;
-  &lt;/info&gt;
-  &lt;host&gt;http://localhost:8984/&lt;/host&gt;
-  &lt;basePath&gt;/api&lt;/basePath&gt;
-&lt;/json&gt;
-}</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
+<xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0"><xqdoc:control><xqdoc:date>2025-05-17T18:35:19.705+01:00</xqdoc:date><xqdoc:version>1.1</xqdoc:version></xqdoc:control><xqdoc:module type="library"><xqdoc:uri>quodatum:xqdoca.generator.rename</xqdoc:uri><xqdoc:name>_</xqdoc:name><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+rewrite code&#xD;
+&#xD;
+</xqdoc:description><xqdoc:author>Andy Bunce</xqdoc:author><xqdoc:version>0.2</xqdoc:version></xqdoc:comment><xqdoc:body>xquery version "3.1";&#xD;
+(:~&#xD;
+ : rewrite code  &#xD;
+ :&#xD;
+ : @author Andy Bunce&#xD;
+ : @version 0.2&#xD;
+ :)&#xD;
+ &#xD;
+module namespace _ = 'quodatum:xqdoca.generator.rename';&#xD;
+declare namespace xqdoca="https://github.com/Quodatum/xqdoca";&#xD;
+(:~ &#xD;
+ : code rewritting&#xD;
+ :)&#xD;
+declare &#xD;
+%xqdoca:module("refactor","simple code change examples.")&#xD;
+%xqdoca:output("rename.xqm","text") &#xD;
+function _:rename($file as map(*), &#xD;
+                  $model as map(*),&#xD;
+                  $opts as map(*)&#xD;
+                  )                    &#xD;
+{&#xD;
+&#xD;
+&#xD;
+  let $parse:=$file?xqparse &#xD;
+  &#xD;
+  (: change function names that are called :)&#xD;
+  let $parse := $parse transform with {&#xD;
+    .//FunctionCall/QName&#xD;
+    !.[contains(.,":")]&#xD;
+    !( replace value of node . with . || "-XQDOCA")&#xD;
+  }&#xD;
+  (: add an import :)&#xD;
+    let $i:=``[;&#xD;
+import module namespace xqd = 'quodatum:xqdoca.model' at '../../lib/model.xqm']``&#xD;
+   let $parse := $parse transform with {&#xD;
+    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)&#xD;
+  }&#xD;
+  (: change name of function :)&#xD;
+   let $parse := $parse transform with {&#xD;
+    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))&#xD;
+  }&#xD;
+  let $result:=``[(:  xqDocA added a comment :)&#xD;
+]`` || $parse&#xD;
+  return $result&#xD;
+  };&#xD;
+</xqdoc:body></xqdoc:module><xqdoc:namespaces><xqdoc:namespace prefix="_" uri="quodatum:xqdoca.generator.rename"/><xqdoc:namespace prefix="xqdoca" uri="https://github.com/Quodatum/xqdoca"/></xqdoc:namespaces><xqdoc:variables/><xqdoc:functions><xqdoc:function arity="3"><xqdoc:comment><xqdoc:description>&#xD;
+&#xD;
+code rewritting&#xD;
+</xqdoc:description></xqdoc:comment><xqdoc:name>_:rename</xqdoc:name><xqdoc:annotations><xqdoc:annotation name="xqdoca:module"><xqdoc:literal type="xs:string">refactor</xqdoc:literal><xqdoc:literal type="xs:string">simple code change examples.</xqdoc:literal></xqdoc:annotation><xqdoc:annotation name="xqdoca:output"><xqdoc:literal type="xs:string">rename.xqm</xqdoc:literal><xqdoc:literal type="xs:string">text</xqdoc:literal></xqdoc:annotation></xqdoc:annotations><xqdoc:signature>function _:rename ( $file as map(*), $model as map(*), $opts as map(*) ) { let $parse:=$file?xqparse (: change function names that are called :) let $parse := $parse transform with { .//FunctionCall/QName !.[contains(.,":")] !( replace value of node . with . || "-XQDOCA") } (: add an import :) let $i:=``[; import module namespace xqd = 'quodatum:xqdoca.model' at '../../lib/model.xqm']`` let $parse := $parse transform with { .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .) } (: change name of function :) let $parse := $parse transform with { (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA")) } let $result:=``[(: xqDocA added a comment :) ]`` || $parse return $result }</xqdoc:signature><xqdoc:parameters><xqdoc:parameter><xqdoc:name>file</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>model</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter><xqdoc:parameter><xqdoc:name>opts</xqdoc:name><xqdoc:type>map(*)</xqdoc:type></xqdoc:parameter></xqdoc:parameters><xqdoc:body>function _:rename($file as map(*), &#xD;
+                  $model as map(*),&#xD;
+                  $opts as map(*)&#xD;
+                  )                    &#xD;
+{&#xD;
+&#xD;
+&#xD;
+  let $parse:=$file?xqparse &#xD;
+  &#xD;
+  (: change function names that are called :)&#xD;
+  let $parse := $parse transform with {&#xD;
+    .//FunctionCall/QName&#xD;
+    !.[contains(.,":")]&#xD;
+    !( replace value of node . with . || "-XQDOCA")&#xD;
+  }&#xD;
+  (: add an import :)&#xD;
+    let $i:=``[;&#xD;
+import module namespace xqd = 'quodatum:xqdoca.model' at '../../lib/model.xqm']``&#xD;
+   let $parse := $parse transform with {&#xD;
+    .//ModuleImport[not(following-sibling::ModuleImport)]!(insert node &lt;ModuleImport&gt;{$i}&lt;/ModuleImport&gt; after .)&#xD;
+  }&#xD;
+  (: change name of function :)&#xD;
+   let $parse := $parse transform with {&#xD;
+    (.//FunctionDecl)[1]!(replace value of node QName[1] with concat(QName[1],"-XQDOCA"))&#xD;
+  }&#xD;
+  let $result:=``[(:  xqDocA added a comment :)&#xD;
+]`` || $parse&#xD;
+  return $result&#xD;
+  }</xqdoc:body></xqdoc:function></xqdoc:functions></xqdoc:xqdoc>
