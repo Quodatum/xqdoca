@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
   <p>Generate HTML describing the rest interface</p> 
-  @copyright (c) 2019-2022 Quodatum Ltd
+  @copyright (c) 2019-2026 Quodatum Ltd
   @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 
@@ -24,6 +24,7 @@ declare
 function _:restxq($model,$opts)
 {
 let $annots as map(*)*:= xqd:rxq-paths($model)
+
 let $tree:=$annots?uri
 let $tree:=tree:build($tree)=>tree:flatten()
 

@@ -13,7 +13,8 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019
 
 Work in progress.
 
-Runs with BaseX 9.5.1+ 9.7.99
+Runs with BaseX 10.7. The batch file uses an environment `BASEX10` to locate the BaseX10 home folder.
+It can process the XQuery syntax used in BaseX version 10 and earlier.
 
 ## Install
 1. unzip dist bundle to a folder, or clone the respository

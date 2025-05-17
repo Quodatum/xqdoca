@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  : <p>XQuery Lint report</p>
- : @Copyright (c) 2022-2022 Quodatum Ltd
+ : @Copyright (c) 2026-2026 Quodatum Ltd
  : @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 

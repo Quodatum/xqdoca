@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  <p>converting XML config to maps.</p>
- @Copyright (c) 2022 Quodatum Ltd
+ @Copyright (c) 2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 module namespace opts = 'quodatum:xqdoca:options';
@@ -9,7 +9,7 @@ module namespace opts = 'quodatum:xqdoca:options';
 (:~  convert xml  options to  a  map :)
 declare function opts:as-map($a as element(*))
 as map(*){
- $a/* ! map:entry(name(.), util:if (*,  opts:as-map(.),string(.)))
+ $a/* ! map:entry(name(.), if (*) then opts:as-map(.) else string(.))
 =>map:merge()
 (: =>trace("AS_MAP: ") :)
 };

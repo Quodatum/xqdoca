@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 annotation utils
- @Copyright (c) 2019-2022 Quodatum Ltd
+ @Copyright (c) 2019-2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -13,6 +13,7 @@ import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.x
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 declare variable $xqa:nsRESTXQ:= 'http://exquery.org/ns/restxq';
+declare variable $xqa:nsUNIT:= 'http://basex.org/modules/unit';
 declare variable $xqa:nsXQDOC:='https://github.com/Quodatum/xqdoca';
 declare variable $xqa:nsANN:='http://www.w3.org/2012/xquery';
 declare variable $xqa:nsOUT:='http://www.w3.org/2010/xslt-xquery-serialization';
@@ -103,6 +104,13 @@ as xs:boolean
   xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsRESTXQ,$name)
 };
 
+(:~  true if test:name :)
+declare function xqa:is-unit($a  as element(xqdoc:annotation),$name as xs:string,$ns as map(*))
+as xs:boolean
+{
+  xqn:eq(xqn:qmap($a/@name,$ns,$xqa:nsANN), $xqa:nsUNIT,$name)
+};
+
 declare function xqa:is-out($a as element(xqdoc:annotation),$name as xs:string,$ns as map(*))
 as xs:boolean
 {
@@ -172,5 +180,5 @@ as xs:string*
 {
   tokenize($url,"/\{")
   !replace(.,"\s*(\$\w*).*","$1")
-  !util:if(starts-with(.,"$"),.)
+  !(if (starts-with(.,"$")) then .)
 };    

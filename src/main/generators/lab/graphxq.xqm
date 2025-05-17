@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 talk to graphxq server.
-@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@copyright Copyright (c) 2019-2026 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace gxq = 'quodatum:service.graphxq';
@@ -42,7 +42,8 @@ return gxq:post('/api/dotml', $form, $data)
 };
 
 (:~ graphxq request :)
-declare function gxq:post($url as xs:string, $form as element(http:multipart),$data ){
+declare function gxq:post($url as xs:string, $form as element(http:multipart),$data )
+{
   let $req:= <http:request method="POST"  xmlns="http://expath.org/ns/http-client">
               { $form}
             </http:request>

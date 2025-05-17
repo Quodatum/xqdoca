@@ -21,7 +21,9 @@ declare function local:resolve($path) as xs:string{
 let $args:=cmd:parse-args($args)
 let $args:=if(exists($args)) 
            then $args 
-           else local:resolve(".xqdoca")!util:if(doc-available(.),.,"-h")
+           else local:resolve(".xqdoca")!(if(doc-available(.))
+                                          then .
+                                          else "-h")
 let  $action :=head($args)
 
 return  

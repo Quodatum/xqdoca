@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 create xqdoc from parse tree 
- @Copyright (c) 2022 Quodatum Ltd
+ @Copyright (c) 2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
  @TODO refs
 :)
@@ -10,11 +10,20 @@ create xqdoc from parse tree
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
+
+
 (:~ build xqdoc from XQuery parse tree 
+ @param $parse xml parse tree
+ @param $url source path
+ @param $staticNS map of known namespaces
  @param $opts {"body-full","body-items","refs"}
+
 :)
-declare function xqdc:build($parse as element(XQuery),$url as xs:string,$opts as map(*))
-as element(xqdoc:xqdoc)
+declare function xqdc:build($parse as element(XQuery),
+                            $url as xs:string,
+                            $staticNS as map(*),
+                            $opts as map(*)
+) as element(xqdoc:xqdoc)
 {
   let $version:=$opts?xqdoc?version
   let $mod:= $parse/Module
@@ -29,7 +38,7 @@ as element(xqdoc:xqdoc)
                 ,xs:QName("xqdoc:imports")
                 ,xqdc:import(?,$opts))
  
-    ,xqdc:namespaces($mod)
+    ,xqdc:namespaces($mod,$staticNS)
     ,xqdc:variables($mod, $opts)
     ,xqdc:functions($mod, $opts)
   }</xqdoc:xqdoc>
@@ -51,14 +60,14 @@ let $uri:=if($type eq 'library')
 let $com:=util:or(xqcom:comment($parse)
                   ,xqcom:comment($parse/(LibraryModule|MainModule))
                  )
-                 =>trace("Mod comm: ")
+                (: =>trace("Mod comm: ") :)
           
 return 
     <xqdoc:module type="{ $type }">
       <xqdoc:uri>{ $uri }</xqdoc:uri>
       <xqdoc:name>{ $name }</xqdoc:name>
       { $com }
-      { util:if(xqdc:opt($opts,"body-full"),xqdc:body(root($parse)))} 
+      { if(xqdc:opt($opts,"body-full")) then xqdc:body(root($parse))} 
     </xqdoc:module>
 };
 
@@ -69,13 +78,14 @@ as element(xqdoc:import)
    let $uri:= $import/URILiteral/string(.)
    return <xqdoc:import type="library">
               <xqdoc:uri>{ xqdc:unquote($uri[1]) }</xqdoc:uri>
-              {util:if(xqdc:is11($opts),tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at>) 
+              {(if(xqdc:is11($opts)) then tail($uri)!<xqdoc:at>{ xqdc:unquote(.) }</xqdoc:at>) 
                 ,xqcom:comment($import)}
           </xqdoc:import>
 };
 
 
-declare %private function xqdc:namespaces($parse as element(Module))
+declare %private function xqdc:namespaces($parse as element(Module),
+$staticNS as map(*))
 as element(xqdoc:namespaces)
 {
   let $this:=if($parse/LibraryModule)
@@ -83,7 +93,7 @@ as element(xqdoc:namespaces)
                 let $name:=$parse/LibraryModule/ModuleDecl/(.|NCName)/NCName[not(NCName)]/string()
                 let $uri:=$parse/LibraryModule/ModuleDecl/URILiteral/StringLiteral/xqdc:unquote(.)
                 return <xqdoc:namespace prefix="{ $name}" uri="{ $uri }"/>
-  return <xqdoc:namespaces>{
+  let $namespaces:=(
         $this,
         for $import in $parse/(MainModule|LibraryModule)/Prolog/(Import/ModuleImport|NamespaceDecl)
         (: let $_:=trace($import,"FFF:" ) :)
@@ -92,7 +102,14 @@ as element(xqdoc:namespaces)
         return <xqdoc:namespace prefix="{ $prefix}" uri="{ $uri }">{
                    xqcom:comment($import)
         }</xqdoc:namespace>
-  }</xqdoc:namespaces>
+  )
+   let $prefixes:=$parse//QName[contains(.,":")]!substring-before(.,":")=>distinct-values()
+   let $prefixes:=$prefixes[not(.=$namespaces/@prefix)]
+   let $static:=$prefixes!(if(map:contains($staticNS,.))
+                          then <xqdoc:namespace prefix="{ . }" uri="{ $staticNS(.) }" />
+                          )
+ 
+  return <xqdoc:namespaces>{ $namespaces,$static }</xqdoc:namespaces>
   (: =>trace("NSSS") :)
 };  
 
@@ -110,8 +127,8 @@ as element(xqdoc:variable){
   (: =>trace("VAR: ") :)
 
   return <xqdoc:variable>
-     { util:if(xqdc:is11($opts)
-              ,$vardecl/TOKEN[.="external"]!attribute external {"true"})}
+     { if(xqdc:is11($opts)) 
+       then $vardecl/TOKEN[.="external"]!attribute external {"true"} }
 			<xqdoc:name>{ $name }</xqdoc:name>
       { 
          xqcom:comment($vardecl/..)
@@ -121,11 +138,10 @@ as element(xqdoc:variable){
 
        ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
 
-       ,util:if(xqdc:is11($opts)
-               ,xqdc:refs($vardecl))
+       ,if(xqdc:is11($opts)) then xqdc:refs($vardecl)
 
-       ,util:if(xqdc:is11($opts) and xqdc:opt($opts,"body-items")
-                ,xqdc:body($vardecl)) }
+       ,if(xqdc:is11($opts) and xqdc:opt($opts,"body-items"))
+        then xqdc:body($vardecl) }
 		</xqdoc:variable>
 };
 
@@ -187,8 +203,7 @@ as element(xqdoc:function){
       {   xqdc:parameters($params)  
         , xqdc:return($fundecl)
         , xqdc:refs($fundecl) 
-        ,util:if(xqdc:opt($opts,"body-items")
-                ,xqdc:body($fundecl)) }
+        ,if(xqdc:opt($opts,"body-items")) then xqdc:body($fundecl) }
   </xqdoc:function>
 };
 
@@ -231,8 +246,8 @@ as element(xqdoc:type)?
 declare %private function xqdc:refs($ast as element(*))
 as element(*)*
 {
- (:~ let $_:=trace("refs",$ast) ~:)
-  () 
+ (: let $_:=trace("refs",$ast)
+ return :) () 
 };
 
 (:~  :)

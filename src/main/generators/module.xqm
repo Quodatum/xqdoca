@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 Library to support html5 rendering of single xqdoc source
- @Copyright (c) 2019-2022 Quodatum Ltd
+ @Copyright (c) 2019-2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 
@@ -36,29 +36,30 @@ as document-node()
 {
 let $xqd:=$file?xqdoc
 let $_:=trace(concat($file?path,"->",$file?href),"module: ")
-let $sections:=(
-         xqh:summary($xqd/xqdoc:module,$opts),
-         xqh:imports($xqd,$model), 
-         xqh:variables($xqd/xqdoc:variables,$file),
-         xqh:functions($xqd/xqdoc:functions, $file, $model),
-         xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
-         xqh:restxq($xqd,$file),
-          <section id="source">
-            <h2 >Source Code</h2>
-            <pre><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ $xqd/xqdoc:module/xqdoc:body/string() }</code></pre>
-          </section>
-)
-let $d:=<div>
-       <h1>
-			<span class="badge badge-info">{ $file?namespace }</span>&#160;
-			<small>{ $xqd/xqdoc:module/@type/string() } module</small>
-            <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file,page:badge#3) }</div>
-		</h1>
-{
-         xqh:toc($xqd,$opts,$file),
-         $sections
-}
-</div>
+let $d:=if($file?isParsed)
+        then  <div>
+                  <h1>
+                    <span class="badge badge-info">{ $file?namespace }</span>&#160;
+                    <small>{ $xqd/xqdoc:module/@type/string() } module</small>
+                    <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file,page:badge#3) }</div>
+                  </h1>
+                  { xqh:toc($xqd,$opts,$file),
+                    xqh:summary($xqd/xqdoc:module,$opts),
+                    xqh:imports($xqd,$model), 
+                    xqh:variables($xqd/xqdoc:variables,$file),
+                    xqh:functions($xqd/xqdoc:functions, $file, $model),
+                    xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
+                    xqh:restxq($xqd,$file),
+                      <section id="source">
+                        <h2 >Source Code</h2>
+                        <pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html" >
+                        <code class="language-xquery"  data-prismjs-copy="Copy to clipboard">{ 
+                          $xqd/xqdoc:module/xqdoc:body/string() 
+                          }</code></pre>
+                      </section>
+                            }
+                    </div>
+          else "Parse Failed"
  return document{ page:wrap($d, $opts )  }                 
 };
 
@@ -336,7 +337,9 @@ as element(div)
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      <details>
         <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
-        { $funs! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
+        { $funs! <pre class="no-line-numbers" style="white-space:pre-wrap;">
+        <code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code>
+        </pre> }
       </details>
 		</div>
 };

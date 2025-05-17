@@ -2,7 +2,7 @@ xquery version "3.1";
 (:~
   <p>Save documents to file system or database. Data is supplied as a map which 
   includes serialization options</p>
-  @copyright (c) 2019-2022 Quodatum Ltd
+  @copyright (c) 2019-2026 Quodatum Ltd
   @author Andy Bunce, Quodatum, License: Apache-2.0
  
  :)
@@ -17,7 +17,7 @@ declare %updating
 function store:store($docs as map(*)*,$base as xs:string)
 {
 for $doc in $docs
-let $_:=util:if(empty($doc?output),trace($doc,"DOC"))
+let $_:=if(empty($doc?output)) then trace($doc,"DOC")
 let $uri:=resolve-uri($doc?uri,$base)
 let $opts:=if(map:contains($doc,"output")) then $doc?output else map{}
 let $document:=store:doc-tweak($doc,$opts)
@@ -105,6 +105,6 @@ function store:xmldb($data,$uri as xs:string,$params as map(*))
   let $a:=analyze-string(substring-after($uri,":"),"/([^/]*)/(.*)")
   let $db:=$a//*[@nr="1"]
   let $path:=$a//*[@nr="2"]
-  return db:replace($db,$path,$data)
+  return db:put($db,$data,$path)
 };
 

@@ -3,7 +3,7 @@ xquery version "3.1";
 Diagrams showing project module imports. Generated with `mermaid.js`.
 
 @see https://mermaid-js.github.io/mermaid/#/
-@copyright Copyright (c) 2019-2022 Quodatum Ltd
+@copyright Copyright (c) 2019-2024 Quodatum Ltd
 @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -43,51 +43,74 @@ let $files:=$model?files
 let $files:= $files!_:class-name(.,position(),$files)
 
 let $classes:=  $files!_:class(.)             
-let $links:= $files!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`" 
+let $links:= $files!``[link `{ .?mermaid }` "`{ .?href }`index.html" "This is a tooltip for `{ .?namespace }`"
 ]``
 let $imports:=for $f in $files,
                 $i in xqd:where-imported($files, $f?namespace)
                 return ``[`{ $i?mermaid}` ..>`{ $f?mermaid}` 
 ]``
-       
+
+let $actors:=``[
+class RESTXQ:::cssrest  
+class INVOKE:::cssmain  
+class TEST:::cssunit
+]``
+let $classDefs:=``[
+classDef cssrest fill:palegreen
+classDef cssmain fill:powderblue
+classDef cssunit fill:yellow
+]``
 return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
 classDiagram
 direction TB
+`{ $actors }`
 `{ $classes }`
 `{ $imports }`
+`{ $classDefs }`
 `{ $links }`
-]``
+
+]``=>replace('&#xd;&#xa;', '&#xa;')
 
 };
 
-(:~ generate mermaid class definition :)
+(:~ generate mermaid class definition for $file :)
 declare %private
 function _:class($file as map(*))
 as xs:string{
 let $name:=$file?mermaid
 let $ns:= $file?namespaces
-let $annotations:= xqa:annotations($file)
-let $restfns:=$file?xqdoc
-              //xqdoc:function[
+let $functions:= $file?xqdoc//xqdoc:function
+
+let $restfns:=$functions[
                               xqdoc:annotations/xqdoc:annotation
                               =>filter(xqa:is-rest(?,"path",$ns))
                               ]
-let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
 
+let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
+let $testfns:=$functions[
+                              xqdoc:annotations/xqdoc:annotation
+                              =>filter(xqa:is-unit(?,"test",$ns))
+                              ]
 let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
 let $vars:=$file?xqdoc
               //xqdoc:variable/xqdoc:name
               => _:class-vars-list()
 
 return if($restfns)
-       then ``[class `{ $name }`:::cssRest { << Rest `{$file?path }`>> 
+       then ``[class `{ $name }`:::cssrest { << Rest `{$file?path }`>> 
 `{ $fns }`}
+RESTXQ..>`{ $name }`
 ]``
        else if($is-main)
-            then ``[class `{ $name }`:::cssMain{ << `{ $file?path }` >>
+            then ``[class `{ $name }`:::cssmain{ << `{ $file?path }` >>
 `{ $vars }`}
+INVOKE..>`{ $name }`
 ]``
-            else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
+       else if (exists($testfns))
+            then ``[class `{ $name }`:::cssunit{ << `{ $file?path }` >>}
+TEST..>`{ $name }`
+]``
+        else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
 ]``
 };
 
@@ -99,8 +122,9 @@ as map(*){
   let $fn:=function($file){if($file?prefix)then $file?prefix else "local"}
   let $name:=$fn($file)
   let $count:=subsequence($files,1,$pos -1)!$fn(.)[. eq $name]=>count()
-  return (map:entry("mermaid", translate($name,"-","_") || util:if($count gt 0, "Δ" ||1+ $count)),
-          $file)=>map:merge()
+  let $name:= translate($name,"-","_") || (if($count gt 0) then  "Δ" ||1+ $count) 
+  return (map:entry("mermaid",  $name),$file)
+          =>map:merge()
 };
 
 (:~ generate mermaid function list :)
@@ -130,30 +154,17 @@ declare %private
 function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
 as element(html){
 <html lang="en">
-{_:head("Module imports diagram (Mermaid)","resources/")}
+{_:head("Module imports diagram","resources/")}
 
 <body>
-<style>
-    .cssRest > rect, line{{
-        fill:palegreen !important;
-        stroke:black !important;
-    }}
-    .cssMain > rect, line{{
-        fill:powderblue !important;
-        stroke:black !important;
-    }}
-     .cssDoca > rect, line{{
-        fill:yellow !important;
-        stroke:black !important;
-    }}
-</style>
-  <nav id="toc" style="position:absolute;top:0"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
-  {$related}
+  <nav id="toc" style="position:absolute;top:0"><span>
+    <span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram</span>
+    {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js" 
-  integrity="sha512-ku2nmBrzAXY5YwohzTqLYH1/lvyMrpTVxgQKrvTabd/b/uesqltLORdmpVapYv6QhZVCLUX6wkvFaKOAY4xpUA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
-  <script>mermaid.initialize({{
+ <script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+   mermaid.initialize({{
   startOnLoad:true,
   logLevel: "error", 
   securityLevel: "loose", 

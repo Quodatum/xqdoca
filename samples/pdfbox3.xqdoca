@@ -1,0 +1,5 @@
+<xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
+    <project>pdfbox</project>
+    <source>..\..\..\expkg-zone58\pdfbox</source>
+    <target>file:///tmp/pdfbox/</target>
+</xqdoca>

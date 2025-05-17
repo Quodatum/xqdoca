@@ -11,7 +11,7 @@ declare %updating function local:decl($tree as element(XQuery),
 let $t:="C:\Users\andy\basex.home\basex.945\etc\xqdoc\admin.xqm"
 let $w as xs:string := unparsed-text($t)  
 let $a:= xp:parse($w  ,map{ "lang":"xquery", "version":"3.1 basex",  "flatten":true() })
-let $out:= $a transform with {
+let $out:= $a   with {
   local:decl(.,"ff")
 }
 return $out/string()

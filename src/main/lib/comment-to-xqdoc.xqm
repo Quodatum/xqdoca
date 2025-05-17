@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 create xqdoc comment from xquery parse comment 
- @Copyright (c) 2022 Quodatum Ltd
+ @Copyright (c) 2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -37,7 +37,7 @@ as map(*)?{
                    =>substring(4,string-length($comment)-5)
                    =>tokenize("\n")
        let $lines:=$lines!xqcom:trim(.)
-                   !util:if(starts-with(.,":"), xqcom:trim(substring(.,2)), .)
+                   !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)
        let $state:= map{
                       'description': '',
                       'params': (),

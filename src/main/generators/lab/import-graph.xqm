@@ -42,12 +42,12 @@ function _:module($file as map(*),
  
  (:~ import svg for set of files :)
  declare function _:build($files as map(*)*,         
-                         $model as map(*),
+                         $_model as map(*),
                          $opts as map(*) )
- {                   
+as document-node(){                   
    let $nodes:=$files!_:node(.,$opts) 
                 
-	let $edges := for $f at $pos in  $files 
+	let $edges := for $f  in  $files 
                 return _:edge($f,$f)
 	let $dot:=_:graph(($nodes,$edges),$opts)
            

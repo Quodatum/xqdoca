@@ -1,14 +1,14 @@
 xquery version "3.1";
 (:~
  <p>command line tool support.</p>
- @copyright Copyright (c) 2019-2022 Quodatum Ltd
+ @copyright Copyright (c) 2019-2025 Quodatum Ltd
  @version 0.3
 :)
 module namespace cmd = 'quodatum:tools:commandline';
 import module namespace semver = "http://exist-db.org/xquery/semver" at "semver.xqm";
 declare namespace pkg="http://expath.org/ns/pkg";
 
-declare variable $cmd:repo-list:= "https://raw.githubusercontent.com/expkg-zone58/catalog/main/repositories.xml";
+declare variable $cmd:repo-list:= xs:anyURI("https://raw.githubusercontent.com/expkg-zone58/catalog/main/repositories.xml");
 
 (:~  simple command line parse splits on space unless in quotes :)
 declare function cmd:parse-args($str as xs:string)
