@@ -1,10 +1,4 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\mrwhe\Desktop\basex.home\basex.107\webapp\dba\</source>
     <target>file:///tmp/xqdoca/dba/</target>
-    <outputs>
-        <global>
-            report
-            restxq
-        </global>
-    </outputs>
 </xqdoca>
