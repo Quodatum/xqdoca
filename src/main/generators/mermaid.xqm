@@ -53,12 +53,12 @@ let $imports:=for $f in $files,
 let $actors:=``[
 class RESTXQ:::cssrest  
 class INVOKE:::cssmain  
-class TEST:::cssdoca 
+class TEST:::cssunit
 ]``
 let $classDefs:=``[
 classDef cssrest fill:palegreen
 classDef cssmain fill:powderblue
-classDef cssdoca fill:yellow
+classDef cssunit fill:yellow
 ]``
 return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
 classDiagram
@@ -73,20 +73,24 @@ direction TB
 
 };
 
-(:~ generate mermaid class definition :)
+(:~ generate mermaid class definition for $file :)
 declare %private
 function _:class($file as map(*))
 as xs:string{
 let $name:=$file?mermaid
 let $ns:= $file?namespaces
-let $annotations:= xqa:annotations($file)
-let $restfns:=$file?xqdoc
-              //xqdoc:function[
+let $functions:= $file?xqdoc//xqdoc:function
+
+let $restfns:=$functions[
                               xqdoc:annotations/xqdoc:annotation
                               =>filter(xqa:is-rest(?,"path",$ns))
                               ]
-let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
 
+let $fns:=$restfns/xqdoc:name=>_:class-fns-list()
+let $testfns:=$functions[
+                              xqdoc:annotations/xqdoc:annotation
+                              =>filter(xqa:is-unit(?,"test",$ns))
+                              ]
 let $is-main:= $file?xqdoc/xqdoc:module/@type eq "main"
 let $vars:=$file?xqdoc
               //xqdoc:variable/xqdoc:name
@@ -102,7 +106,11 @@ RESTXQ..>`{ $name }`
 `{ $vars }`}
 INVOKE..>`{ $name }`
 ]``
-            else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
+       else if (exists($testfns))
+            then ``[class `{ $name }`:::cssunit{ << `{ $file?path }` >>}
+TEST..>`{ $name }`
+]``
+        else ``[class `{ $name }` { << `{ tokenize($file?path,"/")[last()] }` >>}
 ]``
 };
 
@@ -146,16 +154,16 @@ declare %private
 function _:page-wrap($mermaid as xs:string+,$related,$opts as map(*))
 as element(html){
 <html lang="en">
-{_:head("Module imports diagram (Mermaid)","resources/")}
+{_:head("Module imports diagram","resources/")}
 
 <body>
-
-  <nav id="toc" style="position:absolute;top:0"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
-  {$related}
+  <nav id="toc" style="position:absolute;top:0"><span>
+    <span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
+    {$related}
   </nav>
   <div class="mermaid">{ $mermaid }</div>
  <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
    mermaid.initialize({{
   startOnLoad:true,
   logLevel: "error", 

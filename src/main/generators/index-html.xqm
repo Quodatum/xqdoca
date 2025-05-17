@@ -182,7 +182,7 @@ as element(div)
         return  <tr>
                 <td style="word-break:break-all;">{page:link-module($file) }</td>
                 <td title="prefix">{ $file?prefix}</td>
-                 <td title="{ $desc }">{ xqhtml:truncate-text($desc,50) }</td>
+                 <td title="{ page:line-wrap($desc,60) }">{ xqhtml:truncate-text($desc,50) }</td>
                  <td >{   xqhtml:file-usage($file,$model) }</td>
 
                  <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file,page:badge#3) }</td>       

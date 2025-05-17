@@ -131,16 +131,7 @@ as element(html){
 {_:head("Module imports diagram (Mermaid)","resources/")}
 
 <body>
-<style>
-    .cssRest > rect, line{{
-        fill:palegreen !important;
-        stroke:black !important;
-    }}
-    .cssMain > rect, line{{
-        fill:powderblue !important;
-        stroke:black !important;
-    }}
-</style>
+
   <nav id="toc" style="position:absolute;top:0"><span><span class="badge badge-info">{$opts?project}</span> - Module dependancy diagram (mermaid)</span>
   {$related}
   </nav>
