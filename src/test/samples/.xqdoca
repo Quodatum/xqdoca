@@ -1,4 +1,13 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
   <source>.</source>
   <target>xqdoca/</target>
+  <!--
+    xqdoc config version and items to include
+    -->
+    <xqdoc>
+        <version>1.1</version>
+        <body-full>false</body-full>
+        <body-items>false</body-items>
+        <refs>true</refs>
+    </xqdoc>
 </xqdoca>

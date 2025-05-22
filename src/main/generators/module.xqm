@@ -36,6 +36,7 @@ as document-node()
 {
 let $xqd:=$file?xqdoc
 let $_:=trace(concat($file?path,"->",$file?href),"module: ")
+
 let $d:=if($file?isParsed)
         then  <div>
                   <h1>
@@ -46,11 +47,13 @@ let $d:=if($file?isParsed)
                   { xqh:toc($xqd,$opts,$file),
                     xqh:summary($xqd/xqdoc:module,$opts),
                     xqh:imports($xqd,$model), 
-                    xqh:variables($xqd/xqdoc:variables,$file),
-                    xqh:functions($xqd/xqdoc:functions, $file, $model),
+                    xqh:variables($xqd/xqdoc:variables,$file,$opts),
+                    xqh:functions($xqd/xqdoc:functions, $file, $model,$opts),
                     xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
                     xqh:restxq($xqd,$file),
-                      <section id="source">
+                     
+                    if($opts?xqdoc?body-full)
+                       then <section id="source">
                         <h2 >Source Code</h2>
                         <pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html" >
                         <code class="language-xquery"  data-prismjs-copy="Copy to clipboard">{ 
@@ -191,12 +194,14 @@ as element(nav){
 								<span class="content">RestXQ</span>
 							</a>
 				</li>
-       	<li>
-					<a href="#source">
-						<span class="secno">7 </span>
-						<span class="content">Source</span>
-					</a>
-				</li> 
+       {if($opts?xqdoc?body-full)
+       then	<li>
+            <a href="#source">
+              <span class="secno">7 </span>
+              <span class="content">Source</span>
+            </a>
+          </li>
+       } 
 			</ol>
 		</nav>
 };   
@@ -227,7 +232,7 @@ as element(section){
     </section>
 }; 
 
-declare function xqh:variables($vars as element(xqdoc:variables)?,$file as map(*))
+declare function xqh:variables($vars as element(xqdoc:variables)?,$file as map(*),$opts as map(*))
 as element(section)
 {
   <section id="variables">
@@ -235,7 +240,7 @@ as element(section)
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
       count $index
-	   return xqh:variable($v,(3,$index),$file),
+	   return xqh:variable($v,(3,$index),$file,$opts),
      if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
 		</section>
@@ -243,7 +248,8 @@ as element(section)
 
 declare function xqh:variable($v as element(xqdoc:variable),
                               $section as xs:anyAtomicType*,
-                              $file as map(*))
+                              $file as map(*),
+                              $opts as map(*))
 as element(div)
 {
 let $name:= concat('$',$v/xqdoc:name) (: =>trace("VNAME:") :)
@@ -267,17 +273,21 @@ return
 			</dl>
       {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
+      { if($opts?xqdoc?body-items)
+      then 
        <details open="open">
         <summary>Source ( {sum($v !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $v! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>
+      }
 		</div>
 };  
 
 declare function xqh:functions(
                      $funs as element(xqdoc:functions)?,
                      $file as map(*),
-                     $model as map(*)
+                     $model as map(*),
+                     $opts as map(*)
                    )
 as element(section)
 {
@@ -287,7 +297,7 @@ as element(section)
       group by $name:=$f/xqdoc:name
       order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos),$file, $model ),
+	   return xqh:function($f,(4,$pos),$file, $model,$opts ),
       if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
 		</section>
@@ -300,7 +310,8 @@ declare
 function xqh:function($funs as element(xqdoc:function)*,
                               $section as xs:anyAtomicType*,
                               $file as map(*),
-                              $model as map(*))
+                              $model as map(*),
+                              $opts as map(*))
 as element(div)
 {
     let $funs:=sort($funs,(),function($f){number($f/@arity)})
@@ -335,12 +346,15 @@ as element(div)
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
    
      { $funs/xqdoc:annotations!xqh:annotations(.) }
+     {if($opts?xqdoc?body-items)
+     then
      <details>
         <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $funs! <pre class="no-line-numbers" style="white-space:pre-wrap;">
         <code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code>
         </pre> }
       </details>
+     }
 		</div>
 };
 

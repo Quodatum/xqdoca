@@ -31,6 +31,8 @@ The code to be processed must be syntactically valid from the perspective of the
 
 `XQDocA` uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
 
+### .xdoca format
+
 The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
 
 For example the file `samples/dba.xqdoca`
@@ -52,7 +54,7 @@ Options not specified in the .xqdoca file are taken from [config.xqdoca](src/mai
 `xqdoca options....`
 
 
-`xqdoca -h` will display a summary of the options.
+
 
 `xqdoca -h` will display a summary of the options.
 

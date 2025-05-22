@@ -60,7 +60,12 @@ classDef cssrest fill:palegreen
 classDef cssmain fill:powderblue
 classDef cssunit fill:yellow
 ]``
-return``[%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%    
+return``[---
+title: something here
+config:
+  theme: base
+  securityLevel: loose
+--- 
 classDiagram
 direction TB
 `{ $actors }`

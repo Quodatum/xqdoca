@@ -3,8 +3,8 @@ xquery version '3.1';
 pdfbox 3.0 https://pdfbox.apache.org/ BaseX 10.7+ interface library, 
 requires pdfbox jars on classpath, i.e. in custom or xar
 tested with pdfbox-app-3.0.4.jar
-@see download https://pdfbox.apache.org/download.cgi
-@javadoc https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.4/
+@see <a href="https://pdfbox.apache.org/download.cgi">download</a>
+@javadoc <a href="https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.4/">pdfbox/3.0.4/</a>
 @author Andy Bunce 2025
 :)
 

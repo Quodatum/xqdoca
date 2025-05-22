@@ -1,4 +1,7 @@
 # Changelog
+## 0.9.1
+* fix option handling
+* fix reference handling
 ## 0.9.0
 * update mermaid.js to v11 esm 
 

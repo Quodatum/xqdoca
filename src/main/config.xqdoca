@@ -24,8 +24,11 @@
     xqdoc config version and items to include
     -->
     <xqdoc>
+        <!-- xddoc schema version -->
         <version>1.1</version>
+        <!-- include full xquery source -->
         <body-full>true</body-full>
+        <!-- include  xquery in item descriptions, For instance functions and variables -->
         <body-items>true</body-items>
         <refs>true</refs>
     </xqdoc>

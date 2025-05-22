@@ -246,8 +246,8 @@ as element(xqdoc:type)?
 declare %private function xqdc:refs($ast as element(*))
 as element(*)*
 {
- (: let $_:=trace("refs",$ast)
- return :) () 
+ let $_:=trace(string($ast),"------------refs-----------")
+ return () 
 };
 
 (:~  :)

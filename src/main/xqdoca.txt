@@ -1,4 +1,5 @@
 XQdocA
+
 Usage xqdoca [options] [files]
    [files]  names of xqdoca files to run, 
             if none supplied and a .xqdoca file exists in the current directory it will be run.
