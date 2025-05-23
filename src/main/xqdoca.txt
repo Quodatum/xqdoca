@@ -1,4 +1,3 @@
-XQdocA
 
 Usage xqdoca [options] [files]
    [files]  names of xqdoca files to run, 

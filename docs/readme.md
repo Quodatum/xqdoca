@@ -14,3 +14,7 @@ bin/xqdoca -> main/xqdoca-cmd.xq -> xqdoca.xq
 
 ## References
 `parser.xqm` uncalled xqp:references
+* xqp:references(.,$prefixes, $def-fn)
+    * xqp:invoke-fn
+    * qp:invoke-arrow
+    * xqp:ref-variable
