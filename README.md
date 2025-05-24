@@ -1,7 +1,7 @@
 ## About `xqdoca`
 `XQDocA` is a tool to generate documentation from XQuery sources. It makes use of XQDoc style comments and XQuery annotations.
 
-The outputs can be changed or extended with custom generators that are dynamically 
+The outputs can be changed or extended with custom generators or "renderers" that are dynamically 
 located and loaded at run time. 
 
 A paper on this project was presented at [Markup UK](https://markupuk.org/).
@@ -35,6 +35,7 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/).
 Work in progress.
 
 ## Install
+1. Ensure `BaseX 10` is install
 1. unzip dist bundle to a folder, or clone the respository
 1. Add the `/bin` folder from above to your `PATH`
 1. Execute `xqdoca -install` in a command window to ensure required repository modules are installed. 
@@ -53,7 +54,7 @@ Usage xqdoca [options] [files]
             if none supplied and a .xqdoca file exists in the current directory it will be run.
    -v       display version
    -h       display this help
-   -init    create .xqdoca file in current directory if not existing
+   -init    create .xqdoca file in current directory if missing
    -update  update XQdocA required packages (as specified in expath-pkg.xml).
 ```
 
@@ -62,8 +63,6 @@ Usage xqdoca [options] [files]
  The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
 
 ### The .xdoca format
-
-
 
 A simple example `samples/dba.xqdoca`
 ```xml
@@ -74,19 +73,12 @@ A simple example `samples/dba.xqdoca`
 ```
 Then 
 ```xqdoca samples/dba.xqdoca``` 
-will generate documentation for XQuery sources in `C:\Users\andy\basex.home\basex.951\webapp\dba` and write them to the folder
-`file:///tmp/dba/`
+will generate documentation for XQuery sources in `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to the folder `file:///tmp/dba/`
 
 If  `source` or `target` are relative urls they are resolved relative to the `.xqdoca` file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
 Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
 
 
-`xqdoca options....`
-
-
-
-
-`xqdoca -h` will display a summary of the options.
 
 ## Configuration
 As used in `.xqdoc` files

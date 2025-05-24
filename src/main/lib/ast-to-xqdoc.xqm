@@ -8,6 +8,7 @@ create xqdoc from parse tree
  module namespace xqdc = 'quodatum:xqdoca.model.xqdoc';
 
 import module namespace xqcom = 'quodatum:xqdoca.model.comment' at "comment-to-xqdoc.xqm";
+import module namespace xqn = 'quodatum:xqdoca.namespaces' at "xqdoc-namespace.xqm";
 declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 
@@ -26,6 +27,7 @@ declare function xqdc:build($parse as element(XQuery),
 ) as element(xqdoc:xqdoc)
 {
   let $version:=$opts?xqdoc?version
+  let $def-fn-uri:=xqdc:default-fn-uri($parse)
   let $mod:= $parse/Module
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
@@ -39,8 +41,8 @@ declare function xqdc:build($parse as element(XQuery),
                 ,xqdc:import(?,$opts))
  
     ,xqdc:namespaces($mod,$staticNS)
-    ,xqdc:variables($mod, $opts)
-    ,xqdc:functions($mod, $opts)
+    ,xqdc:variables($mod,$staticNS, $def-fn-uri,$opts)
+    ,xqdc:functions($mod ,$staticNS, $def-fn-uri,$opts)
   }</xqdoc:xqdoc>
 };
 
@@ -84,9 +86,10 @@ as element(xqdoc:import)
 };
 
 
-declare %private function xqdc:namespaces($parse as element(Module),
-$staticNS as map(*))
-as element(xqdoc:namespaces)
+declare %private function xqdc:namespaces(
+  $parse as element(Module),
+  $staticNS as map(*)
+) as element(xqdoc:namespaces)
 {
   let $this:=if($parse/LibraryModule)
              then
@@ -113,15 +116,21 @@ as element(xqdoc:namespaces)
   (: =>trace("NSSS") :)
 };  
 
-declare %private function xqdc:variables($parse as element(Module), $opts as map(*))
+declare %private function xqdc:variables($parse as element(Module), 
+                                         $staticNS as map(*),
+                                         $def-fn-uri as xs:string,
+                                         $opts as map(*))
 as element(xqdoc:variables)
 {
   <xqdoc:variables>{ 
-	$parse/*/Prolog/AnnotatedDecl/VarDecl!xqdc:variable(., $opts)
+	$parse/*/Prolog/AnnotatedDecl/VarDecl!xqdc:variable(., $staticNS ,$def-fn-uri, $opts)
 	}</xqdoc:variables>
 };
 
-declare %private function  xqdc:variable($vardecl as element(VarDecl), $opts as map(*))
+declare %private function  xqdc:variable($vardecl as element(VarDecl), 
+                                         $staticNS as map(*),
+                                         $def-fn-uri as xs:string,
+                                         $opts as map(*))
 as element(xqdoc:variable){
 	let $name:=$vardecl/VarName/string()
   (: =>trace("VAR: ") :)
@@ -138,19 +147,22 @@ as element(xqdoc:variable){
 
        ,$vardecl/TypeDeclaration/SequenceType!xqdc:type(.)
 
-       ,if(xqdc:is11($opts)) then xqdc:refs($vardecl)
+       ,if(xqdc:is11($opts)) then xqdc:refs($vardecl,$staticNS,$def-fn-uri)
 
        ,if(xqdc:is11($opts) and xqdc:opt($opts,"body-items"))
         then xqdc:body($vardecl) }
 		</xqdoc:variable>
 };
 
-declare %private function xqdc:functions($module as element(Module), $opts as map(*))
+declare %private function xqdc:functions($module as element(Module), 
+                                         $staticNS as map(*),
+                                         $def-fn-uri as xs:string, 
+                                         $opts as map(*))
 as element(xqdoc:functions)
 {
   let $items:= $module/*/Prolog/AnnotatedDecl/FunctionDecl  
   return <xqdoc:functions>{  
-          $items!xqdc:function(., $opts)
+          $items!xqdc:function(.,$staticNS,$def-fn-uri, $opts)
           ,xqdc:main($module/MainModule/QueryBody)
         (:~ @TODO
         if ($body) then (
@@ -180,7 +192,10 @@ as element(xqdoc:functions)
          </xqdoc:function>
  };
 
-declare %private function xqdc:function($fundecl as element(FunctionDecl), $opts as map(*))
+declare %private function xqdc:function($fundecl as element(FunctionDecl),
+                                        $staticNS as map(*),
+                                        $def-fn-uri as xs:string,
+                                        $opts as map(*))
 as element(xqdoc:function){
   let $params:= $fundecl/(.|ParamList)/Param
   return <xqdoc:function>
@@ -202,7 +217,7 @@ as element(xqdoc:function){
 
       {   xqdc:parameters($params)  
         , xqdc:return($fundecl)
-        , xqdc:refs($fundecl) 
+        , xqdc:refs($fundecl,$staticNS,$def-fn-uri) 
         ,if(xqdc:opt($opts,"body-items")) then xqdc:body($fundecl) }
   </xqdoc:function>
 };
@@ -243,10 +258,13 @@ as element(xqdoc:type)?
 };
 
 (:~ sequence of invoked and ref-variable elements :)
-declare %private function xqdc:refs($ast as element(*))
+declare %private function xqdc:refs($ast as element(*), 
+                                    $staticNS as map(*),
+                                    $def-fn as xs:string)
 as element(*)*
 {
  let $_:=trace(string($ast),"------------refs-----------")
+ let $refs:=xqdc:references($ast, $staticNS  , $def-fn )
  return () 
 };
 
@@ -302,6 +320,88 @@ as xs:boolean{
 declare %private function xqdc:is11($opts as map(*))
 as xs:boolean{
  $opts?xqdoc?version eq "1.1"
+};
+
+(:~ default function namespace
+ : NOTE if parse failed will return "http://www.w3.org/2005/xpath-functions"
+ :)
+declare function xqdc:default-fn-uri($xqparse as element(XQuery))
+as xs:string
+{
+  let $def-fn:= $xqparse/*//Prolog/DefaultNamespaceDecl
+  return if( empty($def-fn) ) 
+         then "http://www.w3.org/2005/xpath-functions"
+         else $def-fn/URILiteral!substring(.,2,string-length(.)-2)
+};
+
+(:~ scan tree below $e for references
+ : @param $expand function to map prefixes to namespaces
+ : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
+ :)
+declare  function xqdc:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)
+as element(*)*
+{
+  $e//FunctionCall!xqdc:invoke-fn(.,$prefixes, $def-fn),
+  $e//ArrowExpr!xqdc:invoke-arrow(.,$prefixes, $def-fn),
+  $e//VarRef!xqdc:ref-variable(.,$prefixes, $def-fn) 
+};
+
+
+
+(:~  build invoked nodes for function call
+ : @param $e is FunctionCall or ArrowExpr 
+ :)
+declare function xqdc:invoke-fn(
+                 $e as element( (:  FunctionCall :) ),
+                 $prefixes as map(*),
+                 $def-fn as xs:string)
+as element(xqdoc:invoked)*
+{
+
+let $commas:=count($e/ArgumentList/TOKEN[.=","])=>trace("xqdc:invoke-fn")
+let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])
+let $arity:= if($hasarg) then 1+$commas else 0
+let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
+let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            
+let $_:= if(empty($fname)) then trace($e,"??????") 
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
+ return <xqdoc:invoked arity="{ $arity }">
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:invoked>   
+};
+(:~  build invoked nodes for arrow expression
+ : @param $e is FunctionCall or ArrowExpr 
+ :)
+declare function xqdc:invoke-arrow($e as element(ArrowExpr),
+                                  $prefixes as function(*),
+                                  $def-fn as xs:string)
+as element(xqdoc:invoked)*
+{
+for $arrow in $e/TOKEN[. = "=&gt;"]
+let $fname:=$arrow/(following-sibling::QName|following-sibling::TOKEN)
+let $arglist:=$arrow/following-sibling::ArgumentList
+let $arity:=1+count($arglist/*[not(self::TOKEN)])
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
+ return <xqdoc:invoked arity="{ $arity }">
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:invoked> 
+};
+
+(:~  build invoked nodes for function call
+ : @param $e is variable reference @@TODO
+ :)
+declare function xqdc:ref-variable($e as element(*),$prefixes as map(*), $def-fn as xs:string)
+as element(xqdoc:ref-variable)
+{
+
+let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
+let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
+ return <xqdoc:ref-variable >
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:ref-variable>   
 };
 
 (:~ if items then apply $fun to each and wrap result sequence in $qname :)

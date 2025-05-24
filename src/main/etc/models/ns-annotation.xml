@@ -2,6 +2,13 @@
 <annotations>
     <namespace ns="http://basex.org/modules/perm" prefix="perm">
         <doc href="http://docs.basex.org/wiki/Permissions#Annotations"></doc>
+        <item name="allow">
+            <arg name="permission" type="xs:string"/>
+        </item>
+         <item name="check">
+            <arg name="path" type="xs:string"/>
+            <arg name="permissions" type="map()?"/>
+        </item>  
     </namespace>
     
     <namespace ns="http://basex.org" prefix="basex">

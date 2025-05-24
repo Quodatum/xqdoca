@@ -124,7 +124,7 @@ as map(*)
                                 "namespaces": $namespaces,
                                 "annotations": xqd:anno($xqdoc,$opts?platform), (: sequence map{annotation:, xqdoc: } :)
                                 "namespace":$xqdoc/xqdoc:module/xqdoc:uri/string(), 
-                                "default-fn-uri": xqp:default-fn-uri($parse)      
+                                "default-fn-uri": xqdc:default-fn-uri($parse)      
                                 }
                     else prof:dump($url,"PARSE FAIL: ")
     return ($result,$analysis)=>map:merge()                         
