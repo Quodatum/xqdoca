@@ -1,13 +1,13 @@
 xquery version "3.1";
 (:~
- <p>namespace and qname utils</p>
+ <p>namespace and qname utils for use with XML parse tree</p>
  @copyright (c) 2019-2026 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace xqn = 'quodatum:xqdoca.namespaces';
 
-(:~  parse qname into parts
-@param $e is from QName or TOKEN in some cases e.g "count"
+(:~  parse token into parts 
+@param $token is from QName or TOKEN in some cases e.g "count"
 @param $prefixes map of namespaces
 @param $defaultns namespace for no prefix
 @error xqn:qmap NO TOK
@@ -22,7 +22,8 @@ declare
 function xqn:qmap($token as xs:string?, $prefixes as map(*), $defaultns as xs:string)
 as map(*)
 {
- let $_:=if(empty($token)) then error(xs:QName("xqn:qmap"),"NO TOK")
+ let $token:=if(starts-with($token,"$"))then substring($token,2) else $token
+ let $_:=if(empty($token)) then error(xs:QName("xqn:qmap"),"NO TOKEN")
  return if(starts-with($token,"Q{"))
         then map{
            "uri": $token=>substring-after("{")=>substring-before("}"),
@@ -37,7 +38,7 @@ as map(*)
                     else if( map:contains($prefixes,$prefix)) 
                         then $prefixes?($prefix)
                         else 
-                          let $_:= trace(map:size($prefixes),"missing prefix:" || $prefix || ": ")
+                          let $_:= trace($prefixes,"missing prefix:" || $prefix || ": ")
                           return error(xs:QName("xqn:qmap"),"Failed process token: " || $token)
                       
           return map{
@@ -117,3 +118,45 @@ as map(*)
  (: =>trace("PLATFORM ")  :)
 };
 
+(:~ All known module namespaces :)
+declare function xqn:ns-all($parse as element(Module),$platform as xs:string)
+as map(*)+
+{
+map:merge((
+  xqn:ns-module($parse),
+  xqn:ns-defined($parse),
+  xqn:static-prefix-map($platform )
+))
+};
+
+(:~ The module namespace :)
+declare function xqn:ns-module($parse as element(Module))
+as map(*)?
+{
+if($parse/LibraryModule)
+then
+  let $name:=$parse/LibraryModule/ModuleDecl/(.|NCName)/NCName[not(NCName)]/string()
+  let $uri:=$parse/LibraryModule/ModuleDecl/URILiteral/StringLiteral/xqn:unquote(.)
+  return map:entry( $name,$uri)
+else ()
+};
+
+(:~  The namespaces imported or declared by Module. :)
+declare function xqn:ns-defined($parse as element(Module))
+as map(*)*
+{
+for $import in $parse/(MainModule|LibraryModule)/Prolog/(Import/ModuleImport|NamespaceDecl)
+        (: let $_:=trace($import,"FFF:" ) :)
+        let $uri:=($import/URILiteral/StringLiteral)[1]=>xqn:unquote()
+        let $prefix:= $import/NCName/string()
+        return map{
+                    "import": $import,
+                    $prefix:$uri
+                    }
+};
+
+(:~  remove start and end quote marks :)
+declare %private function xqn:unquote($s as xs:string)
+as xs:string{
+  replace($s,'^[''"](.*)[''"]$','$1')
+};

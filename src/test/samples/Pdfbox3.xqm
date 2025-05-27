@@ -1,10 +1,10 @@
 xquery version '3.1';
 (:~ 
-pdfbox 3.0 https://pdfbox.apache.org/ BaseX 10.7+ interface library, 
+A BaseX 10.7+ interface to pdfbox 3.0 https://pdfbox.apache.org/ , 
 requires pdfbox jars on classpath, i.e. in custom or xar
 tested with pdfbox-app-3.0.4.jar
 @see <a href="https://pdfbox.apache.org/download.cgi">download</a>
-@javadoc <a href="https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.4/">pdfbox/3.0.4/</a>
+@javadoc https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.4/
 @author Andy Bunce 2025
 :)
 
@@ -16,7 +16,7 @@ declare namespace PDDocument ="java:org.apache.pdfbox.pdmodel.PDDocument";
 declare namespace PDDocumentCatalog ="java:org.apache.pdfbox.pdmodel.PDDocumentCatalog";
 declare namespace PDPageLabels ="java:org.apache.pdfbox.pdmodel.common.PDPageLabels";
 declare namespace PageExtractor ="java:org.apache.pdfbox.multipdf.PageExtractor";
-declare namespace PDPage ="org.apache.pdfbox.pdmodel.PDPage";
+declare namespace PDPage ="java:org.apache.pdfbox.pdmodel.PDPage";
 declare namespace PDPageTree ="java:org.apache.pdfbox.pdmodel.PDPageTree";
 declare namespace PDDocumentOutline ="java:org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline";
 declare namespace PDDocumentInformation ="java:org.apache.pdfbox.pdmodel.PDDocumentInformation";
@@ -54,8 +54,8 @@ pdfbox:open($pdfsrc, map{})
 };
 
 (:~ open pdf from file/url/binary, opts may have password , returns pdf object 
-@param $pdfsrc a fetchable url or a xs:base64Binary 
-@param $opts map {"password":} 
+@param $pdfsrc a fetchable url or filepath, or xs:base64Binary item
+@param $opts options otionally with map {"password":} 
 :)
 declare function pdfbox:open($pdfsrc as item(), $opts as map(*))
 as item(){
@@ -75,7 +75,7 @@ as item(){
 }
 };
 
-(:~ the version of the PDF specification used by $pdf  e.g "1.4"
+(:~ The version of the PDF specification used by $pdf  e.g "1.4"
 returned as string to avoid float rounding issues
  :)
 declare function pdfbox:specification($pdf as item())
@@ -83,13 +83,13 @@ as xs:string{
  PDDocument:getVersion($pdf)=>xs:decimal()=>round(4)=>string()
 };
 
-(:~ save pdf $pdf to filesystem at $savepath , returns $savepath :)
+(:~ Save pdf $pdf to filesystem at $savepath , returns $savepath :)
 declare function pdfbox:save($pdf as item(),$savepath as xs:string)
 as xs:string{
    PDDocument:save($pdf, File:new($savepath)),$savepath
 };
 
-(:~   $pdf as xs:base64Binary :)
+(:~ Create binary representation of $pdf as xs:base64Binary :)
 declare function pdfbox:binary($pdf as item())
 as xs:base64Binary{
    let $bytes:=Q{java:java.io.ByteArrayOutputStream}new()
@@ -98,7 +98,7 @@ as xs:base64Binary{
          =>convert:integers-to-base64()
 };
 
-(:~ release references to $pdf:)
+(:~ Release any resources related to $pdf:)
 declare function pdfbox:close($pdf as item())
 as empty-sequence(){
   (# db:wrapjava void #) {
@@ -106,13 +106,13 @@ as empty-sequence(){
   }
 };
 
-(:~ number of pages in PDF:)
+(:~ Number of pages in PDF:)
 declare function pdfbox:page-count($pdf as item())
 as xs:integer{
   PDDocument:getNumberOfPages($pdf)
 };
 
-(:~ pdf page as image (zero is cover)
+(:~ Pdf page as image (zero is cover)
 options.format="bmp jpg png gif" etc, options.scale= 1 is 72 dpi?? :)
 declare function pdfbox:page-image($pdf as item(),$pageNo as xs:integer,$options as map(*))
 as xs:base64Binary{
@@ -275,7 +275,7 @@ as map(*){
   )
 };
 
-(:~ outline as xml :)
+(:~ PDF outline in xml format :)
 declare function pdfbox:outline-xml($pdf as item())
 as element(outline)?{
  let $outline:=pdfbox:outline($pdf)
@@ -294,8 +294,8 @@ as element(bookmark)*
   </bookmark>
 };
 
-(:~ return bookmark info for children of $outlineItem 
-@return map like{index:,title:,hasChildren:}
+(:~ return bookmark info for $bookmark
+@return map{index:..,title:..,hasChildren:..}
 :)
 declare %private function pdfbox:bookmark($bookmark as item(),$pdf as item())
 as map(*)
@@ -321,7 +321,7 @@ as item()?
       =>PDPageTree:indexOf($page)
 };            
 
-(:~  new PDF doc from 1 based page range as xs:base64Binary :)
+(:~  Return new extract PDF doc as xs:base64Binary, using a 1 based page range  :)
 declare function pdfbox:extract($pdf as item(), 
              $start as xs:integer,$end as xs:integer)
 as xs:base64Binary

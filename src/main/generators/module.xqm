@@ -47,7 +47,7 @@ let $d:=if($file?isParsed)
                   { xqh:toc($xqd,$opts,$file),
                     xqh:summary($xqd/xqdoc:module,$opts),
                     xqh:imports($xqd,$model), 
-                    xqh:variables($xqd/xqdoc:variables,$file,$opts),
+                    xqh:variables($xqd/xqdoc:variables,$file,$model,$opts),
                     xqh:functions($xqd/xqdoc:functions, $file, $model,$opts),
                     xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
                     xqh:restxq($xqd,$file),
@@ -232,7 +232,10 @@ as element(section){
     </section>
 }; 
 
-declare function xqh:variables($vars as element(xqdoc:variables)?,$file as map(*),$opts as map(*))
+declare function xqh:variables($vars as element(xqdoc:variables)?,
+                               $file as map(*),
+                               $model as map(*),
+                               $opts as map(*))
 as element(section)
 {
   <section id="variables">
@@ -240,7 +243,7 @@ as element(section)
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
       count $index
-	   return xqh:variable($v,(3,$index),$file,$opts),
+	   return xqh:variable($v,(3,$index),$file,$model,$opts),
      if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
 		</section>
@@ -249,6 +252,7 @@ as element(section)
 declare function xqh:variable($v as element(xqdoc:variable),
                               $section as xs:anyAtomicType*,
                               $file as map(*),
+                              $model as map(*),
                               $opts as map(*))
 as element(div)
 {
@@ -272,6 +276,7 @@ return
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
       {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
+      { xqh:when ($v/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
       { if($opts?xqdoc?body-items)
       then 
@@ -329,7 +334,7 @@ as element(div)
     <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
                       <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">#{ string(@arity) }</a>
-                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }                     
+                      <span style="margin-left:1em">{ xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }</span>                     
                     </span>                          
                  }
     </p>
@@ -484,8 +489,8 @@ as element(section)
 			<table class="data" style="float:none">
 				<thead>
 					<tr>
-						<th>Prefix</th>
-						<th>Uri</th>
+						<th>Prefix <span>-</span></th>
+						<th>Uri <span>-</span></th>
 					</tr>
 				</thead>
 				<tbody>{ 
@@ -619,11 +624,14 @@ return typeswitch ($tag)
        case element (xqdoc:author) 
           return <span>{string($tag)}</span>
 
-       default return
-            <span>
-                <span class="badge badge-pill badge-light" >@{ $name }</span>:
-                <span>{ string($tag) }</span>
-            </span>
+       default return switch($name)
+                      case "javadoc"
+                      return <span>Javadoc: <a href="{$tag}" target="_blank">{$tag}</a></span>
+                      default return 
+                        <span>
+                            <span class="badge badge-pill badge-light" >@{ $name }</span>:
+                            <span>{ string($tag) }</span>
+                        </span>
 };
  
 declare function xqh:restxq($xqd,$file as map(*))

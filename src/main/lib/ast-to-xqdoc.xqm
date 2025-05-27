@@ -22,13 +22,14 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 :)
 declare function xqdc:build($parse as element(XQuery),
                             $url as xs:string,
-                            $staticNS as map(*),
                             $opts as map(*)
 ) as element(xqdoc:xqdoc)
 {
   let $version:=$opts?xqdoc?version
   let $def-fn-uri:=xqdc:default-fn-uri($parse)
   let $mod:= $parse/Module
+  let $staticNS:=xqn:ns-all($mod,$opts?platform)
+ 
   return <xqdoc:xqdoc xmlns:xqdoc="http://www.xqdoc.org/1.0">
     <xqdoc:control>
       <xqdoc:date>{ current-dateTime() }</xqdoc:date>
@@ -263,9 +264,9 @@ declare %private function xqdc:refs($ast as element(*),
                                     $def-fn as xs:string)
 as element(*)*
 {
- let $_:=trace(string($ast),"------------refs-----------")
- let $refs:=xqdc:references($ast, $staticNS  , $def-fn )
- return () 
+ let $_:=trace(substring($ast,65),"----refs->>")
+ let $refs:=xqdc:references($ast, $staticNS , $def-fn )
+ return $refs 
 };
 
 (:~  :)
@@ -342,10 +343,28 @@ declare  function xqdc:references($e as element(*),$prefixes as map(*), $def-fn 
 as element(*)*
 {
   $e//FunctionCall!xqdc:invoke-fn(.,$prefixes, $def-fn),
-  $e//ArrowExpr!xqdc:invoke-arrow(.,$prefixes, $def-fn),
+  $e//NamedFunctionRef!xqdc:named-function-ref(.,$prefixes, $def-fn),
+  (: $e//ArrowExpr!xqdc:invoke-arrow(.,$prefixes, $def-fn), :)
   $e//VarRef!xqdc:ref-variable(.,$prefixes, $def-fn) 
 };
 
+(:~  build invoked nodes for function call
+ : @param $e is FunctionCall or ArrowExpr 
+ :)
+declare function xqdc:named-function-ref(
+                 $e as element( (:  NamedFunctionRef :) ),
+                 $prefixes as map(*),
+                 $def-fn as xs:string)
+as element(xqdoc:invoked)
+{
+let $arity:= $e//IntegerLiteral/string() 
+let $fname:= $e//FunctionName/string()           
+let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
+ return <xqdoc:invoked arity="{ $arity }">
+         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+         <xqdoc:name>{ $qname?name }</xqdoc:name>
+        </xqdoc:invoked> 
+};
 
 
 (:~  build invoked nodes for function call
@@ -358,11 +377,11 @@ declare function xqdc:invoke-fn(
 as element(xqdoc:invoked)*
 {
 
-let $commas:=count($e/ArgumentList/TOKEN[.=","])=>trace("xqdc:invoke-fn")
+let $commas:=count($e/ArgumentList/TOKEN[.=","])
 let $hasarg:=boolean($e/ArgumentList/*[not(self::TOKEN)])
 let $arity:= if($hasarg) then 1+$commas else 0
 let $arity:= if(name($e)="ArrowExpr") then $arity +1 else $arity
-let $fname:= $e/(QName|URIQualifiedName|TOKEN)/string()            
+let $fname:= $e/(FunctionEQName|QName|URIQualifiedName|TOKEN)/string()            
 let $_:= if(empty($fname)) then trace($e,"??????") 
 let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
  return <xqdoc:invoked arity="{ $arity }">
@@ -389,19 +408,20 @@ let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
         </xqdoc:invoked> 
 };
 
-(:~  build invoked nodes for function call
- : @param $e is variable reference @@TODO
+(:~  build invoked nodes for declared var call
+ : @param $e is variable reference 
  :)
 declare function xqdc:ref-variable($e as element(*),$prefixes as map(*), $def-fn as xs:string)
-as element(xqdoc:ref-variable)
+as element(xqdoc:ref-variable)?
 {
-
-let $fname:= if($e/QName) then $e/QName/string() else $e/TOKEN[1]/string() 
-let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
- return <xqdoc:ref-variable >
-         <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
-         <xqdoc:name>{ $qname?name }</xqdoc:name>
-        </xqdoc:ref-variable>   
+let $fname:= string($e)
+return if(contains($fname,":")) (:ok? :)
+       then let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
+            return <xqdoc:ref-variable >
+                      <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
+                      <xqdoc:name>{ $qname?name }</xqdoc:name>
+                    </xqdoc:ref-variable>
+        else ()   
 };
 
 (:~ if items then apply $fun to each and wrap result sequence in $qname :)

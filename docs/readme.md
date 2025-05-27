@@ -13,8 +13,12 @@ bin/xqdoca -> main/xqdoca-cmd.xq -> xqdoca.xq
 1. `$pages:= xqo:render($model,$options)`
 
 ## References
+In xqdoc xml these are:
+* invoked
+* ref-variable
+  
 `parser.xqm` uncalled xqp:references
 * xqp:references(.,$prefixes, $def-fn)
     * xqp:invoke-fn
-    * qp:invoke-arrow
+    * xqp:invoke-arrow
     * xqp:ref-variable
