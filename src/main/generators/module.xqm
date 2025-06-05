@@ -73,7 +73,7 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
  {
     <section id="summary">
     <h2>Summary</h2>
-       { if($mod/xqdoc:comment) then xqh:comment($mod/xqdoc:comment,$opts) } 
+       { $mod/xqdoc:comment!xqh:comment(.,$opts) } 
 		   { page:related-links("module","module", $opts) }
     </section>
   };
@@ -81,15 +81,10 @@ declare function xqh:summary($mod as element(xqdoc:module)?,
 declare function xqh:comment($comment as element(xqdoc:comment),
                             $opts as map(*)
                             )
- as element(*)+
+ as element(*)*
  {
-  let $desc:=$comment/xqdoc:description/(node()|text())
-  let $result:= if(exists($desc))
-                then <div>{$desc}</div>
-                else  <div>MISSING</div>
 
-  return ($result
-          ,xqh:tags("See also",$comment/xqdoc:see)
+          xqh:tags("See also",$comment/xqdoc:see)
           ,xqh:tags("Authors",$comment/xqdoc:author)
           ,xqh:tags("Parameters",$comment/xqdoc:param)
           ,xqh:tags("Return",$comment/xqdoc:return)
@@ -97,14 +92,15 @@ declare function xqh:comment($comment as element(xqdoc:comment),
           ,xqh:tags("Deprecated",$comment/xqdoc:deprecated)
           ,xqh:tags("Since",$comment/xqdoc:since)
           ,xqh:tags("Custom",$comment/xqdoc:custom)      
-  )
  };
 
 (:~ Table of contents :)
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
-  let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
-  let $funs:=$xqd//xqdoc:function   (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
+  let $vars:=$xqd//xqdoc:variable
+    [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] 
+  let $funs:=$xqd//xqdoc:function
+      [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] 
 	return	<nav id="toc">
 			<h2>
 			    <a href="{ $opts?root || "index.html" }" >{ $opts?project }</a>
@@ -165,7 +161,7 @@ as element(nav){
               count $pos
               let $display:=substring-after($name,":")
               let $display:=if($display eq "") then $name else $display
-              let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/string()
+              let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/normalize-space()
               return
 									<li>
 										<a href="#{$name}">
@@ -275,7 +271,7 @@ return
 				<dt class="label">Type</dt>
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
-      {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
+      { $v/xqdoc:comment ! xqh:tags("See also",xqdoc:see) }
       { xqh:when ($v/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
       { if($opts?xqdoc?body-items)
@@ -346,7 +342,9 @@ as element(div)
 			{ $maxfn/xqdoc:parameters!xqh:parameters(.) } 
 	    { $maxfn!xqh:return(.) }
 		  { $maxfn/xqdoc:comment/xqdoc:error!xqh:error(.) }
-      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return)),xqh:tags("Tags",?)) }    
+      { xqh:tags("See also",$maxfn/xqdoc:comment/xqdoc:see) }    
+ 
+      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return|xqdoc:see)),xqh:tags("Tags",?)) }    
        {xqh:invoked-by($funs, $qmap , $model)}   
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
    
@@ -381,7 +379,7 @@ as element(details)
        group by $key:= $i/xqdoc:uri || $name
        order by $key
        return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
- let $msg:= ``[Invokes `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
+ let $msg:= ``[References `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
 
  return <details>
       <summary>{ $msg }</summary>
@@ -408,7 +406,7 @@ let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
                     let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
                     return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
                     
-          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          let $sum:= ``[Referenced by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
           return  <details>
                     <summary>{$sum}</summary>
                     <ul>
@@ -441,7 +439,7 @@ as element(p)
  : @see xqdoc/xqdoc-display;$months
  : @see xqdoc/xqdoc-display;$months;month variable
  : @see http://www.xquery.com;;xquery
- : @see some text
+ : @see "some text"
  :)
 declare function xqh:see($v as element(xqdoc:see))
 as element(span)
@@ -450,9 +448,10 @@ as element(span)
   let $first:=$items[1]
   return  <span>
           {switch(true())
+          case starts-with($items[1], '"') return string($v)
           case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
           case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
-          default return if(page:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
+          default return <a href="{ $first }">{ $first }</a>
         }</span>
 };
   
@@ -490,6 +489,7 @@ as element(section)
 				<thead>
 					<tr>
 						<th>Prefix <span>-</span></th>
+            <th>Type <span>-</span></th>
 						<th>Uri <span>-</span></th>
 					</tr>
 				</thead>
@@ -500,6 +500,13 @@ as element(section)
           return
 						<tr>
 							<td>{string($ns[1]/@prefix) }</td>
+              <td>{switch (true())
+              case starts-with($url,"java:") return "java"
+              case starts-with($url,"http://basex.org/modules/") return "basex"
+              case starts-with($url,"http://www.w3.org/2005/xpath-functions") return "xpath"
+              case starts-with($url,"http://www.w3.org/") return "w3c"
+              default return "-"
+              }</td>
 							<td>{ page:link-module(string($url),$model) }</td>
 						</tr>
 			}</tbody>
@@ -598,7 +605,7 @@ as element(*)*
 (:~ tags list :)
 declare function xqh:tags($title as xs:string,$tags as element(*)*)
 as element(dl)?{ 
-  if($tags)
+  if(exists($tags))
   then <dl>
         <dt title="{count($tags)}">{ $title  }</dt>
         <dd>
@@ -634,6 +641,7 @@ return typeswitch ($tag)
                         </span>
 };
  
+(:~ create html <div> with namespace report :)
 declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {

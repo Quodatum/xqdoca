@@ -20,6 +20,8 @@
             xqparse
         </module>
     </outputs>
+    <!-- include  private -->
+    <show-private>true</show-private>
     <!--
     xqdoc config version and items to include
     -->
@@ -30,6 +32,8 @@
         <body-full>true</body-full>
         <!-- include  xquery in item descriptions, For instance functions and variables -->
         <body-items>true</body-items>
+       
+        <!-- include  references -->
         <refs>true</refs>
     </xqdoc>
 </xqdoca>

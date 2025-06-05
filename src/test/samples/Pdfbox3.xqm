@@ -98,7 +98,10 @@ as xs:base64Binary{
          =>convert:integers-to-base64()
 };
 
-(:~ Release any resources related to $pdf:)
+(:~ Release any resources related to $pdf
+@see #pdfbox:open
+@see #pdfbox:with-pdf  
+:)
 declare function pdfbox:close($pdf as item())
 as empty-sequence(){
   (# db:wrapjava void #) {
@@ -182,7 +185,8 @@ as item()*{
          else error(xs:QName('pdfbox:property'),concat("Property '",$property,"' not defined."))
 };
 
-(:~ summary CSV style info for all properties for $pdfpaths 
+(:~ summary CSV style info for all properties for $pdfpaths
+@see #$pdfbox:property-map 
 :)
 declare function pdfbox:report($pdfpaths as xs:string*)
 as map(*){
