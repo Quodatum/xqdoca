@@ -254,7 +254,7 @@ as element(xqdoc:type)?
  <xqdoc:type >{
        if($type/OccurrenceIndicator)
        then attribute occurrence {$type/OccurrenceIndicator/string()}
-      ,$type/*=>head()=>string() 
+      ,string-join($type/*[not(self::OccurrenceIndicator)])
  }</xqdoc:type>
 };
 

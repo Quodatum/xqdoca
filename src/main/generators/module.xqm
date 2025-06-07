@@ -544,7 +544,7 @@ as element(*)*
 			<ul>
 				<li>
 					<code class="return-type">
-					{ $f/xqdoc:return/xqdoc:type/(string(),@occurrence/string()) }
+					{ $f/xqdoc:return/xqdoc:type/(.,@occurrence)=>string-join() }
 					</code>
 					{for $comment in $f/xqdoc:comment/xqdoc:return
 					return " " || $comment/(node()|text())
@@ -562,20 +562,20 @@ as element(*)*{
 		</dd>
 };
 
-declare function xqh:function-signature($v as element(xqdoc:function))
+declare function xqh:function-signature($fun as element(xqdoc:function))
 as element(div){
 		<div class="proto">
-			<code class="function">{ $v/xqdoc:name/string() }</code>
+			<code class="function">{ $fun/xqdoc:name/string() }</code>
 		  ( 
 			{
-        for $p in $v/xqdoc:parameters/xqdoc:parameter
+        for $p in $fun/xqdoc:parameters/xqdoc:parameter
           return	(
             <code class="arg">${ $p/xqdoc:name/string() }</code>
             ,xqh:as($p/xqdoc:type)
-            ,if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else "" 
+            ,if(not($p is $fun/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else "" 
           )
        ,")"
-       ,xqh:as($v/xqdoc:return/xqdoc:type)
+       ,xqh:as($fun/xqdoc:return/xqdoc:type)
      }
       </div>
 };
@@ -587,8 +587,7 @@ as element(code)*
   then (
     <code class="as">&#160;as&#160;</code>
     ,<code class="type">
-        { string($t)  }
-        { $t/@occurrence/string() }
+        { string($t) || $t/@occurrence/string() }
     </code>
   )
 };

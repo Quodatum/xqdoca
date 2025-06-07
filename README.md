@@ -158,7 +158,7 @@ prefix `xqdoca`
  Two kinds of generator are currently defined: `global` and `module`. 
  
 ### Global generators
-These functions generate one output file derived from the entire source.
+These functions generate one output file derived from the entire source tree.
 They have the `xqdoca:global` annotation.
 The first parameter is an arbitary name used to reference the generator in the run `options`
 The second is a simple text description.

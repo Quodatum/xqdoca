@@ -93,7 +93,7 @@ function xqcom:text( $txt as xs:string? )  as item()*
 {
   try{
    if(every $c in ("<",">","/") satisfies contains($txt,$c))
-   then parse-xml-fragment($txt)/*
+   then parse-xml-fragment($txt)
    else $txt
   }catch *{
     $txt
