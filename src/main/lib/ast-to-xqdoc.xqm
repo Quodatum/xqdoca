@@ -212,7 +212,7 @@ as element(xqdoc:function){
        =>xqdc:wrap( xs:QName('xqdoc:annotations'), xqdc:annotation#1) }
       
       
-      <xqdoc:signature>{$fundecl/((*|text()) except EnclosedExpr)/string()
+      <xqdoc:signature>{$fundecl/((*|text()) except FunctionBody)/string()
                         =>string-join(" ")=>normalize-space()
        }</xqdoc:signature>
 
