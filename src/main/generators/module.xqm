@@ -83,12 +83,13 @@ declare function xqh:comment($comment as element(xqdoc:comment),
                             )
  as element(*)*
  {
-
-          xqh:tags("See also",$comment/xqdoc:see)
-          ,xqh:tags("Authors",$comment/xqdoc:author)
-          ,xqh:tags("Parameters",$comment/xqdoc:param)
+          <p>{ $comment/xqdoc:description/node()}</p>, 
+          
+          xqh:tags("Parameters",$comment/xqdoc:param)
           ,xqh:tags("Return",$comment/xqdoc:return)
           ,xqh:tags("Errors",$comment/xqdoc:error)
+          ,xqh:tags("See also",$comment/xqdoc:see)
+          ,xqh:tags("Authors",$comment/xqdoc:author)
           ,xqh:tags("Deprecated",$comment/xqdoc:deprecated)
           ,xqh:tags("Since",$comment/xqdoc:since)
           ,xqh:tags("Custom",$comment/xqdoc:custom)      

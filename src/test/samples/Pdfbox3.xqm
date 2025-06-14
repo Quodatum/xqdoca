@@ -41,7 +41,7 @@ declare namespace File ="java:java.io.File";
 
 
 
-(:~ "With-document" pattern: open pdf,apply $fn function, close pdf
+(:~ open $pdf,apply $fn function, close pdf ("With-document" pattern)
  creates a local pdfobject and ensures it is closed after use
 e.g pdfbox:with-pdf("path...",pdfbox:page-text(?,5))
 :)
@@ -58,11 +58,6 @@ as item()*{
 };
 
 
-(:~ open pdf using fetch:binary, returns pdf object :)
-declare function pdfbox:open($pdfsrc as item())
-as item(){
-pdfbox:open($pdfsrc, map{})
-};
 
 (:~ open pdf from file/url/binary, opts may have password , returns pdf object 
 @param $pdfsrc a fetchable url or filepath, or xs:base64Binary item
@@ -87,6 +82,13 @@ as item(){
 }
 };
 
+(:~ open pdf from a location, returns pdf object :)
+declare function pdfbox:open($pdfsrc as item())
+as item(){
+pdfbox:open($pdfsrc, map{})
+};
+
+
 (:~ The version of the PDF specification used by $pdf  e.g "1.4"
 returned as string to avoid float rounding issues
  :)
@@ -95,13 +97,17 @@ as xs:string{
  PDDocument:getVersion($pdf)=>xs:decimal()=>round(4)=>string()
 };
 
-(:~ Save pdf $pdf to filesystem at $savepath , returns $savepath :)
+(:~ Save pdf <code>$pdf</code> to filesystem at <code>$savepath</code> , returns $savepath :)
 declare function pdfbox:pdf-save($pdf as item(),$savepath as xs:string)
 as xs:string{
    PDDocument:save($pdf, File:new($savepath)),$savepath
 };
 
-(:~ Create binary representation of $pdf object as xs:base64Binary :)
+(:~ Create binary representation (<code>xs:base64Binary</code>) of <code>$pdf</code> object  
+@param $pdf pdf object, created by pdfbox:open
+@see #pdfbox:open
+@see #pdfbox:with-pdf
+:)
 declare function pdfbox:binary($pdf as item())
 as xs:base64Binary{
    let $bytes:=Q{java:java.io.ByteArrayOutputStream}new()
@@ -110,7 +116,7 @@ as xs:base64Binary{
          =>convert:integers-to-base64()
 };
 
-(:~ Release any resources related to <code>$pdf</code>:)
+(:~ Release any resources related to $pdf:)
 declare function pdfbox:close($pdf as item())
 as empty-sequence(){
   (# db:wrapjava void #) {
@@ -198,12 +204,6 @@ as item()*{
          else error(xs:QName('pdfbox:property'),concat("Property '",$property,"' not defined."))
 };
 
-(:~ summary CSV style info for all properties for $pdfpaths 
-:)
-declare function pdfbox:report($pdfpaths as xs:string*)
-as map(*){
- pdfbox:report($pdfpaths,pdfbox:property-names())
-};
 
 (:~ summary CSV style info for named $properties for PDFs in $pdfpaths 
 @see https://docs.basex.org/main/CSV_Functions#xquery
@@ -231,6 +231,13 @@ as map(*){
                  }
                
   }
+};
+
+(:~ summary CSV style info for all properties for $pdfpaths 
+:)
+declare function pdfbox:report($pdfpaths as xs:string*)
+as map(*){
+ pdfbox:report($pdfpaths,pdfbox:property-names())
 };
 
 (:~ Convenience function to save report() data to file :)
@@ -306,9 +313,14 @@ as map(*){
      map{"list":(),"this":$outlineItem},
 
      function($input,$pos ) { 
-        let $bk:= pdfbox:bookmark($input?this,$pdf)
-        let $bk:= if($bk?hasChildren)
-                  then let $kids:=pdfbox:outline($pdf,PDOutlineItem:getFirstChild($input?this))
+        let $bookmark:=$input?this
+        let $bk:=map{ 
+              "index":  PDOutlineItem:findDestinationPage($bookmark,$pdf)=>pdfbox:find-page($pdf),
+              "title":  (# db:checkstrings #) {PDOutlineItem:getTitle($bookmark)}
+              }
+
+        let $bk:= if(PDOutlineItem:hasChildren($bookmark))
+                  then let $kids:=pdfbox:outline($pdf,PDOutlineItem:getFirstChild($bookmark))
                         return map:merge(($bk,map:entry("children",$kids)))
                   else $bk 
         return map{
@@ -338,21 +350,6 @@ as element(bookmark)*
     {?children!pdfbox:bookmark-xml(.)}
   </bookmark>
 };
-
-(:~ Return bookmark info for $bookmark
-@return map{index:..,title:..,hasChildren:..}
-:)
-declare %private function pdfbox:bookmark($bookmark as item(),$pdf as item())
-as map(*)
-{
- map{ 
-  "index":  PDOutlineItem:findDestinationPage($bookmark,$pdf)=>pdfbox:find-page($pdf),
-  "title":  (# db:checkstrings #) {PDOutlineItem:getTitle($bookmark)}
-  (:=>translate("�",""), :),
-  "hasChildren": PDOutlineItem:hasChildren($bookmark)
-  }
-};
-
 
 (:~ pageIndex of $page in $pdf :)
 declare function pdfbox:find-page(

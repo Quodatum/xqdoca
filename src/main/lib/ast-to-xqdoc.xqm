@@ -16,7 +16,6 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 (:~ build xqdoc from XQuery parse tree 
  @param $parse xml parse tree
  @param $url source path
- @param $staticNS map of known namespaces
  @param $opts {"body-full","body-items","refs"}
 
 :)

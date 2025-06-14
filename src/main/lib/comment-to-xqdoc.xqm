@@ -20,17 +20,19 @@ as element(xqdoc:comment)?{
   let $comment:= ($node/preceding-sibling::node())[last()][self::text()]
                  (: =>trace(name($node)|| ": ") :)
   return if(exists($comment)) 
-         then $comment
+         then $comment=>trace("comment: ")
               =>xqcom:comment-parse()
+              =>trace("PRSE DONE: ")
               =>xqcom:comment-xml()
+              
 };
 
 (:~ parse xqdoc comment to map 
 @todo use _tag to track last updated :)
-declare %private
+declare 
 function xqcom:comment-parse($comment as xs:string?)
 as map(*)?{
-  let $comment:=xqcom:trim($comment)
+  let $comment:=xqcom:trim($comment=>trace("comment-parse:"))
   return if(starts-with($comment,'(:~'))
     then  
        let $lines:=$comment
@@ -38,32 +40,58 @@ as map(*)?{
                    =>tokenize("\n")
        let $lines:=$lines!xqcom:trim(.)
                    !(if(starts-with(.,":"))then xqcom:trim(substring(.,2)) else .)
+                 
        let $state:= map{
                       'description': '',
                       'params': (),
-                      '_tag': 'description'
+                      '_tag': 'description' (: current state :)
                         }
-       return  fold-left($lines,$state,xqcom:comment-parse#2)
+       return  fold-left($lines  =>trace("LINES: "),$state,xqcom:comment-parse#2)
      
 };
 
 (:~ update parse $state from  $line :)
-declare %private
+declare 
 function xqcom:comment-parse($state as map(*),$line as xs:string)
 as map(*){
 
   let $reg:="^\s*@(\w+)\s+(.+)$"
   let $is-tag:=matches($line,$reg)
+  let $_tag:=$state?_tag
   return if($is-tag)
          then 
-         let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()
-         let $tag:=map{"tag": $match[1], "txt": $match[2]}
-         return 
-              if($tag?tag =$xqcom:TAGS )
-              then  map:put($state,$match[1],($state?($match[1]) ,$tag))
-              else  map:put($state,'custom',($state?custom ,$tag))                 
+            let $match:=fn:analyze-string($line,$reg)/fn:match/fn:group/text()
+            let $tag:=map{"tag": $match[1], "txt": $match[2]}
+            let $target:= if($match[1] =$xqcom:TAGS )
+                          then $match[1]
+                          else "custom"
+            let $newstate:= 
+                             xqcom:addtext($state,$is-tag,$match[1],$match[2])
+                             =>map:put("_tag",$match[1])
+            return $newstate=>trace("NEW TAG STATE:")
          else 
-         map:put($state,'description',$state?description || file:line-separator() || $line)
+          xqcom:addtext($state,$is-tag, $_tag, $line)=>trace("OLD TAG STATE:")
+};
+
+(:~ update map $state by concatenating $line to last item in sequence at $tag :)
+declare 
+function xqcom:addtext($state as map(*),$new as xs:boolean
+                       ,$tag as xs:string,$line  as xs:string){
+ if (empty($line) or normalize-space($line) eq "")
+ then $state
+ else 
+    let $value:=(prof:variables(),
+                $state?($tag=>trace("state was " || $state("_tag") || " "))=>trace("addtext: ")
+                )
+    let $this:=if($new=>trace("new: ")) 
+                then ($value,$line)
+                else (
+                      $value[position() < last()],
+                      ($value[last()] ,
+                      " ",
+                      $line)=>string-join()
+                      )
+    return map:put($state,$tag,$this)
 };
 
 (:~
@@ -74,14 +102,16 @@ function xqcom:comment-xml($state as map(*)?)
 as element(xqdoc:comment)?{
   if(exists($state)) 
   then <xqdoc:comment>{
-        for $key in ($xqcom:TAGS)
-            ,$tag in $state?($key)
-        where map:contains($state,$key)
-        (:~ let $_:=trace($key,"^^^") ~:)
-        return element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} 
+        for $key in $xqcom:TAGS
+        let $ekeys:=if($key eq 'custom')
+                    then map:keys($state)[not(. = ('_tag',$xqcom:TAGS))]
+                    else $key
+        for $tag in $ekeys 
+        let $value:=$state($tag)
+        return $value!element {QName('http://www.xqdoc.org/1.0','xqdoc:' || $key)} 
                        {
-                        if($key eq "custom") then attribute tag { $tag?tag},
-                        if($key="description") then xqcom:text($tag) else xqcom:text($tag?txt)
+                        if($key eq "custom") then attribute tag { $tag},
+                        xqcom:text(.)
                         }
       }</xqdoc:comment>
   else ()
