@@ -134,10 +134,11 @@ as element(nav){
             {for $var  in $vars
             order by $var/xqdoc:name
             let $id:=concat('$',$var/xqdoc:name)
+            let $desc:= $var[1]/xqdoc:comment/xqdoc:description/normalize-space()
             count $pos
             return
                 <li>
-                  <a href="#{$id}">
+                  <a href="#{$id}" title="{ $desc }">
                     <span class="secno">{ concat('3.',$pos) }</span>
                     <span class="content">{ $id }</span>
                     <div style="float:right">
@@ -165,9 +166,9 @@ as element(nav){
               let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/normalize-space()
               return
 									<li>
-										<a href="#{$name}">
+										<a href="#{$name}" title="{ $desc }">
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
-											<span class="content" title="{ $desc }">{ $display }
+											<span class="content" >{ $display }
                       <div style="float:right">
                      {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file,page:badge#3)}
                         </div>
@@ -274,6 +275,7 @@ return
 			</dl>
       { $v/xqdoc:comment ! xqh:tags("See also",xqdoc:see) }
       { xqh:when ($v/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
+       { xqh:when ($v/xqdoc:ref-variable,xqh:ref-variable(?, $file, $model) )}
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
       { if($opts?xqdoc?body-items)
       then 
@@ -389,7 +391,31 @@ as element(details)
      } </ul>
       </details> 
 };
+(:~
+ : list of variables referenced by function/variable 
+ :)
+declare
+function xqh:ref-variable(
+       $invoked as element(xqdoc:ref-variable)*,
+       $file as map(*),
+       $model as map(*)
+     )
+as element(details)
+{
+ let $di:=for $i in $invoked
+       let $name:= $i/xqdoc:name
+       group by $key:= $i/xqdoc:uri || $name
+       order by $key
+       return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
+ let $msg:= ``[References `{ count($di) }` variables from `{ count(distinct-values($di?uri)) }` modules ]``
 
+ return <details>
+      <summary>{ $msg }</summary>
+      <ul> {
+         $di! <li>{ page:link-function(?uri, ?name, $file, $model) }</li>
+     } </ul>
+      </details> 
+};
 
 (:~
  : list of functions invoking  
@@ -506,6 +532,7 @@ as element(section)
               case starts-with($url,"http://basex.org/modules/") return "basex"
               case starts-with($url,"http://www.w3.org/2005/xpath-functions") return "xpath"
               case starts-with($url,"http://www.w3.org/") return "w3c"
+              case starts-with($url,"http://expath.org/") return "expath"
               default return "-"
               }</td>
 							<td>{ page:link-module(string($url),$model) }</td>

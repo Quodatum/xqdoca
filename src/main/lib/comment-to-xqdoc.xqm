@@ -20,9 +20,8 @@ as element(xqdoc:comment)?{
   let $comment:= ($node/preceding-sibling::node())[last()][self::text()]
                  (: =>trace(name($node)|| ": ") :)
   return if(exists($comment)) 
-         then $comment=>trace("comment: ")
+         then $comment
               =>xqcom:comment-parse()
-              =>trace("PRSE DONE: ")
               =>xqcom:comment-xml()
               
 };
@@ -32,7 +31,7 @@ as element(xqdoc:comment)?{
 declare 
 function xqcom:comment-parse($comment as xs:string?)
 as map(*)?{
-  let $comment:=xqcom:trim($comment=>trace("comment-parse:"))
+  let $comment:=xqcom:trim($comment)
   return if(starts-with($comment,'(:~'))
     then  
        let $lines:=$comment
@@ -46,7 +45,7 @@ as map(*)?{
                       'params': (),
                       '_tag': 'description' (: current state :)
                         }
-       return  fold-left($lines  =>trace("LINES: "),$state,xqcom:comment-parse#2)
+       return  fold-left($lines ,$state,xqcom:comment-parse#2)
      
 };
 
@@ -68,9 +67,9 @@ as map(*){
             let $newstate:= 
                              xqcom:addtext($state,$is-tag,$match[1],$match[2])
                              =>map:put("_tag",$match[1])
-            return $newstate=>trace("NEW TAG STATE:")
+            return $newstate
          else 
-          xqcom:addtext($state,$is-tag, $_tag, $line)=>trace("OLD TAG STATE:")
+          xqcom:addtext($state,$is-tag, $_tag, $line)
 };
 
 (:~ update map $state by concatenating $line to last item in sequence at $tag :)
@@ -80,10 +79,8 @@ function xqcom:addtext($state as map(*),$new as xs:boolean
  if (empty($line) or normalize-space($line) eq "")
  then $state
  else 
-    let $value:=(prof:variables(),
-                $state?($tag=>trace("state was " || $state("_tag") || " "))=>trace("addtext: ")
-                )
-    let $this:=if($new=>trace("new: ")) 
+    let $value:= $state?($tag)
+    let $this:=if($new) 
                 then ($value,$line)
                 else (
                       $value[position() < last()],

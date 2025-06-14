@@ -415,7 +415,7 @@ as element(xqdoc:ref-variable)?
 {
 let $fname:= string($e)
 return if(contains($fname,":")) (:ok? :)
-       then let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
+       then let $qname:=xqn:qmap($fname, $prefixes, $def-fn)=>trace("------------VAR: ")
             return <xqdoc:ref-variable >
                       <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
                       <xqdoc:name>{ $qname?name }</xqdoc:name>
