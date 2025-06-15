@@ -133,7 +133,7 @@ as element(nav){
             <ol class="toc">
             {for $var  in $vars
             order by $var/xqdoc:name
-            let $id:=concat('$',$var/xqdoc:name)
+            let $id:=concat('',$var/xqdoc:name)
             let $desc:= $var[1]/xqdoc:comment/xqdoc:description/normalize-space()
             count $pos
             return
@@ -254,7 +254,7 @@ declare function xqh:variable($v as element(xqdoc:variable),
                               $opts as map(*))
 as element(div)
 {
-let $name:= concat('$',$v/xqdoc:name) (: =>trace("VNAME:") :)
+let $name:= concat('',$v/xqdoc:name) (: =>trace("VNAME:") :)
 let $qmap:=xqn:qmap($v/xqdoc:name,$file?namespaces, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
@@ -276,6 +276,7 @@ return
       { $v/xqdoc:comment ! xqh:tags("See also",xqdoc:see) }
       { xqh:when ($v/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
        { xqh:when ($v/xqdoc:ref-variable,xqh:ref-variable(?, $file, $model) )}
+       {xqh:ref-variable-by( $qmap , $model)} 
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
       { if($opts?xqdoc?body-items)
       then 
@@ -348,9 +349,10 @@ as element(div)
       { xqh:tags("See also",$maxfn/xqdoc:comment/xqdoc:see) }    
  
       {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return|xqdoc:see)),xqh:tags("Tags",?)) }    
-       {xqh:invoked-by($funs, $qmap , $model)}   
+       {xqh:invoked-by($funs, $qmap , $model)}
+           
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
-   
+      { xqh:when ($funs/xqdoc:ref-variable,xqh:ref-variable(?, $file, $model) )}
      { $funs/xqdoc:annotations!xqh:annotations(.) }
      {if($opts?xqdoc?body-items)
      then
@@ -429,6 +431,33 @@ let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
                                          xqdoc:name = $qmap?name
                                      and @arity=$funs/@arity 
                                      and xqdoc:uri= $qmap?uri 
+                                ]]
+                    let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
+                    return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
+                    
+          let $sum:= ``[Referenced by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          return  <details>
+                    <summary>{$sum}</summary>
+                    <ul>
+                     { $hits!<li>{
+                       page:link-function2(?qname?uri, ?name, ?file, true()) 
+                     }</li> }
+                 
+                    </ul>              
+                    </details>
+};
+
+(:~
+ : list of functions referencing   
+ :)
+declare
+function xqh:ref-variable-by($qmap as map(*), $model)
+as element(details){
+let $_:=trace($qmap,"vsr-by: ")
+let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
+                     where $function[xqdoc:ref-variable[
+                                         xqdoc:name = $qmap?name
+                                         and xqdoc:uri= $qmap?uri 
                                 ]]
                     let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
                     return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}

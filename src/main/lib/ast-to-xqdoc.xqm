@@ -263,7 +263,7 @@ declare %private function xqdc:refs($ast as element(*),
                                     $def-fn as xs:string)
 as element(*)*
 {
- let $_:=trace(substring($ast,65),"----refs->>")
+ (: let $_:=trace(substring($ast,65),"----refs->>") :)
  let $refs:=xqdc:references($ast, $staticNS , $def-fn )
  return $refs 
 };
