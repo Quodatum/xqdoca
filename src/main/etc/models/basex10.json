@@ -16,7 +16,6 @@
 "ft": "http://basex.org/modules/ft",
 "hof":"http://basex.org/modules/hof",
 "xslt": "http://basex.org/modules/xslt",
-"zip": "http://expath.org/ns/zip",
 "crypto": "http://expath.org/ns/crypto",
 "json": "http://basex.org/modules/json",
 "sql": "http://basex.org/modules/sql",
@@ -43,8 +42,9 @@
 "bin":  "http://expath.org/ns/binary",
 "user":  "http://basex.org/modules/user",
 "web":  "http://basex.org/modules/web",
-"strings":  "http://basex.org/modules/strings",
-"jobs":  "http://basex.org/modules/jobs",
+"store":  "http://basex.org/modules/store",
+"string":  "http://basex.org/modules/string",
+"job":  "http://basex.org/modules/job",
 "util":  "http://basex.org/modules/util",
 "lazy":  "http://basex.org/modules/lazy",
 "update":  "http://basex.org/modules/update",
@@ -54,5 +54,5 @@
 "basex": "http://basex.org",
 "session": "http://basex.org/modules/session",
 "sessions": "http://basex.org/modules/sessions",
-"geo": "http://expath.org/ns/geo"
+"request": "http://exquery.org/ns/request"
 }

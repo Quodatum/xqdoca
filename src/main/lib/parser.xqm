@@ -16,8 +16,8 @@ declare namespace xqdoc="http://www.xqdoc.org/1.0";
 
 (:~ xparser defaults :)
 declare variable $xqp:xparse_opts:=map{
-  "basex":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }
-  , "fat":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }
+    "basex9":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }
+  , "basex10":  map{ "lang": "xquery", "version": "3.1 basex",  "flatten": false() }
 
 };
 

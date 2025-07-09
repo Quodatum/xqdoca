@@ -3,7 +3,7 @@
     <source>C:\Users\andy\git\quodatum\xqdoca\</source>
     <target>file:///{webpath}/static/xqdoc/{project}/</target>
     <extensions>*.xqm,*.xq,*.xquery</extensions>
-    <platform>basex</platform>
+    <platform>basex9</platform>
     <outputs>
         <global>
             report

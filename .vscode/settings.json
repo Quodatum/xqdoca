@@ -2,5 +2,5 @@
     "liveServer.settings.port": 5501,
     "basexTools.xquery.showHovers": false,
     "basexTools.xquery.executionDefault": "basexclient",
-    "basexTools.xquery.profile": "basex-9"
+    "basexTools.xquery.profile": "basex-10"
 }

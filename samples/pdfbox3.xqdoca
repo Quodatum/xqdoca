@@ -2,4 +2,6 @@
     <project>pdfbox</project>
     <source>..\..\..\expkg-zone58\pdfbox</source>
     <target>file:///tmp/pdfbox/</target>
+    <platform>basex10</platform>
+
 </xqdoca>

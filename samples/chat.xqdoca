@@ -1,4 +1,5 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
     <source>C:\Users\mrwhe\Desktop\basex.home\basex.107\webapp\chat\</source>
     <target>c:/tmp/xqdoca/chat/</target>
+    <platform>basex10</platform>
 </xqdoca>

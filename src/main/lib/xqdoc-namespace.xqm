@@ -85,7 +85,8 @@ as xs:string
  : @param $map keys are prefixes items are namespaces
  : @return namespace for prefix
   :)
-declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, $prefixes as map(*))
+declare function xqn:map-prefix($prefix as xs:string?, $default as xs:string, 
+                                $prefixes as map(*))
 as xs:string{
   if(empty($prefix)) then
     $default
@@ -115,7 +116,7 @@ as map(*)
 {
  fetch:text(resolve-uri(``[../etc/models/`{ $platform }`.json]``,static-base-uri()))
  =>parse-json()
- (: =>trace("PLATFORM ")  :)
+   
 };
 
 (:~ All known module namespaces :)
