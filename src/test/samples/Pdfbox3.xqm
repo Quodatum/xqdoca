@@ -1,9 +1,21 @@
 xquery version '3.1';
 (:~ 
-A BaseX 10.7+ interface to pdfbox3 https://pdfbox.apache.org/ , 
-requires pdfbox jars on classpath, in lib/custom or xar
-@note following the java source the terms outline and bookmark
-refer to the same concept. Also label and (page)range are used interchangably
+A BaseX 10.7+ interface for <a href="https://pdfbox.apache.org/" target="_blank">Apache PDFBox®</a> - A Java PDF Library, 
+It requires the Pdfbox jars to be on the classpath, or a EXPath package (xar) installation.
+<h3>Terms</h3>
+The following terms are used:
+<dl>
+
+<dt>bookmark</dt>
+<dd>A bookmark has a title and a pageindex. It may contain nested bookmarks.</dd>
+<dt>outline</dt>
+<dd>The outline is the tree of bookmarks defined in the PDF. It may be empty.</dd>
+<dt>page range</dt>
+<dd>A page range defines the page numbering schema in operation from a certain pageIndex until a subsequent range is set. </dd>
+<dt>page label</dt>
+<dd>A page label defines <code>style</code>: Roman, Decimal etc, <code>start</code>: the index to start from (default 1) and <code>prefix</code>: an optional string to prefix to the page label e.g "Vol1:"</dd>
+</dl>
+
 @note tested with pdfbox-app-3.0.5.jar
 @see https://pdfbox.apache.org/download.cgi
 @javadoc https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.5/
@@ -62,6 +74,7 @@ as item()*{
 (:~ open pdf from file/url/binary, opts may have password , returns pdf object 
 @param $pdfsrc a fetchable url or filepath, or xs:base64Binary item
 @param $opts options options include map {"password":}
+@error pdfbox:open unable to load source
 @note fetch:binary for https will use a lot of memory here
 :)
 declare function pdfbox:open($pdfsrc as item(), $opts as map(*))
@@ -148,6 +161,8 @@ as xs:base64Binary{
 (:~ Defines a map from property names to evaluation method.
    Keys are property names, 
    values are sequences of functions to get property value starting from a $pdf object.
+@see #pdfbox:property
+@see #pdfbox:report
 :)
 declare %private variable $pdfbox:property-map:=map{
   "#pages": pdfbox:number-of-pages#1,
@@ -193,7 +208,9 @@ as xs:string*{
   $pdfbox:property-map=>map:keys()=>sort()
 };
 
-(:~  Return the value of $property for $pdf :)
+(:~  Return the value of $property for $pdf 
+@error pdfbox:property unknown property name
+:)
 declare function pdfbox:property($pdf as item(),$property as xs:string)
 as item()*{
   let $fns:= $pdfbox:property-map($property)
@@ -501,6 +518,7 @@ as xs:string?{
 
 (:~ fn:do-until shim for BaseX 9+10 
 if  fn:do-until not found use hof:until, note: $pos always zero
+@error pdfbox:do-until No implementation of do-until found
 :)
 declare %private function pdfbox:do-until(
  $input 	as item()*, 	

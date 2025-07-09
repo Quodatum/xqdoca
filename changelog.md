@@ -1,4 +1,6 @@
 # Changelog
+## 0.9.2 2025-06-20
+* fix reference issues
 ## 0.9.1
 * fix option handling
 * fix reference handling

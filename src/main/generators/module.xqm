@@ -45,7 +45,7 @@ let $d:=if($file?isParsed)
                     <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file,page:badge#3) }</div>
                   </h1>
                   { xqh:toc($xqd,$opts,$file),
-                    xqh:summary($xqd/xqdoc:module,$opts),
+                    xqh:summary($xqd/xqdoc:module/xqdoc:comment,$opts),
                     xqh:imports($xqd,$model), 
                     xqh:variables($xqd/xqdoc:variables,$file,$model,$opts),
                     xqh:functions($xqd/xqdoc:functions, $file, $model,$opts),
@@ -66,18 +66,19 @@ let $d:=if($file?isParsed)
  return document{ page:wrap($d, $opts )  }                 
 };
 
-declare function xqh:summary($mod as element(xqdoc:module)?,
+declare function xqh:summary($comment as element(xqdoc:comment)?,
                             $opts as map(*)
                             )
  as element(section)
  {
     <section id="summary">
     <h2>Summary</h2>
-       { $mod/xqdoc:comment!xqh:comment(.,$opts) } 
+       { $comment!xqh:comment(.,$opts) } 
 		   { page:related-links("module","module", $opts) }
     </section>
   };
 
+(: used in summary only :)
 declare function xqh:comment($comment as element(xqdoc:comment),
                             $opts as map(*)
                             )
@@ -85,10 +86,7 @@ declare function xqh:comment($comment as element(xqdoc:comment),
  {
           <p>{ $comment/xqdoc:description/node()}</p>, 
           
-          xqh:tags("Parameters",$comment/xqdoc:param)
-          ,xqh:tags("Return",$comment/xqdoc:return)
-          ,xqh:tags("Errors",$comment/xqdoc:error)
-          ,xqh:tags("See also",$comment/xqdoc:see)
+           xqh:tags("See also",$comment/xqdoc:see)
           ,xqh:tags("Authors",$comment/xqdoc:author)
           ,xqh:tags("Deprecated",$comment/xqdoc:deprecated)
           ,xqh:tags("Since",$comment/xqdoc:since)
@@ -348,7 +346,7 @@ as element(div)
 		  { $maxfn/xqdoc:comment/xqdoc:error!xqh:error(.) }
       { xqh:tags("See also",$maxfn/xqdoc:comment/xqdoc:see) }    
  
-      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return|xqdoc:see)),xqh:tags("Tags",?)) }    
+      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return|xqdoc:see|xqdoc:error)),xqh:tags("Tags",?)) }    
        {xqh:invoked-by($funs, $qmap , $model)}
            
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
@@ -453,7 +451,7 @@ let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
 declare
 function xqh:ref-variable-by($qmap as map(*), $model)
 as element(details){
-let $_:=trace($qmap,"vsr-by: ")
+(: let $_:=trace($qmap,"vsr-by: ") :)
 let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
                      where $function[xqdoc:ref-variable[
                                          xqdoc:name = $qmap?name
@@ -604,7 +602,8 @@ as element(*)*
 					{ $f/xqdoc:return/xqdoc:type/(.,@occurrence)=>string-join() }
 					</code>
 					{for $comment in $f/xqdoc:comment/xqdoc:return
-					return " " || $comment/(node()|text())
+          
+					return " " || $comment (:  todo :)
         }
 				</li>
 			</ul>
@@ -613,7 +612,7 @@ as element(*)*
  
 declare function xqh:error($v as element(xqdoc:error))
 as element(*)*{
-		<dt class="label">Error</dt>,
+		<dt class="label">Error Conditions</dt>,
 		<dd>
 		{ $v/(node()|text()) }
 		</dd>

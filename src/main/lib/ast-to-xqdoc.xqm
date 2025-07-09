@@ -335,15 +335,15 @@ as xs:string
 };
 
 (:~ scan tree below $e for references
- : @param $expand function to map prefixes to namespaces
- : @return sequence of xqdoc:invoked and xqdoc:var-refences elements
+ : @param $prefixes map prefixes to namespaces
+ : @return sequence of xqdoc:invoked and xqdoc:var-references elements
  :)
 declare  function xqdc:references($e as element(*),$prefixes as map(*), $def-fn as xs:string)
 as element(*)*
 {
   $e//FunctionCall!xqdc:invoke-fn(.,$prefixes, $def-fn),
   $e//NamedFunctionRef!xqdc:named-function-ref(.,$prefixes, $def-fn),
-  (: $e//ArrowExpr!xqdc:invoke-arrow(.,$prefixes, $def-fn), :)
+  $e//ArrowExpr!xqdc:invoke-arrow(.,$prefixes, $def-fn),
   $e//VarRef!xqdc:ref-variable(.,$prefixes, $def-fn) 
 };
 
@@ -396,15 +396,18 @@ declare function xqdc:invoke-arrow($e as element(ArrowExpr),
                                   $def-fn as xs:string)
 as element(xqdoc:invoked)*
 {
-for $arrow in $e/TOKEN[. = "=&gt;"]
-let $fname:=$arrow/(following-sibling::QName|following-sibling::TOKEN)
-let $arglist:=$arrow/following-sibling::ArgumentList
-let $arity:=1+count($arglist/*[not(self::TOKEN)])
-let $qname:=xqn:qmap($fname,$prefixes, $def-fn)
- return <xqdoc:invoked arity="{ $arity }">
+  let $fs:=$e/ArrowFunctionSpecifier
+  let $arglist:=$e/ArgumentList
+  let $fn:=function($fs,$arg){
+       let $arity:=1+count($arglist/*[not(self::TOKEN)])
+       let $qname:=xqn:qmap($fs,$prefixes, $def-fn)
+      return <xqdoc:invoked arity="{ $arity }">
          <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
          <xqdoc:name>{ $qname?name }</xqdoc:name>
-        </xqdoc:invoked> 
+        </xqdoc:invoked>
+
+  }
+  return for-each-pair($fs,$arglist,$fn)
 };
 
 (:~  build invoked nodes for declared var call
@@ -415,7 +418,7 @@ as element(xqdoc:ref-variable)?
 {
 let $fname:= string($e)
 return if(contains($fname,":")) (:ok? :)
-       then let $qname:=xqn:qmap($fname, $prefixes, $def-fn)=>trace("------------VAR: ")
+       then let $qname:=xqn:qmap($fname, $prefixes, $def-fn)
             return <xqdoc:ref-variable >
                       <xqdoc:uri>{ $qname?uri }</xqdoc:uri>
                       <xqdoc:name>{ $qname?name }</xqdoc:name>
