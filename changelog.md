@@ -1,6 +1,7 @@
 # Changelog
-## 0.9.2 2025-06-20
+## 0.9.3 2025-07-16
 * fix reference issues
+* Add Websocket as notable annotation.
 ## 0.9.1
 * fix option handling
 * fix reference handling
