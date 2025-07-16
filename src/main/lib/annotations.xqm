@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 annotation utils
- @Copyright (c) 2019-2026 Quodatum Ltd
+ @Copyright (c) 2019-2025 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -49,6 +49,14 @@ declare variable $xqa:noteworthy:=(
     "class": 'primary',
     "callable": true()
   },
+     map{
+    "uri":'http://basex.org/modules/ws',
+    "name":'ws',
+    "title":'WebSockets',
+    "icon": 'W',
+    "class": 'primary',
+    "callable": true()
+  },
    map{
     "uri":'https://github.com/Quodatum/xqdoca',
     "name":'output',
@@ -84,13 +92,16 @@ declare function xqa:badges($annos as element(xqdoc:annotation)*,
                             $button-render as function(*))
 {
   let $prefixes:=$file?namespaces
-  let $others:= some $a in $annos 
+  let $others:= some $a in $annos
                 satisfies let $m:=xqn:qmap($a/@name,$prefixes,$xqa:nsANN)
                           return not($m?uri = $xqa:noteworthy?uri)
   return (
     for $badge in $xqa:noteworthy
-    where some $a in $annos 
-          satisfies xqn:eq(xqn:qmap($a/@name,$prefixes,$xqa:nsANN), $badge?uri, $badge?name)
+    let $found:= some $a in $annos 
+          satisfies 
+                    xqn:qmap($a/@name,$prefixes,$xqa:nsANN)?uri
+                    = $badge?uri
+    where $found
     return  $button-render($badge?icon, $badge?class, $badge?title)
     
     ,if($others) then $button-render("A", "info", "Other annotations") else ()

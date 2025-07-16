@@ -1,21 +1,21 @@
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
-   <project>XQDocA</project>
+    <project>XQDocA</project>
     <source>src/main</source>
     <target>file:///tmp/xqdoca/xqdoca/</target>
     <outputs>
         <global>report 
-        imports  
-        annotations 
-        imports-diag 
-        imports-diag.mmd    
-        lint 
-        xqdoca.xml
-        xqdoc-validate
+            imports  
+            annotations 
+            imports-diag 
+            imports-diag.mmd    
+            lint 
+            xqdoca.xml
+            xqdoc-validate
         </global>
-        <module>
-         module
-        xqdoc 
-        xqparse
-        </module>
+      <!--   <module>
+            module
+            xqdoc 
+            xqparse
+        </module> -->
     </outputs>
 </xqdoca>

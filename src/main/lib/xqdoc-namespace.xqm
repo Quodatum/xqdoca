@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  <p>namespace and qname utils for use with XML parse tree</p>
- @copyright (c) 2019-2026 Quodatum Ltd
+ @copyright (c) 2019-2025 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
 module namespace xqn = 'quodatum:xqdoca.namespaces';
@@ -50,7 +50,8 @@ as map(*)
 declare function xqn:eq($qmap as map(*),$uri as xs:string, $name as xs:string) 
 as xs:boolean
 {
-  $qmap?name=$name and $qmap?uri=$uri
+  let $_:=if($uri="http://basex.org/modules/ws" and  $qmap?uri=$uri) then trace(($qmap?name,$name),"-HIT")
+  return $qmap?name=$name and $qmap?uri=$uri
 };
 
 

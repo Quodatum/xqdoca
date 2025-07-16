@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
  <p>Library to support html5 rendering of xqdoc</p>
- @copyright Copyright (c) 2019-2026 Quodatum Ltd
+ @copyright Copyright (c) 2019-2025 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
 :)
  
@@ -185,10 +185,14 @@ as element(div)
                  <td title="{ page:line-wrap($desc,60) }">{ xqhtml:truncate-text($desc,50) }</td>
                  <td >{   xqhtml:file-usage($file,$model) }</td>
 
-                 <td title="{ $annots }">{ xqa:badges($file?xqdoc//xqdoc:annotation, $file,page:badge#3) }</td>       
+                 <td title="{ $annots }">{ 
+                  xqa:badges($file?xqdoc//xqdoc:annotation, $file,page:badge#3) 
+                  }</td>       
               
                  <td style="text-align: right">
-                 <div>V#{$file?xqdoc//xqdoc:variable=>count() }</div>
+                 {let $n:=count($file?xqdoc//xqdoc:variable) 
+                 return if ($n ne 0) then <div>V#{$n}</div>
+                 }
                  <div>F#{$file?xqdoc//xqdoc:function=>count() }</div>
                  </td>
               </tr>
