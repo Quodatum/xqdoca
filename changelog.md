@@ -1,4 +1,10 @@
 # Changelog
+## 0.9.3 2025-07-16
+* fix reference issues
+* Add Websocket as notable annotation.
+## 0.9.1
+* fix option handling
+* fix reference handling
 ## 0.9.0
 * update mermaid.js to v11 esm 
 

@@ -1,7 +1,7 @@
 (: Parse XQuery file :)
 import module namespace xqp = 'quodatum:xqdoca.parser' at "../main/lib/parser.xqm";
-declare variable $xquery:="../test/samples/sample.xqm";
+declare variable $xquery:="C:\Users\mrwhe\git\quodatum\xqdoca\src\test\samples\Pdfbox3.xqm";
 
 $xquery
-!fetch:text(resolve-uri(.))
+!unparsed-text(resolve-uri(.))
 !xqp:parse(.,"fat")

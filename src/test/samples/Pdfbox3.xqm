@@ -1,10 +1,24 @@
 xquery version '3.1';
 (:~ 
-pdfbox 3.0 https://pdfbox.apache.org/ BaseX 10.7+ interface library, 
-requires pdfbox jars on classpath, i.e. in custom or xar
-tested with pdfbox-app-3.0.4.jar
-@see download https://pdfbox.apache.org/download.cgi
-@javadoc https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.4/
+A BaseX 10.7+ interface for <a href="https://pdfbox.apache.org/" target="_blank">Apache PDFBox®</a> - A Java PDF Library, 
+It requires the Pdfbox jars to be on the classpath, or a EXPath package (xar) installation.
+<h3>Terms</h3>
+The following terms are used:
+<dl>
+
+<dt>bookmark</dt>
+<dd>A bookmark has a title and a pageindex. It may contain nested bookmarks.</dd>
+<dt>outline</dt>
+<dd>The outline is the tree of bookmarks defined in the PDF. It may be empty.</dd>
+<dt>page range</dt>
+<dd>A page range defines the page numbering schema in operation from a certain pageIndex until a subsequent range is set. </dd>
+<dt>page label</dt>
+<dd>A page label defines <code>style</code>: Roman, Decimal etc, <code>start</code>: the index to start from (default 1) and <code>prefix</code>: an optional string to prefix to the page label e.g "Vol1:"</dd>
+</dl>
+
+@note tested with pdfbox-app-3.0.5.jar
+@see https://pdfbox.apache.org/download.cgi
+@javadoc https://javadoc.io/static/org.apache.pdfbox/pdfbox/3.0.5/
 @author Andy Bunce 2025
 :)
 
@@ -15,22 +29,31 @@ declare namespace PDFTextStripper = "java:org.apache.pdfbox.text.PDFTextStripper
 declare namespace PDDocument ="java:org.apache.pdfbox.pdmodel.PDDocument";
 declare namespace PDDocumentCatalog ="java:org.apache.pdfbox.pdmodel.PDDocumentCatalog";
 declare namespace PDPageLabels ="java:org.apache.pdfbox.pdmodel.common.PDPageLabels";
+declare namespace PDPageLabelRange="java:org.apache.pdfbox.pdmodel.common.PDPageLabelRange";
+
 declare namespace PageExtractor ="java:org.apache.pdfbox.multipdf.PageExtractor";
-declare namespace PDPage ="org.apache.pdfbox.pdmodel.PDPage";
+declare namespace PDPage ="java:org.apache.pdfbox.pdmodel.PDPage";
 declare namespace PDPageTree ="java:org.apache.pdfbox.pdmodel.PDPageTree";
 declare namespace PDDocumentOutline ="java:org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline";
 declare namespace PDDocumentInformation ="java:org.apache.pdfbox.pdmodel.PDDocumentInformation";
 declare namespace PDOutlineItem="java:org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem";
 declare namespace PDFRenderer="java:org.apache.pdfbox.rendering.PDFRenderer";
+declare namespace PDMetadata="java:org.apache.pdfbox.pdmodel.common.PDMetadata";
+declare namespace COSInputStream="java:org.apache.pdfbox.cos.COSInputStream";
+
+
+declare namespace rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+
 declare namespace RandomAccessReadBuffer="java:org.apache.pdfbox.io.RandomAccessReadBuffer";
 declare namespace RandomAccessReadBufferedFile = "java:org.apache.pdfbox.io.RandomAccessReadBufferedFile";
-declare namespace PDRectangle="org.apache.pdfbox.pdmodel.common.PDRectangle";
+declare namespace PDRectangle="java:org.apache.pdfbox.pdmodel.common.PDRectangle";
 
 declare namespace File ="java:java.io.File";
 
 
 
-(:~ with-document pattern: open pdf,apply function, close pdf
+(:~ open $pdf,apply $fn function, close pdf ("With-document" pattern)
  creates a local pdfobject and ensures it is closed after use
 e.g pdfbox:with-pdf("path...",pdfbox:page-text(?,5))
 :)
@@ -39,23 +62,20 @@ declare function pdfbox:with-pdf($src as xs:string,
 as item()*{
  let $pdf:=pdfbox:open($src)
  return try{
-        $fn($pdf),pdfbox:close($pdf)
+            $fn($pdf),pdfbox:close($pdf)
         } catch *{
-          pdfbox:close($pdf),fn:error($err:code,$src || " " || $err:description)
+            pdfbox:close($pdf),fn:error($err:code,$src || " " || $err:description)
         }
 
 };
 
 
-(:~ open pdf using fetch:binary, returns pdf object :)
-declare function pdfbox:open($pdfsrc as item())
-as item(){
-pdfbox:open($pdfsrc, map{})
-};
 
 (:~ open pdf from file/url/binary, opts may have password , returns pdf object 
-@param $pdfsrc a fetchable url or a xs:base64Binary 
-@param $opts map {"password":} 
+@param $pdfsrc a fetchable url or filepath, or xs:base64Binary item
+@param $opts options options include map {"password":}
+@error pdfbox:open unable to load source
+@note fetch:binary for https will use a lot of memory here
 :)
 declare function pdfbox:open($pdfsrc as item(), $opts as map(*))
 as item(){
@@ -75,7 +95,14 @@ as item(){
 }
 };
 
-(:~ the version of the PDF specification used by $pdf  e.g "1.4"
+(:~ open pdf from a location, returns pdf object :)
+declare function pdfbox:open($pdfsrc as item())
+as item(){
+pdfbox:open($pdfsrc, map{})
+};
+
+
+(:~ The version of the PDF specification used by $pdf  e.g "1.4"
 returned as string to avoid float rounding issues
  :)
 declare function pdfbox:specification($pdf as item())
@@ -83,13 +110,17 @@ as xs:string{
  PDDocument:getVersion($pdf)=>xs:decimal()=>round(4)=>string()
 };
 
-(:~ save pdf $pdf to filesystem at $savepath , returns $savepath :)
-declare function pdfbox:save($pdf as item(),$savepath as xs:string)
+(:~ Save pdf <code>$pdf</code> to filesystem at <code>$savepath</code> , returns $savepath :)
+declare function pdfbox:pdf-save($pdf as item(),$savepath as xs:string)
 as xs:string{
    PDDocument:save($pdf, File:new($savepath)),$savepath
 };
 
-(:~   $pdf as xs:base64Binary :)
+(:~ Create binary representation (<code>xs:base64Binary</code>) of <code>$pdf</code> object  
+@param $pdf pdf object, created by pdfbox:open
+@see #pdfbox:open
+@see #pdfbox:with-pdf
+:)
 declare function pdfbox:binary($pdf as item())
 as xs:base64Binary{
    let $bytes:=Q{java:java.io.ByteArrayOutputStream}new()
@@ -98,7 +129,7 @@ as xs:base64Binary{
          =>convert:integers-to-base64()
 };
 
-(:~ release references to $pdf:)
+(:~ Release any resources related to $pdf:)
 declare function pdfbox:close($pdf as item())
 as empty-sequence(){
   (# db:wrapjava void #) {
@@ -106,35 +137,39 @@ as empty-sequence(){
   }
 };
 
-(:~ number of pages in PDF:)
-declare function pdfbox:page-count($pdf as item())
+(:~ Number of pages in PDF:)
+declare function pdfbox:number-of-pages($pdf as item())
 as xs:integer{
   PDDocument:getNumberOfPages($pdf)
 };
 
-(:~ pdf page as image (zero is cover)
+(:~ Pdf page as image (zero is cover)
 options.format="bmp jpg png gif" etc, options.scale= 1 is 72 dpi?? :)
-declare function pdfbox:page-image($pdf as item(),$pageNo as xs:integer,$options as map(*))
+declare function pdfbox:page-render($pdf as item(),$pageNo as xs:integer,$options as map(*))
 as xs:base64Binary{
-  let $options:=map:merge(($options,map{"format":"jpg","scale":1}))
-  let $bufferedImage:=PDFRenderer:new($pdf)=>PDFRenderer:renderImage($pageNo,$options?scale)
-  let $bytes:=Q{java:java.io.ByteArrayOutputStream}new()
-  let $_:=Q{java:javax.imageio.ImageIO}write($bufferedImage ,$options?format,  $bytes)
+  let $options := map:merge(($options,map{"format":"jpg","scale":1}))
+  let $bufferedImage := PDFRenderer:new($pdf)
+                      =>PDFRenderer:renderImage($pageNo,$options?scale)
+  let $bytes := Q{java:java.io.ByteArrayOutputStream}new()
+  let $_ := Q{java:javax.imageio.ImageIO}write($bufferedImage ,$options?format,  $bytes)
   return Q{java:java.io.ByteArrayOutputStream}toByteArray($bytes)
          =>convert:integers-to-base64()
  
 };
 
-(:~ property access map
-   keys are property names, 
-   values are sequences of functions to get property from $pdf object
+
+(:~ Defines a map from property names to evaluation method.
+   Keys are property names, 
+   values are sequences of functions to get property value starting from a $pdf object.
+@see #pdfbox:property
+@see #pdfbox:report
 :)
 declare %private variable $pdfbox:property-map:=map{
-  "pageCount": pdfbox:page-count#1,
+  "#pages": pdfbox:number-of-pages#1,
 
-  "hasOutline": pdfbox:hasOutline#1,
+  "#bookmarks": pdfbox:number-of-bookmarks#1,
 
-  "hasLabels": pdfbox:hasLabels#1,
+  "#labels": pdfbox:number-of-labels#1,
 
   "specification":pdfbox:specification#1,
 
@@ -162,34 +197,32 @@ declare %private variable $pdfbox:property-map:=map{
 
   "modificationDate":  (PDDocument:getDocumentInformation#1,
                         PDDocumentInformation:getModificationDate#1,
-                        pdfbox:gregToISO#1)
+                        pdfbox:gregToISO#1),
+
+   "labels":      pdfbox:labels-as-string#1                     
 };
 
-(:~ known property names sorted :)
-declare function pdfbox:defined-properties() 
+(:~ Defined property names, sorted :)
+declare function pdfbox:property-names() 
 as xs:string*{
   $pdfbox:property-map=>map:keys()=>sort()
 };
 
-(:~  return value of $property for $pdf :)
+(:~  Return the value of $property for $pdf 
+@error pdfbox:property unknown property name
+:)
 declare function pdfbox:property($pdf as item(),$property as xs:string)
 as item()*{
   let $fns:= $pdfbox:property-map($property)
   return if(exists($fns))
          then fold-left($fns, 
                         $pdf, 
-                        function($result,$this as function(*)){$this($result)})
+                        function($result,$this as function(*)){$result!$this(.)})
          else error(xs:QName('pdfbox:property'),concat("Property '",$property,"' not defined."))
 };
 
-(:~ summary CSV style info for all properties for $pdfpaths 
-:)
-declare function pdfbox:report($pdfpaths as xs:string*)
-as map(*){
- pdfbox:report($pdfpaths,map:keys($pdfbox:property-map))
-};
 
-(:~ summary CSV style info for named properties for $pdfpaths 
+(:~ summary CSV style info for named $properties for PDFs in $pdfpaths 
 @see https://docs.basex.org/main/CSV_Functions#xquery
 :)
 declare function pdfbox:report($pdfpaths as item()*, $properties as xs:string*)
@@ -217,23 +250,59 @@ as map(*){
   }
 };
 
-(:~ true if $pdf has an outline :)
-declare function pdfbox:hasOutline($pdf as item())
-as xs:boolean{
-  PDDocument:getDocumentCatalog($pdf)
-  =>PDDocumentCatalog:getDocumentOutline()
-  =>exists()
+(:~ summary CSV style info for all properties for $pdfpaths 
+:)
+declare function pdfbox:report($pdfpaths as xs:string*)
+as map(*){
+ pdfbox:report($pdfpaths,pdfbox:property-names())
 };
 
-(:~ true if $pdf has Labels :)
-declare function pdfbox:hasLabels($pdf as item())
-as xs:boolean{
-  PDDocument:getDocumentCatalog($pdf)
-  =>PDDocumentCatalog:getPageLabels()
-  =>exists()
+(:~ Convenience function to save report() data to file :)
+declare function pdfbox:report-save($data as map(*),$dest as xs:string)
+as empty-sequence(){
+  let $opts := map {  "format":"xquery", "header":"yes", "separator" : "," }
+  return file:write-text($dest,csv:serialize($data,$opts))
 };
 
-(:~ outline for $pdf as map()* :)
+(:~ The number of outline items defined in $pdf :)
+declare function pdfbox:number-of-bookmarks($pdf as item())
+as xs:integer{
+  let $xml:=pdfbox:outline-xml($pdf)
+  return count($xml//bookmark)
+};
+
+(:~ XMP metadata as "RDF" document
+@note usually rdf:RDF root, but sometimes x:xmpmeta 
+:)
+declare function pdfbox:metadata($pdf as item())
+as document-node(element(*))?
+{
+  let $m:=PDDocument:getDocumentCatalog($pdf)
+         =>PDDocumentCatalog:getMetadata()
+  return  if(exists($m))
+          then 
+              let $is:=PDMetadata:exportXMPMetadata($m)
+              return pdfbox:do-until(
+                        map{"n":0,"data":""},
+
+                        function($input,$pos ) {  pdfbox:read-stream($is,$input?data)},
+
+                        function($output,$pos) { $output?n eq -1 }     
+                     )?data=>parse-xml()
+          else ()
+};
+
+(:~ read next block from XMP stream :)
+declare %private function pdfbox:read-stream($is,$read as xs:string)
+as map(*){
+  let $blen:=4096
+  let $buff:=Q{java:java.util.Arrays}copyOf(array{xs:byte(0)},$blen)
+  let $n:= COSInputStream:read($is,$buff,xs:int(0),xs:int($blen))
+  let $data:=convert:integers-to-base64(subsequence($buff,1,$n))=>convert:binary-to-string()
+  return map{"n":$n, "data": $read || $data}
+};
+
+(:~ Return outline for $pdf as map()* :)
 declare function pdfbox:outline($pdf as item())
 as map(*)*{
   (# db:wrapjava some #) {
@@ -247,13 +316,13 @@ as map(*)*{
 };
 
 (:~ return bookmark info for children of $outlineItem as seq of maps :)
-declare function pdfbox:outline($pdf as item(),$outlineItem as item()?)
+declare %private function pdfbox:outline($pdf as item(),$outlineItem as item()?)
 as map(*)*{
   let $find as map(*):=pdfbox:outline_($pdf ,$outlineItem)
   return map:get($find,"list")
 };
 
-(:~ BaseX bug 10.7? error if inlined in outline :)
+(:~ outline helper. BaseX bug 10.7? error if inlined in outline :)
 declare %private function pdfbox:outline_($pdf as item(),$outlineItem as item()?)
 as map(*){
   pdfbox:do-until(
@@ -261,9 +330,14 @@ as map(*){
      map{"list":(),"this":$outlineItem},
 
      function($input,$pos ) { 
-        let $bk:= pdfbox:bookmark($input?this,$pdf)
-        let $bk:= if($bk?hasChildren)
-                  then let $kids:=pdfbox:outline($pdf,PDOutlineItem:getFirstChild($input?this))
+        let $bookmark:=$input?this
+        let $bk:=map{ 
+              "index":  PDOutlineItem:findDestinationPage($bookmark,$pdf)=>pdfbox:find-page($pdf),
+              "title":  (# db:checkstrings #) {PDOutlineItem:getTitle($bookmark)}
+              }
+
+        let $bk:= if(PDOutlineItem:hasChildren($bookmark))
+                  then let $kids:=pdfbox:outline($pdf,PDOutlineItem:getFirstChild($bookmark))
                         return map:merge(($bk,map:entry("children",$kids)))
                   else $bk 
         return map{
@@ -275,7 +349,7 @@ as map(*){
   )
 };
 
-(:~ outline as xml :)
+(:~ PDF outline in xml format :)
 declare function pdfbox:outline-xml($pdf as item())
 as element(outline)?{
  let $outline:=pdfbox:outline($pdf)
@@ -284,7 +358,7 @@ as element(outline)?{
          else ()
 };
 
-(:~ recursive ouutline map to XML :)
+(:~ Convert outline map to XML :)
 declare %private function pdfbox:bookmark-xml($outline as map(*)*)
 as element(bookmark)*
 {
@@ -293,21 +367,6 @@ as element(bookmark)*
     {?children!pdfbox:bookmark-xml(.)}
   </bookmark>
 };
-
-(:~ return bookmark info for children of $outlineItem 
-@return map like{index:,title:,hasChildren:}
-:)
-declare %private function pdfbox:bookmark($bookmark as item(),$pdf as item())
-as map(*)
-{
- map{ 
-  "index":  PDOutlineItem:findDestinationPage($bookmark,$pdf)=>pdfbox:find-page($pdf),
-  "title":  (# db:checkstrings #) {PDOutlineItem:getTitle($bookmark)}
-  (:=>translate("�",""), :),
-  "hasChildren": PDOutlineItem:hasChildren($bookmark)
-  }
-};
-
 
 (:~ pageIndex of $page in $pdf :)
 declare function pdfbox:find-page(
@@ -321,8 +380,11 @@ as item()?
       =>PDPageTree:indexOf($page)
 };            
 
-(:~  new PDF doc from 1 based page range as xs:base64Binary :)
-declare function pdfbox:extract($pdf as item(), 
+(:~  Return new  PDF doc with pages from $start to $end as xs:base64Binary, (1 based)  
+@param $start first page to include
+@param $end last page to include
+:)
+declare function pdfbox:extract-range($pdf as item(), 
              $start as xs:integer,$end as xs:integer)
 as xs:base64Binary
 {
@@ -330,20 +392,93 @@ as xs:base64Binary
     return (pdfbox:binary($a),pdfbox:close($a)) 
 };
 
+(:~ The number of labels defined in PDF  :)
+declare function pdfbox:number-of-labels($pdf as item())
+as xs:integer
+{
+  let $labels:=PDDocument:getDocumentCatalog($pdf)
+               =>PDDocumentCatalog:getPageLabels()
+  return if(exists($labels)) 
+         then PDPageLabels:getPageRangeCount($labels)
+         else 0
+};
 
-(:~   pageLabel for every page or empty if none
+(:~   pageLabel for every page from derived from page-ranges
+The returned sequence will contain at MOST as much entries as the document has pages.
 @see https://www.w3.org/TR/WCAG20-TECHS/PDF17.html#PDF17-examples
 @see https://codereview.stackexchange.com/questions/286078/java-code-showing-page-labels-from-pdf-files
 :)
-declare function pdfbox:labels($pdf as item())
+declare function pdfbox:labels-by-page($pdf as item())
 as xs:string*
 {
+  PDDocument:getDocumentCatalog($pdf)
+  =>PDDocumentCatalog:getPageLabels()
+  =>PDPageLabels:getLabelsByPageIndices()
+};
+
+(:~ sequence of label ranges defined in PDF as formatted strings
+@return a custom representation of the labels e.g "0-*Cover,1r,11D" 
+:)
+declare function pdfbox:labels-as-string($pdf as item())
+as xs:string{
   let $pagelabels:=PDDocument:getDocumentCatalog($pdf)
                    =>PDDocumentCatalog:getPageLabels()
-  return if(exists($pagelabels))
-         then PDPageLabels:getLabelsByPageIndices($pagelabels)
-         else ()
+  return $pagelabels
+         !(0 to pdfbox:number-of-pages($pdf)-1)
+         !pdfbox:label-as-string($pagelabels,.)=>string-join("&#10;")
+            
 };
+
+(:~ get pagelabels exist :)
+declare function pdfbox:page-labels($pdf)
+{
+  PDDocument:getDocumentCatalog($pdf)
+  =>PDDocumentCatalog:getPageLabels()
+};
+
+(:~ label for $page formated as string, empty if none :)
+declare function pdfbox:label-as-string($pagelabels,$page as  xs:integer)
+as xs:string?{
+  let $label:=PDPageLabels:getPageLabelRange($pagelabels,$page)
+  return  if(empty($label))
+          then ()
+          else
+            let $start:=  PDPageLabelRange:getStart($label)
+            let $style := PDPageLabelRange:getStyle($label)
+            let $prefix:= PDPageLabelRange:getPrefix($label) 
+            return string-join(($page, 
+                                if(empty($style)) then "-" else $style,
+                                if(($start eq 1)) then "" else $start,
+                                if(exists($prefix)) then '*' || $prefix  (:TODO double " :)
+                    ))
+};
+
+(:~ sequence of maps for each label/page range defined in $pdf:)
+declare function pdfbox:labels-as-map($pdf as item())
+as map(*)*{
+  let $pagelabels:=PDDocument:getDocumentCatalog($pdf)
+                   =>PDDocumentCatalog:getPageLabels()
+  return  $pagelabels
+          !(0 to pdfbox:number-of-pages($pdf)-1)
+          !pdfbox:label-as-map($pagelabels,.)
+};
+
+(:~ label/page-range for $page as map :)
+declare function pdfbox:label-as-map($pagelabels,$page as  xs:integer)
+as map(*)
+{
+  let $label:=PDPageLabels:getPageLabelRange($pagelabels,$page)
+  return if(empty($label))
+  then ()
+  else map{
+      "index": $page,
+      "prefix": PDPageLabelRange:getPrefix($label),
+      "start":  PDPageLabelRange:getStart($label),
+      "style":  PDPageLabelRange:getStyle($label)
+      }
+};
+
+
 
 (:~ return text on $pageNo :)
 declare function pdfbox:page-text($pdf as item(), $pageNo as xs:integer)
@@ -356,21 +491,23 @@ as xs:string{
   return (# db:checkstrings #) {PDFTextStripper:getText($tStripper,$pdf)}
 };
 
-(:~ return size of $pageNo (zero is cover :)
-declare function pdfbox:page-size($pdf as item(), $pageNo as xs:integer)
+(:~ Return size of $pageNo (zero based)
+@return e.g. [0.0,0.0,168.0,239.52]
+ :)
+declare function pdfbox:page-media-box($pdf as item(), $pageNo as xs:integer)
 as xs:string{
   PDDocument:getPage($pdf, $pageNo)
   =>PDPage:getMediaBox()
   =>PDRectangle:toString()
 };
 
-(:~  version of Apache Pdfbox in use  e.g. "3.0.4" :)
+(:~  Version of Apache Pdfbox in use  e.g. "3.0.4" :)
 declare function pdfbox:version()
 as xs:string{
   Q{java:org.apache.pdfbox.util.Version}getVersion()
 };
 
-(:~ convert date :)
+(:~ Convert date :)
 declare %private
 function pdfbox:gregToISO($item as item()?)
 as xs:string?{
@@ -380,7 +517,8 @@ as xs:string?{
 };
 
 (:~ fn:do-until shim for BaseX 9+10 
-if  fn:do-until not found use hof:until
+if  fn:do-until not found use hof:until, note: $pos always zero
+@error pdfbox:do-until No implementation of do-until found
 :)
 declare %private function pdfbox:do-until(
  $input 	as item()*, 	

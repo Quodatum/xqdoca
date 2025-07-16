@@ -2,4 +2,5 @@
    <project>XQDocA</project>
     <source>..\src\main</source>
     <target>file:///tmp/xqdoca/xqdoca/</target>
+    <platform>basex10</platform>
 </xqdoca>

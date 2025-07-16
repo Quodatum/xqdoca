@@ -1,7 +1,7 @@
 xquery version "3.1";
 (:~
 Library to support html5 rendering of single xqdoc source
- @Copyright (c) 2019-2026 Quodatum Ltd
+ @Copyright (c) 2019-2025 Quodatum Ltd
  @author Andy Bunce, Quodatum, License: Apache-2.0
  :)
 
@@ -36,6 +36,7 @@ as document-node()
 {
 let $xqd:=$file?xqdoc
 let $_:=trace(concat($file?path,"->",$file?href),"module: ")
+
 let $d:=if($file?isParsed)
         then  <div>
                   <h1>
@@ -44,13 +45,15 @@ let $d:=if($file?isParsed)
                     <div style="float:right">{ xqa:badges($xqd//xqdoc:annotation, $file,page:badge#3) }</div>
                   </h1>
                   { xqh:toc($xqd,$opts,$file),
-                    xqh:summary($xqd/xqdoc:module,$opts),
+                    xqh:summary($xqd/xqdoc:module/xqdoc:comment,$opts),
                     xqh:imports($xqd,$model), 
-                    xqh:variables($xqd/xqdoc:variables,$file),
-                    xqh:functions($xqd/xqdoc:functions, $file, $model),
+                    xqh:variables($xqd/xqdoc:variables,$file,$model,$opts),
+                    xqh:functions($xqd/xqdoc:functions, $file, $model,$opts),
                     xqh:when($xqd/xqdoc:namespaces/xqdoc:namespace,xqh:namespaces(?,$model)),
                     xqh:restxq($xqd,$file),
-                      <section id="source">
+                     
+                    if($opts?xqdoc?body-full)
+                       then <section id="source">
                         <h2 >Source Code</h2>
                         <pre style="white-space:pre-wrap;" class="line-numbers" data-src="plugins/line-numbers/index.html" >
                         <code class="language-xquery"  data-prismjs-copy="Copy to clipboard">{ 
@@ -63,45 +66,40 @@ let $d:=if($file?isParsed)
  return document{ page:wrap($d, $opts )  }                 
 };
 
-declare function xqh:summary($mod as element(xqdoc:module)?,
+declare function xqh:summary($comment as element(xqdoc:comment)?,
                             $opts as map(*)
                             )
  as element(section)
  {
     <section id="summary">
     <h2>Summary</h2>
-       { if($mod/xqdoc:comment) then xqh:comment($mod/xqdoc:comment,$opts) } 
+       { $comment!xqh:comment(.,$opts) } 
 		   { page:related-links("module","module", $opts) }
     </section>
   };
 
+(: used in summary only :)
 declare function xqh:comment($comment as element(xqdoc:comment),
                             $opts as map(*)
                             )
- as element(*)+
+ as element(*)*
  {
-  let $desc:=$comment/xqdoc:description/(node()|text())
-  let $result:= if(exists($desc))
-                then <div>{$desc}</div>
-                else  <div>MISSING</div>
-
-  return ($result
-          ,xqh:tags("See also",$comment/xqdoc:see)
+          <p>{ $comment/xqdoc:description/node()}</p>, 
+          
+           xqh:tags("See also",$comment/xqdoc:see)
           ,xqh:tags("Authors",$comment/xqdoc:author)
-          ,xqh:tags("Parameters",$comment/xqdoc:param)
-          ,xqh:tags("Return",$comment/xqdoc:return)
-          ,xqh:tags("Errors",$comment/xqdoc:error)
           ,xqh:tags("Deprecated",$comment/xqdoc:deprecated)
           ,xqh:tags("Since",$comment/xqdoc:since)
           ,xqh:tags("Custom",$comment/xqdoc:custom)      
-  )
  };
 
 (:~ Table of contents :)
 declare function xqh:toc($xqd,$opts,$file as map(*))
 as element(nav){
-  let $vars:=$xqd//xqdoc:variable (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
-  let $funs:=$xqd//xqdoc:function   (: [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] :)
+  let $vars:=$xqd//xqdoc:variable
+    [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] 
+  let $funs:=$xqd//xqdoc:function
+      [$opts?show-private or not(xqdoc:annotations/xqdoc:annotation/@name='private')] 
 	return	<nav id="toc">
 			<h2>
 			    <a href="{ $opts?root || "index.html" }" >{ $opts?project }</a>
@@ -133,11 +131,12 @@ as element(nav){
             <ol class="toc">
             {for $var  in $vars
             order by $var/xqdoc:name
-            let $id:=concat('$',$var/xqdoc:name)
+            let $id:=concat('',$var/xqdoc:name)
+            let $desc:= $var[1]/xqdoc:comment/xqdoc:description/normalize-space()
             count $pos
             return
                 <li>
-                  <a href="#{$id}">
+                  <a href="#{$id}" title="{ $desc }">
                     <span class="secno">{ concat('3.',$pos) }</span>
                     <span class="content">{ $id }</span>
                     <div style="float:right">
@@ -162,12 +161,12 @@ as element(nav){
               count $pos
               let $display:=substring-after($name,":")
               let $display:=if($display eq "") then $name else $display
-              let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/string()
+              let $desc:= $fun[1]/xqdoc:comment/xqdoc:description/normalize-space()
               return
 									<li>
-										<a href="#{$name}">
+										<a href="#{$name}" title="{ $desc }">
 											<span class="secno">{ concat('4.',$pos[1]) }</span>
-											<span class="content" title="{ $desc }">{ $display }
+											<span class="content" >{ $display }
                       <div style="float:right">
                      {xqa:badges($fun/xqdoc:annotations/xqdoc:annotation,$file,page:badge#3)}
                         </div>
@@ -191,12 +190,14 @@ as element(nav){
 								<span class="content">RestXQ</span>
 							</a>
 				</li>
-       	<li>
-					<a href="#source">
-						<span class="secno">7 </span>
-						<span class="content">Source</span>
-					</a>
-				</li> 
+       {if($opts?xqdoc?body-full)
+       then	<li>
+            <a href="#source">
+              <span class="secno">7 </span>
+              <span class="content">Source</span>
+            </a>
+          </li>
+       } 
 			</ol>
 		</nav>
 };   
@@ -227,7 +228,10 @@ as element(section){
     </section>
 }; 
 
-declare function xqh:variables($vars as element(xqdoc:variables)?,$file as map(*))
+declare function xqh:variables($vars as element(xqdoc:variables)?,
+                               $file as map(*),
+                               $model as map(*),
+                               $opts as map(*))
 as element(section)
 {
   <section id="variables">
@@ -235,7 +239,7 @@ as element(section)
 		{for $v in $vars/xqdoc:variable
       order by  lower-case($v/xqdoc:name)
       count $index
-	   return xqh:variable($v,(3,$index),$file),
+	   return xqh:variable($v,(3,$index),$file,$model,$opts),
      if(empty( $vars/xqdoc:variable)) then <p>None</p> else ()
    }
 		</section>
@@ -243,10 +247,12 @@ as element(section)
 
 declare function xqh:variable($v as element(xqdoc:variable),
                               $section as xs:anyAtomicType*,
-                              $file as map(*))
+                              $file as map(*),
+                              $model as map(*),
+                              $opts as map(*))
 as element(div)
 {
-let $name:= concat('$',$v/xqdoc:name) (: =>trace("VNAME:") :)
+let $name:= concat('',$v/xqdoc:name) (: =>trace("VNAME:") :)
 let $qmap:=xqn:qmap($v/xqdoc:name,$file?namespaces, $file?default-fn-uri)
 let $summary:= $v/xqdoc:comment/xqdoc:description/(node()|text())
 return
@@ -265,19 +271,26 @@ return
 				<dt class="label">Type</dt>
 				<dd>{ $v/xqdoc:type/string() }	{ $v/xqdoc:type/@occurrence/string() }</dd>
 			</dl>
-      {xqh:when($v/xqdoc:comment/(* except xqdoc:description),xqh:tags("Tags",?)) }
+      { $v/xqdoc:comment ! xqh:tags("See also",xqdoc:see) }
+      { xqh:when ($v/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
+       { xqh:when ($v/xqdoc:ref-variable,xqh:ref-variable(?, $file, $model) )}
+       {xqh:ref-variable-by( $qmap , $model)} 
       { xqh:when($v/xqdoc:annotations,xqh:annotations#1) }
+      { if($opts?xqdoc?body-items)
+      then 
        <details open="open">
         <summary>Source ( {sum($v !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $v! <pre ><code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code></pre> }
       </details>
+      }
 		</div>
 };  
 
 declare function xqh:functions(
                      $funs as element(xqdoc:functions)?,
                      $file as map(*),
-                     $model as map(*)
+                     $model as map(*),
+                     $opts as map(*)
                    )
 as element(section)
 {
@@ -287,7 +300,7 @@ as element(section)
       group by $name:=$f/xqdoc:name
       order by  $name
       count $pos
-	   return xqh:function($f,(4,$pos),$file, $model ),
+	   return xqh:function($f,(4,$pos),$file, $model,$opts ),
       if(empty( $funs/xqdoc:function)) then <p>None</p> else ()
    }
 		</section>
@@ -300,7 +313,8 @@ declare
 function xqh:function($funs as element(xqdoc:function)*,
                               $section as xs:anyAtomicType*,
                               $file as map(*),
-                              $model as map(*))
+                              $model as map(*),
+                              $opts as map(*))
 as element(div)
 {
     let $funs:=sort($funs,(),function($f){number($f/@arity)})
@@ -318,7 +332,7 @@ as element(div)
     <p>Arities: {  $funs 
                   ! <span style="margin-left:1em" >
                       <a href="#{ xqn:clark-name($qmap?uri, $qmap?name) }#{ @arity }">#{ string(@arity) }</a>
-                      { xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }                     
+                      <span style="margin-left:1em">{ xqa:badges(xqdoc:annotations/xqdoc:annotation,$file,page:badge#3) }</span>                     
                     </span>                          
                  }
     </p>
@@ -330,17 +344,23 @@ as element(div)
 			{ $maxfn/xqdoc:parameters!xqh:parameters(.) } 
 	    { $maxfn!xqh:return(.) }
 		  { $maxfn/xqdoc:comment/xqdoc:error!xqh:error(.) }
-      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return)),xqh:tags("Tags",?)) }    
-       {xqh:invoked-by($funs, $qmap , $model)}   
+      { xqh:tags("See also",$maxfn/xqdoc:comment/xqdoc:see) }    
+ 
+      {xqh:when($funs/xqdoc:comment/(* except (xqdoc:description|xqdoc:param|xqdoc:return|xqdoc:see|xqdoc:error)),xqh:tags("Tags",?)) }    
+       {xqh:invoked-by($funs, $qmap , $model)}
+           
       { xqh:when ($funs/xqdoc:invoked,xqh:invoked(?, $file, $model) )}
-   
+      { xqh:when ($funs/xqdoc:ref-variable,xqh:ref-variable(?, $file, $model) )}
      { $funs/xqdoc:annotations!xqh:annotations(.) }
+     {if($opts?xqdoc?body-items)
+     then
      <details>
         <summary>Source ( {sum($funs !xqdoc:body/page:line-count(.)) } lines)</summary>
         { $funs! <pre class="no-line-numbers" style="white-space:pre-wrap;">
         <code class="language-xquery" data-prismjs-copy="Copy to clipboard">{ xqdoc:body/string() }</code>
         </pre> }
       </details>
+     }
 		</div>
 };
 
@@ -362,7 +382,7 @@ as element(details)
        group by $key:= $i/xqdoc:uri || $name
        order by $key
        return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
- let $msg:= ``[Invokes `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
+ let $msg:= ``[References `{ count($di) }` functions from `{ count(distinct-values($di?uri)) }` modules ]``
 
  return <details>
       <summary>{ $msg }</summary>
@@ -371,7 +391,31 @@ as element(details)
      } </ul>
       </details> 
 };
+(:~
+ : list of variables referenced by function/variable 
+ :)
+declare
+function xqh:ref-variable(
+       $invoked as element(xqdoc:ref-variable)*,
+       $file as map(*),
+       $model as map(*)
+     )
+as element(details)
+{
+ let $di:=for $i in $invoked
+       let $name:= $i/xqdoc:name
+       group by $key:= $i/xqdoc:uri || $name
+       order by $key
+       return map{"name":$name[1], "uri": $i[1]/xqdoc:uri/string()}
+ let $msg:= ``[References `{ count($di) }` variables from `{ count(distinct-values($di?uri)) }` modules ]``
 
+ return <details>
+      <summary>{ $msg }</summary>
+      <ul> {
+         $di! <li>{ page:link-function(?uri, ?name, $file, $model) }</li>
+     } </ul>
+      </details> 
+};
 
 (:~
  : list of functions invoking  
@@ -389,7 +433,34 @@ let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
                     let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
                     return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
                     
-          let $sum:= ``[Invoked by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          let $sum:= ``[Referenced by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
+          return  <details>
+                    <summary>{$sum}</summary>
+                    <ul>
+                     { $hits!<li>{
+                       page:link-function2(?qname?uri, ?name, ?file, true()) 
+                     }</li> }
+                 
+                    </ul>              
+                    </details>
+};
+
+(:~
+ : list of functions referencing   
+ :)
+declare
+function xqh:ref-variable-by($qmap as map(*), $model)
+as element(details){
+(: let $_:=trace($qmap,"vsr-by: ") :)
+let $hits:=for $file in $model?files, $function in $file?xqdoc//xqdoc:function
+                     where $function[xqdoc:ref-variable[
+                                         xqdoc:name = $qmap?name
+                                         and xqdoc:uri= $qmap?uri 
+                                ]]
+                    let $qname:=xqn:qmap($function/xqdoc:name,$file?namespaces,$file?default-fn-uri)                         
+                    return map{"file": $file, "name": concat($qname?name,"#",$function/@arity), "qname": $qname}
+                    
+          let $sum:= ``[Referenced by `{ count($hits) }` functions from `{ count(distinct-values($hits?file?href)) }` modules]``
           return  <details>
                     <summary>{$sum}</summary>
                     <ul>
@@ -422,7 +493,7 @@ as element(p)
  : @see xqdoc/xqdoc-display;$months
  : @see xqdoc/xqdoc-display;$months;month variable
  : @see http://www.xquery.com;;xquery
- : @see some text
+ : @see "some text"
  :)
 declare function xqh:see($v as element(xqdoc:see))
 as element(span)
@@ -431,9 +502,10 @@ as element(span)
   let $first:=$items[1]
   return  <span>
           {switch(true())
+          case starts-with($items[1], '"') return string($v)
           case count($items) eq 3 return <a href="{ $first }">{ $items[3] }</a>
           case count($items) eq 2 return <a href="{ $first }#{ $items[2] }">{ $items[2] }</a>
-          default return if(page:is-url($first)) then <a href="{ $first }">{ $first }</a> else $first
+          default return <a href="{ $first }">{ $first }</a>
         }</span>
 };
   
@@ -470,8 +542,9 @@ as element(section)
 			<table class="data" style="float:none">
 				<thead>
 					<tr>
-						<th>Prefix</th>
-						<th>Uri</th>
+						<th>Prefix <span>-</span></th>
+            <th>Type <span>-</span></th>
+						<th>Uri <span>-</span></th>
 					</tr>
 				</thead>
 				<tbody>{ 
@@ -481,6 +554,14 @@ as element(section)
           return
 						<tr>
 							<td>{string($ns[1]/@prefix) }</td>
+              <td>{switch (true())
+              case starts-with($url,"java:") return "java"
+              case starts-with($url,"http://basex.org/modules/") return "basex"
+              case starts-with($url,"http://www.w3.org/2005/xpath-functions") return "xpath"
+              case starts-with($url,"http://www.w3.org/") return "w3c"
+              case starts-with($url,"http://expath.org/") return "expath"
+              default return "-"
+              }</td>
 							<td>{ page:link-module(string($url),$model) }</td>
 						</tr>
 			}</tbody>
@@ -518,10 +599,11 @@ as element(*)*
 			<ul>
 				<li>
 					<code class="return-type">
-					{ $f/xqdoc:return/xqdoc:type/(string(),@occurrence/string()) }
+					{ $f/xqdoc:return/xqdoc:type/(.,@occurrence)=>string-join() }
 					</code>
 					{for $comment in $f/xqdoc:comment/xqdoc:return
-					return " " || $comment/(node()|text())
+          
+					return " " || $comment (:  todo :)
         }
 				</li>
 			</ul>
@@ -530,26 +612,26 @@ as element(*)*
  
 declare function xqh:error($v as element(xqdoc:error))
 as element(*)*{
-		<dt class="label">Error</dt>,
+		<dt class="label">Error Conditions</dt>,
 		<dd>
 		{ $v/(node()|text()) }
 		</dd>
 };
 
-declare function xqh:function-signature($v as element(xqdoc:function))
+declare function xqh:function-signature($fun as element(xqdoc:function))
 as element(div){
 		<div class="proto">
-			<code class="function">{ $v/xqdoc:name/string() }</code>
+			<code class="function">{ $fun/xqdoc:name/string() }</code>
 		  ( 
 			{
-        for $p in $v/xqdoc:parameters/xqdoc:parameter
+        for $p in $fun/xqdoc:parameters/xqdoc:parameter
           return	(
             <code class="arg">${ $p/xqdoc:name/string() }</code>
             ,xqh:as($p/xqdoc:type)
-            ,if(not($p is $v/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else "" 
+            ,if(not($p is $fun/xqdoc:parameters/xqdoc:parameter[last()] )) then ", " else "" 
           )
        ,")"
-       ,xqh:as($v/xqdoc:return/xqdoc:type)
+       ,xqh:as($fun/xqdoc:return/xqdoc:type)
      }
       </div>
 };
@@ -561,8 +643,7 @@ as element(code)*
   then (
     <code class="as">&#160;as&#160;</code>
     ,<code class="type">
-        { string($t)  }
-        { $t/@occurrence/string() }
+        { string($t) || $t/@occurrence/string() }
     </code>
   )
 };
@@ -579,7 +660,7 @@ as element(*)*
 (:~ tags list :)
 declare function xqh:tags($title as xs:string,$tags as element(*)*)
 as element(dl)?{ 
-  if($tags)
+  if(exists($tags))
   then <dl>
         <dt title="{count($tags)}">{ $title  }</dt>
         <dd>
@@ -605,13 +686,17 @@ return typeswitch ($tag)
        case element (xqdoc:author) 
           return <span>{string($tag)}</span>
 
-       default return
-            <span>
-                <span class="badge badge-pill badge-light" >@{ $name }</span>:
-                <span>{ string($tag) }</span>
-            </span>
+       default return switch($name)
+                      case "javadoc"
+                      return <span>Javadoc: <a href="{$tag}" target="_blank">{$tag}</a></span>
+                      default return 
+                        <span>
+                            <span class="badge badge-pill badge-light" >@{ $name }</span>:
+                            <span>{ string($tag) }</span>
+                        </span>
 };
  
+(:~ create html <div> with namespace report :)
 declare function xqh:restxq($xqd,$file as map(*))
 as element(div)
 {

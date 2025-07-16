@@ -1,67 +1,94 @@
-# XQdocA
+## About `xqdoca`
+`XQDocA` is a tool to generate documentation from XQuery sources. It makes use of XQDoc style comments and XQuery annotations.
 
-Generate documentation from XQuery sources based on XQDoc style comments and the usage of XQuery annotations.
-
-The outputs can be changed or extended with custom generators that are dynamically 
+The outputs can be changed or extended with custom generators or "renderers" that are dynamically 
 located and loaded at run time. 
 
-A paper on this project was presented at [Markup UK](https://markupuk.org/) 2019.
+A paper on this project was presented at [Markup UK](https://markupuk.org/).
 
-*Generating documents from XQuery annotations* [HTML](https://markupuk.org/2019/webhelp/index.html#ar04.html) 
+*Generating documents from XQuery annotations*  Andy Bunce, [2019](https://markupuk.org/2019/webhelp/index.html#ar04.html).
+
+
+- [About `xqdoca`](#about-xqdoca)
+- [Status](#status)
+- [Install](#install)
+- [Usage](#usage)
+  - [The .xdoca format](#the-xdoca-format)
+- [Configuration](#configuration)
+- [Built-in generators](#built-in-generators)
+- [Customization](#customization)
+  - [Global generators](#global-generators)
+  - [Module generators](#module-generators)
+  - [Serialization](#serialization)
+    - [current serialization types](#current-serialization-types)
+- [Development notes](#development-notes)
+  - [File](#file)
+  - [expath-pkg.xml](#expath-pkgxml)
+- [License](#license)
+- [Third party components](#third-party-components)
+- [Credit, Acknowledgements](#credit-acknowledgements)
+
+
 
 ## Status
 
 Work in progress.
 
-Runs with BaseX 10.7. The batch file uses an environment `BASEX10` to locate the BaseX10 home folder.
-It can process the XQuery syntax used in BaseX version 10 and earlier.
-
 ## Install
+1. Ensure `BaseX 10` is install
 1. unzip dist bundle to a folder, or clone the respository
 1. Add the `/bin` folder from above to your `PATH`
 1. Execute `xqdoca -install` in a command window to ensure required repository modules are installed. 
 
-The XQDocA script uses the `basex` script. If the environment variable `BASEX_HOME` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
-## Requirements
-
-The code to be processed must be syntactically valid from the perspective of the version of BaseX used to run `XQdocA`. In particular any repository packages referenced by the code must be available.
+The XQDocA script `xqdoca` uses the `basex` script. If the environment variable `BASEX10` is set it will run the basex script in that bin folder otherwise  it will search for basex on the `PATH`
 
 
 ## Usage
+Running `xqdoca -h` display usage information.
+```bash
+xqdoca -h
+using C:\Users\mrwhe\Desktop\basex.home\basex.107\bin\basex.bat
 
-`XQDocA` uses XML files to define documentation tasks. These typically use the extension `.xqdoca`
+Usage xqdoca [options] [files]
+   [files]  names of xqdoca files to run,
+            if none supplied and a .xqdoca file exists in the current directory it will be run.
+   -v       display version
+   -h       display this help
+   -init    create .xqdoca file in current directory if missing
+   -update  update XQdocA required packages (as specified in expath-pkg.xml).
+```
 
-The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
+`XQDocA` uses XML files to define documentation tasks. These files typically use the extension `.xqdoca`.
 
-For example the file `samples/dba.xqdoca`
+ The `xqdoca` command expects the path to the task file to be passed as an argument. If no arguments or options are passed and a `.xqdoca` file is found in the current directory it will use that.
+
+### The .xdoca format
+
+A simple example `samples/dba.xqdoca`
 ```xml
 <xqdoca xmlns="urn:quodatum:xqdoca" version="1.0">
-    <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
-    <target>file:///tmp/dba/</target>
+   <source>C:\Users\andy\basex.home\basex.951\webapp\dba</source>
+  <target>file:///tmp/dba/</target>
 </xqdoca>
 ```
 Then 
 ```xqdoca samples/dba.xqdoca``` 
-will generate documentation for XQuery sources below `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to the folder
-`file:///tmp/dba/`
+will generate documentation for XQuery sources in `C:\Users\andy\basex.home\basex.951\webapp\dba` and write it to the folder `file:///tmp/dba/`
 
 If  `source` or `target` are relative urls they are resolved relative to the `.xqdoca` file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
 Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
 
 
-`xqdoca options....`
-
-
-`xqdoca -h` will display a summary of the options.
-
-`xqdoca -h` will display a summary of the options.
 
 ## Configuration
+As used in `.xqdoc` files
 | XPath from root                                     | Description| Example |
 | --------------------------------------------------- | ---------- | ------- |
 | `source` | directory containing source files | `C:\....\basex.951\webapp\dba`     |
 | `target`  | directory for output           | `file:///tmp/dba/`        |
-
+|extensions|comma delimited extensions to process|*.xqm,*.xq,*.xquery|
+|platform|system type, ignored|basex|
+|outputs/global|space delimited names of global renderers to use|report restxq|
 
 ## Built-in generators
 
@@ -131,7 +158,7 @@ prefix `xqdoca`
  Two kinds of generator are currently defined: `global` and `module`. 
  
 ### Global generators
-These functions generate one output file derived from the entire source.
+These functions generate one output file derived from the entire source tree.
 They have the `xqdoca:global` annotation.
 The first parameter is an arbitary name used to reference the generator in the run `options`
 The second is a simple text description.
@@ -247,6 +274,6 @@ XQdocA is released under the Apache License, Version 2.0
 * Thanks to Darin McBeath for creating the original xqDoc http://xqdoc.org/.
 * XQdocA has much in common with https://github.com/xquery/xquerydoc
 
-* XQuery parsers were generated from EBNF using Gunther Rademacher's excellent http://www.bottlecaps.de/rex/
+* XQuery parsers were generated from EBNF using Gunther Rademacher's excellent [REx parser generator](http://www.bottlecaps.de/rex/)
 
 

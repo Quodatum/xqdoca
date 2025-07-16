@@ -9,7 +9,9 @@ module namespace opts = 'quodatum:xqdoca:options';
 (:~  convert xml  options to  a  map :)
 declare function opts:as-map($a as element(*))
 as map(*){
- $a/* ! map:entry(name(.), if (*) then opts:as-map(.) else string(.))
+ $a/* ! map:entry(name(.), if (*) 
+                           then opts:as-map(.) 
+                           else if(.=("true","false")) then xs:boolean(.) else string(.))
 =>map:merge()
 (: =>trace("AS_MAP: ") :)
 };
