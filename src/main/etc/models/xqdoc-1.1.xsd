@@ -17,6 +17,11 @@
  *
  * The use of the Apache License does not indicate that this project is
  * affiliated with the Apache Software Foundation.
+     
+    Quodatum changes:  This schema extends xqdoc-1.0.01132014.xsd. It adds
+     1. `variable` elements may have `invoked` and `ref-variable` elements to capture references in varable definitions.
+     2. `function` and `variable` elements may have a boolean valued `external` attribute.
+     3. `import` elements may have `<at>` children
  -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xqdoc.org/1.0"
     xmlns="http://www.xqdoc.org/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
