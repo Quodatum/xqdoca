@@ -83,7 +83,7 @@ Options not specified in the .xqdoca file are taken from [config.xqdoca](src/mai
 The official xqDoc site is https://xqdoc.org/. The schema current is located at https://xqdoc.org/xqdoc-1.0.01132014.xsd. This includes namespace lists.
 
 
-This project uses a slightly expanded schema with the following changes:
+This project uses a slightly expanded [schema](src/main/etc/models/xqdoc-1.1.xsd) with the following changes:
 1. `variable` elements may have `invoked` and `ref-variable` elements to capture references in varable definitions.
 2. `function` and `variable` elements may have a boolean valued `external` attribute.
 3. `import` elements may have `<at>` children
