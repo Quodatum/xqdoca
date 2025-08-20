@@ -14,6 +14,7 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/).
 - [Install](#install)
 - [Usage](#usage)
   - [The .xdoca format](#the-xdoca-format)
+- [XQDoc schema](#xqdoc-schema)
 - [Configuration](#configuration)
 - [Built-in generators](#built-in-generators)
 - [Customization](#customization)
@@ -35,8 +36,8 @@ A paper on this project was presented at [Markup UK](https://markupuk.org/).
 Work in progress.
 
 ## Install
-1. Ensure `BaseX 10` is install
-1. unzip dist bundle to a folder, or clone the respository
+1. Ensure `BaseX 10` is installed.
+1. unzip dist bundle to a folder, or clone the respository.
 1. Add the `/bin` folder from above to your `PATH`
 1. Execute `xqdoca -install` in a command window to ensure required repository modules are installed. 
 
@@ -78,6 +79,14 @@ will generate documentation for XQuery sources in `C:\Users\andy\basex.home\base
 If  `source` or `target` are relative urls they are resolved relative to the `.xqdoca` file location. Additional elements can be used to control the generated outputs. Such as which renderers to run.
 Options not specified in the .xqdoca file are taken from [config.xqdoca](src/main/config.xqdoca)
 
+## XQDoc schema
+The official xqDoc site is https://xqdoc.org/. The schema current is located at https://xqdoc.org/xqdoc-1.0.01132014.xsd. This includes namespace lists.
+
+
+This project uses a slightly expanded [schema](src/main/etc/models/xqdoc-1.1.xsd) with the following changes:
+1. `variable` elements may have `invoked` and `ref-variable` elements to capture references in varable definitions.
+2. `function` and `variable` elements may have a boolean valued `external` attribute.
+3. `import` elements may have `<at>` children
 
 
 ## Configuration
